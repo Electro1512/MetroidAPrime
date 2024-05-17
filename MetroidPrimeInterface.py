@@ -1,6 +1,6 @@
 from logging import Logger
 import struct
-from worlds.metroidprime.DolphinClient import GC_GAME_ID_ADDRESS, DolphinClient, DolphinException
+from .DolphinClient import GC_GAME_ID_ADDRESS, DolphinClient, DolphinException
 from enum import Enum
 from enum import Enum
 import py_randomprime

@@ -5,9 +5,9 @@ import traceback
 from CommonClient import ClientCommandProcessor, CommonContext, get_base_parser, logger, server_loop, gui_enabled
 from NetUtils import ClientStatus, NetworkItem
 import Utils
-from worlds.metroidprime.DolphinClient import DolphinException
-from worlds.metroidprime.Locations import METROID_PRIME_LOCATION_BASE, every_location
-from worlds.metroidprime.MetroidPrimeInterface import InventoryItemData, MetroidPrimeInterface, MetroidPrimeLevel
+from .DolphinClient import DolphinException
+from .Locations import METROID_PRIME_LOCATION_BASE, every_location
+from .MetroidPrimeInterface import InventoryItemData, MetroidPrimeInterface, MetroidPrimeLevel
 
 
 class MetroidPrimeCommandProcessor(ClientCommandProcessor):
