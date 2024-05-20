@@ -13,7 +13,7 @@ from NetUtils import ClientStatus, NetworkItem
 import Utils
 from .DolphinClient import DolphinException
 from .Locations import METROID_PRIME_LOCATION_BASE, every_location
-from .MetroidPrimeInterface import InventoryItemData, MetroidPrimeInterface, MetroidPrimeLevel
+from .MetroidPrimeInterface import ConnectionState, InventoryItemData, MetroidPrimeInterface, MetroidPrimeLevel
 
 
 class MetroidPrimeCommandProcessor(ClientCommandProcessor):
@@ -39,6 +39,7 @@ class MetroidPrimeContext(CommonContext):
     game = "Metroid Prime"
     items_handling = 0b111
     dolphin_sync_task = None
+    connection_state = ConnectionState.DISCONNECTED
 
     def __init__(self, server_address, password):
         super().__init__(server_address, password)
@@ -61,24 +62,40 @@ class MetroidPrimeContext(CommonContext):
                     bool(args["slot_data"]["death_link"])))
 
 
-async def dolphin_sync_task(ctx: MetroidPrimeContext):
-    logger.info("Starting Dolphin connector")
-    while not ctx.exit_event.is_set():
-        try:
-            if ctx.game_interface.is_connected() and ctx.game_interface.is_in_playable_state():
-                await _handle_game_ready(ctx)
-            else:
-                await _handle_game_not_ready(ctx)
-        except Exception as e:
-            if isinstance(e, DolphinException):
-                logger.error(str(e))
-            else:
-                logger.error(traceback.format_exc())
+def update_connection_status(ctx: MetroidPrimeContext, status):
+    if ctx.connection_state == status:
+        return
+    elif status == ConnectionState.IN_GAME:
+        logger.info("Connected to Metroid Prime")
+    elif status == ConnectionState.IN_MENU:
+        logger.info("Connected to Metroid Prime, waiting for game to start")
+    elif status == ConnectionState.DISCONNECTED:
+        logger.info("Disconnected from Metroid Prime, attempting to reconnect...")
 
-            logger.info("Attempting to reconnect to Dolphin")
-            await ctx.disconnect()
+    ctx.connection_state = status
+
+
+async def dolphin_sync_task(ctx: MetroidPrimeContext):
+    logger.info("Starting Dolphin Connector")
+    while not ctx.exit_event.is_set():
+        if not ctx.slot:
             await asyncio.sleep(3)
             continue
+        else:
+            try:
+                connection_state = ctx.game_interface.get_connection_state()
+                update_connection_status(ctx, connection_state)
+                if connection_state == ConnectionState.IN_GAME:
+                    await _handle_game_ready(ctx)
+                else:
+                    await _handle_game_not_ready(ctx)
+            except Exception as e:
+                if isinstance(e, DolphinException):
+                    logger.error(str(e))
+                else:
+                    logger.error(traceback.format_exc())
+                await asyncio.sleep(3)
+                continue
 
 
 def inventory_item_by_network_id(network_id: int, current_inventory: dict[str, InventoryItemData]) -> InventoryItemData:
@@ -99,14 +116,14 @@ def get_total_count_of_item_received(network_id: int, items: list[NetworkItem]) 
 async def handle_checked_location(ctx: MetroidPrimeContext, current_inventory: dict[str, InventoryItemData]):
     """Uses the current amount of UnknownItem1 in inventory as an indicator of which location was checked. This will break if the player collects more than one pickup without having the AP client hooked to the game and server"""
     unknown_item1 = current_inventory["UnknownItem1"]
-    if (unknown_item1.current_amount == 0):
+    if (unknown_item1.current_capacity == 0):
         return
     checked_location_id = METROID_PRIME_LOCATION_BASE + \
-        unknown_item1.current_amount - 1
+        unknown_item1.current_capacity - 1
     logger.debug(
-        f"Checked location: {checked_location_id} with amount: {unknown_item1.current_amount} ")
+        f"Checked location: {checked_location_id} with amount: {unknown_item1.current_capacity} ")
     await ctx.send_msgs([{"cmd": "LocationChecks", "locations": [checked_location_id]}])
-    ctx.game_interface.give_item_to_player(unknown_item1.id, 0, 999)
+    ctx.game_interface.give_item_to_player(unknown_item1.id, 0, 0)
 
 
 async def handle_receive_items(ctx: MetroidPrimeContext, current_items: dict[str, InventoryItemData]):
@@ -144,7 +161,7 @@ async def handle_receive_items(ctx: MetroidPrimeContext, current_items: dict[str
         power_bomb_item.code, ctx.items_received)
     diff = num_power_bombs_received - power_bomb_item.current_capacity
     if diff > 0 and power_bomb_item.current_capacity < power_bomb_item.max_capacity:
-        new_capacity = min(num_power_bombs_received,
+        new_capacity = min(3 + num_power_bombs_received,
                            power_bomb_item.max_capacity)
         new_amount = min(power_bomb_item.current_amount + diff, new_capacity)
         logger.debug(
@@ -209,12 +226,9 @@ async def _handle_game_ready(ctx: MetroidPrimeContext):
 
 async def _handle_game_not_ready(ctx: MetroidPrimeContext):
     """If the game is not connected or not in a playable state, this will attempt to retry connecting to the game."""
-    if not ctx.game_interface.is_connected():
-        logger.info("Attempting to connect to Dolphin")
+    if ctx.connection_state == ConnectionState.DISCONNECTED:
         ctx.game_interface.connect_to_game()
-    elif not ctx.game_interface.is_in_playable_state():
-        logger.info(
-            "Waiting for player to load a save file or start a new game")
+    elif ctx.connection_state == ConnectionState.IN_MENU:
         await asyncio.sleep(3)
 
 
@@ -264,7 +278,6 @@ def launch():
         raw_argstring = ' '.join(sys.argv[1:])
         logger.info(raw_argstring)
         args = parser.parse_args()
-
 
         if args.apmp1_file:
             logger.info("APMP1 file supplied, beginning patching process...")

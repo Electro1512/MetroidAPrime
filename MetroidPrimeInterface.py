@@ -17,6 +17,12 @@ METROID_PRIME_ID = b"GM8E01"
 ARTIFACT_TEMPLE_ROOM_INDEX = 16
 
 
+class ConnectionState(Enum):
+    DISCONNECTED = 0
+    IN_GAME = 1
+    IN_MENU = 2
+
+
 class MetroidPrimeSuit(Enum):
     Power = 0
     Gravity = 1
@@ -90,16 +96,15 @@ class MetroidPrimeInterface:
         self.dolphin_client.write_pointer(self.__get_player_state_pointer(),
                                           self.__calculate_item_offset(item_id), struct.pack(">II", new_amount, new_capacity))
         if item_id > 20 and item_id <= 23:
-          current_suit = self.get_current_suit()
-          if current_suit == MetroidPrimeSuit.Phazon:
-            return
-          elif item_id == 23:
-            self.set_current_suit(MetroidPrimeSuit.Phazon)
-          elif item_id == 21:
-            self.set_current_suit(MetroidPrimeSuit.Gravity)
-          elif item_id == 22 and current_suit != MetroidPrimeSuit.Gravity:
-            self.set_current_suit(MetroidPrimeSuit.Varia)
-
+            current_suit = self.get_current_suit()
+            if current_suit == MetroidPrimeSuit.Phazon:
+                return
+            elif item_id == 23:
+                self.set_current_suit(MetroidPrimeSuit.Phazon)
+            elif item_id == 21:
+                self.set_current_suit(MetroidPrimeSuit.Gravity)
+            elif item_id == 22 and current_suit != MetroidPrimeSuit.Gravity:
+                self.set_current_suit(MetroidPrimeSuit.Varia)
 
     def check_for_new_locations(self):
         pass
@@ -157,7 +162,6 @@ class MetroidPrimeInterface:
         self.dolphin_client.write_pointer(
             player_state_pointer, 0, struct.pack(">I", value))
 
-
     def get_current_level(self) -> MetroidPrimeLevel:
         """Returns the world that the player is currently in"""
         world_bytes = self.dolphin_client.read_pointer(
@@ -192,8 +196,14 @@ class MetroidPrimeInterface:
         self.dolphin_client.disconnect()
         self.logger.info("Disconnected from Dolphin Emulator")
 
-    def is_connected(self):
-        return self.dolphin_client.is_connected()
+    def get_connection_state(self):
+        connected = self.dolphin_client.is_connected()
+        if not connected:
+            return ConnectionState.DISCONNECTED
+        elif self.is_in_playable_state():
+            return ConnectionState.IN_GAME
+        else:
+            return ConnectionState.IN_MENU
 
     def is_in_playable_state(self) -> bool:
         """ Check if the player is in the actual game rather than the main menu """
@@ -203,7 +213,7 @@ class MetroidPrimeInterface:
         """Check if the player table is ready to be read from memory, indicating the game is in a playable state"""
         player_table_bytes = self.dolphin_client.read_pointer(
             cstate_manager_global + 0x84C, 0, 4)
-        if(player_table_bytes is None):
+        if (player_table_bytes is None):
             return False
         player_table = struct.unpack(">I", player_table_bytes)[0]
         if player_table == cplayer_vtable:
