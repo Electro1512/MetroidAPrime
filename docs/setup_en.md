@@ -1,4 +1,4 @@
-# Setup Guide for Metroiod Prime Archipelago
+# Setup Guide for Metroid Prime Archipelago
 
 This guide is meant to help you get up and running with Metroid Prime in your Archipelago run.
 
