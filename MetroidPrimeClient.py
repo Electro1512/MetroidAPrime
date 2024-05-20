@@ -76,7 +76,7 @@ def update_connection_status(ctx: MetroidPrimeContext, status):
 
 
 async def dolphin_sync_task(ctx: MetroidPrimeContext):
-    logger.info("Starting Dolphin Connector")
+    logger.info("Starting Dolphin Connector, attempting to connect to emulator...")
     while not ctx.exit_event.is_set():
         if not ctx.slot:
             await asyncio.sleep(3)
@@ -89,6 +89,7 @@ async def dolphin_sync_task(ctx: MetroidPrimeContext):
                     await _handle_game_ready(ctx)
                 else:
                     await _handle_game_not_ready(ctx)
+                    await asyncio.sleep(1)
             except Exception as e:
                 if isinstance(e, DolphinException):
                     logger.error(str(e))

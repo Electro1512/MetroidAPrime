@@ -185,25 +185,31 @@ class MetroidPrimeInterface:
 
     def connect_to_game(self):
         """Initializes the connection to dolphin and verifies it is connected to Metroid Prime"""
-        self.dolphin_client.connect()
-        self.logger.info("Connected to Dolphin Emulator")
-        if self.dolphin_client.read_address(GC_GAME_ID_ADDRESS, 6) != METROID_PRIME_ID:
-            self.logger.error(
-                f"Connected to the wrong game, please connect to Metroid Prime V1 English ({METROID_PRIME_ID})")
-            self.disconnect_from_game()
+        try:
+            self.dolphin_client.connect()
+            self.logger.info("Connected to Dolphin Emulator")
+            if self.dolphin_client.read_address(GC_GAME_ID_ADDRESS, 6) != METROID_PRIME_ID:
+                self.logger.error(
+                    f"Connected to the wrong game, please connect to Metroid Prime V1 English ({METROID_PRIME_ID})")
+                self.disconnect_from_game()
+        except DolphinException as e:
+          pass
 
     def disconnect_from_game(self):
         self.dolphin_client.disconnect()
         self.logger.info("Disconnected from Dolphin Emulator")
 
     def get_connection_state(self):
-        connected = self.dolphin_client.is_connected()
-        if not connected:
+        try:
+            connected = self.dolphin_client.is_connected()
+            if not connected:
+                return ConnectionState.DISCONNECTED
+            elif self.is_in_playable_state():
+                return ConnectionState.IN_GAME
+            else:
+                return ConnectionState.IN_MENU
+        except DolphinException:
             return ConnectionState.DISCONNECTED
-        elif self.is_in_playable_state():
-            return ConnectionState.IN_GAME
-        else:
-            return ConnectionState.IN_MENU
 
     def is_in_playable_state(self) -> bool:
         """ Check if the player is in the actual game rather than the main menu """
