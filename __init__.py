@@ -11,6 +11,18 @@ from worlds.AutoWorld import World
 from ..AutoWorld import WebWorld
 import py_randomprime
 import settings
+from worlds.LauncherComponents import Component, Type, components, launch_subprocess
+
+
+def run_client():
+    print("Running Metroid Prime Client")
+    from MetroidPrimeClient import main  # lazy import
+    launch_subprocess(main, name="MetroidPrimeClient")
+
+
+components.append(
+    Component("Metroid Prime Client", func=run_client, component_type=Type.CLIENT)
+)
 
 
 class MetroidPrimeSettings(settings.Group):
@@ -70,11 +82,7 @@ class MetroidPrimeWorld(World):
             self.multiworld.itempool += [self.create_item(i)]
             items_added += 1
         excluded = self.options.exclude_items
-        spring = int(self.options.spring_ball)
-        if spring == 1:
-            self.multiworld.itempool += [self.create_item("Spring Ball")]
-            items_added += 1
-        for i in {*suit_upgrade_table, *custom_suit_upgrade_table}:
+        for i in {*suit_upgrade_table}:  # , *custom_suit_upgrade_table}:
             if i == "Power Beam" or i == "Scan Visor" or i == "Power Suit" or i == "Combat Visor":
                 self.multiworld.push_precollected(self.create_item(i))
             elif i in excluded.keys():
@@ -98,10 +106,11 @@ class MetroidPrimeWorld(World):
             elif i == "Ice Trap":
                 continue
             elif i == "Power Bomb Expansion":
+                self.multiworld.itempool += [self.create_item('Power Bomb Expansion', True)]
                 for j in range(0, 4):
                     self.multiworld.itempool += [
                         self.create_item("Power Bomb Expansion")]
-                items_added += 4
+                items_added += 5
             else:
                 self.multiworld.itempool += [self.create_item(i)]
                 items_added += 1
@@ -125,7 +134,8 @@ class MetroidPrimeWorld(World):
         # write configjson to a file for review
         with open("config.json", "w") as file:
             file.write(configjsons)
-        notifier = py_randomprime.ProgressNotifier(lambda progress, message: print("Generating ISO: ", progress, message))
+        notifier = py_randomprime.ProgressNotifier(
+            lambda progress, message: print("Generating ISO: ", progress, message))
 
         input_iso_path = Path(settings.get_settings().metroidprime_options.rom_file)
         output_iso_path = Path(f"{output_directory}\prime_out.iso")
