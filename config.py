@@ -86,6 +86,7 @@ def make_config(world):
             "artifactHintBehavior": "All",
         },
         "gameConfig": {
+            "mainMenuMessage": "Archipelago Metroid Prime",
             "startingRoom": "Tallon Overworld:Landing Site",
             "springBall": spring_check(options.spring_ball.value),
             "warpToStart": True,

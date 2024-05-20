@@ -12,12 +12,15 @@ The following are required in order to play Metroid Prime in Archipelago
    **Make sure to install the Generator if you intend to generate multiworlds.**
 - The latest version of the [Metroiod Prime apworld](https://github.com/Electro1512/MetroidAPrime/releases/latest).
 - [Dolphin Emulator](https://dolphin-emu.org/download/). We recommend the latest beta version.
+- A Metroid Prime US ISO (`US 0-00`)
 
 ## AP World Installation
 
 1. Unzip the downloaded Metroid Prime apworld zip file
 2. Place the `metroidprime.apworld` file in your Archipelago installation's `lib/worlds` folder (Windows default to:
    `%programdata%/Archipelago`).
+3. Copy the contents of the `lib` folder from the downloaded Metroid Prime zip file into your Archipelago installation's
+   `lib` folder.
 
 - If you have a `metroidprime.apworld` file from a previous version of the apworld, you **must** delete it, as it is no longer
   supported. Additionally, if there is a `metroidprime` folder in that folder, you **must** also delete it. Keeping
@@ -53,19 +56,20 @@ corresponding to your multiworld, follow
 [these steps](https://archipelago.gg/tutorial/Archipelago/setup/en#hosting-an-archipelago-server) to host a room. Follow
 the instructions for hosting on the website from a locally generated game or on a local machine.
 
-## Connecting to a Room
+## Starting the Game and Connecting to a Room
 
-You should have the zip file provided to you by the multiworld generator. You should also have the room's server
+You should have the `apmp1` file provided to you by the multiworld generator. You should also have the room's server
 name and port number from the room's host.
 
 Once you do, follow these steps to connect to the room:
 
-1. Unzip the folder given to you and copy its contents <!--TODO: Update this to include steps on patching the rom-->
-2. Start `ArchipelagoLauncher.exe` and choose `Metroid Prime Client`, which will open the text client.
-3. Connect to the room by entering the server name and port number at the top and pressing `Connect`. For rooms hosted
+1. Double click the `apmp1` file. If you have not done so before, it will ask you what program you want to open it with. Click "Choose another program" and browser to your Archipelago directory. Select `ArchipelagoLauncher.exe`.
+2. Be patient, after clicking the `apmp1` file, it can take a minute to have the client and patched iso showup
+3. If this is your first time, it will prompt you for an input iso. Select your Metroid Prime USA V1.0 (0-00) iso
+4. Once the output iso file appears in the same directory as your `apmp1` file (it should have a name `AP_XXXX.iso`), open it with Dolphin
+5. After the game is running, connect the Metroid Prime Client to the room by entering the server name and port number at the top and pressing `Connect`. For rooms hosted
    on the website, this will be `archipelago.gg:<port>`, where `<port>` is the port number. If a game is hosted from the
    `ArchipelagoServer.exe` (without `.exe` on Linux), this will default to `38281` but may be changed in the `host.yaml`.
-4. Once you successfully configure and launch a game, the client should let you know it is connected and you will be ready to play!
 
 ## Troubleshooting
 

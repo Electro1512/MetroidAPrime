@@ -1,6 +1,12 @@
 import asyncio
-import logging
+import json
+import multiprocessing
+import os
+import subprocess
+import sys
 import traceback
+import zipfile
+import py_randomprime
 
 from CommonClient import ClientCommandProcessor, CommonContext, get_base_parser, logger, server_loop, gui_enabled
 from NetUtils import ClientStatus, NetworkItem
@@ -212,20 +218,67 @@ async def _handle_game_not_ready(ctx: MetroidPrimeContext):
         await asyncio.sleep(3)
 
 
-def main(connect=None, password=None, name=None):
-    Utils.init_logging("Metroid Prime Client")
+async def run_game(romfile):
+    auto_start = Utils.get_options()["metroidprime_options"].get("rom_start", True)
+    if auto_start is True:
+        import webbrowser
+        webbrowser.open(romfile)
+    elif os.path.isfile(auto_start):
+        subprocess.Popen([auto_start, romfile],
+                         stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
-    async def _main(connect, password, name):
-        ctx = MetroidPrimeContext(connect, password)
-        ctx.auth = name
-        ctx.server_task = asyncio.create_task(
-            server_loop(ctx), name="ServerLoop")
+
+async def patch_and_run_game(apmp1_file: str):
+    apmp1_file = os.path.abspath(apmp1_file)
+    input_iso_path = Utils.get_options()["metroidprime_options"]["rom_file"]
+    base_name = os.path.splitext(apmp1_file)[0]
+    output_path = base_name + '.iso'
+
+    config_json_file = None
+    if zipfile.is_zipfile(apmp1_file):
+        for name in zipfile.ZipFile(apmp1_file).namelist():
+            if name == 'config.json':
+                config_json_file = name
+                break
+
+    config_json = None
+    with zipfile.ZipFile(apmp1_file) as zip_file:
+        with zip_file.open(config_json_file) as file:
+            config_json = file.read().decode("utf-8")
+            config_json = json.loads(config_json)
+
+    notifier = py_randomprime.ProgressNotifier(
+        lambda progress, message: print("Generating ISO: ", progress, message))
+    py_randomprime.patch_iso(input_iso_path, output_path, config_json, notifier)
+
+
+def launch():
+    Utils.init_logging("MetroidPrime Client")
+
+    async def main():
+        multiprocessing.freeze_support()
+        logger.info("main")
+        parser = get_base_parser()
+        parser.add_argument('apmp1_file', default="", type=str, nargs="?",
+                            help='Path to an apmp1 file')
+        raw_argstring = ' '.join(sys.argv[1:])
+        logger.info(raw_argstring)
+        args = parser.parse_args()
+
+
+        if args.apmp1_file:
+            logger.info("APMP1 file supplied, beginning patching process...")
+            Utils.async_start(patch_and_run_game(args.apmp1_file))
+
+        ctx = MetroidPrimeContext(args.connect, args.password)
+        logger.info("Connecting to server...")
+        ctx.server_task = asyncio.create_task(server_loop(ctx), name="Server Loop")
         if gui_enabled:
             ctx.run_gui()
-        await asyncio.sleep(1)
+        ctx.run_cli()
 
-        ctx.dolphin_sync_task = asyncio.create_task(
-            dolphin_sync_task(ctx), name="DolphinSync")
+        logger.info("Running game...")
+        ctx.dolphin_sync_task = asyncio.create_task(dolphin_sync_task(ctx), name="Dolphin Sync")
 
         await ctx.exit_event.wait()
         ctx.server_address = None
@@ -239,14 +292,10 @@ def main(connect=None, password=None, name=None):
     import colorama
 
     colorama.init()
-    asyncio.run(_main(connect, password, name))
+
+    asyncio.run(main())
     colorama.deinit()
 
 
-if __name__ == "__main__":
-    parser = get_base_parser()
-    parser.add_argument('--name', default=None,
-                        help="Slot Name to connect as.")
-    args = parser.parse_args()
-    logger.setLevel(logging.DEBUG)
-    main(args.connect, args.password, args.name)
+if __name__ == '__main__':
+    launch()

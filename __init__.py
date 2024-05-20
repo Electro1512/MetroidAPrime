@@ -1,6 +1,8 @@
 from pathlib import Path
 from typing import Any, Dict, List
+import typing
 from BaseClasses import Item, Tutorial, ItemClassification
+from worlds.metroidprime.Container import MetroidPrimeContainer
 from .Items import MetroidPrimeItem, suit_upgrade_table, artifact_table, item_table, custom_suit_upgrade_table
 from .PrimeOptions import MetroidPrimeOptions
 from .Locations import every_location
@@ -11,17 +13,18 @@ from worlds.AutoWorld import World
 from ..AutoWorld import WebWorld
 import py_randomprime
 import settings
-from worlds.LauncherComponents import Component, Type, components, launch_subprocess
+from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess
 
 
-def run_client():
+def run_client(_):
     print("Running Metroid Prime Client")
-    from MetroidPrimeClient import main  # lazy import
-    launch_subprocess(main, name="MetroidPrimeClient")
+    from .MetroidPrimeClient import launch
+    launch_subprocess(launch, name="MetroidPrimeClient")
 
 
 components.append(
-    Component("Metroid Prime Client", func=run_client, component_type=Type.CLIENT)
+    Component("Metroid Prime Client", func=run_client, component_type=Type.CLIENT,
+              file_identifier=SuffixIdentifier(".apmp1"))
 )
 
 
@@ -29,9 +32,17 @@ class MetroidPrimeSettings(settings.Group):
     class RomFile(settings.UserFilePath):
         """File name of the Metroid Prime ISO"""
         description = "Metroid Prime (US) v1.0 ISO file"
-        copy_to = "prime.iso"
+        copy_to = "Metroid_Prime.iso"
 
-    rom_file: RomFile = RomFile.copy_to
+    class RomStart(str):
+        """
+        Set this to false to never autostart a rom (such as after patching),
+                    true  for operating system default program
+        Alternatively, a path to a program to open the .iso file with
+        """
+
+    rom_file: RomFile = RomFile(RomFile.copy_to)
+    rom_start: typing.Union[RomStart, bool] = True
 
 
 class MetroidPrimeWeb(WebWorld):
@@ -128,19 +139,11 @@ class MetroidPrimeWorld(World):
         configjson = make_config(self)
         # convert configjson to json
         import json
-
         configjsons = json.dumps(configjson, indent=4)
-        # TODO: Remove this later
-        # write configjson to a file for review
-        with open("config.json", "w") as file:
-            file.write(configjsons)
-        notifier = py_randomprime.ProgressNotifier(
-            lambda progress, message: print("Generating ISO: ", progress, message))
 
-        input_iso_path = Path(settings.get_settings().metroidprime_options.rom_file)
-        output_iso_path = Path(f"{output_directory}\prime_out.iso")
-
-        py_randomprime.patch_iso(input_iso_path, output_iso_path, configjson, notifier)
+        outfile_name = self.multiworld.get_out_file_name_base(self.player)
+        apmp1 = MetroidPrimeContainer(configjsons, outfile_name, output_directory, player=self.player, player_name=self.multiworld.get_player_name(self.player))
+        apmp1.write()
 
     def fill_slot_data(self) -> Dict[str, Any]:
 

@@ -15,6 +15,7 @@ The goal of randomized Metroid Prime depends on your selected victory condition.
 ## Which items can be in another player's world?
 
 All suit upgrades except the following can be found in another player's world:
+
 - Power Suit
 - Power Beam
 - Combat Visor
@@ -27,9 +28,11 @@ Multiworld items appear as a Metroid Trophy in the game.
 ## When the player receives an item, what happens?
 
 The player will immediately have their suit inventory updated and receive a notification in the Client.
-* __Currently there is no in-game HUD notification for this, although this is actively being worked on__
+
+- **Currently there is no in-game HUD notification for this, although this is actively being worked on**
 
 ## FAQs
+
 - What happens if I pickup an item without having the client running?
 
   - In order for Metroid Prime Archipelago to function correctly, the Client should always be running whenever you are playing through your game. Due to the way location checks are handled, the client will not be aware of any item you have picked up when it is not running except the one you most recently picked up.
@@ -38,3 +41,5 @@ The player will immediately have their suit inventory updated and receive a noti
 
   - It hasn't been tested extensively, but so far it appears yes
 
+- Does this work with version x, y, or z?
+  - Currently we only support version `0-00`
