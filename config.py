@@ -465,7 +465,7 @@ def make_config(world):
                       "Chozo Ruins West (Main Plaza)": "Tallon Overworld North (Tallon Canyon)",
                       "Chozo Ruins North (Sun Tower)": "Magmoor Caverns North (Lava Lake)",
                       "Chozo Ruins East (Reflecting Pool, Save Station)": "Tallon Overworld East (Frigate Crash Site)",
-                      "Chozo Ruins South (Reflecting Pool, Far End)": "Tallon Overworld South (Great Tree Hall, Lower)",
+                      "Chozo Ruins South (Reflecting Pool, Far End)": "Tallon Overworld South (Great Tree Hall, Upper)",
                   },
                   "rooms": {
                       "Transport to Tallon Overworld North": {},
@@ -1386,7 +1386,7 @@ def make_config(world):
                 },
                 "Phazon Mines": {
                     "transports": {
-                        "Phazon Mines East (Main Quarry)": "Tallon Overworld South (Great Tree Hall, Upper)",
+                        "Phazon Mines East (Main Quarry)": "Tallon Overworld South (Great Tree Hall, Lower)",
                         "Phazon Mines West (Phazon Processing Center)": "Magmoor Caverns South (Magmoor Workstation, Debris)",
                     },
                     "rooms": {
