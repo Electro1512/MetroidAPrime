@@ -11,10 +11,11 @@ import py_randomprime
 from CommonClient import ClientCommandProcessor, CommonContext, get_base_parser, logger, server_loop, gui_enabled
 from NetUtils import ClientStatus, NetworkItem
 import Utils
+from worlds.metroidprime.NotificationManager import NotificationManager
 from worlds.metroidprime.Container import construct_hud_message_patch
 from .DolphinClient import DolphinException
 from .Locations import METROID_PRIME_LOCATION_BASE, every_location
-from .MetroidPrimeInterface import ConnectionState, InventoryItemData, MetroidPrimeInterface, MetroidPrimeLevel
+from .MetroidPrimeInterface import HUD_MESSAGE_DURATION, ConnectionState, InventoryItemData, MetroidPrimeInterface, MetroidPrimeLevel
 
 
 class MetroidPrimeCommandProcessor(ClientCommandProcessor):
@@ -37,6 +38,7 @@ class MetroidPrimeContext(CommonContext):
     is_pending_death_link_reset = False
     command_processor = MetroidPrimeCommandProcessor
     game_interface: MetroidPrimeInterface
+    notification_manager: NotificationManager
     game = "Metroid Prime"
     items_handling = 0b111
     dolphin_sync_task = None
@@ -45,6 +47,7 @@ class MetroidPrimeContext(CommonContext):
     def __init__(self, server_address, password):
         super().__init__(server_address, password)
         self.game_interface = MetroidPrimeInterface(logger)
+        self.notification_manager = NotificationManager(HUD_MESSAGE_DURATION, self.game_interface.send_hud_message)
 
     def on_deathlink(self, data: Utils.Dict[str, Utils.Any]) -> None:
         super().on_deathlink(data)
@@ -140,6 +143,7 @@ async def handle_receive_items(ctx: MetroidPrimeContext, current_items: dict[str
         if item_data.max_capacity == 1 and item_data.current_amount == 0:
             logger.debug(f"Giving item {item_data.name} to player")
             ctx.game_interface.give_item_to_player(item_data.id, 1, 1)
+            ctx.notification_manager.queue_notification(f"{item_data.name} online ({ctx.player_names[network_item.player]})")
 
     # Handle Missile Expansions
     amount_of_missiles_given_per_item = 5
@@ -156,6 +160,7 @@ async def handle_receive_items(ctx: MetroidPrimeContext, current_items: dict[str
             f"Setting missile expansion to {new_amount}/{new_capacity} from {missile_item.current_amount}/{missile_item.current_capacity}")
         ctx.game_interface.give_item_to_player(
             missile_item.id, new_amount, new_capacity)
+        ctx.notification_manager.queue_notification(f"Missile capactiy increased by {diff}")
 
     # Handle Power Bomb Expansions
     power_bomb_item = current_items["Power Bomb Expansion"]
@@ -170,6 +175,7 @@ async def handle_receive_items(ctx: MetroidPrimeContext, current_items: dict[str
             f"Setting power bomb expansions to {new_capacity} from {power_bomb_item.current_capacity}")
         ctx.game_interface.give_item_to_player(
             power_bomb_item.id, new_capacity, new_capacity)
+        ctx.notification_manager.queue_notification(f"Power Bomb capactiy increased by {diff}")
 
     # Handle Energy Tanks
     energy_tank_item = current_items["Energy Tank"]
@@ -215,6 +221,7 @@ async def _handle_game_ready(ctx: MetroidPrimeContext):
             return
         current_inventory = ctx.game_interface.get_current_inventory()
         await handle_receive_items(ctx, current_inventory)
+        ctx.notification_manager.handle_notifications()
         await handle_checked_location(ctx, current_inventory)
         await handle_check_goal_complete(ctx)
 

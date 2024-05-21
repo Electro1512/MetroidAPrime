@@ -5,7 +5,7 @@ import zipfile
 from worlds.Files import APContainer
 import py_randomprime
 
-from worlds.metroidprime.MetroidPrimeInterface import HUD_MESSAGE_ADDRESS, HUD_MESSAGE_DURATION
+from worlds.metroidprime.MetroidPrimeInterface import HUD_MESSAGE_ADDRESS, HUD_MESSAGE_DURATION, HUD_TRIGGER_ADDRESS
 
 
 class MetroidPrimeContainer(APContainer):
@@ -29,7 +29,6 @@ def construct_hud_message_patch() -> List[int]:
 
   # UpdateHintState is 0x1BC in length, 111 instructions
   num_preserved_registers = 2
-  trigger_hud_address = 0x8000332C # When this is 1 the game will display the message and then set it back to 0
   num_required_instructions = 111
   instruction_size = 4
   block_size = 32
@@ -42,8 +41,8 @@ def construct_hud_message_patch() -> List[int]:
       or_(r31, r3, r3),
 
       # Check if trigger is set
-      lis(r6, trigger_hud_address >> 16),  # Load upper 16 bits of address
-      ori(r6, r6, trigger_hud_address & 0xFFFF),  # Load lower 16 bits of address
+      lis(r6, HUD_TRIGGER_ADDRESS >> 16),  # Load upper 16 bits of address
+      ori(r6, r6, HUD_TRIGGER_ADDRESS & 0xFFFF),  # Load lower 16 bits of address
       lbz(r5, 0, r6),
 
       cmpwi(r5, 1),
