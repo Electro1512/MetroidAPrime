@@ -262,6 +262,141 @@ async def patch_and_run_game(apmp1_file: str):
             config_json = file.read().decode("utf-8")
             config_json = json.loads(config_json)
 
+    from ppc_asm import assembler
+    from ppc_asm.assembler.ppc import addi, beq, bl, cmpw, li, lwz, r1, r3, r4, r5, r6, r13, r31, stw, cmpwi, icbi, isync, bne, sync, mtspr, blr, lmw, r0, LR, stwu, mfspr, or_, bgt, lbz, stmw, r30, stb, lis, r7, r9, nop, ori, GeneralRegister
+    from ppc_asm.assembler import custom_ppc
+    symbols = py_randomprime.symbols_for_version("0-00")
+    config_json["gameConfig"]["multiworldDolPatches"] = True
+    # UpdateHintState is 0x1BC in length, 111 instructions
+    num_registers = 2
+    patch_stack_length = 0x30 + (num_registers * 4)
+    config_json["gameConfig"]["updateHintStateReplacement"] = list(
+        assembler.assemble_instructions(
+            symbols["UpdateHintState__13CStateManagerFf"],
+            [
+              # This works if you don't overlap messages, otherwise it keeps calling them
+              # TODO: Set a flag or something to not process yet that the client can read
+              # Prep stack
+                stwu(r1, -(patch_stack_length - 4), r1),
+                mfspr(r0, LR),
+                stw(r0, patch_stack_length, r1),
+                stmw(GeneralRegister(32 - num_registers), patch_stack_length - 4 - num_registers * 4, r1),
+                or_(r31, r3, r3),
+                nop(),
+
+              # Prep function arguments
+                lis(r5, 0x4100),
+                li(r6, 0x0),
+                li(r7, 0x1),
+                li(r9, 0x9),
+                stw(r5, 0x10, r1),  # display time (seconds)
+                stb(r7, 0x14, r1),
+                stb(r6, 0x15, r1),
+                stb(r6, 0x16, r1),
+                stb(r7, 0x17, r1),
+                stw(r9, 0x18, r1),
+                addi(r3, r1, 0x1C),
+                lis(r4, 0x803e),  # Load upper 16 bits
+                ori(r4, r4, 0xfb90),  # Load lower 16 bits
+                bl(symbols["wstring_l__4rstlFPCw"]),
+                addi(r4, r1, 0x10),
+
+              # Call function
+                bl(symbols["DisplayHudMemo__9CSamusHudFRC7wstringRC12SHudMemoInfo"]),
+                lmw(GeneralRegister(32 - num_registers), patch_stack_length - 4 - num_registers * 4, r1),
+                lwz(r0, patch_stack_length, r1),
+                mtspr(LR, r0),
+                addi(r1, r1, patch_stack_length - 4),
+                blr(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+                nop(),
+            ],
+            symbols=symbols,
+        )
+    )
+
     notifier = py_randomprime.ProgressNotifier(
         lambda progress, message: print("Generating ISO: ", progress, message))
     py_randomprime.patch_iso(input_iso_path, output_path, config_json, notifier)
@@ -276,8 +411,6 @@ def launch():
         parser = get_base_parser()
         parser.add_argument('apmp1_file', default="", type=str, nargs="?",
                             help='Path to an apmp1 file')
-        raw_argstring = ' '.join(sys.argv[1:])
-        logger.info(raw_argstring)
         args = parser.parse_args()
 
         if args.apmp1_file:
