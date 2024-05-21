@@ -1,9 +1,8 @@
-from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict
 import typing
 from BaseClasses import Item, Tutorial, ItemClassification
-from worlds.metroidprime.Container import MetroidPrimeContainer, construct_hud_message_patch
-from .Items import MetroidPrimeItem, suit_upgrade_table, artifact_table, item_table, custom_suit_upgrade_table
+from worlds.metroidprime.Container import MetroidPrimeContainer
+from .Items import MetroidPrimeItem, suit_upgrade_table, artifact_table, item_table
 from .PrimeOptions import MetroidPrimeOptions
 from .Locations import every_location
 from .Regions import create_regions
@@ -11,7 +10,6 @@ from .Rules import set_rules
 from .config import make_config
 from worlds.AutoWorld import World
 from ..AutoWorld import WebWorld
-import py_randomprime
 import settings
 from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess
 
