@@ -15,6 +15,10 @@ ITEM_SIZE = 0x8
 RTSL_VECTOR_OFFSET = 0x4
 METROID_PRIME_ID = b"GM8E01"
 ARTIFACT_TEMPLE_ROOM_INDEX = 16
+HUD_MESSAGE_DURATION = 7.0
+HUD_MESSAGE_ADDRESS = 0x803efb90
+HUD_MAX_MESSAGE_SIZE = 194
+HUD_TRIGGER_ADDRESS = 0x8000332C # When this is 1 the game will display the message and then set it back to 0
 
 
 class ConnectionState(Enum):
@@ -86,6 +90,7 @@ class MetroidPrimeInterface:
     dolphin_client: DolphinClient
     connection_status: str
     logger: Logger
+    _previous_message_size: int = 0
 
     def __init__(self, logger) -> None:
         self.logger = logger
@@ -215,6 +220,34 @@ class MetroidPrimeInterface:
         """ Check if the player is in the actual game rather than the main menu """
         return self.get_current_level() != None and self.__is_player_table_ready()
 
+    def send_hud_message(self, message: str) -> bool:
+        current_value = self.dolphin_client.read_address(HUD_TRIGGER_ADDRESS, 1)
+        if current_value == b"\x01":
+            return False
+        self._save_message_to_memory(message)
+        self.dolphin_client.write_address(HUD_TRIGGER_ADDRESS, b"\x01")
+        return True
+
+
+    def _save_message_to_memory(self, message: str):
+      encoded_message = message.encode(
+          "utf-16_be")[: HUD_MAX_MESSAGE_SIZE]
+
+      if len(encoded_message) == self._previous_message_size:
+          encoded_message += b"\x00 " # Add a space to the end of the message to force the game to update the message if it is the same size
+
+      self._previous_message_size = len(encoded_message)
+
+      encoded_message += b"\x00\x00" # Game expects a null terminator at the end of the message
+
+      if len(encoded_message) & 3:
+          # Ensure the size is a multiple of 4
+          num_to_align = (len(encoded_message) | 3) - \
+              len(encoded_message) + 1
+          encoded_message += b"\x00" * num_to_align
+
+      self.dolphin_client.write_address(HUD_MESSAGE_ADDRESS, encoded_message)
+
     def __is_player_table_ready(self) -> bool:
         """Check if the player table is ready to be read from memory, indicating the game is in a playable state"""
         player_table_bytes = self.dolphin_client.read_pointer(
@@ -299,3 +332,4 @@ class MetroidPrimeInterface:
                         self.set_layer_active(
                             ARTIFACT_TEMPLE_ROOM_INDEX, layer_id, item.current_amount > 0)
                         changed = True
+
