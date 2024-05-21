@@ -90,6 +90,7 @@ def make_config(world):
             "startingRoom": "Tallon Overworld:Landing Site",
             "springBall": spring_check(options.spring_ball.value),
             "warpToStart": True,
+            "multiworldDolPatches": True,
             "nonvariaHeatDamage": False,
             "staggeredSuitDamage": False,
             "heatDamagePerSec": 10.0,

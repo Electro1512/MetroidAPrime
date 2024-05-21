@@ -2,7 +2,7 @@ from pathlib import Path
 from typing import Any, Dict, List
 import typing
 from BaseClasses import Item, Tutorial, ItemClassification
-from worlds.metroidprime.Container import MetroidPrimeContainer
+from worlds.metroidprime.Container import MetroidPrimeContainer, construct_hud_message_patch
 from .Items import MetroidPrimeItem, suit_upgrade_table, artifact_table, item_table, custom_suit_upgrade_table
 from .PrimeOptions import MetroidPrimeOptions
 from .Locations import every_location
@@ -137,6 +137,7 @@ class MetroidPrimeWorld(World):
 
     def generate_output(self, output_directory: str) -> None:
         configjson = make_config(self)
+
         # convert configjson to json
         import json
         configjsons = json.dumps(configjson, indent=4)
