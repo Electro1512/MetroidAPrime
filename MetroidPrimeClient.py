@@ -264,7 +264,6 @@ async def patch_and_run_game(apmp1_file: str):
             config_json = json.loads(config_json)
 
     config_json["gameConfig"]["updateHintStateReplacement"] = construct_hud_message_patch()
-
     notifier = py_randomprime.ProgressNotifier(
         lambda progress, message: print("Generating ISO: ", progress, message))
     py_randomprime.patch_iso(input_iso_path, output_path, config_json, notifier)

@@ -15,6 +15,8 @@ ITEM_SIZE = 0x8
 RTSL_VECTOR_OFFSET = 0x4
 METROID_PRIME_ID = b"GM8E01"
 ARTIFACT_TEMPLE_ROOM_INDEX = 16
+HUD_MESSAGE_DURATION = 7.0
+HUD_MESSAGE_ADDRESS = 0x803efb90
 
 
 class ConnectionState(Enum):
@@ -299,3 +301,4 @@ class MetroidPrimeInterface:
                         self.set_layer_active(
                             ARTIFACT_TEMPLE_ROOM_INDEX, layer_id, item.current_amount > 0)
                         changed = True
+
