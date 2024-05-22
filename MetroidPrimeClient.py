@@ -72,7 +72,7 @@ def update_connection_status(ctx: MetroidPrimeContext, status):
     elif status == ConnectionState.IN_GAME:
         logger.info("Connected to Metroid Prime")
     elif status == ConnectionState.IN_MENU:
-        logger.info("Connected to Metroid Prime, waiting for game to start")
+        logger.info("Connected to game, waiting for game to start")
     elif status == ConnectionState.DISCONNECTED:
         logger.info("Disconnected from Metroid Prime, attempting to reconnect...")
 

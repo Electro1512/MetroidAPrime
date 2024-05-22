@@ -91,6 +91,7 @@ class MetroidPrimeInterface:
     connection_status: str
     logger: Logger
     _previous_message_size: int = 0
+    game_id_error: str = None
 
     def __init__(self, logger) -> None:
         self.logger = logger
@@ -194,10 +195,10 @@ class MetroidPrimeInterface:
             self.dolphin_client.connect()
             self.logger.info("Connected to Dolphin Emulator")
             game_id = self.dolphin_client.read_address(GC_GAME_ID_ADDRESS, 6)
-            if game_id != METROID_PRIME_ID:
-                self.logger.error(
+            if game_id != METROID_PRIME_ID and self.game_id_error != game_id:
+                self.logger.warn(
                     f"Connected to the wrong game ({game_id}), please connect to Metroid Prime V1 English ({METROID_PRIME_ID})")
-                self.disconnect_from_game()
+                self.game_id_error = game_id
         except DolphinException as e:
           pass
 
