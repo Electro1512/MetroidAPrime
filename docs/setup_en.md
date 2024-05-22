@@ -2,7 +2,7 @@
 
 This guide is meant to help you get up and running with Metroid Prime in your Archipelago run.
 
-Windows is the only OS this has been tested on but feel free to let us know if you get the chance to try it on Linux or MacOS
+Windows is the only OS this has been tested on, but feel free to let us know if you get the chance to try it on Linux or MacOS
 
 ## Requirements
 
@@ -10,7 +10,7 @@ The following are required in order to play Metroid Prime in Archipelago
 
 - Installed [Archipelago](https://github.com/ArchipelagoMW/Archipelago/releases) v0.4.5 or higher.\
    **Make sure to install the Generator if you intend to generate multiworlds.**
-- The latest version of the [Metroiod Prime apworld](https://github.com/Electro1512/MetroidAPrime/releases/latest).
+- The latest version of the [Metroid Prime apworld](https://github.com/Electro1512/MetroidAPrime/releases/latest).
 - [Dolphin Emulator](https://dolphin-emu.org/download/). We recommend the latest beta version.
 - A Metroid Prime US ISO (`US 0-00`)
 
