@@ -22,6 +22,10 @@ class MetroidPrimeCommandProcessor(ClientCommandProcessor):
     def __init__(self, ctx: CommonContext):
         super().__init__(ctx)
 
+    def _cmd_message(self, *args):
+        """Send a message to the game interface."""
+        self.ctx.notification_manager.queue_notification(' '.join(map(str, args)))
+
     def _cmd_deathlink(self):
         """Toggle deathlink from client. Overrides default setting."""
         if isinstance(self.ctx, MetroidPrimeContext):
