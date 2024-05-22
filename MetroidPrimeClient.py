@@ -137,6 +137,10 @@ async def handle_checked_location(ctx: MetroidPrimeContext, current_inventory: d
 
 async def handle_receive_items(ctx: MetroidPrimeContext, current_items: dict[str, InventoryItemData]):
     # Handle Single Item Upgrades
+    missile_sender = None
+    energy_tank_sender = None
+    power_bomb_sender = None
+
     for network_item in ctx.items_received:
         item_data = inventory_item_by_network_id(
             network_item.item, current_items)
@@ -147,7 +151,16 @@ async def handle_receive_items(ctx: MetroidPrimeContext, current_items: dict[str
         if item_data.max_capacity == 1 and item_data.current_amount == 0:
             logger.debug(f"Giving item {item_data.name} to player")
             ctx.game_interface.give_item_to_player(item_data.id, 1, 1)
-            ctx.notification_manager.queue_notification(f"{item_data.name} online ({ctx.player_names[network_item.player]})")
+            if network_item.player != ctx.slot:
+                receipt_message = "online" if not item_data.name.startswith("Artifact") else "received"
+                ctx.notification_manager.queue_notification(f"{item_data.name} {receipt_message} ({ctx.player_names[network_item.player]})")
+        elif item_data.max_capacity > 1:
+            if item_data.name == "Missile Expansion":
+                missile_sender = network_item.player
+            elif item_data.name == "Energy Tank":
+                energy_tank_sender = network_item.player
+            elif item_data.name == "Power Bomb Expansion":
+                power_bomb_sender = network_item.player
 
     # Handle Missile Expansions
     amount_of_missiles_given_per_item = 5
@@ -164,22 +177,29 @@ async def handle_receive_items(ctx: MetroidPrimeContext, current_items: dict[str
             f"Setting missile expansion to {new_amount}/{new_capacity} from {missile_item.current_amount}/{missile_item.current_capacity}")
         ctx.game_interface.give_item_to_player(
             missile_item.id, new_amount, new_capacity)
-        ctx.notification_manager.queue_notification(f"Missile capactiy increased by {diff}")
+        if missile_sender != ctx.slot:
+            message = f"Missile capactiy increased by {diff}" if diff > 5 else f"Missile capactiy increased by {diff} ({ctx.player_names[missile_sender]})"
+            ctx.notification_manager.queue_notification(message)
 
     # Handle Power Bomb Expansions
     power_bomb_item = current_items["Power Bomb Expansion"]
     num_power_bombs_received = get_total_count_of_item_received(
         power_bomb_item.code, ctx.items_received)
-    diff = num_power_bombs_received - power_bomb_item.current_capacity
-    if diff > 0 and power_bomb_item.current_capacity < power_bomb_item.max_capacity:
-        new_capacity = min(3 + num_power_bombs_received,
+
+    starting_power_bombs = 3
+    diff = starting_power_bombs + num_power_bombs_received - power_bomb_item.current_capacity
+    if num_power_bombs_received > 0 and diff > 0:
+        new_capacity = min(starting_power_bombs + num_power_bombs_received,
                            power_bomb_item.max_capacity)
         new_amount = min(power_bomb_item.current_amount + diff, new_capacity)
+
         logger.debug(
             f"Setting power bomb expansions to {new_capacity} from {power_bomb_item.current_capacity}")
         ctx.game_interface.give_item_to_player(
-            power_bomb_item.id, new_capacity, new_capacity)
-        ctx.notification_manager.queue_notification(f"Power Bomb capactiy increased by {diff}")
+            power_bomb_item.id, new_amount, new_capacity)
+        if power_bomb_sender != ctx.slot:
+            message = f"Power Bomb capactiy increased by {diff}" if diff > 5 else f"Power Bomb capactiy increased by {diff} ({ctx.player_names[missile_sender]})"
+            ctx.notification_manager.queue_notification(message)
 
     # Handle Energy Tanks
     energy_tank_item = current_items["Energy Tank"]
@@ -193,6 +213,9 @@ async def handle_receive_items(ctx: MetroidPrimeContext, current_items: dict[str
             f"Setting energy tanks to {new_capacity} from {energy_tank_item.current_capacity}")
         ctx.game_interface.give_item_to_player(
             energy_tank_item.id, new_capacity, new_capacity)
+        if energy_tank_sender != ctx.slot:
+            message = f"Energy Tank capactiy increased by {diff}" if diff > 5 else f"Energy Tank capactiy increased by {diff} ({ctx.player_names[missile_sender]})"
+            ctx.notification_manager.queue_notification(message)
 
         # Heal player when they receive a new energy tank
         # Player starts with 99 health and each energy tank adds 100 additional

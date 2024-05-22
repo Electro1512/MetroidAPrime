@@ -9,7 +9,7 @@ class NotificationManager:
     send_notification_func = None
 
     def __init__(self, message_duration, send_notification_func):
-        self.message_duration = message_duration / 1.75  # If there are multiple messages, the duration is shorter
+        self.message_duration = message_duration / 2  # If there are multiple messages, the duration is shorter
         self.send_notification_func = send_notification_func
 
     def queue_notification(self, message):
