@@ -186,7 +186,7 @@ async def handle_receive_items(ctx: MetroidPrimeContext, current_items: dict[str
         ctx.game_interface.give_item_to_player(
             missile_item.id, new_amount, new_capacity)
         if missile_sender != ctx.slot:
-            message = f"Missile capactiy increased by {diff}" if diff > 5 else f"Missile capactiy increased by {diff} ({ctx.player_names[missile_sender]})"
+            message = f"Missile capacitiy increased by {diff}" if diff > 5 else f"Missile capacitiy increased by {diff} ({ctx.player_names[missile_sender]})"
             ctx.notification_manager.queue_notification(message)
 
     # Handle Power Bomb Expansions
@@ -206,7 +206,7 @@ async def handle_receive_items(ctx: MetroidPrimeContext, current_items: dict[str
         ctx.game_interface.give_item_to_player(
             power_bomb_item.id, new_amount, new_capacity)
         if power_bomb_sender != ctx.slot:
-            message = f"Power Bomb capactiy increased by {diff}" if diff > 5 else f"Power Bomb capactiy increased by {diff} ({ctx.player_names[missile_sender]})"
+            message = f"Power Bomb capacitiy increased by {diff}" if diff > 5 else f"Power Bomb capacitiy increased by {diff} ({ctx.player_names[missile_sender]})"
             ctx.notification_manager.queue_notification(message)
 
     # Handle Energy Tanks
@@ -222,7 +222,7 @@ async def handle_receive_items(ctx: MetroidPrimeContext, current_items: dict[str
         ctx.game_interface.give_item_to_player(
             energy_tank_item.id, new_capacity, new_capacity)
         if energy_tank_sender != ctx.slot:
-            message = f"Energy Tank capactiy increased by {diff}" if diff > 5 else f"Energy Tank capactiy increased by {diff} ({ctx.player_names[missile_sender]})"
+            message = f"Energy Tank capacitiy increased by {diff}" if diff > 5 else f"Energy Tank capacitiy increased by {diff} ({ctx.player_names[missile_sender]})"
             ctx.notification_manager.queue_notification(message)
 
         # Heal player when they receive a new energy tank
