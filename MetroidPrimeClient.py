@@ -69,6 +69,18 @@ class MetroidPrimeContext(CommonContext):
                 Utils.async_start(self.update_death_link(
                     bool(args["slot_data"]["death_link"])))
 
+    def run_gui(self):
+        from kvui import GameManager
+
+        class MetroidPrimeManager(GameManager):
+            logging_pairs = [
+                ("Client", "Archipelago")
+            ]
+            base_title = "Archipelago Metroid Prime Client"
+
+        self.ui = MetroidPrimeManager(self)
+        self.ui_task = asyncio.create_task(self.ui.async_run(), name="UI")
+
 
 def update_connection_status(ctx: MetroidPrimeContext, status):
     if ctx.connection_state == status:
@@ -280,23 +292,27 @@ async def patch_and_run_game(apmp1_file: str):
     base_name = os.path.splitext(apmp1_file)[0]
     output_path = base_name + '.iso'
 
-    config_json_file = None
-    if zipfile.is_zipfile(apmp1_file):
-        for name in zipfile.ZipFile(apmp1_file).namelist():
-            if name == 'config.json':
-                config_json_file = name
-                break
+    if not os.path.exists(output_path):
 
-    config_json = None
-    with zipfile.ZipFile(apmp1_file) as zip_file:
-        with zip_file.open(config_json_file) as file:
-            config_json = file.read().decode("utf-8")
-            config_json = json.loads(config_json)
+        config_json_file = None
+        if zipfile.is_zipfile(apmp1_file):
+            for name in zipfile.ZipFile(apmp1_file).namelist():
+                if name == 'config.json':
+                    config_json_file = name
+                    break
 
-    config_json["gameConfig"]["updateHintStateReplacement"] = construct_hud_message_patch()
-    notifier = py_randomprime.ProgressNotifier(
-        lambda progress, message: print("Generating ISO: ", progress, message))
-    py_randomprime.patch_iso(input_iso_path, output_path, config_json, notifier)
+        config_json = None
+        with zipfile.ZipFile(apmp1_file) as zip_file:
+            with zip_file.open(config_json_file) as file:
+                config_json = file.read().decode("utf-8")
+                config_json = json.loads(config_json)
+
+        config_json["gameConfig"]["updateHintStateReplacement"] = construct_hud_message_patch()
+        notifier = py_randomprime.ProgressNotifier(
+            lambda progress, message: print("Generating ISO: ", progress, message))
+        py_randomprime.patch_iso(input_iso_path, output_path, config_json, notifier)
+
+    Utils.async_start(run_game(output_path))
 
 
 def launch():

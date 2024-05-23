@@ -1,4 +1,4 @@
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 import typing
 from BaseClasses import Item, Tutorial, ItemClassification
 from worlds.metroidprime.Container import MetroidPrimeContainer
@@ -14,8 +14,7 @@ import settings
 from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess
 
 
-def run_client(_):
-    print("Running Metroid Prime Client")
+def run_client(url: Optional[str] = None):
     from .MetroidPrimeClient import launch
     launch_subprocess(launch, name="MetroidPrimeClient")
 
