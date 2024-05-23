@@ -300,7 +300,7 @@ def set_rules(multiworld: MultiWorld, player, locations):
                                                      state.has_all({'Morph Ball', 'Space Jump Boots'}, player)),
         'Magmoor Caverns: Triclops Pit': lambda state: (logic.prime_early_magmoor(state, multiworld, player) and
                                                         logic.prime_has_missiles(state, multiworld, player) and
-                                                        state.has('Space Jump Boots', player)),
+                                                        state.has_all({'Space Jump Boots', 'X-Ray Visor'}, player)),
         'Magmoor Caverns: Storage Cavern': lambda state: (logic.prime_early_magmoor(state, multiworld, player) and
                                                           state.has('Morph Ball', player)),
         'Magmoor Caverns: Transport Tunnel A': lambda state: (logic.prime_early_magmoor(state, multiworld, player) and
