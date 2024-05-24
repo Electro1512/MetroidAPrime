@@ -163,7 +163,7 @@ function main() {
         for platform in "${SUPPORTED_PLATFORMS[@]}"; do
             get_deps "${platform}" "${project}/requirements.txt" "${destdir}/lib"
         done
-        mk_apworld "${project}" "${destdir}"
+        mk_apworld "${project}" "${destdir}/lib/worlds/"
         cp_data "${project}" "${destdir}"
         bundle "${destdir}" "${target_path}/${bundle}.zip"
         echo "! Bundle finalized as ${target_path}/${bundle}.zip"

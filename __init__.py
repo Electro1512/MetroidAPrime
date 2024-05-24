@@ -34,12 +34,12 @@ class MetroidPrimeSettings(settings.Group):
     class RomStart(str):
         """
         Set this to false to never autostart a rom (such as after patching),
-                    true  for operating system default program
-        Alternatively, a path to a program to open the .iso file with
+        Set it to true to have the operating system default program open the iso
+        Alternatively, set it to a path to a program to open the .iso file with (like Dolplhin)
         """
 
     rom_file: RomFile = RomFile(RomFile.copy_to)
-    rom_start: typing.Union[RomStart, bool] = True
+    rom_start: typing.Union[RomStart, bool] = False
 
 
 class MetroidPrimeWeb(WebWorld):

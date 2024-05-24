@@ -52,6 +52,6 @@ jobs:
         with:
           name: ${{ github.ref_name }}
           prerelease: ${{ contains(github.ref_name, '-rc') }}
-          draft: false
+          draft: true
           generate_release_notes: true
           files: build/target/metroidprime_apworld-${{ steps.tag.outputs.tag }}.zip
