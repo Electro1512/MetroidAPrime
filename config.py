@@ -51,7 +51,7 @@ def temple_dest(boss) -> str:
 
 def item_text(world, location) -> str:
     loc = world.multiworld.get_location(location, world.player)
-    player_name = f"{world.multiworld.player_name[location.player]} " if loc.player != world.player else ""
+    player_name = f"{world.multiworld.player_name[loc.item.player]}'s " if loc.item.player != world.player else ""
     return f"{player_name}{loc.item.name}"
 
 
