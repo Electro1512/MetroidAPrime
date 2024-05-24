@@ -101,6 +101,8 @@ async def dolphin_sync_task(ctx: MetroidPrimeContext):
         try:
             connection_state = ctx.game_interface.get_connection_state()
             update_connection_status(ctx, connection_state)
+            if connection_state == ConnectionState.IN_MENU:
+              await handle_check_goal_complete(ctx) # It will say the player is in menu sometimes
             if connection_state == ConnectionState.IN_GAME:
                 await _handle_game_ready(ctx)
             else:
