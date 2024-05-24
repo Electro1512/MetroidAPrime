@@ -1,5 +1,5 @@
 
-from Options import DeathLink, Toggle, Range, ItemDict, StartInventoryPool, Choice, PerGameCommonOptions
+from Options import DeathLink, DefaultOnToggle, Toggle, Range, ItemDict, StartInventoryPool, Choice, PerGameCommonOptions
 from dataclasses import dataclass
 
 
@@ -35,6 +35,11 @@ class FinalBosses(Choice):
     default = 0
 
 
+class ArtifactHints(DefaultOnToggle):
+    """If enabled, scanning the artifact stones in the temple will give a hint to their location"""
+    default = True
+
+
 @dataclass
 class MetroidPrimeOptions(PerGameCommonOptions):
     start_inventory_from_pool: StartInventoryPool
@@ -43,4 +48,4 @@ class MetroidPrimeOptions(PerGameCommonOptions):
     exclude_items: ExcludeItems
     final_bosses: FinalBosses
     death_link: DeathLink
-
+    artifact_hints: ArtifactHints

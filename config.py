@@ -65,6 +65,10 @@ def item_model(world, location) -> str:
             return nam
     else:
         return "Nothing"
+def make_hint(world, item) -> str:
+  if world.options.artifact_hints.value:
+    loc = world.multiworld.find_item(item, world.player).location.name
+    return f"The &push;&main-color=#c300ff;{item}&pop; can be found in &push;&main-color=#d4cc33;{world.multiworld.player_name[loc.player]}'s&pop; &push;&main-color=#89a1ff;{loc.name}&pop;."
 
 
 def make_config(world):
@@ -84,6 +88,7 @@ def make_config(world):
             "qolPickupScans": True,
             "mapDefaultState": "Always",
             "artifactHintBehavior": "All",
+            "skipSplashScreens": True
         },
         "gameConfig": {
             "mainMenuMessage": "Archipelago Metroid Prime",
@@ -188,18 +193,18 @@ def make_config(world):
             "removeHiveMecha": False,
             "powerBombArboretumSandstone": False,
             "artifactHints": {
-                "Artifact of Chozo": "TODO: Add hint here",
-                "Artifact of Nature": "TODO: Add hint here",
-                "Artifact of Sun": "TODO: Add hint here",
-                "Artifact of World": "TODO: Add hint here",
-                "Artifact of Spirit": "TODO: Add hint here",
-                "Artifact of Newborn": "TODO: Add hint here",
-                "Artifact of Truth": "TODO: Add hint here",
-                "Artifact of Strength": "TODO: Add hint here",
-                "Artifact of Elder": "TODO: Add hint here",
-                "Artifact of Wild": "TODO: Add hint here",
-                "Artifact of Lifegiver": "TODO: Add hint here",
-                "Artifact of Warrior": "TODO: Add hint here"
+                "Artifact of Chozo": make_hint(world, "Artifact of Chozo"),
+                "Artifact of Nature": make_hint(world, "Artifact of Nature"),
+                "Artifact of Sun": make_hint(world, "Artifact of Sun"),
+                "Artifact of World": make_hint(world, "Artifact of World"),
+                "Artifact of Spirit": make_hint(world, "Artifact of Spirit"),
+                "Artifact of Newborn": make_hint(world, "Artifact of Newborn"),
+                "Artifact of Truth": make_hint(world, "Artifact of Truth"),
+                "Artifact of Strength": make_hint(world, "Artifact of Strength"),
+                "Artifact of Elder": make_hint(world, "Artifact of Elder"),
+                "Artifact of Wild": make_hint(world, "Artifact of Wild"),
+                "Artifact of Lifegiver": make_hint(world, "Artifact of Lifegiver"),
+                "Artifact of Warrior": make_hint(world, "Artifact of Warrior")
             },
             "artifactTempleLayerOverrides": {
                 "Artifact of Truth": starting_inventory(world, "Artifact of Truth"),
