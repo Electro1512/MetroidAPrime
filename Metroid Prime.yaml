@@ -3,7 +3,6 @@ Metroid Prime:
   progression_balancing: 50
   accessibility: items
 
-
   # When enabled, pressing c up (after acquiring morph ball) will allow you to jump in morph ball form
   # true: spring ball is enabled
   # false: spring ball is disabled
@@ -24,6 +23,18 @@ Metroid Prime:
   # true: artifact hints are shown
   # false: artifact hints are not shown
   artifact_hints: "true"
+
+  # If enabled, the gravity suit and phazon suit will not protect against heat damage which will change the required logic of the game
+  non_varia_heat_damage: "true"
+
+  # Configure how suit damage reduction is calculated
+  # eefault: based on the strongest suit you have
+  # progressive: based on the number of suits you have
+  # addititve: Individual suits provide their added damage reduction
+  staggered_suit_damage: "default"
+
+  # If enabled, the Hive Mecha boss trigger will be removed from the game
+  remove_hive_mecha: "false"
 
   # Whether to send death events to other players with deathlink enabled or not
   death_link: "true"

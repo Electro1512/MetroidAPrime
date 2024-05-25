@@ -37,8 +37,32 @@ class FinalBosses(Choice):
 
 class ArtifactHints(DefaultOnToggle):
     """If enabled, scanning the artifact stones in the temple will give a hint to their location"""
+    display_name = "Artifact Hints"
     default = True
 
+
+class NonVariaHeatDamage(DefaultOnToggle):
+    """If enabled, the gravity suit and phazon suit will not protect against heat damage which will change the required logic of the game"""
+    display_name = "Non-Varia Heat Damage"
+    default = True
+
+
+class StaggeredSuitDamage(Choice):
+    """Configure how suit damage reduction is calculated
+    Default: based on the strongest suit you have
+    Progressive: based on the number of suits you have
+    Addititve: Individual suits provide their added damage reduction
+    """
+    display_name = "Staggered Suit Damage"
+    option_default = "Default"
+    option_progressive = "Progressive"
+    option_additive = "Additive"
+    default = "Progressive"
+
+class RemoveHiveMecha(DefaultOnToggle):
+    """If enabled, the trigger for the Hive Mecha boss will be removed from the game"""
+    display_name = "Remove Hive Mecha"
+    default = False
 
 @dataclass
 class MetroidPrimeOptions(PerGameCommonOptions):
@@ -49,3 +73,6 @@ class MetroidPrimeOptions(PerGameCommonOptions):
     final_bosses: FinalBosses
     death_link: DeathLink
     artifact_hints: ArtifactHints
+    non_varia_heat_damage: NonVariaHeatDamage
+    staggered_suit_damage: StaggeredSuitDamage
+    remove_hive_mecha: RemoveHiveMecha

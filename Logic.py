@@ -42,7 +42,11 @@ class MetroidPrimeLogic(LogicMixin):
         return self.prime_has_missiles(world, player) and self.has_all({'Charge Beam', 'Super Missile'}, player)
 
     def prime_can_heat(self, world: MultiWorld, player: int) -> bool:
-        return self.has_any({'Varia Suit', 'Gravity Suit', 'Phazon Suit'}, player)
+        non_varia_heat_damage = world.worlds[player].options.non_varia_heat_damage.value
+        if non_varia_heat_damage:
+          return self.has('Varia Suit', player)
+        else:
+          return self.has_any({'Varia Suit', 'Gravity Suit', 'Phazon Suit'}, player)
 
     # logic rules related to accessing regions or subregions
 

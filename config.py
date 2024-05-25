@@ -1,5 +1,7 @@
 from typing import Dict, Any, Optional
 
+from worlds.metroidprime.PrimeOptions import MetroidPrimeOptions
+
 
 def starting_inventory(world, item) -> bool:
     items = world.multiworld.precollected_items.values()
@@ -97,7 +99,7 @@ def make_hint(world, item) -> Optional[str]:
 
 
 def make_config(world):
-    options = world.options
+    options: MetroidPrimeOptions = world.options
     config = {
         "$schema": "https://randovania.org/randomprime/randomprime.schema.json",
         "inputIso": "prime.iso",
@@ -112,8 +114,7 @@ def make_config(world):
             "qolCutscenes": "Skippable",
             "qolPickupScans": True,
             "mapDefaultState": "Always",
-            "artifactHintBehavior": "All",
-            "skipSplashScreens": True
+            "artifactHintBehavior": "All"
         },
         "gameConfig": {
             "mainMenuMessage": "Archipelago Metroid Prime",
@@ -121,14 +122,15 @@ def make_config(world):
             "springBall": spring_check(options.spring_ball.value),
             "warpToStart": True,
             "multiworldDolPatches": True,
-            "nonvariaHeatDamage": False,
-            "staggeredSuitDamage": False,
+            "nonvariaHeatDamage": bool(options.non_varia_heat_damage.value),
+            "staggeredSuitDamage": options.staggered_suit_damage.value,
             "heatDamagePerSec": 10.0,
             "poisonDamagePerSec": 0.11,
             "phazonDamagePerSec": 0.964,
             "phazonDamageModifier": "Default",
             "autoEnabledElevators": True,
             "skipRidley": ridley(options.final_bosses.value),
+            "removeHiveMecha": bool(options.remove_hive_mecha.value),
             "multiworldDolPatches": False,
             "startingItems": {
                 "combatVisor":True,  # starting_inventory(world, "Combat Visor"),
