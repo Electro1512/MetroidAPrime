@@ -23,9 +23,9 @@ def starting_ammo(world, item) -> int:
         for i in items:
             if i == "Energy Tank":
                 count += 1
-    if item == "Power Bomb":
+    if item == "Power Bomb (Main)":
         for i in items:
-            if i == "Power Bomb" or i == "Power Bomb Expansion":
+            if i == "Power Bomb (Main)" or i == "Power Bomb Expansion":
                 count += 1
     return count
 
@@ -60,11 +60,15 @@ def item_text(world, location) -> str:
 def item_model(world, location) -> str:
     loc = world.multiworld.get_location(location, world.player)
     if loc.native_item:
-        nam = loc.item.name
-        if nam == "Missile Expansion" or nam == "Main Missile":
+        name = loc.item.name
+        if name == "Missile Expansion":
             return "Missile"
+        elif name == "Missile Launcher":
+            return "Shiny Missile"
+        elif name == "Power Bomb (Main)":
+          return "Power Bomb"
         else:
-            return nam
+            return name
     else:
         return "Nothing"
 
@@ -137,9 +141,9 @@ def make_config(world):
                 "combatVisor":True,  # starting_inventory(world, "Combat Visor"),
                 "powerBeam": True, # starting_inventory(world, "Power Beam"), disabling this for now since we don't have this worked into logic
                 "scanVisor": True,  # starting_inventory(world, "Scan Visor"),
-                "missiles": starting_ammo(world, "Missile Expansion"),
+                "missiles": starting_ammo(world, "Missile Launcher"),
                 "energyTanks": starting_ammo(world, "Energy Tank"),
-                "powerBombs": starting_ammo(world, "Power Bomb"),
+                "powerBombs": starting_ammo(world, "Power Bomb (Main)"),
                 "wave": starting_inventory(world, "Wave Beam"),
                 "ice": starting_inventory(world, "Ice Beam"),
                 "plasma": starting_inventory(world, "Plasma Beam"),

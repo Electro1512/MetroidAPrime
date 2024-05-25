@@ -158,6 +158,8 @@ class MetroidPrimeWorld(World):
             "spring_ball": self.options.spring_ball.value,
             "death_link": self.options.death_link.value,
             "required_artifacts": self.options.required_artifacts.value,
+            "missile_launcher": self.options.missile_launcher.value,
+            "main_power_bomb": self.options.main_power_bomb.value,
             "exclude_items": self.options.exclude_items.value,
             "final_bosses": self.options.final_bosses.value,
         }

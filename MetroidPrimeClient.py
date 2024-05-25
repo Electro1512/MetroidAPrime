@@ -11,8 +11,9 @@ import py_randomprime
 from CommonClient import ClientCommandProcessor, CommonContext, get_base_parser, logger, server_loop, gui_enabled
 from NetUtils import ClientStatus, NetworkItem
 import Utils
-from worlds.metroidprime.NotificationManager import NotificationManager
-from worlds.metroidprime.Container import construct_hud_message_patch
+from .ClientReceiveItems import handle_receive_items
+from .NotificationManager import NotificationManager
+from .Container import construct_hud_message_patch
 from .DolphinClient import DolphinException
 from .Locations import METROID_PRIME_LOCATION_BASE, every_location
 from .MetroidPrimeInterface import HUD_MESSAGE_DURATION, ConnectionState, InventoryItemData, MetroidPrimeInterface, MetroidPrimeLevel
@@ -47,6 +48,7 @@ class MetroidPrimeContext(CommonContext):
     items_handling = 0b111
     dolphin_sync_task = None
     connection_state = ConnectionState.DISCONNECTED
+    slot_data: dict[str, Utils.Any] = None
 
     def __init__(self, server_address, password):
         super().__init__(server_address, password)
@@ -65,6 +67,7 @@ class MetroidPrimeContext(CommonContext):
 
     def on_package(self, cmd: str, args: dict):
         if cmd == "Connected":
+            self.slot_data = args["slot_data"]
             if "death_link" in args["slot_data"]:
                 Utils.async_start(self.update_death_link(
                     bool(args["slot_data"]["death_link"])))
@@ -102,7 +105,7 @@ async def dolphin_sync_task(ctx: MetroidPrimeContext):
             connection_state = ctx.game_interface.get_connection_state()
             update_connection_status(ctx, connection_state)
             if connection_state == ConnectionState.IN_MENU:
-              await handle_check_goal_complete(ctx) # It will say the player is in menu sometimes
+                await handle_check_goal_complete(ctx)  # It will say the player is in menu sometimes
             if connection_state == ConnectionState.IN_GAME:
                 await _handle_game_ready(ctx)
             else:
@@ -117,21 +120,6 @@ async def dolphin_sync_task(ctx: MetroidPrimeContext):
             continue
 
 
-def inventory_item_by_network_id(network_id: int, current_inventory: dict[str, InventoryItemData]) -> InventoryItemData:
-    for item in current_inventory.values():
-        if item.code == network_id:
-            return item
-    return None
-
-
-def get_total_count_of_item_received(network_id: int, items: list[NetworkItem]) -> int:
-    count = 0
-    for network_item in items:
-        if network_item.item == network_id:
-            count += 1
-    return count
-
-
 async def handle_checked_location(ctx: MetroidPrimeContext, current_inventory: dict[str, InventoryItemData]):
     """Uses the current amount of UnknownItem1 in inventory as an indicator of which location was checked. This will break if the player collects more than one pickup without having the AP client hooked to the game and server"""
     unknown_item1 = current_inventory["UnknownItem1"]
@@ -143,96 +131,6 @@ async def handle_checked_location(ctx: MetroidPrimeContext, current_inventory: d
         f"Checked location: {checked_location_id} with amount: {unknown_item1.current_capacity} ")
     await ctx.send_msgs([{"cmd": "LocationChecks", "locations": [checked_location_id]}])
     ctx.game_interface.give_item_to_player(unknown_item1.id, 0, 0)
-
-
-async def handle_receive_items(ctx: MetroidPrimeContext, current_items: dict[str, InventoryItemData]):
-    # Handle Single Item Upgrades
-    missile_sender = None
-    energy_tank_sender = None
-    power_bomb_sender = None
-
-    for network_item in ctx.items_received:
-        item_data = inventory_item_by_network_id(
-            network_item.item, current_items)
-        if item_data is None:
-            logger.debug(
-                f"Item with network id {network_item.item} not found in inventory. {network_item}")
-            continue
-        if item_data.max_capacity == 1 and item_data.current_amount == 0:
-            logger.debug(f"Giving item {item_data.name} to player")
-            ctx.game_interface.give_item_to_player(item_data.id, 1, 1)
-            if network_item.player != ctx.slot:
-                receipt_message = "online" if not item_data.name.startswith("Artifact") else "received"
-                ctx.notification_manager.queue_notification(f"{item_data.name} {receipt_message} ({ctx.player_names[network_item.player]})")
-        elif item_data.max_capacity > 1:
-            if item_data.name == "Missile Expansion":
-                missile_sender = network_item.player
-            elif item_data.name == "Energy Tank":
-                energy_tank_sender = network_item.player
-            elif item_data.name == "Power Bomb Expansion":
-                power_bomb_sender = network_item.player
-
-    # Handle Missile Expansions
-    amount_of_missiles_given_per_item = 5
-    missile_item = current_items["Missile Expansion"]
-    num_missile_expansions_received = get_total_count_of_item_received(
-        missile_item.code, ctx.items_received)
-    diff = num_missile_expansions_received * \
-        amount_of_missiles_given_per_item - missile_item.current_capacity
-    if diff > 0 and missile_item.current_capacity < missile_item.max_capacity:
-        new_capacity = min(num_missile_expansions_received *
-                           amount_of_missiles_given_per_item, missile_item.max_capacity)
-        new_amount = min(missile_item.current_amount + diff, new_capacity)
-        logger.debug(
-            f"Setting missile expansion to {new_amount}/{new_capacity} from {missile_item.current_amount}/{missile_item.current_capacity}")
-        ctx.game_interface.give_item_to_player(
-            missile_item.id, new_amount, new_capacity)
-        if missile_sender != ctx.slot:
-            message = f"Missile capacity increased by {diff}" if diff > 5 else f"Missile capacity increased by {diff} ({ctx.player_names[missile_sender]})"
-            ctx.notification_manager.queue_notification(message)
-
-    # Handle Power Bomb Expansions
-    power_bomb_item = current_items["Power Bomb Expansion"]
-    num_power_bombs_received = get_total_count_of_item_received(
-        power_bomb_item.code, ctx.items_received)
-
-    starting_power_bombs = 3
-    diff = starting_power_bombs + num_power_bombs_received - power_bomb_item.current_capacity
-    if num_power_bombs_received > 0 and diff > 0:
-        new_capacity = min(starting_power_bombs + num_power_bombs_received,
-                           power_bomb_item.max_capacity)
-        new_amount = min(power_bomb_item.current_amount + diff, new_capacity)
-
-        logger.debug(
-            f"Setting power bomb expansions to {new_capacity} from {power_bomb_item.current_capacity}")
-        ctx.game_interface.give_item_to_player(
-            power_bomb_item.id, new_amount, new_capacity)
-        if power_bomb_sender != ctx.slot:
-            message = f"Power Bomb capacity increased by {diff}" if diff > 5 else f"Power Bomb capacity increased by {diff} ({ctx.player_names[missile_sender]})"
-            ctx.notification_manager.queue_notification(message)
-
-    # Handle Energy Tanks
-    energy_tank_item = current_items["Energy Tank"]
-    num_energy_tanks_received = get_total_count_of_item_received(
-        energy_tank_item.code, ctx.items_received)
-    diff = num_energy_tanks_received - energy_tank_item.current_capacity
-    if diff > 0 and energy_tank_item.current_capacity < energy_tank_item.max_capacity:
-        new_capacity = min(num_energy_tanks_received,
-                           energy_tank_item.max_capacity)
-        logger.debug(
-            f"Setting energy tanks to {new_capacity} from {energy_tank_item.current_capacity}")
-        ctx.game_interface.give_item_to_player(
-            energy_tank_item.id, new_capacity, new_capacity)
-        if energy_tank_sender != ctx.slot:
-            message = f"Energy Tank capacity increased by {diff}" if diff > 5 else f"Energy Tank capacity increased by {diff} ({ctx.player_names[missile_sender]})"
-            ctx.notification_manager.queue_notification(message)
-
-        # Heal player when they receive a new energy tank
-        # Player starts with 99 health and each energy tank adds 100 additional
-        ctx.game_interface.set_current_health(new_capacity * 100.0 + 99)
-
-    # Handle Artifacts
-    ctx.game_interface.sync_artifact_layers()
 
 
 async def handle_check_goal_complete(ctx: MetroidPrimeContext):

@@ -1,2 +1,2 @@
 # Metroid Prime Archipelago
-SEe the `README.md`
+See the `README.md`
