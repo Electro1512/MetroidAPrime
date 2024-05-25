@@ -34,7 +34,7 @@ Metroid Prime:
   non_varia_heat_damage: "true"
 
   # Configure how suit damage reduction is calculated
-  # eefault: based on the strongest suit you have
+  # default: based on the strongest suit you have
   # progressive: based on the number of suits you have
   # addititve: Individual suits provide their added damage reduction
   staggered_suit_damage: "default"
