@@ -24,6 +24,12 @@ Metroid Prime:
   # false: artifact hints are not shown
   artifact_hints: "true"
 
+  # If enabled, the missile launcher will be added to the item pool. This will only allow you to use missiles once the missile launcher is found (regardless of missile expansions received).
+  missile_launcher: "true"
+
+  # If enabled, the main power bomb will be added to the item pool. This will only allow you to use power bombs once the main power bombs is found (regardless of power bomb expansions received)."""
+  main_power_bomb: "true"
+
   # If enabled, the gravity suit and phazon suit will not protect against heat damage which will change the required logic of the game
   non_varia_heat_damage: "true"
 

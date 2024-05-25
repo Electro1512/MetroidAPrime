@@ -41,6 +41,18 @@ class ArtifactHints(DefaultOnToggle):
     default = True
 
 
+class MissileLauncher(DefaultOnToggle):
+    """If enabled, the missile launcher will be added to the item pool. This will only allow you to use missiles once the missile launcher is found (regardless of missile expansions received)."""
+    display_name = "Missile Launcher"
+    default = False
+
+
+class MainPowerBomb(DefaultOnToggle):
+    """If enabled, the main power bomb will be added to the item pool. This will only allow you to use power bombs once the main power bombs is found (regardless of power bomb expansions received)."""
+    display_name = "Main Power Bomb"
+    default = False
+
+
 class NonVariaHeatDamage(DefaultOnToggle):
     """If enabled, the gravity suit and phazon suit will not protect against heat damage which will change the required logic of the game"""
     display_name = "Non-Varia Heat Damage"
@@ -59,10 +71,12 @@ class StaggeredSuitDamage(Choice):
     option_additive = "Additive"
     default = "Progressive"
 
+
 class RemoveHiveMecha(DefaultOnToggle):
     """If enabled, the trigger for the Hive Mecha boss will be removed from the game"""
     display_name = "Remove Hive Mecha"
     default = False
+
 
 @dataclass
 class MetroidPrimeOptions(PerGameCommonOptions):
@@ -73,6 +87,8 @@ class MetroidPrimeOptions(PerGameCommonOptions):
     final_bosses: FinalBosses
     death_link: DeathLink
     artifact_hints: ArtifactHints
+    missile_launcher: MissileLauncher
+    main_power_bomb: MainPowerBomb
     non_varia_heat_damage: NonVariaHeatDamage
     staggered_suit_damage: StaggeredSuitDamage
     remove_hive_mecha: RemoveHiveMecha

@@ -122,6 +122,15 @@ class MetroidPrimeWorld(World):
             else:
                 self.multiworld.itempool += [self.create_item(i)]
                 items_added += 1
+
+        if self.options.missile_launcher.value:
+            self.multiworld.itempool += [self.create_item("Missile Launcher")]
+            items_added += 1
+
+        if self.options.main_power_bomb.value:
+            self.multiworld.itempool += [self.create_item("Power Bomb (Main)")]
+            items_added += 1
+
         # add missiles in whatever slots we have left
         remain = 100 - items_added
         for i in range(0, remain):
