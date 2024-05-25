@@ -84,6 +84,8 @@ Once you do, follow these steps to connect to the room:
   - Browse to the info tab (you will need to click the arrow to view more tabs to the right)
   - Verify under name it says `Metroid Prime  (Revision 0)`
 
+- If the client is running, connected to the Archipelago server but it appears to not be able to connect to dolphin, verify  you only have one instance of Dolphin opened up. If there are other windows (even if they aren't running anything) it will cause problems with the client.
+
 - If you do not see the client in the launcher, ensure you have placed the `metroidprime.apworld` in the correct folder (the
   `lib/worlds` folder of your Archipelago installation).
 

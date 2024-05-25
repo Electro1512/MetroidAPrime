@@ -1,4 +1,4 @@
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 
 
 def starting_inventory(world, item) -> bool:
@@ -65,10 +65,35 @@ def item_model(world, location) -> str:
             return nam
     else:
         return "Nothing"
-def make_hint(world, item) -> str:
-  if world.options.artifact_hints.value:
-    loc = world.multiworld.find_item(item, world.player).location.name
-    return f"The &push;&main-color=#c300ff;{item}&pop; can be found in &push;&main-color=#d4cc33;{world.multiworld.player_name[loc.player]}'s&pop; &push;&main-color=#89a1ff;{loc.name}&pop;."
+
+def make_artifact_hints(world) -> str:
+  def make_artifact_hint(item) -> str:
+    if world.options.artifact_hints.value:
+      location = world.multiworld.find_item(item, world.player)
+      player_string = f"{world.multiworld.player_name[location.player]}'s" if location.player != world.player else "your"
+      return f"The &push;&main-color=#c300ff;{item}&pop; can be found in &push;&main-color=#d4cc33;{player_string}&pop; &push;&main-color=#89a1ff;{location.name}&pop;."
+    else:
+      return f"The &push;&main-color=#c300ff;{item}&pop; has not been collected."
+
+  return  {
+                "Artifact of Chozo": make_artifact_hint("Artifact of Chozo"),
+                "Artifact of Nature": make_artifact_hint("Artifact of Nature"),
+                "Artifact of Sun": make_artifact_hint("Artifact of Sun"),
+                "Artifact of World": make_artifact_hint("Artifact of World"),
+                "Artifact of Spirit": make_artifact_hint("Artifact of Spirit"),
+                "Artifact of Newborn": make_artifact_hint("Artifact of Newborn"),
+                "Artifact of Truth": make_artifact_hint("Artifact of Truth"),
+                "Artifact of Strength": make_artifact_hint("Artifact of Strength"),
+                "Artifact of Elder": make_artifact_hint("Artifact of Elder"),
+                "Artifact of Wild": make_artifact_hint("Artifact of Wild"),
+                "Artifact of Lifegiver": make_artifact_hint("Artifact of Lifegiver"),
+                "Artifact of Warrior": make_artifact_hint("Artifact of Warrior")
+            }
+
+def make_hint(world, item) -> Optional[str]:
+    location = world.multiworld.find_item(item, world.player)
+    player_string = f"{world.multiworld.player_name[location.player]}'s" if location.player != world.player else "your"
+    return f"The &push;&main-color=#c300ff;{item}&pop; can be found in &push;&main-color=#d4cc33;{player_string}&pop; &push;&main-color=#89a1ff;{location.name}&pop;."
 
 
 def make_config(world):
@@ -192,20 +217,7 @@ def make_config(world):
             "removeMineSecurityStationLocks": False,
             "removeHiveMecha": False,
             "powerBombArboretumSandstone": False,
-            "artifactHints": {
-                "Artifact of Chozo": make_hint(world, "Artifact of Chozo"),
-                "Artifact of Nature": make_hint(world, "Artifact of Nature"),
-                "Artifact of Sun": make_hint(world, "Artifact of Sun"),
-                "Artifact of World": make_hint(world, "Artifact of World"),
-                "Artifact of Spirit": make_hint(world, "Artifact of Spirit"),
-                "Artifact of Newborn": make_hint(world, "Artifact of Newborn"),
-                "Artifact of Truth": make_hint(world, "Artifact of Truth"),
-                "Artifact of Strength": make_hint(world, "Artifact of Strength"),
-                "Artifact of Elder": make_hint(world, "Artifact of Elder"),
-                "Artifact of Wild": make_hint(world, "Artifact of Wild"),
-                "Artifact of Lifegiver": make_hint(world, "Artifact of Lifegiver"),
-                "Artifact of Warrior": make_hint(world, "Artifact of Warrior")
-            },
+            "artifactHints": make_artifact_hints(world),
             "artifactTempleLayerOverrides": {
                 "Artifact of Truth": starting_inventory(world, "Artifact of Truth"),
                 "Artifact of Strength": starting_inventory(world, "Artifact of Strength"),
