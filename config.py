@@ -94,6 +94,7 @@ def make_artifact_hints(world) -> str:
 
 def make_hint(world, item) -> Optional[str]:
     location = world.multiworld.find_item(item, world.player)
+
     player_string = f"{world.multiworld.player_name[location.player]}'s" if location.player != world.player else "your"
     return f"The &push;&main-color=#c300ff;{item}&pop; can be found in &push;&main-color=#d4cc33;{player_string}&pop; &push;&main-color=#89a1ff;{location.name}&pop;."
 
