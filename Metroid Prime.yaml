@@ -3,8 +3,11 @@ Metroid Prime:
   progression_balancing: 50
   accessibility: items
 
-  # Future support, ignore for now
-  spring_ball: "false"
+
+  # When enabled, pressing c up (after acquiring morph ball) will allow you to jump in morph ball form
+  # true: spring ball is enabled
+  # false: spring ball is disabled
+  spring_ball: "true"
 
   # Required artifacts to complete the game, any number between 1 and 12.
   # It will give the remaning artifacts as starting items
