@@ -74,12 +74,16 @@ def item_model(world, location) -> str:
 
 def make_artifact_hints(world) -> str:
   def make_artifact_hint(item) -> str:
-    if world.options.artifact_hints.value:
-      location = world.multiworld.find_item(item, world.player)
-      player_string = f"{world.multiworld.player_name[location.player]}'s" if location.player != world.player else "your"
-      return f"The &push;&main-color=#c300ff;{item}&pop; can be found in &push;&main-color=#d4cc33;{player_string}&pop; &push;&main-color=#89a1ff;{location.name}&pop;."
-    else:
-      return f"The &push;&main-color=#c300ff;{item}&pop; has not been collected."
+    try:
+      if world.options.artifact_hints.value:
+        location = world.multiworld.find_item(item, world.player)
+        player_string = f"{world.multiworld.player_name[location.player]}'s" if location.player != world.player else "your"
+        return f"The &push;&main-color=#c300ff;{item}&pop; can be found in &push;&main-color=#d4cc33;{player_string}&pop; &push;&main-color=#89a1ff;{location.name}&pop;."
+      else:
+        return f"The &push;&main-color=#c300ff;{item}&pop; has not been collected."
+      # This will error when trying to find an artifact that does not have a location since was pre collected
+    except:
+      return f"The &push;&main-color=#c300ff;{item}&pop; does not need to be collected."
 
   return  {
                 "Artifact of Chozo": make_artifact_hint("Artifact of Chozo"),
@@ -95,13 +99,6 @@ def make_artifact_hints(world) -> str:
                 "Artifact of Lifegiver": make_artifact_hint("Artifact of Lifegiver"),
                 "Artifact of Warrior": make_artifact_hint("Artifact of Warrior")
             }
-
-def make_hint(world, item) -> Optional[str]:
-    location = world.multiworld.find_item(item, world.player)
-
-    player_string = f"{world.multiworld.player_name[location.player]}'s" if location.player != world.player else "your"
-    return f"The &push;&main-color=#c300ff;{item}&pop; can be found in &push;&main-color=#d4cc33;{player_string}&pop; &push;&main-color=#89a1ff;{location.name}&pop;."
-
 
 def make_config(world):
     options: MetroidPrimeOptions = world.options

@@ -1,9 +1,8 @@
 Metroid Prime:
-  # TODO: Add examples here
   progression_balancing: 50
   accessibility: items
 
-  # When enabled, pressing c up (after acquiring morph ball) will allow you to jump in morph ball form
+  # When enabled, pressing c up (after acquiring morph ball bombs) will allow you to jump in morph ball form
   # true: spring ball is enabled
   # false: spring ball is disabled
   spring_ball: "true"
@@ -15,7 +14,7 @@ Metroid Prime:
   # Required bosses to complete the game
   # ridley: Only need to fight Ridley at the Artifact temple then take the portal to the credits sequence
   # prime: Portal to impact crater will be active without requiring you to defeat Ridley
-  # both: Both Ridley and Meta Ridley must be defeated to reach the credits sequence
+  # both: Both Ridley and Metroid Prime must be defeated to reach the credits sequence
   # none: Portal at the artifact temple will be active when all artifacts are collected and will take you to the credits sequence
   final_bosses: both
 
