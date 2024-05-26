@@ -100,8 +100,6 @@ class MetroidPrimeWorld(World):
                     self.multiworld.itempool += [
                         self.create_item('Missile Expansion', True)]
                 items_added += 8
-            elif i == "Spring Ball":
-                continue
             elif i == "Energy Tank":
                 for j in range(0, 8):
                     self.multiworld.itempool += [
