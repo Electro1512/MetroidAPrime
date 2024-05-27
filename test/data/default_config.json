@@ -22,7 +22,7 @@
     "multiworldDolPatches": false,
     "nonvariaHeatDamage": true,
     "staggeredSuitDamage": true,
-    "heatDamagePerSec": 10,
+    "heatDamagePerSec": 10.0,
     "poisonDamagePerSec": 0.11,
     "phazonDamagePerSec": 0.964,
     "phazonDamageModifier": "Default",
@@ -926,10 +926,10 @@
             },
             {
               "type": "Unknown Item 1",
-              "scanText": "Thermal Visor",
-              "hudmemoText": "Thermal Visor Acquired!",
+              "scanText": "Phazon Suit",
+              "hudmemoText": "Phazon Suit Acquired!",
               "currIncrease": 98,
-              "model": "Thermal Visor",
+              "model": "Phazon Suit",
               "showIcon": true
             }
           ]
@@ -1432,10 +1432,10 @@
           "pickups": [
             {
               "type": "Unknown Item 1",
-              "scanText": "Phazon Suit",
-              "hudmemoText": "Phazon Suit Acquired!",
+              "scanText": "Thermal Visor",
+              "hudmemoText": "Thermal Visor Acquired!",
               "currIncrease": 85,
-              "model": "Phazon Suit",
+              "model": "Thermal Visor",
               "showIcon": true
             }
           ]

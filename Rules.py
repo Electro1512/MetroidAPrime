@@ -272,7 +272,7 @@ def set_rules(multiworld: MultiWorld, player, locations):
                                                        logic.prime_can_bomb(state, multiworld, player) and
                                                        logic.prime_can_pb(state, multiworld, player) and
                                                        logic.prime_can_spider(state, multiworld, player) and
-                                                       state.has('X-Ray Visor'), player),
+                                                       state.has('X-Ray Visor', player)),
         'Phazon Mines: Metroid Quarantine B': lambda state: (logic.prime_lower_mines(state, multiworld, player) and
                                                              logic.prime_can_super(state, multiworld, player)),
         'Phazon Mines: Metroid Quarantine A': lambda state: (logic.prime_upper_mines(state, multiworld, player) and
@@ -280,7 +280,7 @@ def set_rules(multiworld: MultiWorld, player, locations):
                                                              logic.prime_can_pb(state, multiworld, player) and
                                                              logic.prime_can_spider(state, multiworld, player) and
                                                              logic.prime_can_boost(state, multiworld, player) and
-                                                             state.has('X-Ray Visor'), player),
+                                                             state.has('X-Ray Visor', player)),
         'Phazon Mines: Fungal Hall B': lambda state: (logic.prime_lower_mines(state, multiworld, player) and
                                                       state.has_any({'Thermal Visor', 'X-Ray Visor'}, player)),
         'Phazon Mines: Phazon Mining Tunnel': lambda state: (logic.prime_lower_mines(state, multiworld, player) and
