@@ -22,7 +22,7 @@ def dict_diff(d1, d2, path=""):
             print(f"{path}: Key {k} not found in first dict")
 
 
-class TestOutputGeneration(MetroidPrimeTestBase):
+class TestDefaultOutputGeneration(MetroidPrimeTestBase):
     options = {
     }
 
@@ -35,11 +35,33 @@ class TestOutputGeneration(MetroidPrimeTestBase):
             expected_output = json.load(f)
 
         dict_diff(expected_output, output)
-        try:
-            self.assertDictEqual(output, expected_output)
-        except AssertionError:
-            # If the test fails, write the expected output to a file
-            os.makedirs(OUTPUT_DIR, exist_ok=True)  # Create the directory if it does not exist
-            with open(f'{OUTPUT_DIR}/{self._testMethodName}.json', 'w') as f:
-                json.dump(output, f, indent=4)
-            raise  # Re-raise the exception to fail the test
+        dump_output_if_test_fails(self, output, expected_output)
+
+
+class TestMainPBAndMissileLauncherOutputGeneration(MetroidPrimeTestBase):
+    options = {
+      "missile_launcher": 1,
+      "main_power_bomb": 1
+    }
+
+    def test_output_generates_correctly_with_main_pb_and_missile_launcher(self) -> None:
+        self.test_fill()
+        output = make_config(self.world)
+        expected_output = {}
+        path = os.path.join(os.path.dirname(__file__), "data", "missile_launcher_main_pb_config.json")
+        with open(path, "r") as f:
+            expected_output = json.load(f)
+
+        dict_diff(expected_output, output)
+        dump_output_if_test_fails(self, output, expected_output)
+
+
+def dump_output_if_test_fails(test: MetroidPrimeTestBase, output, expected_output):
+    try:
+        test.assertDictEqual(output, expected_output)
+    except AssertionError:
+        # If the test fails, write the expected output to a file
+        os.makedirs(OUTPUT_DIR, exist_ok=True)  # Create the directory if it does not exist
+        with open(f'{OUTPUT_DIR}/{test._testMethodName}.json', 'w') as f:
+            json.dump(output, f, indent=4)
+        raise  # Re-raise the exception to fail the test
