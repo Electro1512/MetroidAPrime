@@ -219,7 +219,6 @@ def make_config(world):
             "backwardsLowerMines": True,
             "patchPowerConduits": False,
             "removeMineSecurityStationLocks": False,
-            "removeHiveMecha": False,
             "powerBombArboretumSandstone": False,
             "artifactHints": make_artifact_hints(world),
             "artifactTempleLayerOverrides": {
