@@ -59,7 +59,6 @@ class DolphinClient:
         try:
             address = self.dolphin.follow_pointers(pointer, [0])
         except RuntimeError:
-            self.logger.debug(f"Could not read pointer at {pointer:x}")
             return None
 
         if not self.dolphin.is_hooked():
@@ -80,7 +79,6 @@ class DolphinClient:
         try:
             address = self.dolphin.follow_pointers(pointer, [0])
         except RuntimeError:
-            self.logger.debug(f"Could not read pointer at {pointer:x}")
             return None
 
         if not self.dolphin.is_hooked():

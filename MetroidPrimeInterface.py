@@ -329,8 +329,6 @@ class MetroidPrimeInterface:
                     active = self.get_layer_active(
                         ARTIFACT_TEMPLE_ROOM_INDEX, layer_id)
                     if active != (item.current_amount > 0):
-                        self.logger.debug(
-                            f"Setting Artifact layer for {item.name} to {item.current_amount > 0}")
                         self.set_layer_active(
                             ARTIFACT_TEMPLE_ROOM_INDEX, layer_id, item.current_amount > 0)
                         changed = True

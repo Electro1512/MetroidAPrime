@@ -127,8 +127,6 @@ async def handle_checked_location(ctx: MetroidPrimeContext, current_inventory: d
         return
     checked_location_id = METROID_PRIME_LOCATION_BASE + \
         unknown_item1.current_capacity - 1
-    logger.debug(
-        f"Checked location: {checked_location_id} with amount: {unknown_item1.current_capacity} ")
     await ctx.send_msgs([{"cmd": "LocationChecks", "locations": [checked_location_id]}])
     ctx.game_interface.give_item_to_player(unknown_item1.id, 0, 0)
 
@@ -136,7 +134,6 @@ async def handle_checked_location(ctx: MetroidPrimeContext, current_inventory: d
 async def handle_check_goal_complete(ctx: MetroidPrimeContext):
     current_level = ctx.game_interface.get_current_level()
     if current_level == MetroidPrimeLevel.End_of_Game:
-        logger.debug("Sending Goal Complete")
         await ctx.send_msgs([{"cmd": "StatusUpdate", "status": ClientStatus.CLIENT_GOAL}])
 
 

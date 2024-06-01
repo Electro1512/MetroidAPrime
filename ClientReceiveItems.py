@@ -16,8 +16,6 @@ async def handle_receive_items(ctx: 'MetroidPrimeContext', current_items: dict[s
         item_data = inventory_item_by_network_id(
             network_item.item, current_items)
         if item_data is None:
-            logger.debug(
-                f"Item with network id {network_item.item} not found in inventory. {network_item}")
             continue
         if item_data.name == "Missile Launcher":
             continue
@@ -26,7 +24,6 @@ async def handle_receive_items(ctx: 'MetroidPrimeContext', current_items: dict[s
 
         # Handle Single Item Upgrades
         if item_data.max_capacity == 1 and item_data.current_amount == 0:
-            logger.debug(f"Giving item {item_data.name} to player")
             ctx.game_interface.give_item_to_player(item_data.id, 1, 1)
             if network_item.player != ctx.slot:
                 receipt_message = "online" if not item_data.name.startswith("Artifact") else "received"
@@ -81,9 +78,6 @@ async def handle_receive_missiles(ctx: 'MetroidPrimeContext', current_items: dic
         diff = new_capacity - current_capacity
         new_amount = min(current_amount + diff, new_capacity)
 
-        logger.debug(
-            f"Setting missile expansion to {new_amount}/{new_capacity} from {missile_item.current_amount}/{missile_item.current_capacity}")
-
         ctx.game_interface.give_item_to_player(
             missile_item.id, new_amount, new_capacity)
         if missile_sender != ctx.slot and diff > 0 and missile_sender != None:
@@ -131,9 +125,6 @@ async def handle_receive_power_bombs(ctx: 'MetroidPrimeContext', current_items: 
         diff = new_capacity - current_capacity
         new_amount = min(current_amount + diff, new_capacity)
 
-        logger.debug(
-            f"Setting power bomb expansion to {new_amount}/{new_capacity} from {pb_item.current_amount}/{pb_item.current_capacity}")
-
         ctx.game_interface.give_item_to_player(
             pb_item.id, new_amount, new_capacity)
         if pb_sender != ctx.slot and diff > 0 and pb_sender != None:
@@ -160,8 +151,6 @@ async def handle_receive_energy_tanks(ctx: 'MetroidPrimeContext', current_items:
     if diff > 0 and energy_tank_item.current_capacity < energy_tank_item.max_capacity:
         new_capacity = min(num_energy_tanks_received,
                            energy_tank_item.max_capacity)
-        logger.debug(
-            f"Setting energy tanks to {new_capacity} from {energy_tank_item.current_capacity}")
         ctx.game_interface.give_item_to_player(
             energy_tank_item.id, new_capacity, new_capacity)
 
