@@ -35,7 +35,7 @@ Metroid Prime:
   # Configure how suit damage reduction is calculated
   # default: based on the strongest suit you have
   # progressive: based on the number of suits you have
-  # addititve: Individual suits provide their added damage reduction
+  # additive: Individual suits provide their added damage reduction
   staggered_suit_damage: "default"
 
   # If enabled, the Hive Mecha boss trigger will be removed from the game

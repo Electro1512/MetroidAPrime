@@ -63,12 +63,12 @@ class StaggeredSuitDamage(Choice):
     """Configure how suit damage reduction is calculated
     Default: based on the strongest suit you have
     Progressive: based on the number of suits you have
-    Addititve: Individual suits provide their added damage reduction
+    Additive: Individual suits provide their added damage reduction
     """
     display_name = "Staggered Suit Damage"
     option_default = False
     option_progressive = True
-    # option_additive = "Additive"
+    # option_additive = "Additive" can re enable when on latest randomprime
     default = "Progressive"
 
 
