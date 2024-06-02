@@ -108,7 +108,7 @@ def make_config(world):
         "outputIso": "prime_out.iso",
         "forceVanillaLayout": False,
         "preferences": {
-            "forceFusion": False,
+            "forceFusion": bool(options.fusion_suit.value),
             "cacheDir": "cache",
             "qolGeneral": True,
             "qolGameBreaking": True,

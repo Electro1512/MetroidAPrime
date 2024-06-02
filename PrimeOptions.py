@@ -77,6 +77,11 @@ class RemoveHiveMecha(DefaultOnToggle):
     display_name = "Remove Hive Mecha"
     default = False
 
+class FusionSuit(Toggle):
+    """Whether to use the fusion suit or not"""
+    display_name = "Fusion Suit"
+    default = False
+
 
 @dataclass
 class MetroidPrimeOptions(PerGameCommonOptions):
@@ -92,3 +97,4 @@ class MetroidPrimeOptions(PerGameCommonOptions):
     non_varia_heat_damage: NonVariaHeatDamage
     staggered_suit_damage: StaggeredSuitDamage
     remove_hive_mecha: RemoveHiveMecha
+    fusion_suit: FusionSuit
