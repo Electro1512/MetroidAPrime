@@ -221,21 +221,7 @@ def make_config(world):
             "removeMineSecurityStationLocks": False,
             "powerBombArboretumSandstone": False,
             "artifactHints": make_artifact_hints(world),
-            "artifactTempleLayerOverrides": {
-                "Artifact of Truth": starting_inventory(world, "Artifact of Truth"),
-                "Artifact of Strength": starting_inventory(world, "Artifact of Strength"),
-                "Artifact of Elder": starting_inventory(world, "Artifact of Elder"),
-                "Artifact of Wild": starting_inventory(world, "Artifact of Wild"),
-                "Artifact of Lifegiver": starting_inventory(world, "Artifact of Lifegiver"),
-                "Artifact of Warrior": starting_inventory(world, "Artifact of Warrior"),
-                "Artifact of Chozo": starting_inventory(world, "Artifact of Chozo"),
-                "Artifact of Nature": starting_inventory(world, "Artifact of Nature"),
-                "Artifact of Sun": starting_inventory(world, "Artifact of Sun"),
-                "Artifact of World": starting_inventory(world, "Artifact of World"),
-                "Artifact of Spirit": starting_inventory(world, "Artifact of Spirit"),
-                "Artifact of Newborn": starting_inventory(world, "Artifact of Newborn")
-            },
-            "requiredArtifactCount": 12
+            "requiredArtifactCount": world.options.required_artifacts.value
         },
         "levelData": {
             "Frigate Orpheon": {

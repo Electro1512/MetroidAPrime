@@ -84,16 +84,12 @@ class MetroidPrimeWorld(World):
     def create_items(self) -> None:
         # add artifacts
         items_added = 0
-        reqarts = int(self.options.required_artifacts)
-        precollectedarts = [*artifact_table][reqarts:]
-        neededarts = [*artifact_table][:reqarts]
-        for i in precollectedarts:
-            self.multiworld.push_precollected(self.create_item(i))
-        for i in neededarts:
+        for i in artifact_table.keys():
             self.multiworld.itempool += [self.create_item(i)]
             items_added += 1
+
         excluded = self.options.exclude_items
-        for i in {*suit_upgrade_table}:  # , *custom_suit_upgrade_table}:
+        for i in {*suit_upgrade_table}:
             if i == "Power Beam" or i == "Scan Visor" or i == "Power Suit" or i == "Combat Visor":
                 self.multiworld.push_precollected(self.create_item(i))
             elif i in excluded.keys():
