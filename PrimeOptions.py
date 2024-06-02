@@ -67,7 +67,7 @@ class StaggeredSuitDamage(Choice):
     """
     display_name = "Staggered Suit Damage"
     option_default = "Default"
-    option_progressive = "Progressive "
+    option_progressive = "Progressive"
     option_additive = "Additive"
     default = "Progressive"
 
