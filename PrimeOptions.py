@@ -66,9 +66,9 @@ class StaggeredSuitDamage(Choice):
     Additive: Individual suits provide their added damage reduction
     """
     display_name = "Staggered Suit Damage"
-    option_default = False
-    option_progressive = True
-    # option_additive = "Additive" can re enable when on latest randomprime
+    option_default = "Default"
+    option_progressive = "Progressive "
+    option_additive = "Additive"
     default = "Progressive"
 
 
