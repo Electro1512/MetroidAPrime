@@ -27,6 +27,10 @@ class MetroidPrimeCommandProcessor(ClientCommandProcessor):
         """Send a message to the game interface."""
         self.ctx.notification_manager.queue_notification(' '.join(map(str, args)))
 
+    def _cmd_status(self, *args):
+        """Display the current dolphin connection status."""
+        logger.info(f"Connection status: {status_messages[self.ctx.connection_state]}")
+
     def _cmd_deathlink(self):
         """Toggle deathlink from client. Overrides default setting."""
         if isinstance(self.ctx, MetroidPrimeContext):
@@ -35,6 +39,14 @@ class MetroidPrimeCommandProcessor(ClientCommandProcessor):
                 self.ctx.death_link_enabled), name="Update Deathlink")
             logger.info(
                 f"Deathlink is now {'enabled' if self.ctx.death_link_enabled else 'disabled'}")
+
+
+status_messages = {
+    ConnectionState.IN_GAME: "Connected to Metroid Prime",
+    ConnectionState.IN_MENU: "Connected to game, waiting for game to start",
+    ConnectionState.DISCONNECTED: "Unable to connect to the Dolphin instance, attempting to reconnect...",
+    ConnectionState.MULTIPLE_DOLPHIN_INSTANCES: "Multiple Dolphin instances detected, please close all but one instance"
+}
 
 
 class MetroidPrimeContext(CommonContext):
@@ -90,16 +102,9 @@ class MetroidPrimeContext(CommonContext):
 def update_connection_status(ctx: MetroidPrimeContext, status):
     if ctx.connection_state == status:
         return
-    elif status == ConnectionState.IN_GAME:
-        logger.info("Connected to Metroid Prime")
-    elif status == ConnectionState.IN_MENU:
-        logger.info("Connected to game, waiting for game to start")
-    elif status == ConnectionState.DISCONNECTED:
-        logger.info("Unable to connect to the Dolphin instance, attempting to reconnect...")
-    elif status == ConnectionState.MULTIPLE_DOLPHIN_INSTANCES:
-        logger.info("Multiple Dolphin instances detected, please close all but one instance")
-
-    ctx.connection_state = status
+    else:
+        logger.info(status_messages[status])
+        ctx.connection_state = status
 
 
 async def dolphin_sync_task(ctx: MetroidPrimeContext):
