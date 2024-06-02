@@ -30,11 +30,11 @@ class MetroidPrimeCommandProcessor(ClientCommandProcessor):
     def _cmd_deathlink(self):
         """Toggle deathlink from client. Overrides default setting."""
         if isinstance(self.ctx, MetroidPrimeContext):
-            new_value = True
-            if (self.tags["DeathLink"]):
-                new_value = False
+            self.ctx.death_link_enabled = not self.ctx.death_link_enabled
             Utils.async_start(self.ctx.update_death_link(
-                new_value), name="Update Deathlink")
+                self.ctx.death_link_enabled), name="Update Deathlink")
+            logger.info(
+                f"Deathlink is now {'enabled' if self.ctx.death_link_enabled else 'disabled'}")
 
 
 class MetroidPrimeContext(CommonContext):
@@ -49,6 +49,7 @@ class MetroidPrimeContext(CommonContext):
     dolphin_sync_task = None
     connection_state = ConnectionState.DISCONNECTED
     slot_data: dict[str, Utils.Any] = None
+    death_link_enabled = False
 
     def __init__(self, server_address, password):
         super().__init__(server_address, password)
@@ -69,6 +70,7 @@ class MetroidPrimeContext(CommonContext):
         if cmd == "Connected":
             self.slot_data = args["slot_data"]
             if "death_link" in args["slot_data"]:
+                self.death_link_enabled = bool(args["slot_data"]["death_link"])
                 Utils.async_start(self.update_death_link(
                     bool(args["slot_data"]["death_link"])))
 
@@ -141,7 +143,7 @@ async def handle_check_deathlink(ctx: MetroidPrimeContext):
     health = ctx.game_interface.get_current_health()
     if health <= 0 and ctx.is_pending_death_link_reset == False:
         await ctx.send_death(ctx.player_names[ctx.slot] + " ran out of energy.")
-        ctx.is_pending_death_link_reset
+        ctx.is_pending_death_link_reset = True
     elif health > 0 and ctx.is_pending_death_link_reset == True:
         ctx.is_pending_death_link_reset = False
 
@@ -157,7 +159,7 @@ async def _handle_game_ready(ctx: MetroidPrimeContext):
         await handle_checked_location(ctx, current_inventory)
         await handle_check_goal_complete(ctx)
 
-        if "DeathLink" in ctx.tags:
+        if ctx.death_link_enabled:
             await handle_check_deathlink(ctx)
         await asyncio.sleep(0.5)
     else:
