@@ -14,7 +14,7 @@ import Utils
 from .ClientReceiveItems import handle_receive_items
 from .NotificationManager import NotificationManager
 from .Container import construct_hud_message_patch
-from .DolphinClient import DolphinException
+from .DolphinClient import DolphinException, assert_no_running_dolphin
 from .Locations import METROID_PRIME_LOCATION_BASE, every_location
 from .MetroidPrimeInterface import HUD_MESSAGE_DURATION, ConnectionState, InventoryItemData, MetroidPrimeInterface, MetroidPrimeLevel
 
@@ -95,7 +95,9 @@ def update_connection_status(ctx: MetroidPrimeContext, status):
     elif status == ConnectionState.IN_MENU:
         logger.info("Connected to game, waiting for game to start")
     elif status == ConnectionState.DISCONNECTED:
-        logger.info("Disconnected from Metroid Prime, attempting to reconnect...")
+        logger.info("Unable to connect to the Dolphin instance, attempting to reconnect...")
+    elif status == ConnectionState.MULTIPLE_DOLPHIN_INSTANCES:
+        logger.info("Multiple Dolphin instances detected, please close all but one instance")
 
     ctx.connection_state = status
 
@@ -177,10 +179,11 @@ async def _handle_game_not_ready(ctx: MetroidPrimeContext):
 
 async def run_game(romfile):
     auto_start = Utils.get_options()["metroidprime_options"].get("rom_start", True)
-    if auto_start is True:
+
+    if auto_start is True and assert_no_running_dolphin():
         import webbrowser
         webbrowser.open(romfile)
-    elif os.path.isfile(auto_start):
+    elif os.path.isfile(auto_start) and assert_no_running_dolphin():
         subprocess.Popen([auto_start, romfile],
                          stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 

@@ -1,6 +1,6 @@
 from logging import Logger
 import struct
-from .DolphinClient import GC_GAME_ID_ADDRESS, DolphinClient, DolphinException
+from .DolphinClient import GC_GAME_ID_ADDRESS, DolphinClient, DolphinException, get_num_dolphin_instances
 from enum import Enum
 from enum import Enum
 import py_randomprime
@@ -25,6 +25,7 @@ class ConnectionState(Enum):
     DISCONNECTED = 0
     IN_GAME = 1
     IN_MENU = 2
+    MULTIPLE_DOLPHIN_INSTANCES = 3
 
 
 class MetroidPrimeSuit(Enum):
@@ -211,7 +212,8 @@ class MetroidPrimeInterface:
         try:
             connected = self.dolphin_client.is_connected()
             if not connected:
-                return ConnectionState.DISCONNECTED
+                # If multiple instances of dolphin are open then it will not connect
+                return ConnectionState.MULTIPLE_DOLPHIN_INSTANCES if get_num_dolphin_instances() > 1 else ConnectionState.DISCONNECTED
             elif self.is_in_playable_state():
                 return ConnectionState.IN_GAME
             else:
