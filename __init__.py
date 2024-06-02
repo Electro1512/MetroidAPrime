@@ -67,6 +67,9 @@ class MetroidPrimeWorld(World):
     item_name_to_id = {name: data.code for name, data in item_table.items()}
     location_name_to_id = every_location
     settings: MetroidPrimeSettings
+    item_name_groups = {
+        "Artifacts": artifact_table.keys()
+    }
 
     def create_regions(self) -> None:
         boss_selection = int(self.options.final_bosses)
