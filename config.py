@@ -223,42 +223,13 @@ def make_config(world):
             "artifactHints": make_artifact_hints(world),
             "requiredArtifactCount": world.options.required_artifacts.value
         },
-        "levelData": {
-            "Frigate Orpheon": {
-                  "transports": {
-                      "Frigate Escape Cutscene": "Tallon Overworld:Landing Site"
-                  },
-                  "rooms": {
-                        "Exterior Docking Hangar": {},
-                        "Air Lock": {},
-                        "Deck Alpha Access Hall": {},
-                        "Deck Alpha Mech Shaft": {},
-                        "Emergency Evacuation Area": {},
-                        "Connection Elevator to Deck Alpha": {},
-                        "Deck Alpha Umbilical Hall": {},
-                        "Biotech Research Area 2": {},
-                        "Map Facility": {},
-                        "Main Ventilation Shaft Section F": {},
-                        "Connection Elevator to Deck Beta": {},
-                        "Main Ventilation Shaft Section E": {},
-                        "Deck Beta Conduit Hall": {},
-                        "Main Ventilation Shaft Section D": {},
-                        "Biotech Research Area 1": {},
-                        "Main Ventilation Shaft Section C": {},
-                        "Deck Beta Security Hall": {},
-                        "Connection Elevator to Deck Beta (2)": {},
-                        "Subventilation Shaft Section A": {},
-                        "Main Ventilation Shaft Section B": {},
-                        "Biohazard Containment": {},
-                        "Deck Gamma Monitor Hall": {},
-                        "Subventilation Shaft Section B": {},
-                        "Main Ventilation Shaft Section A": {},
-                        "Deck Beta Transit Hall": {},
-                        "Reactor Core": {},
-                        "Cargo Freight Lift to Deck Gamma": {},
-                        "Reactor Core Entrance": {}
-                    },
-              },
+        "levelData": make_level_data(world)
+        }
+
+    return config
+
+def make_level_data(world):
+  return {
             "Tallon Overworld": {
                     "transports": {
                             "Tallon Overworld North (Tallon Canyon)":  "Chozo Ruins West (Main Plaza)",
@@ -266,7 +237,7 @@ def make_config(world):
                             "Tallon Overworld East (Frigate Crash Site)": "Chozo Ruins East (Reflecting Pool, Save Station)",
                             "Tallon Overworld South (Great Tree Hall, Upper)": "Chozo Ruins South (Reflecting Pool, Far End)",
                             "Tallon Overworld South (Great Tree Hall, Lower)": "Phazon Mines East (Main Quarry)",
-                            "Artifact Temple": temple_dest(options.final_bosses.value)
+                            "Artifact Temple": temple_dest(world.options.final_bosses.value)
                     },
                     "rooms": {
                         "Landing Site": {
@@ -1643,5 +1614,3 @@ def make_config(world):
                   }
                 }
             }
-        }
-    return config
