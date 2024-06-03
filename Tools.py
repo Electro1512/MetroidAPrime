@@ -14,8 +14,9 @@ def convert_rooms_enum():
         # Skip frigate intro rooms
         if "Orpheon" in key:
             continue
-        new_key = key.replace(" ", "_").replace(":", "_").replace("'", "")
-        new_data[new_key] = key
+        new_value = key.split(':')[1]
+        new_key = new_value.replace(" ", "_").replace(":", "_").replace("'", "")
+        new_data[new_key] = new_value
     new_file = """
 from enum import Enum
 
@@ -43,7 +44,7 @@ def convert_config_py():
         old_str = f"\"{room.value}\""
         print(f"{old_str} -> {new_str}")
         data_str = data_str.replace(old_str, new_str)
-    with open(file_path , "w") as f:
+    with open(file_path, "w") as f:
         f.write(data_str)
 
     # for each value in the room name enum, search for it in the string and replace it with the enum name
