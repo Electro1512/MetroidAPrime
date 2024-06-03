@@ -1,0 +1,50 @@
+
+from .RoomData import AreaData, PickupData, RoomData
+from .RoomNames import RoomName
+
+
+class PhazonMinesAreaData(AreaData):
+    rooms = {
+        RoomName.Central_Dynamo: RoomData(doors={}, pickups=[PickupData('Central Dynamo', required_items=[], tricks=[]), ]),
+        RoomName.Dynamo_Access: RoomData(doors={}, pickups=[]),
+        RoomName.Elevator_A: RoomData(doors={}, pickups=[]),
+        RoomName.Elevator_Access_A: RoomData(doors={}, pickups=[]),
+        RoomName.Elevator_Access_B: RoomData(doors={}, pickups=[]),
+        RoomName.Elevator_B: RoomData(doors={}, pickups=[]),
+        RoomName.Elite_Control_Access: RoomData(doors={}, pickups=[PickupData('Elite Control Access', required_items=[], tricks=[]), ]),
+        RoomName.Elite_Control: RoomData(doors={}, pickups=[]),
+        RoomName.Elite_Quarters_Access: RoomData(doors={}, pickups=[]),
+        RoomName.Elite_Quarters: RoomData(doors={}, pickups=[PickupData('Elite Quarters', required_items=[], tricks=[]), ]),
+        RoomName.Elite_Research: RoomData(doors={}, pickups=[PickupData('Elite Research - Phazon Elite', required_items=[], tricks=[]), PickupData('Elite Research - Laser', required_items=[], tricks=[]), ]),
+        RoomName.Fungal_Hall_A: RoomData(doors={}, pickups=[]),
+        RoomName.Fungal_Hall_Access: RoomData(doors={}, pickups=[PickupData('Fungal Hall Access', required_items=[], tricks=[]), ]),
+        RoomName.Fungal_Hall_B: RoomData(doors={}, pickups=[PickupData('Fungal Hall B', required_items=[], tricks=[]), ]),
+        RoomName.Main_Quarry: RoomData(doors={}, pickups=[PickupData('Main Quarry', required_items=[], tricks=[]), ]),
+        RoomName.Maintenance_Tunnel: RoomData(doors={}, pickups=[]),
+        RoomName.Map_Station_Mines: RoomData(doors={}, pickups=[]),
+        RoomName.Metroid_Quarantine_A: RoomData(doors={}, pickups=[PickupData('Metroid Quarantine A', required_items=[], tricks=[]), ]),
+        RoomName.Metroid_Quarantine_B: RoomData(doors={}, pickups=[PickupData('Metroid Quarantine B', required_items=[], tricks=[]), ]),
+        RoomName.Mine_Security_Station: RoomData(doors={}, pickups=[]),
+        RoomName.Missile_Station_Mines: RoomData(doors={}, pickups=[]),
+        RoomName.Omega_Research: RoomData(doors={}, pickups=[]),
+        RoomName.Ore_Processing: RoomData(doors={}, pickups=[]),
+        RoomName.Phazon_Mining_Tunnel: RoomData(doors={}, pickups=[PickupData('Phazon Mining Tunnel', required_items=[], tricks=[]), ]),
+        RoomName.Phazon_Processing_Center: RoomData(doors={}, pickups=[PickupData('Phazon Processing Center', required_items=[], tricks=[]), ]),
+        RoomName.Processing_Center_Access: RoomData(doors={}, pickups=[PickupData('Processing Center Access', required_items=[], tricks=[]), ]),
+        RoomName.Quarantine_Access_A: RoomData(doors={}, pickups=[]),
+        RoomName.Quarantine_Access_B: RoomData(doors={}, pickups=[]),
+        RoomName.Quarry_Access: RoomData(doors={}, pickups=[]),
+        RoomName.Research_Access: RoomData(doors={}, pickups=[]),
+        RoomName.Save_Station_Mines_A: RoomData(doors={}, pickups=[]),
+        RoomName.Save_Station_Mines_B: RoomData(doors={}, pickups=[]),
+        RoomName.Save_Station_Mines_C: RoomData(doors={}, pickups=[]),
+        RoomName.Security_Access_A: RoomData(doors={}, pickups=[PickupData('Security Access A', required_items=[], tricks=[]), ]),
+        RoomName.Security_Access_B: RoomData(doors={}, pickups=[]),
+        RoomName.Storage_Depot_A: RoomData(doors={}, pickups=[PickupData('Storage Depot A', required_items=[], tricks=[]), ]),
+        RoomName.Storage_Depot_B: RoomData(doors={}, pickups=[PickupData('Storage Depot B', required_items=[], tricks=[]), ]),
+        RoomName.Transport_Access: RoomData(doors={}, pickups=[]),
+        RoomName.Transport_to_Magmoor_Caverns_South: RoomData(doors={}, pickups=[]),
+        RoomName.Transport_to_Tallon_Overworld_South: RoomData(doors={}, pickups=[]),
+        RoomName.Ventilation_Shaft: RoomData(doors={}, pickups=[PickupData('Ventilation Shaft', required_items=[], tricks=[]), ]),
+        RoomName.Waste_Disposal: RoomData(doors={}, pickups=[])
+    }
