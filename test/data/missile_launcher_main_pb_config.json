@@ -21,7 +21,7 @@
     "warpToStart": true,
     "multiworldDolPatches": false,
     "nonvariaHeatDamage": true,
-    "staggeredSuitDamage": true,
+    "staggeredSuitDamage": "Progressive",
     "heatDamagePerSec": 10.0,
     "poisonDamagePerSec": 0.11,
     "phazonDamagePerSec": 0.964,
@@ -128,20 +128,6 @@
       "Artifact of Wild": "The &push;&main-color=#c300ff;Artifact of Wild&pop; can be found in &push;&main-color=#d4cc33;your&pop; &push;&main-color=#89a1ff;Chozo Ruins: Sunchamber - Ghosts&pop;.",
       "Artifact of Lifegiver": "The &push;&main-color=#c300ff;Artifact of Lifegiver&pop; can be found in &push;&main-color=#d4cc33;your&pop; &push;&main-color=#89a1ff;Chozo Ruins: Ruined Fountain&pop;.",
       "Artifact of Warrior": "The &push;&main-color=#c300ff;Artifact of Warrior&pop; can be found in &push;&main-color=#d4cc33;your&pop; &push;&main-color=#89a1ff;Phendrana Drifts: Ruined Courtyard&pop;."
-    },
-    "artifactTempleLayerOverrides": {
-      "Artifact of Truth": false,
-      "Artifact of Strength": false,
-      "Artifact of Elder": false,
-      "Artifact of Wild": false,
-      "Artifact of Lifegiver": false,
-      "Artifact of Warrior": false,
-      "Artifact of Chozo": false,
-      "Artifact of Nature": false,
-      "Artifact of Sun": false,
-      "Artifact of World": false,
-      "Artifact of Spirit": false,
-      "Artifact of Newborn": false
     },
     "requiredArtifactCount": 12
   },
