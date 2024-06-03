@@ -99,7 +99,7 @@ def create_prime_areas():
         if "pickups" in config_data:
             for pickup in config_data["pickups"]:
                 area_data[area][room_name]["pickups"].append(
-                    {"name": area + ": " + pickup["scanText"]}
+                    {"name": area + ": " + pickup["name"]}
                 )
         if config_data == None:
             print(f"Config data not found for {room}")

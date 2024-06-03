@@ -13,7 +13,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Landing Site",
+            "name": "Landing Site",
             "currIncrease": 59
           }
         ]
@@ -25,7 +25,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Alcove",
+            "name": "Alcove",
             "currIncrease": 60
           }
         ]
@@ -37,7 +37,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Frigate Crash Site",
+            "name": "Frigate Crash Site",
             "currIncrease": 61
           }
         ]
@@ -50,7 +50,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Overgrown Cavern",
+            "name": "Overgrown Cavern",
             "currIncrease": 62
           }
         ]
@@ -60,7 +60,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Root Cave",
+            "name": "Root Cave",
             "currIncrease": 63
           }
         ]
@@ -69,7 +69,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Artifact Temple",
+            "name": "Artifact Temple",
             "currIncrease": 64
           }
         ]
@@ -80,7 +80,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Transport Tunnel B",
+            "name": "Transport Tunnel B",
             "currIncrease": 65
           }
         ]
@@ -89,7 +89,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Arbor Chamber",
+            "name": "Arbor Chamber",
             "currIncrease": 66
           }
         ]
@@ -104,7 +104,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Cargo Freight Lift to Deck Gamma",
+            "name": "Cargo Freight Lift to Deck Gamma",
             "currIncrease": 67
           }
         ]
@@ -115,7 +115,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Biohazard Containment",
+            "name": "Biohazard Containment",
             "currIncrease": 68
           }
         ]
@@ -128,7 +128,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Hydro Access Tunnel",
+            "name": "Hydro Access Tunnel",
             "currIncrease": 69
           }
         ]
@@ -138,7 +138,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Great Tree Chamber",
+            "name": "Great Tree Chamber",
             "currIncrease": 70
           }
         ]
@@ -148,7 +148,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Life Grove Tunnel",
+            "name": "Life Grove Tunnel",
             "currIncrease": 71
           }
         ]
@@ -159,12 +159,12 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Life Grove - Start",
+            "name": "Life Grove - Start",
             "currIncrease": 72
           },
           {
             "type": "Unknown Item 1",
-            "scanText": "Life Grove - Underwater Spinner",
+            "name": "Life Grove - Underwater Spinner",
             "currIncrease": 73
           }
         ]
@@ -186,22 +186,22 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Main Plaza - Half-Pipe",
+            "name": "Main Plaza - Half-Pipe",
             "currIncrease": 1
           },
           {
             "type": "Unknown Item 1",
-            "scanText": "Main Plaza - Grapple Ledge",
+            "name": "Main Plaza - Grapple Ledge",
             "currIncrease": 2
           },
           {
             "type": "Unknown Item 1",
-            "scanText": "Main Plaza - Tree",
+            "name": "Main Plaza - Tree",
             "currIncrease": 3
           },
           {
             "type": "Unknown Item 1",
-            "scanText": "Main Plaza - Locked Door",
+            "name": "Main Plaza - Locked Door",
             "currIncrease": 4
           }
         ]
@@ -215,7 +215,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Ruined Fountain",
+            "name": "Ruined Fountain",
             "currIncrease": 5
           }
         ]
@@ -224,17 +224,17 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Ruined Shrine - Plated Beetle",
+            "name": "Ruined Shrine - Plated Beetle",
             "currIncrease": 6
           },
           {
             "type": "Unknown Item 1",
-            "scanText": "Ruined Shrine - Half-Pipe",
+            "name": "Ruined Shrine - Half-Pipe",
             "currIncrease": 7
           },
           {
             "type": "Unknown Item 1",
-            "scanText": "Ruined Shrine - Lower Tunnel",
+            "name": "Ruined Shrine - Lower Tunnel",
             "currIncrease": 8
           }
         ]
@@ -244,7 +244,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Vault",
+            "name": "Vault",
             "currIncrease": 9
           }
         ]
@@ -253,7 +253,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Training Chamber",
+            "name": "Training Chamber",
             "currIncrease": 10
           }
         ]
@@ -265,7 +265,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Ruined Nursery",
+            "name": "Ruined Nursery",
             "currIncrease": 11
           }
         ]
@@ -275,7 +275,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Training Chamber Access",
+            "name": "Training Chamber Access",
             "currIncrease": 12
           }
         ]
@@ -285,7 +285,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Magma Pool",
+            "name": "Magma Pool",
             "currIncrease": 13
           }
         ]
@@ -294,7 +294,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Tower of Light",
+            "name": "Tower of Light",
             "currIncrease": 14
           }
         ]
@@ -308,7 +308,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Tower Chamber",
+            "name": "Tower Chamber",
             "currIncrease": 15
           }
         ]
@@ -317,12 +317,12 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Ruined Gallery - Missile Wall",
+            "name": "Ruined Gallery - Missile Wall",
             "currIncrease": 16
           },
           {
             "type": "Unknown Item 1",
-            "scanText": "Ruined Gallery - Tunnel",
+            "name": "Ruined Gallery - Tunnel",
             "currIncrease": 17
           }
         ]
@@ -332,7 +332,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Transport Access North",
+            "name": "Transport Access North",
             "currIncrease": 18
           }
         ]
@@ -342,7 +342,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Gathering Hall",
+            "name": "Gathering Hall",
             "currIncrease": 19
           }
         ]
@@ -354,7 +354,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Hive Totem",
+            "name": "Hive Totem",
             "currIncrease": 20
           }
         ]
@@ -363,12 +363,12 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Sunchamber - Flaaghra",
+            "name": "Sunchamber - Flaaghra",
             "currIncrease": 21
           },
           {
             "type": "Unknown Item 1",
-            "scanText": "Sunchamber - Ghosts",
+            "name": "Sunchamber - Ghosts",
             "currIncrease": 22
           }
         ]
@@ -377,7 +377,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Watery Hall Access",
+            "name": "Watery Hall Access",
             "currIncrease": 23
           }
         ]
@@ -388,12 +388,12 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Watery Hall - Scan Puzzle",
+            "name": "Watery Hall - Scan Puzzle",
             "currIncrease": 24
           },
           {
             "type": "Unknown Item 1",
-            "scanText": "Watery Hall - Underwater",
+            "name": "Watery Hall - Underwater",
             "currIncrease": 25
           }
         ]
@@ -405,12 +405,12 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Dynamo - Lower",
+            "name": "Dynamo - Lower",
             "currIncrease": 26
           },
           {
             "type": "Unknown Item 1",
-            "scanText": "Dynamo - Spider Track",
+            "name": "Dynamo - Spider Track",
             "currIncrease": 27
           }
         ]
@@ -421,12 +421,12 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Burn Dome - Missile",
+            "name": "Burn Dome - Missile",
             "currIncrease": 28
           },
           {
             "type": "Unknown Item 1",
-            "scanText": "Burn Dome - Incinerator Drone",
+            "name": "Burn Dome - Incinerator Drone",
             "currIncrease": 29
           }
         ]
@@ -435,12 +435,12 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Furnace - Spider Tracks",
+            "name": "Furnace - Spider Tracks",
             "currIncrease": 30
           },
           {
             "type": "Unknown Item 1",
-            "scanText": "Furnace - Inside Furnace",
+            "name": "Furnace - Inside Furnace",
             "currIncrease": 31
           }
         ]
@@ -451,7 +451,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Hall of the Elders",
+            "name": "Hall of the Elders",
             "currIncrease": 32
           }
         ]
@@ -460,7 +460,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Crossway",
+            "name": "Crossway",
             "currIncrease": 33
           }
         ]
@@ -472,7 +472,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Elder Chamber",
+            "name": "Elder Chamber",
             "currIncrease": 34
           }
         ]
@@ -484,7 +484,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Antechamber",
+            "name": "Antechamber",
             "currIncrease": 35
           }
         ]
@@ -510,7 +510,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Lava Lake",
+            "name": "Lava Lake",
             "currIncrease": 91
           }
         ]
@@ -520,7 +520,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Triclops Pit",
+            "name": "Triclops Pit",
             "currIncrease": 92
           }
         ]
@@ -530,7 +530,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Storage Cavern",
+            "name": "Storage Cavern",
             "currIncrease": 93
           }
         ]
@@ -540,7 +540,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Transport Tunnel A",
+            "name": "Transport Tunnel A",
             "currIncrease": 94
           }
         ]
@@ -549,7 +549,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Warrior Shrine",
+            "name": "Warrior Shrine",
             "currIncrease": 95
           }
         ]
@@ -558,7 +558,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Shore Tunnel",
+            "name": "Shore Tunnel",
             "currIncrease": 96
           }
         ]
@@ -568,12 +568,12 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Fiery Shores - Morph Track",
+            "name": "Fiery Shores - Morph Track",
             "currIncrease": 97
           },
           {
             "type": "Unknown Item 1",
-            "scanText": "Fiery Shores - Warrior Shrine Tunnel",
+            "name": "Fiery Shores - Warrior Shrine Tunnel",
             "currIncrease": 98
           }
         ]
@@ -588,7 +588,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Plasma Processing",
+            "name": "Plasma Processing",
             "currIncrease": 99
           }
         ]
@@ -598,7 +598,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Magmoor Workstation",
+            "name": "Magmoor Workstation",
             "currIncrease": 100
           }
         ]
@@ -622,12 +622,12 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Phendrana Shorelines - Behind Ice",
+            "name": "Phendrana Shorelines - Behind Ice",
             "currIncrease": 36
           },
           {
             "type": "Unknown Item 1",
-            "scanText": "Phendrana Shorelines - Spider Track",
+            "name": "Phendrana Shorelines - Spider Track",
             "currIncrease": 37
           }
         ]
@@ -641,7 +641,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Chozo Ice Temple",
+            "name": "Chozo Ice Temple",
             "currIncrease": 38
           }
         ]
@@ -650,7 +650,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Ice Ruins West",
+            "name": "Ice Ruins West",
             "currIncrease": 39
           }
         ]
@@ -659,12 +659,12 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Ice Ruins East - Behind Ice",
+            "name": "Ice Ruins East - Behind Ice",
             "currIncrease": 40
           },
           {
             "type": "Unknown Item 1",
-            "scanText": "Ice Ruins East - Spider Track",
+            "name": "Ice Ruins East - Spider Track",
             "currIncrease": 41
           }
         ]
@@ -676,7 +676,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Chapel of the Elders",
+            "name": "Chapel of the Elders",
             "currIncrease": 42
           }
         ]
@@ -685,7 +685,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Ruined Courtyard",
+            "name": "Ruined Courtyard",
             "currIncrease": 43
           }
         ]
@@ -694,7 +694,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Phendrana Canyon",
+            "name": "Phendrana Canyon",
             "currIncrease": 44
           }
         ]
@@ -710,7 +710,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Quarantine Cave",
+            "name": "Quarantine Cave",
             "currIncrease": 45
           }
         ]
@@ -719,7 +719,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Research Lab Hydra",
+            "name": "Research Lab Hydra",
             "currIncrease": 46
           }
         ]
@@ -729,7 +729,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Quarantine Monitor",
+            "name": "Quarantine Monitor",
             "currIncrease": 47
           }
         ]
@@ -740,7 +740,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Observatory",
+            "name": "Observatory",
             "currIncrease": 48
           }
         ]
@@ -749,7 +749,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Transport Access",
+            "name": "Transport Access",
             "currIncrease": 49
           }
         ]
@@ -765,7 +765,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Control Tower",
+            "name": "Control Tower",
             "currIncrease": 50
           }
         ]
@@ -774,7 +774,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Research Core",
+            "name": "Research Core",
             "currIncrease": 51
           }
         ]
@@ -783,7 +783,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Frost Cave",
+            "name": "Frost Cave",
             "currIncrease": 52
           }
         ]
@@ -801,12 +801,12 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Research Lab Aether - Tank",
+            "name": "Research Lab Aether - Tank",
             "currIncrease": 53
           },
           {
             "type": "Unknown Item 1",
-            "scanText": "Research Lab Aether - Morph Track",
+            "name": "Research Lab Aether - Morph Track",
             "currIncrease": 54
           }
         ]
@@ -816,12 +816,12 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Gravity Chamber - Underwater",
+            "name": "Gravity Chamber - Underwater",
             "currIncrease": 55
           },
           {
             "type": "Unknown Item 1",
-            "scanText": "Gravity Chamber - Grapple Ledge",
+            "name": "Gravity Chamber - Grapple Ledge",
             "currIncrease": 56
           }
         ]
@@ -830,7 +830,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Storage Cave",
+            "name": "Storage Cave",
             "currIncrease": 57
           }
         ]
@@ -839,7 +839,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Security Cave",
+            "name": "Security Cave",
             "currIncrease": 58
           }
         ]
@@ -858,7 +858,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Main Quarry",
+            "name": "Main Quarry",
             "currIncrease": 74
           }
         ]
@@ -869,7 +869,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Security Access A",
+            "name": "Security Access A",
             "currIncrease": 75
           }
         ]
@@ -881,7 +881,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Storage Depot B",
+            "name": "Storage Depot B",
             "currIncrease": 76
           }
         ]
@@ -892,7 +892,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Storage Depot A",
+            "name": "Storage Depot A",
             "currIncrease": 77
           }
         ]
@@ -901,12 +901,12 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Elite Research - Phazon Elite",
+            "name": "Elite Research - Phazon Elite",
             "currIncrease": 78
           },
           {
             "type": "Unknown Item 1",
-            "scanText": "Elite Research - Laser",
+            "name": "Elite Research - Laser",
             "currIncrease": 79
           }
         ]
@@ -916,7 +916,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Elite Control Access",
+            "name": "Elite Control Access",
             "currIncrease": 80
           }
         ]
@@ -927,7 +927,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Ventilation Shaft",
+            "name": "Ventilation Shaft",
             "currIncrease": 81
           }
         ]
@@ -936,7 +936,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Phazon Processing Center",
+            "name": "Phazon Processing Center",
             "currIncrease": 82
           }
         ]
@@ -947,7 +947,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Processing Center Access",
+            "name": "Processing Center Access",
             "currIncrease": 83
           }
         ]
@@ -959,7 +959,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Elite Quarters",
+            "name": "Elite Quarters",
             "currIncrease": 84
           }
         ]
@@ -968,7 +968,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Central Dynamo",
+            "name": "Central Dynamo",
             "currIncrease": 85
           }
         ]
@@ -980,7 +980,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Metroid Quarantine B",
+            "name": "Metroid Quarantine B",
             "currIncrease": 86
           }
         ]
@@ -989,7 +989,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Metroid Quarantine A",
+            "name": "Metroid Quarantine A",
             "currIncrease": 87
           }
         ]
@@ -1001,7 +1001,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Fungal Hall B",
+            "name": "Fungal Hall B",
             "currIncrease": 88
           }
         ]
@@ -1012,7 +1012,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Phazon Mining Tunnel",
+            "name": "Phazon Mining Tunnel",
             "currIncrease": 89
           }
         ]
@@ -1021,7 +1021,7 @@
         "pickups": [
           {
             "type": "Unknown Item 1",
-            "scanText": "Fungal Hall Access",
+            "name": "Fungal Hall Access",
             "currIncrease": 90
           }
         ]
