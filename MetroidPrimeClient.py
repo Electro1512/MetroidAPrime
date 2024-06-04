@@ -14,7 +14,7 @@ import Utils
 from .ClientReceiveItems import handle_receive_items
 from .NotificationManager import NotificationManager
 from .Container import construct_hud_message_patch
-from .DolphinClient import DolphinException, assert_no_running_dolphin
+from .DolphinClient import DolphinException, assert_no_running_dolphin, get_num_dolphin_instances
 from .Locations import METROID_PRIME_LOCATION_BASE, every_location
 from .MetroidPrimeInterface import HUD_MESSAGE_DURATION, ConnectionState, InventoryItemData, MetroidPrimeInterface, MetroidPrimeLevel
 
@@ -45,7 +45,7 @@ status_messages = {
     ConnectionState.IN_GAME: "Connected to Metroid Prime",
     ConnectionState.IN_MENU: "Connected to game, waiting for game to start",
     ConnectionState.DISCONNECTED: "Unable to connect to the Dolphin instance, attempting to reconnect...",
-    ConnectionState.MULTIPLE_DOLPHIN_INSTANCES: "Multiple Dolphin instances detected, please close all but one instance"
+    ConnectionState.MULTIPLE_DOLPHIN_INSTANCES: "Warning: Multiple Dolphin instances detected, client may not function correctly."
 }
 
 
@@ -104,6 +104,8 @@ def update_connection_status(ctx: MetroidPrimeContext, status):
         return
     else:
         logger.info(status_messages[status])
+        if get_num_dolphin_instances() > 1:
+            logger.info(status_messages[ConnectionState.MULTIPLE_DOLPHIN_INSTANCES])
         ctx.connection_state = status
 
 
