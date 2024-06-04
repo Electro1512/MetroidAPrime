@@ -1,4 +1,4 @@
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 import typing
 from BaseClasses import Item, Tutorial, ItemClassification
 from worlds.metroidprime.Container import MetroidPrimeContainer
@@ -14,8 +14,7 @@ import settings
 from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess
 
 
-def run_client(_):
-    print("Running Metroid Prime Client")
+def run_client(url: Optional[str] = None):
     from .MetroidPrimeClient import launch
     launch_subprocess(launch, name="MetroidPrimeClient")
 
@@ -35,12 +34,12 @@ class MetroidPrimeSettings(settings.Group):
     class RomStart(str):
         """
         Set this to false to never autostart a rom (such as after patching),
-                    true  for operating system default program
-        Alternatively, a path to a program to open the .iso file with
+        Set it to true to have the operating system default program open the iso
+        Alternatively, set it to a path to a program to open the .iso file with (like Dolplhin)
         """
 
     rom_file: RomFile = RomFile(RomFile.copy_to)
-    rom_start: typing.Union[RomStart, bool] = True
+    rom_start: typing.Union[RomStart, bool] = False
 
 
 class MetroidPrimeWeb(WebWorld):
@@ -68,6 +67,9 @@ class MetroidPrimeWorld(World):
     item_name_to_id = {name: data.code for name, data in item_table.items()}
     location_name_to_id = every_location
     settings: MetroidPrimeSettings
+    item_name_groups = {
+        "Artifacts": artifact_table.keys()
+    }
 
     def create_regions(self) -> None:
         boss_selection = int(self.options.final_bosses)
@@ -82,16 +84,12 @@ class MetroidPrimeWorld(World):
     def create_items(self) -> None:
         # add artifacts
         items_added = 0
-        reqarts = int(self.options.required_artifacts)
-        precollectedarts = [*artifact_table][reqarts:]
-        neededarts = [*artifact_table][:reqarts]
-        for i in precollectedarts:
-            self.multiworld.push_precollected(self.create_item(i))
-        for i in neededarts:
+        for i in artifact_table.keys():
             self.multiworld.itempool += [self.create_item(i)]
             items_added += 1
+
         excluded = self.options.exclude_items
-        for i in {*suit_upgrade_table}:  # , *custom_suit_upgrade_table}:
+        for i in {*suit_upgrade_table}:
             if i == "Power Beam" or i == "Scan Visor" or i == "Power Suit" or i == "Combat Visor":
                 self.multiworld.push_precollected(self.create_item(i))
             elif i in excluded.keys():
@@ -101,8 +99,6 @@ class MetroidPrimeWorld(World):
                     self.multiworld.itempool += [
                         self.create_item('Missile Expansion', True)]
                 items_added += 8
-            elif i == "Spring Ball":
-                continue
             elif i == "Energy Tank":
                 for j in range(0, 8):
                     self.multiworld.itempool += [
@@ -123,6 +119,15 @@ class MetroidPrimeWorld(World):
             else:
                 self.multiworld.itempool += [self.create_item(i)]
                 items_added += 1
+
+        if self.options.missile_launcher.value:
+            self.multiworld.itempool += [self.create_item("Missile Launcher")]
+            items_added += 1
+
+        if self.options.main_power_bomb.value:
+            self.multiworld.itempool += [self.create_item("Power Bomb (Main)")]
+            items_added += 1
+
         # add missiles in whatever slots we have left
         remain = 100 - items_added
         for i in range(0, remain):
@@ -150,6 +155,8 @@ class MetroidPrimeWorld(World):
             "spring_ball": self.options.spring_ball.value,
             "death_link": self.options.death_link.value,
             "required_artifacts": self.options.required_artifacts.value,
+            "missile_launcher": self.options.missile_launcher.value,
+            "main_power_bomb": self.options.main_power_bomb.value,
             "exclude_items": self.options.exclude_items.value,
             "final_bosses": self.options.final_bosses.value,
         }

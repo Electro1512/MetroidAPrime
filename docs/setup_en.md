@@ -17,10 +17,9 @@ The following are required in order to play Metroid Prime in Archipelago
 ## AP World Installation
 
 1. Unzip the downloaded Metroid Prime apworld zip file
-
-2. Copy the contents of the `lib` folder from the downloaded Metroid Prime zip file into your Archipelago installation's
-   `lib` folder  
-   (On default installations, this folder is at `%programdata%/Archipelago` on Windows)
+2. Place the `metroidprime.apworld` file in your Archipelago installation's `lib/worlds` folder (Default location for Windows: `%programdata%/Archipelago`).
+3. Copy the entire `lib` folder from the zip into your `Archipelago` folder.
+   - If done correctly, you should be able to see dependencies like `ppc_asm` in the `Archipelago/lib` folder and `metroidprime.apworld` in the `Archipelago/lib/worlds` folder.
 
 - If you have a `metroidprime.apworld` file from a previous version of the apworld, you **must** delete it, as it is no longer supported.
   Additionally, if there is a `metroidprime` folder in that folder, you **must** also delete it.
@@ -66,15 +65,28 @@ name and port number from the room's host.
 
 Once you do, follow these steps to connect to the room:
 
-1. Double click the `apmp1` file. If you have not done so before, it will ask you what program you want to open it with. Click "Choose another program" and browser to your Archipelago directory. Select `ArchipelagoLauncher.exe`.
+0. (Optional): If you want the `apmp1` file to automatically open your game for you, navigate to your `Archipelago` installation and edit the `host.yaml` file.
+   - Scroll down to `metroidprime_options` and either set `rom_start` to `true` if ISO files are already associated with Dolphin, or set it to the path to your `Dolphin.exe`.
+   - If `metroidprime_options` isn't in the `host.yaml` yet, click your `apmp1` file and then reopen the `host.yaml` and it should now be there.
+1. Double click the `apmp1` file. If you have not done so before, it will ask you what program you want to open it with.
+    Click "Choose another program" and browser to your Archipelago directory. Select `ArchipelagoLauncher.exe`.
 2. Be patient, after clicking the `apmp1` file, it can take a minute to have the client and patched iso showup
 3. If this is your first time, it will prompt you for an input iso. Select your Metroid Prime DOL-GM8E-0-00 USA iso
-4. Once the output iso file appears in the same directory as your `apmp1` file (it should have a name `AP_XXXX.iso`), open it with Dolphin
-5. After the game is running, connect the Metroid Prime Client to the room by entering the server name and port number at the top and pressing `Connect`. For rooms hosted
-   on the website, this will be `archipelago.gg:<port>`, where `<port>` is the port number. If a game is hosted from the
-   `ArchipelagoServer.exe` (without `.exe` on Linux), this will default to `38281` but may be changed in the `host.yaml`.
+4. Once the output iso file appears in the same directory as your `apmp1` file (it should have a name `AP_XXXX.iso`), open it with Dolphin (or if you associated the file type with Dolphin, sit back and enjoy watching the computer do this menial task for you)
+5. After the game is running, connect the Metroid Prime Client to the room by entering the server name and port number at the top and pressing `Connect`.  
+   For rooms hosted on the website, this will be `archipelago.gg:<port>`, where `<port>` is the port number.  
+   If a game is hosted from the `ArchipelagoServer.exe` (without `.exe` on Linux), this will default to `38281` but may be changed in the `host.yaml`.
 
 ## Troubleshooting
+
+- If you launch the client and the game but are still getting an error saying it is waiting for the game to start, verify you are running version `0-00`. To check this:
+
+  - Add your original ISO to the list of games in Dolphin
+  - Right click on it, select properties
+  - Browse to the info tab (you will need to click the arrow to view more tabs to the right)
+  - Verify under name it says `Metroid Prime  (Revision 0)`
+
+- If the client is running, connected to the Archipelago server but it appears to not be able to connect to dolphin, verify  you only have one instance of Dolphin opened up. If there are other windows (even if they aren't running anything) it will cause problems with the client.
 
 - If you do not see the client in the launcher, ensure you have placed the `metroidprime.apworld` in the correct folder (the
   `lib/worlds` folder of your Archipelago installation).

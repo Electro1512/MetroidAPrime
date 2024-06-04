@@ -59,8 +59,8 @@ misc_item_table: dict[str, ItemData] = {
 
 # These item ids are invalid in the player state, we'll need to exclude it from logic relying on that
 custom_suit_upgrade_table: dict[str, ItemData] = {
-    "Main Missile": ItemData("Main Missile", 41, ItemClassification.progression),
-    "Power Bomb": ItemData("Power Bomb", 42, ItemClassification.progression),
+    "Missile Launcher": ItemData("Missile Launcher", 41, ItemClassification.progression),
+    "Power Bomb (Main)": ItemData("Power Bomb (Main)", 42, ItemClassification.progression),
 
 }
 

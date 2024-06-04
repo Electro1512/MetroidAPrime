@@ -7,11 +7,14 @@ class MetroidPrimeLogic(LogicMixin):
 
     # logic rules related to needing a combination of items
     def prime_has_missiles(self, world: MultiWorld, player: int) -> bool:
-        return self.has_any({'Main Missile', 'Missile Expansion'}, player)
+        if world.worlds[player].options.missile_launcher.value:
+            return self.has('Missile Launcher', player)
+        else:
+            return self.has_any({'Missile Launcher', 'Missile Expansion'}, player)
 
     def prime_has_missile_count(self, world: MultiWorld, player: int) -> int:
         count = 0
-        if self.has('Main Missile', player):
+        if self.has('Missile Launcher', player):
             count = 5
         count += self.count('Missile Expansion', player) * 5
         return count
@@ -36,13 +39,20 @@ class MetroidPrimeLogic(LogicMixin):
         return self.has_all({'Morph Ball', 'Spider Ball'}, player)
 
     def prime_can_pb(self, world: MultiWorld, player: int) -> bool:
-        return self.has('Morph Ball', player) and self.has_any({'Power Bomb', 'Power Bomb Expansion'}, player)
+        if world.worlds[player].options.main_power_bomb.value:
+            return self.has_all({'Morph Ball', 'Power Bomb (Main)'}, player)
+        else:
+            return self.has('Morph Ball', player) and self.has_any({'Power Bomb (Main)', 'Power Bomb Expansion'}, player)
 
     def prime_can_super(self, world: MultiWorld, player: int) -> bool:
         return self.prime_has_missiles(world, player) and self.has_all({'Charge Beam', 'Super Missile'}, player)
 
     def prime_can_heat(self, world: MultiWorld, player: int) -> bool:
-        return self.has_any({'Varia Suit', 'Gravity Suit', 'Phazon Suit'}, player)
+        non_varia_heat_damage = world.worlds[player].options.non_varia_heat_damage.value
+        if non_varia_heat_damage:
+            return self.has('Varia Suit', player)
+        else:
+            return self.has_any({'Varia Suit', 'Gravity Suit', 'Phazon Suit'}, player)
 
     # logic rules related to accessing regions or subregions
 

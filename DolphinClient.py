@@ -1,6 +1,7 @@
 from logging import Logger
 import dolphin_memory_engine
-
+import subprocess
+import Utils
 
 GC_GAME_ID_ADDRESS = 0x80000000
 
@@ -59,7 +60,6 @@ class DolphinClient:
         try:
             address = self.dolphin.follow_pointers(pointer, [0])
         except RuntimeError:
-            self.logger.debug(f"Could not read pointer at {pointer:x}")
             return None
 
         if not self.dolphin.is_hooked():
@@ -80,7 +80,6 @@ class DolphinClient:
         try:
             address = self.dolphin.follow_pointers(pointer, [0])
         except RuntimeError:
-            self.logger.debug(f"Could not read pointer at {pointer:x}")
             return None
 
         if not self.dolphin.is_hooked():
@@ -93,3 +92,21 @@ class DolphinClient:
         self.__assert_connected()
         result = self.dolphin.write_bytes(address, data)
         return result
+
+
+def assert_no_running_dolphin() -> bool:
+    """Only checks on windows for now, verifies no existing instances of dolphin are running."""
+    if Utils.is_windows:
+        if get_num_dolphin_instances() > 0:
+            return False
+    return True
+
+
+def get_num_dolphin_instances() -> int:
+    """Only checks on windows for now"""
+    if Utils.is_windows:
+        output = subprocess.check_output("tasklist", shell=True).decode()
+        lines = output.strip().split("\n")
+        count = sum("Dolphin.exe" in line for line in lines)
+        return count
+    return 0

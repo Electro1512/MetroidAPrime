@@ -252,14 +252,12 @@ def set_rules(multiworld: MultiWorld, player, locations):
         'Phazon Mines: Elite Control Access': lambda state: (logic.prime_upper_mines(state, multiworld, player) and
                                                              logic.prime_can_bomb(state, multiworld, player) and
                                                              logic.prime_can_pb(state, multiworld, player) and
-                                                             logic.prime_can_spider(state, multiworld, player) and
-                                                             state.has('Grapple Beam', player)),
+                                                             logic.prime_can_spider(state, multiworld, player)),
         'Phazon Mines: Ventilation Shaft': lambda state: (logic.prime_upper_mines(state, multiworld, player) and
                                                           logic.prime_can_bomb(state, multiworld, player) and
                                                           logic.prime_can_pb(state, multiworld, player) and
                                                           logic.prime_can_spider(state, multiworld, player) and
-                                                          logic.prime_can_boost(state, multiworld, player) and
-                                                          state.has('Grapple Beam', player)),
+                                                          logic.prime_can_boost(state, multiworld, player)),
         'Phazon Mines: Phazon Processing Center': lambda state: (logic.prime_upper_mines(state, multiworld, player) and
                                                                  logic.prime_can_bomb(state, multiworld, player) and
                                                                  logic.prime_can_pb(state, multiworld, player) and
@@ -274,7 +272,7 @@ def set_rules(multiworld: MultiWorld, player, locations):
                                                        logic.prime_can_bomb(state, multiworld, player) and
                                                        logic.prime_can_pb(state, multiworld, player) and
                                                        logic.prime_can_spider(state, multiworld, player) and
-                                                       state.has_all({'Grapple Beam', 'X-Ray Visor'}, player)),
+                                                       state.has('X-Ray Visor', player)),
         'Phazon Mines: Metroid Quarantine B': lambda state: (logic.prime_lower_mines(state, multiworld, player) and
                                                              logic.prime_can_super(state, multiworld, player)),
         'Phazon Mines: Metroid Quarantine A': lambda state: (logic.prime_upper_mines(state, multiworld, player) and
@@ -282,7 +280,7 @@ def set_rules(multiworld: MultiWorld, player, locations):
                                                              logic.prime_can_pb(state, multiworld, player) and
                                                              logic.prime_can_spider(state, multiworld, player) and
                                                              logic.prime_can_boost(state, multiworld, player) and
-                                                             state.has_all({'Grapple Beam', 'X-Ray Visor'}, player)),
+                                                             state.has('X-Ray Visor', player)),
         'Phazon Mines: Fungal Hall B': lambda state: (logic.prime_lower_mines(state, multiworld, player) and
                                                       state.has_any({'Thermal Visor', 'X-Ray Visor'}, player)),
         'Phazon Mines: Phazon Mining Tunnel': lambda state: (logic.prime_lower_mines(state, multiworld, player) and
@@ -291,7 +289,7 @@ def set_rules(multiworld: MultiWorld, player, locations):
                                                            logic.prime_can_bomb(state, multiworld, player) and
                                                            logic.prime_can_pb(state, multiworld, player) and
                                                            logic.prime_can_boost(state, multiworld, player) and
-                                                           state.has_all({'Grapple Beam', 'X-Ray Visor', 'Plasma Beam'},
+                                                           state.has_all({'X-Ray Visor', 'Plasma Beam'},
                                                                          player)),
 
         # magmoor caverns locations
@@ -300,7 +298,7 @@ def set_rules(multiworld: MultiWorld, player, locations):
                                                      state.has_all({'Morph Ball', 'Space Jump Boots'}, player)),
         'Magmoor Caverns: Triclops Pit': lambda state: (logic.prime_early_magmoor(state, multiworld, player) and
                                                         logic.prime_has_missiles(state, multiworld, player) and
-                                                        state.has('Space Jump Boots', player)),
+                                                        state.has_all({'Space Jump Boots', 'X-Ray Visor'}, player)),
         'Magmoor Caverns: Storage Cavern': lambda state: (logic.prime_early_magmoor(state, multiworld, player) and
                                                           state.has('Morph Ball', player)),
         'Magmoor Caverns: Transport Tunnel A': lambda state: (logic.prime_early_magmoor(state, multiworld, player) and

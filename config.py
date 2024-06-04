@@ -1,4 +1,6 @@
-from typing import Dict, Any
+from typing import Dict, Any, Optional
+
+from worlds.metroidprime.PrimeOptions import MetroidPrimeOptions
 
 
 def starting_inventory(world, item) -> bool:
@@ -21,9 +23,9 @@ def starting_ammo(world, item) -> int:
         for i in items:
             if i == "Energy Tank":
                 count += 1
-    if item == "Power Bomb":
+    if item == "Power Bomb (Main)":
         for i in items:
-            if i == "Power Bomb" or i == "Power Bomb Expansion":
+            if i == "Power Bomb (Main)" or i == "Power Bomb Expansion":
                 count += 1
     return count
 
@@ -51,31 +53,62 @@ def temple_dest(boss) -> str:
 
 def item_text(world, location) -> str:
     loc = world.multiworld.get_location(location, world.player)
-    player_name = f"{world.multiworld.player_name[location.player]} " if loc.player != world.player else ""
+    player_name = f"{world.multiworld.player_name[loc.item.player]}'s " if loc.item.player != world.player else ""
     return f"{player_name}{loc.item.name}"
 
 
 def item_model(world, location) -> str:
     loc = world.multiworld.get_location(location, world.player)
     if loc.native_item:
-        nam = loc.item.name
-        if nam == "Missile Expansion" or nam == "Main Missile":
+        name = loc.item.name
+        if name == "Missile Expansion":
             return "Missile"
+        elif name == "Missile Launcher":
+            return "Shiny Missile"
+        elif name == "Power Bomb (Main)":
+          return "Power Bomb"
         else:
-            return nam
+            return name
     else:
         return "Nothing"
 
+def make_artifact_hints(world) -> str:
+  def make_artifact_hint(item) -> str:
+    try:
+      if world.options.artifact_hints.value:
+        location = world.multiworld.find_item(item, world.player)
+        player_string = f"{world.multiworld.player_name[location.player]}'s" if location.player != world.player else "your"
+        return f"The &push;&main-color=#c300ff;{item}&pop; can be found in &push;&main-color=#d4cc33;{player_string}&pop; &push;&main-color=#89a1ff;{location.name}&pop;."
+      else:
+        return f"The &push;&main-color=#c300ff;{item}&pop; has not been collected."
+      # This will error when trying to find an artifact that does not have a location since was pre collected
+    except:
+      return f"The &push;&main-color=#c300ff;{item}&pop; does not need to be collected."
+
+  return  {
+                "Artifact of Chozo": make_artifact_hint("Artifact of Chozo"),
+                "Artifact of Nature": make_artifact_hint("Artifact of Nature"),
+                "Artifact of Sun": make_artifact_hint("Artifact of Sun"),
+                "Artifact of World": make_artifact_hint("Artifact of World"),
+                "Artifact of Spirit": make_artifact_hint("Artifact of Spirit"),
+                "Artifact of Newborn": make_artifact_hint("Artifact of Newborn"),
+                "Artifact of Truth": make_artifact_hint("Artifact of Truth"),
+                "Artifact of Strength": make_artifact_hint("Artifact of Strength"),
+                "Artifact of Elder": make_artifact_hint("Artifact of Elder"),
+                "Artifact of Wild": make_artifact_hint("Artifact of Wild"),
+                "Artifact of Lifegiver": make_artifact_hint("Artifact of Lifegiver"),
+                "Artifact of Warrior": make_artifact_hint("Artifact of Warrior")
+            }
 
 def make_config(world):
-    options = world.options
+    options: MetroidPrimeOptions = world.options
     config = {
         "$schema": "https://randovania.org/randomprime/randomprime.schema.json",
         "inputIso": "prime.iso",
         "outputIso": "prime_out.iso",
         "forceVanillaLayout": False,
         "preferences": {
-            "forceFusion": False,
+            "forceFusion": bool(options.fusion_suit.value),
             "cacheDir": "cache",
             "qolGeneral": True,
             "qolGameBreaking": True,
@@ -83,7 +116,7 @@ def make_config(world):
             "qolCutscenes": "Skippable",
             "qolPickupScans": True,
             "mapDefaultState": "Always",
-            "artifactHintBehavior": "All",
+            "artifactHintBehavior": "All"
         },
         "gameConfig": {
             "mainMenuMessage": "Archipelago Metroid Prime",
@@ -91,22 +124,23 @@ def make_config(world):
             "springBall": spring_check(options.spring_ball.value),
             "warpToStart": True,
             "multiworldDolPatches": True,
-            "nonvariaHeatDamage": False,
-            "staggeredSuitDamage": False,
+            "nonvariaHeatDamage": bool(options.non_varia_heat_damage.value),
+            "staggeredSuitDamage": options.staggered_suit_damage.value,
             "heatDamagePerSec": 10.0,
             "poisonDamagePerSec": 0.11,
             "phazonDamagePerSec": 0.964,
             "phazonDamageModifier": "Default",
             "autoEnabledElevators": True,
             "skipRidley": ridley(options.final_bosses.value),
+            "removeHiveMecha": bool(options.remove_hive_mecha.value),
             "multiworldDolPatches": False,
             "startingItems": {
                 "combatVisor":True,  # starting_inventory(world, "Combat Visor"),
                 "powerBeam": True, # starting_inventory(world, "Power Beam"), disabling this for now since we don't have this worked into logic
                 "scanVisor": True,  # starting_inventory(world, "Scan Visor"),
-                "missiles": starting_ammo(world, "Missile Expansion"),
+                "missiles": starting_ammo(world, "Missile Launcher"),
                 "energyTanks": starting_ammo(world, "Energy Tank"),
-                "powerBombs": starting_ammo(world, "Power Bomb"),
+                "powerBombs": starting_ammo(world, "Power Bomb (Main)"),
                 "wave": starting_inventory(world, "Wave Beam"),
                 "ice": starting_inventory(world, "Ice Beam"),
                 "plasma": starting_inventory(world, "Plasma Beam"),
@@ -185,74 +219,17 @@ def make_config(world):
             "backwardsLowerMines": True,
             "patchPowerConduits": False,
             "removeMineSecurityStationLocks": False,
-            "removeHiveMecha": False,
             "powerBombArboretumSandstone": False,
-            "artifactHints": {
-                "Artifact of Chozo": "TODO: Add hint here",
-                "Artifact of Nature": "TODO: Add hint here",
-                "Artifact of Sun": "TODO: Add hint here",
-                "Artifact of World": "TODO: Add hint here",
-                "Artifact of Spirit": "TODO: Add hint here",
-                "Artifact of Newborn": "TODO: Add hint here",
-                "Artifact of Truth": "TODO: Add hint here",
-                "Artifact of Strength": "TODO: Add hint here",
-                "Artifact of Elder": "TODO: Add hint here",
-                "Artifact of Wild": "TODO: Add hint here",
-                "Artifact of Lifegiver": "TODO: Add hint here",
-                "Artifact of Warrior": "TODO: Add hint here"
-            },
-            "artifactTempleLayerOverrides": {
-                "Artifact of Truth": starting_inventory(world, "Artifact of Truth"),
-                "Artifact of Strength": starting_inventory(world, "Artifact of Strength"),
-                "Artifact of Elder": starting_inventory(world, "Artifact of Elder"),
-                "Artifact of Wild": starting_inventory(world, "Artifact of Wild"),
-                "Artifact of Lifegiver": starting_inventory(world, "Artifact of Lifegiver"),
-                "Artifact of Warrior": starting_inventory(world, "Artifact of Warrior"),
-                "Artifact of Chozo": starting_inventory(world, "Artifact of Chozo"),
-                "Artifact of Nature": starting_inventory(world, "Artifact of Nature"),
-                "Artifact of Sun": starting_inventory(world, "Artifact of Sun"),
-                "Artifact of World": starting_inventory(world, "Artifact of World"),
-                "Artifact of Spirit": starting_inventory(world, "Artifact of Spirit"),
-                "Artifact of Newborn": starting_inventory(world, "Artifact of Newborn")
-            },
-            "requiredArtifactCount": 12
+            "artifactHints": make_artifact_hints(world),
+            "requiredArtifactCount": world.options.required_artifacts.value
         },
-        "levelData": {
-            "Frigate Orpheon": {
-                  "transports": {
-                      "Frigate Escape Cutscene": "Tallon Overworld:Landing Site"
-                  },
-                  "rooms": {
-                        "Exterior Docking Hangar": {},
-                        "Air Lock": {},
-                        "Deck Alpha Access Hall": {},
-                        "Deck Alpha Mech Shaft": {},
-                        "Emergency Evacuation Area": {},
-                        "Connection Elevator to Deck Alpha": {},
-                        "Deck Alpha Umbilical Hall": {},
-                        "Biotech Research Area 2": {},
-                        "Map Facility": {},
-                        "Main Ventilation Shaft Section F": {},
-                        "Connection Elevator to Deck Beta": {},
-                        "Main Ventilation Shaft Section E": {},
-                        "Deck Beta Conduit Hall": {},
-                        "Main Ventilation Shaft Section D": {},
-                        "Biotech Research Area 1": {},
-                        "Main Ventilation Shaft Section C": {},
-                        "Deck Beta Security Hall": {},
-                        "Connection Elevator to Deck Beta (2)": {},
-                        "Subventilation Shaft Section A": {},
-                        "Main Ventilation Shaft Section B": {},
-                        "Biohazard Containment": {},
-                        "Deck Gamma Monitor Hall": {},
-                        "Subventilation Shaft Section B": {},
-                        "Main Ventilation Shaft Section A": {},
-                        "Deck Beta Transit Hall": {},
-                        "Reactor Core": {},
-                        "Cargo Freight Lift to Deck Gamma": {},
-                        "Reactor Core Entrance": {}
-                    },
-              },
+        "levelData": make_level_data(world)
+        }
+
+    return config
+
+def make_level_data(world):
+  return {
             "Tallon Overworld": {
                     "transports": {
                             "Tallon Overworld North (Tallon Canyon)":  "Chozo Ruins West (Main Plaza)",
@@ -260,7 +237,7 @@ def make_config(world):
                             "Tallon Overworld East (Frigate Crash Site)": "Chozo Ruins East (Reflecting Pool, Save Station)",
                             "Tallon Overworld South (Great Tree Hall, Upper)": "Chozo Ruins South (Reflecting Pool, Far End)",
                             "Tallon Overworld South (Great Tree Hall, Lower)": "Phazon Mines East (Main Quarry)",
-                            "Artifact Temple": temple_dest(options.final_bosses.value)
+                            "Artifact Temple": temple_dest(world.options.final_bosses.value)
                     },
                     "rooms": {
                         "Landing Site": {
@@ -1637,5 +1614,3 @@ def make_config(world):
                   }
                 }
             }
-        }
-    return config

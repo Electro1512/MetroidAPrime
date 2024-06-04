@@ -1,6 +1,6 @@
 from logging import Logger
 import struct
-from .DolphinClient import GC_GAME_ID_ADDRESS, DolphinClient, DolphinException
+from .DolphinClient import GC_GAME_ID_ADDRESS, DolphinClient, DolphinException, get_num_dolphin_instances
 from enum import Enum
 from enum import Enum
 import py_randomprime
@@ -18,13 +18,14 @@ ARTIFACT_TEMPLE_ROOM_INDEX = 16
 HUD_MESSAGE_DURATION = 7.0
 HUD_MESSAGE_ADDRESS = 0x803efb90
 HUD_MAX_MESSAGE_SIZE = 194
-HUD_TRIGGER_ADDRESS = 0x8000332C # When this is 1 the game will display the message and then set it back to 0
+HUD_TRIGGER_ADDRESS = 0x80572414  # When this is 1 the game will display the message and then set it back to 0
 
 
 class ConnectionState(Enum):
     DISCONNECTED = 0
     IN_GAME = 1
     IN_MENU = 2
+    MULTIPLE_DOLPHIN_INSTANCES = 3
 
 
 class MetroidPrimeSuit(Enum):
@@ -91,6 +92,7 @@ class MetroidPrimeInterface:
     connection_status: str
     logger: Logger
     _previous_message_size: int = 0
+    game_id_error: str = None
 
     def __init__(self, logger) -> None:
         self.logger = logger
@@ -193,12 +195,14 @@ class MetroidPrimeInterface:
         try:
             self.dolphin_client.connect()
             self.logger.info("Connected to Dolphin Emulator")
-            if self.dolphin_client.read_address(GC_GAME_ID_ADDRESS, 6) != METROID_PRIME_ID:
-                self.logger.error(
-                    f"Connected to the wrong game, please connect to Metroid Prime V1 English ({METROID_PRIME_ID})")
-                self.disconnect_from_game()
+            game_id = self.dolphin_client.read_address(GC_GAME_ID_ADDRESS, 6)
+            # The first read of the address will be null if the client is faster than the emulator
+            if game_id != METROID_PRIME_ID and self.game_id_error != game_id and game_id != b'\x00\x00\x00\x00\x00\x00':
+                self.logger.warn(
+                    f"Connected to the wrong game ({game_id}), please connect to Metroid Prime V1 English ({METROID_PRIME_ID})")
+                self.game_id_error = game_id
         except DolphinException as e:
-          pass
+            pass
 
     def disconnect_from_game(self):
         self.dolphin_client.disconnect()
@@ -208,7 +212,8 @@ class MetroidPrimeInterface:
         try:
             connected = self.dolphin_client.is_connected()
             if not connected:
-                return ConnectionState.DISCONNECTED
+                # If multiple instances of dolphin are open then it will not connect
+                return ConnectionState.MULTIPLE_DOLPHIN_INSTANCES if get_num_dolphin_instances() > 1 else ConnectionState.DISCONNECTED
             elif self.is_in_playable_state():
                 return ConnectionState.IN_GAME
             else:
@@ -228,25 +233,24 @@ class MetroidPrimeInterface:
         self.dolphin_client.write_address(HUD_TRIGGER_ADDRESS, b"\x01")
         return True
 
-
     def _save_message_to_memory(self, message: str):
-      encoded_message = message.encode(
-          "utf-16_be")[: HUD_MAX_MESSAGE_SIZE]
+        encoded_message = message.encode(
+            "utf-16_be")[: HUD_MAX_MESSAGE_SIZE]
 
-      if len(encoded_message) == self._previous_message_size:
-          encoded_message += b"\x00 " # Add a space to the end of the message to force the game to update the message if it is the same size
+        if len(encoded_message) == self._previous_message_size:
+            encoded_message += b"\x00 "  # Add a space to the end of the message to force the game to update the message if it is the same size
 
-      self._previous_message_size = len(encoded_message)
+        self._previous_message_size = len(encoded_message)
 
-      encoded_message += b"\x00\x00" # Game expects a null terminator at the end of the message
+        encoded_message += b"\x00\x00"  # Game expects a null terminator at the end of the message
 
-      if len(encoded_message) & 3:
-          # Ensure the size is a multiple of 4
-          num_to_align = (len(encoded_message) | 3) - \
-              len(encoded_message) + 1
-          encoded_message += b"\x00" * num_to_align
+        if len(encoded_message) & 3:
+            # Ensure the size is a multiple of 4
+            num_to_align = (len(encoded_message) | 3) - \
+                len(encoded_message) + 1
+            encoded_message += b"\x00" * num_to_align
 
-      self.dolphin_client.write_address(HUD_MESSAGE_ADDRESS, encoded_message)
+        self.dolphin_client.write_address(HUD_MESSAGE_ADDRESS, encoded_message)
 
     def __is_player_table_ready(self) -> bool:
         """Check if the player table is ready to be read from memory, indicating the game is in a playable state"""
@@ -327,9 +331,6 @@ class MetroidPrimeInterface:
                     active = self.get_layer_active(
                         ARTIFACT_TEMPLE_ROOM_INDEX, layer_id)
                     if active != (item.current_amount > 0):
-                        self.logger.debug(
-                            f"Setting Artifact layer for {item.name} to {item.current_amount > 0}")
                         self.set_layer_active(
                             ARTIFACT_TEMPLE_ROOM_INDEX, layer_id, item.current_amount > 0)
                         changed = True
-
