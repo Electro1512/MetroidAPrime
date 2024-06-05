@@ -8,11 +8,11 @@ def _get_options(state: CollectionState, player: int) -> MetroidPrimeOptions:
 
 
 def can_boost(state: CollectionState, player: int) -> bool:
-    state.has_all([SuitUpgrade.Morph_Ball.value, SuitUpgrade.Boost_Ball.value], player)
+    return state.has_all([SuitUpgrade.Morph_Ball.value, SuitUpgrade.Boost_Ball.value], player)
 
 
 def can_bomb(state: CollectionState, player: int) -> bool:
-    state.has_all([SuitUpgrade.Morph_Ball.value, SuitUpgrade.Morph_Ball_Bomb.value], player)
+    return state.has_all([SuitUpgrade.Morph_Ball.value, SuitUpgrade.Morph_Ball_Bomb.value], player)
 
 
 def can_power_bomb(state: CollectionState, player: int) -> bool:

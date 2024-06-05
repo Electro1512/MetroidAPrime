@@ -45,6 +45,7 @@ Metroid Prime:
   fusion_suit: "false"
 
   # Determines which tricks, if any, can be included in the seed. This will affect the logic of the game.
+  # no_tricks, easy, medium, hard
   trick_difficulty: "no_tricks"
 
   # Whether to send death events to other players with deathlink enabled or not

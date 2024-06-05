@@ -170,64 +170,7 @@ def set_rules(multiworld: MultiWorld, player, locations):
                                                           state.has_all({'Plasma Beam', 'Grapple Beam'}, player)),
 
         # tallon overworld locations
-        'Tallon Overworld: Landing Site': lambda state: state.has('Morph Ball', player),
-        'Tallon Overworld: Alcove': lambda state: ((logic.prime_can_bomb(state, multiworld, player) and
-                                                    logic.prime_can_boost(state, multiworld, player)) or
-                                                   state.has('Space Jump Boots', player)),
-        'Tallon Overworld: Frigate Crash Site': lambda state: (logic.prime_has_missiles(state, multiworld, player) and
-                                                               state.has_all(
-                                                                   {'Space Jump Boots', 'Morph Ball', 'Gravity Suit'},
-                                                                   player)),
-        'Tallon Overworld: Overgrown Cavern': lambda state: (logic.prime_reflecting_pool(state, multiworld, player) and
-                                                             state.has_all({'Ice Beam', 'Morph Ball'}, player)),
-
-        'Tallon Overworld: Root Cave': lambda state: (logic.prime_has_missiles(state, multiworld, player) and
-                                                      state.has_all({'Grapple Beam', 'Space Jump Boots', 'X-Ray Visor'},
-                                                                    player)),
-        'Tallon Overworld: Artifact Temple': lambda state: logic.prime_has_missiles(state, multiworld, player),
-        'Tallon Overworld: Transport Tunnel B': lambda state: logic.prime_has_missiles(state, multiworld, player),
-        'Tallon Overworld: Arbor Chamber': lambda state: (logic.prime_has_missiles(state, multiworld, player) and
-                                                          state.has_all(
-                                                              {'Grapple Beam', 'Space Jump Boots', 'X-Ray Visor',
-                                                               'Plasma Beam'}, player)),
-        'Tallon Overworld: Cargo Freight Lift to Deck Gamma': lambda state: logic.prime_frigate(state, multiworld,
-                                                                                                player),
-        'Tallon Overworld: Biohazard Containment': lambda state: (logic.prime_frigate(state, multiworld, player) and
-                                                                  logic.prime_can_super(state, multiworld, player)),
-        'Tallon Overworld: Hydro Access Tunnel': lambda state: (logic.prime_frigate(state, multiworld, player) and
-                                                                logic.prime_can_bomb(state, multiworld, player)),
-        'Tallon Overworld: Great Tree Chamber': lambda state: (
-                state.has_all({'X-Ray Visor', 'Ice Beam', 'Space Jump Boots'}, player) and
-                (logic.prime_reflecting_pool(state, multiworld, player) or
-                 (logic.prime_frigate(state, multiworld, player) and
-                  logic.prime_can_bomb(state, multiworld, player) and
-                  logic.prime_can_boost(state, multiworld, player)))),
-        'Tallon Overworld: Life Grove Tunnel': lambda state: (logic.prime_can_bomb(state, multiworld, player) and
-                                                              logic.prime_can_boost(state, multiworld, player) and
-                                                              logic.prime_can_spider(state, multiworld, player) and
-                                                              logic.prime_can_pb(state, multiworld, player) and
-                                                              state.has_all({'Ice Beam', 'Space Jump Boots'},
-                                                                            player) and
-                                                              (logic.prime_frigate(state, multiworld, player) or
-                                                               logic.prime_reflecting_pool(state, multiworld, player))),
-        'Tallon Overworld: Life Grove - Start': lambda state: (logic.prime_can_bomb(state, multiworld, player) and
-                                                               logic.prime_can_boost(state, multiworld, player) and
-                                                               logic.prime_can_spider(state, multiworld, player) and
-                                                               logic.prime_can_pb(state, multiworld, player) and
-                                                               state.has_all({'Ice Beam', 'Space Jump Boots'},
-                                                                             player) and
-                                                               (logic.prime_frigate(state, multiworld, player) or
-                                                                logic.prime_reflecting_pool(state, multiworld,
-                                                                                            player))),
-        'Tallon Overworld: Life Grove - Underwater Spinner': lambda state: (
-                    logic.prime_can_bomb(state, multiworld, player) and
-                    logic.prime_can_boost(state, multiworld, player) and
-                    logic.prime_can_spider(state, multiworld, player) and
-                    logic.prime_can_pb(state, multiworld, player) and
-                    state.has_all({'Ice Beam', 'Space Jump Boots'}, player) and
-                    (logic.prime_frigate(state, multiworld, player) or
-                     logic.prime_reflecting_pool(state, multiworld, player))),
-
+        # Handled with region creation
         # phazon mines locations
         'Phazon Mines: Main Quarry': lambda state: (logic.prime_upper_mines(state, multiworld, player) and
                                                     logic.prime_can_bomb(state, multiworld, player) and

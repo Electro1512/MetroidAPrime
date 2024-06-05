@@ -115,7 +115,7 @@ class TallonOverworldAreaData(AreaData):
 
         RoomName.Great_Tree_Hall: RoomData(
             doors={
-                0: DoorData(RoomName.Hydro_Access_Tunnel, rule_func=lambda state, player: False, tricks=[Tricks.great_tree_hall_skip_bars]),  # Can't reach from other doors unless you use a trick until after you go through frigate
+                0: DoorData(RoomName.Hydro_Access_Tunnel, rule_func=lambda state, player: False, tricks=[Tricks.great_tree_hall_skip_bars], exclude_from_rando=True),  # Can't reach from other doors unless you use a trick until after you go through frigate
                 1: DoorData(RoomName.Great_Tree_Chamber, rule_func=lambda state, player: can_xray(state, player) and can_space_jump(state, player), tricks=[Tricks.great_tree_chamber_no_xray]),
                 2: DoorData(RoomName.Transport_Tunnel_D, defaultLock=DoorLockType.Ice, destinationArea=MetroidPrimeArea.Tallon_Overworld),  # Can't reach from other doors unless you use a trick until after you go through frigate
                 3: DoorData(RoomName.Life_Grove_Tunnel, defaultLock=DoorLockType.Ice,
@@ -136,15 +136,15 @@ class TallonOverworldAreaData(AreaData):
 
         RoomName.Hydro_Access_Tunnel: RoomData(
             doors={
-                0: DoorData(RoomName.Great_Tree_Hall, rule_func=lambda state, player: can_bomb(state, player) and can_move_underwater(state, player) and can_boost(state, player)),  # Boost is needed to open way in great tree hall
-                1: DoorData(RoomName.Biohazard_Containment, rule_func=lambda state, player: can_bomb(state, player) and can_move_underwater(state, player),
+                0: DoorData(RoomName.Great_Tree_Hall, rule_func=lambda state, player: can_bomb(state, player) and can_crashed_frigate(state, player)),  # Boost is needed to open way in great tree hall
+                1: DoorData(RoomName.Biohazard_Containment, rule_func=lambda state, player: can_bomb(state, player) and can_crashed_frigate(state, player),
                             tricks=[Tricks.frigate_no_gravity]),
 
                 # This one isn't an actual door but is instead accounting for not being able to access the great tree hall lower from upper
                 2: DoorData(RoomName.Transport_Tunnel_E, destinationArea=MetroidPrimeArea.Tallon_Overworld, defaultLock=DoorLockType.Ice, rule_func=can_space_jump, exclude_from_rando=True),
             },
             pickups=[
-                PickupData('Tallon Overworld: Hydro Access Tunnel', rule_func=lambda state, player: can_bomb(state, player) and can_move_underwater(state, player)),
+                PickupData('Tallon Overworld: Hydro Access Tunnel', rule_func=lambda state, player: can_bomb(state, player) and can_crashed_frigate(state, player)),
             ]),
 
         RoomName.Landing_Site: RoomData(
@@ -171,7 +171,7 @@ class TallonOverworldAreaData(AreaData):
         RoomName.Life_Grove: RoomData(
             doors={
                 0: DoorData(RoomName.Life_Grove_Tunnel, defaultLock=DoorLockType.None_,
-                            rule_func=lambda state, player: can_power_bomb(state, player) and can_space_jump(state, player) and can_xray(state, player) and can_boost(state, player),
+                            rule_func=lambda state, player: can_power_bomb(state, player) and can_space_jump(state, player) and can_morph_ball(state, player),
                             tricks=[],
                             exclude_from_rando=True)},
             pickups=[
@@ -214,7 +214,7 @@ class TallonOverworldAreaData(AreaData):
 
             },
             pickups=[
-                PickupData('Tallon Overworld: Root Cave'),
+                PickupData('Tallon Overworld: Root Cave', rule_func=lambda state, player: can_space_jump(state, player) and can_grapple(state, player) and can_xray(state, player), tricks=[Tricks.root_cave_arbor_chamber_no_grapple_xray]),
             ]),
 
         RoomName.Root_Tunnel: RoomData(

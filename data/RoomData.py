@@ -173,8 +173,9 @@ class AreaData:
                         return _can_access_door(state, world.player, door_data)
                     return rule_func
 
+                lock = door_data.lock or door_data.defaultLock
                 target_region = world.multiworld.get_region(door_data.get_destination_region_name(), world.player)
-                region.connect(target_region, None, generate_rule_func(door_data))
+                region.connect(target_region, f"{lock.value} Door from {name} to {destination.value}", generate_rule_func(door_data))
 
 
 def _get_options(state: CollectionState, player: int) -> MetroidPrimeOptions:

@@ -3,7 +3,7 @@ import typing
 from worlds.metroidprime.data.RoomNames import RoomName
 from worlds.metroidprime.data.TallonOverworld import TallonOverworldAreaData
 from .Logic import MetroidPrimeLogic as logic
-from BaseClasses import Region
+from BaseClasses import LocationProgressType, Region
 from .Locations import tallon_location_table, magmoor_location_table, mines_location_table, chozo_location_table, \
     phen_location_table, MetroidPrimeLocation
 if typing.TYPE_CHECKING:
@@ -15,9 +15,6 @@ def create_regions(world: 'MetroidPrimeWorld', final_boss_selection):
     menu = Region("Menu", world.player, world.multiworld)
     world.multiworld.regions.append(menu)
 
-    # tallon_overworld = Region("Tallon Overworld", self.player, self.multiworld)
-    # tallon_overworld.add_locations(tallon_location_table, MetroidPrimeLocation)
-    # self.multiworld.regions.append(tallon_overworld)
 
     TallonOverworldAreaData().create_world_region(world)
 
