@@ -46,7 +46,11 @@ def create_regions(world: 'MetroidPrimeWorld', final_boss_selection):
     # entrances
     menu.connect(world.multiworld.get_region(RoomName.Landing_Site.value, world.player), "Landing Site")
 
+# TODO: Nuke these 3
     world.multiworld.get_region(RoomName.Transport_to_Chozo_Ruins_West.value, world.player).connect(chozo_ruins, "West Chozo Elevator")
+    world.multiworld.get_region(RoomName.Transport_to_Chozo_Ruins_East.value, world.player).connect(chozo_ruins, "East Chozo Elevator")
+    world.multiworld.get_region(RoomName.Transport_to_Chozo_Ruins_South.value, world.player).connect(chozo_ruins, "South Chozo Elevator")
+
     world.multiworld.get_region(RoomName.Transport_to_Magmoor_Caverns_East.value, world.player).connect(magmoor_caverns, "East Magmoor Elevator", lambda state: (
         logic.prime_has_missiles(state, world.multiworld, world.player) and
         logic.prime_can_heat(state, world.multiworld, world.player)))

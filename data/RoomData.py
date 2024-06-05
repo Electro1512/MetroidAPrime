@@ -89,9 +89,10 @@ class DoorData:
     exclude_from_rando: bool = False  # Used primarily for door rando when a door doesn't actually exist
 
     def get_destination_region_name(self):
+        destination = self.destination.value if self.destination is not None else self.defaultDestination.value
         if self.destinationArea is not None:
-            return f"{self.destinationArea.value}: {self.destination.value or self.defaultDestination.value}"
-        return self.destination.value or self.defaultDestination.value
+            return f"{self.destinationArea.value}: {destination}"
+        return destination
 
 
 @ dataclass
@@ -163,7 +164,8 @@ class AreaData:
             name = room_data.get_region_name(room_name.value)
             region = world.multiworld.get_region(name, world.player)
             for door_id, door_data in room_data.doors.items():
-                if door_data.destination is None:
+                destination = door_data.destination or door_data.defaultDestination
+                if destination is None:
                     continue
 
                 def generate_rule_func(door_data) -> Callable[[CollectionState], bool]:
@@ -171,8 +173,8 @@ class AreaData:
                         return _can_access_door(state, world.player, door_data)
                     return rule_func
 
-                destination = world.multiworld.get_region(door_data.get_destination_region_name(), world.player)
-                region.connect(destination, None, door_data.defaultLock, door_data.defaultDestination, door_data.lock, generate_rule_func(door_data))
+                target_region = world.multiworld.get_region(door_data.get_destination_region_name(), world.player)
+                region.connect(target_region, None, generate_rule_func(door_data))
 
 
 def _get_options(state: CollectionState, player: int) -> MetroidPrimeOptions:

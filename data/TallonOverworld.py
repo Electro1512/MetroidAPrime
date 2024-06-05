@@ -117,19 +117,20 @@ class TallonOverworldAreaData(AreaData):
             doors={
                 0: DoorData(RoomName.Hydro_Access_Tunnel, rule_func=lambda state, player: False, tricks=[Tricks.great_tree_hall_skip_bars]),  # Can't reach from other doors unless you use a trick until after you go through frigate
                 1: DoorData(RoomName.Great_Tree_Chamber, rule_func=lambda state, player: can_xray(state, player) and can_space_jump(state, player), tricks=[Tricks.great_tree_chamber_no_xray]),
-                2: DoorData(RoomName.Transport_Tunnel_D, defaultLock=DoorLockType.Ice),  # Can't reach from other doors unless you use a trick until after you go through frigate
+                2: DoorData(RoomName.Transport_Tunnel_D, defaultLock=DoorLockType.Ice, destinationArea=MetroidPrimeArea.Tallon_Overworld),  # Can't reach from other doors unless you use a trick until after you go through frigate
                 3: DoorData(RoomName.Life_Grove_Tunnel, defaultLock=DoorLockType.Ice,
                             rule_func=can_spider,
                             tricks=[Tricks.great_tree_hall_no_spider_ball]
                             ),
-                4: DoorData(RoomName.Transport_Tunnel_E, defaultLock=DoorLockType.Ice, rule_func=lambda state, player: False, tricks=[Tricks.great_tree_hall_skip_bars]),  # Can't reach from other doors unless you use a trick until after you go through frigate
+                4: DoorData(RoomName.Transport_Tunnel_E, defaultLock=DoorLockType.Ice, destinationArea=MetroidPrimeArea.Tallon_Overworld, rule_func=lambda state, player: False, tricks=[Tricks.great_tree_hall_skip_bars]),  # Can't reach from other doors unless you use a trick until after you go through frigate
             },
         ),
 
         RoomName.Gully: RoomData(
             doors={
                 0: DoorData(RoomName.Tallon_Canyon, defaultLock=DoorLockType.Bomb, exclude_from_rando=True, rule_func=lambda state, player: can_bomb(state, player) and can_space_jump(state, player)),
-                1: DoorData(RoomName.Alcove, exclude_from_rando=True)  # Alcove Via Landing Site
+                1: DoorData(RoomName.Landing_Site, exclude_from_rando=True, rule_func=lambda state, player: can_bomb(state, player) and can_space_jump(state, player)),  # Alcove Via Landing Site
+                2: DoorData(RoomName.Alcove, exclude_from_rando=True)  # Alcove Via Landing Site
             },
         ),
 
@@ -264,7 +265,7 @@ class TallonOverworldAreaData(AreaData):
 
         RoomName.Transport_to_Chozo_Ruins_South: RoomData(
             doors={
-                0: DoorData(RoomName.Transport_Tunnel_D, defaultLock=DoorLockType.Ice),
+                0: DoorData(RoomName.Transport_Tunnel_D, defaultLock=DoorLockType.Ice, destinationArea=MetroidPrimeArea.Tallon_Overworld),
             },
         ),
 
@@ -282,7 +283,7 @@ class TallonOverworldAreaData(AreaData):
 
         RoomName.Transport_to_Phazon_Mines_East: RoomData(
             doors={
-                0: DoorData(RoomName.Transport_Tunnel_E, defaultLock=DoorLockType.Ice),
+                0: DoorData(RoomName.Transport_Tunnel_E, defaultLock=DoorLockType.Ice, destinationArea=MetroidPrimeArea.Tallon_Overworld),
             },
         ),
 
@@ -314,7 +315,6 @@ class TallonOverworldAreaData(AreaData):
 
         RoomName.Transport_Tunnel_D: RoomData(
             area=MetroidPrimeArea.Tallon_Overworld,
-
             doors={
                 0: DoorData(RoomName.Great_Tree_Hall, defaultLock=DoorLockType.Ice),
                 1: DoorData(RoomName.Transport_to_Chozo_Ruins_South, defaultLock=DoorLockType.Ice),
@@ -326,13 +326,14 @@ class TallonOverworldAreaData(AreaData):
             doors={
                 0: DoorData(RoomName.Transport_to_Phazon_Mines_East, defaultLock=DoorLockType.Ice),
                 1: DoorData(RoomName.Great_Tree_Hall, defaultLock=DoorLockType.Ice),
+                2: DoorData(RoomName.Hydro_Access_Tunnel, defaultLock=DoorLockType.Ice, exclude_from_rando=True),
             },
         ),
 
         RoomName.Waterfall_Cavern: RoomData(
             doors={
                 0: DoorData(RoomName.Landing_Site, rule_func=can_morph_ball),
-                1: DoorData(RoomName.Tallon_Canyon, defaultLock=DoorLockType.Missile, rule_func=can_morph_ball)
+                1: DoorData(RoomName.Frigate_Crash_Site, defaultLock=DoorLockType.Missile, rule_func=can_morph_ball)
             },
         )
     }
