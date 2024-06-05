@@ -135,8 +135,8 @@ class TallonOverworldAreaData(AreaData):
 
         RoomName.Hydro_Access_Tunnel: RoomData(
             doors={
-                0: RoomData(RoomName.Great_Tree_Hall, rule_func=lambda state, player: can_bomb(state, player) and can_move_underwater(state, player) and can_boost(state, player)),  # Boost is needed to open way in great tree hall
-                1: RoomData(RoomName.Biohazard_Containment, rule_func=lambda state, player: can_bomb(state, player) and can_move_underwater(state, player),
+                0: DoorData(RoomName.Great_Tree_Hall, rule_func=lambda state, player: can_bomb(state, player) and can_move_underwater(state, player) and can_boost(state, player)),  # Boost is needed to open way in great tree hall
+                1: DoorData(RoomName.Biohazard_Containment, rule_func=lambda state, player: can_bomb(state, player) and can_move_underwater(state, player),
                             tricks=[Tricks.frigate_no_gravity]),
 
                 # This one isn't an actual door but is instead accounting for not being able to access the great tree hall lower from upper
@@ -155,7 +155,7 @@ class TallonOverworldAreaData(AreaData):
                 4: DoorData(RoomName.Waterfall_Cavern),
             },
             pickups=[
-                PickupData('Tallon Overworld: Landing Site', rule_func=can_morph_ball, tricks=[]),
+                PickupData('Tallon Overworld: Landing Site', rule_func=can_morph_ball),
             ]),
 
         RoomName.Life_Grove_Tunnel: RoomData(
@@ -168,7 +168,8 @@ class TallonOverworldAreaData(AreaData):
             ]),
 
         RoomName.Life_Grove: RoomData(
-            doors={DoorData(RoomName.Life_Grove_Tunnel, defaultLock=DoorLockType.None_,
+            doors={
+                0: DoorData(RoomName.Life_Grove_Tunnel, defaultLock=DoorLockType.None_,
                             rule_func=lambda state, player: can_power_bomb(state, player) and can_space_jump(state, player) and can_xray(state, player) and can_boost(state, player),
                             tricks=[],
                             exclude_from_rando=True)},
@@ -263,7 +264,7 @@ class TallonOverworldAreaData(AreaData):
 
         RoomName.Transport_to_Chozo_Ruins_South: RoomData(
             doors={
-                0: RoomData(RoomName.Transport_Tunnel_D, defaultLock=DoorLockType.Ice),
+                0: DoorData(RoomName.Transport_Tunnel_D, defaultLock=DoorLockType.Ice),
             },
         ),
 
@@ -281,7 +282,7 @@ class TallonOverworldAreaData(AreaData):
 
         RoomName.Transport_to_Phazon_Mines_East: RoomData(
             doors={
-                0: RoomData(RoomName.Transport_Tunnel_E, defaultLock=DoorLockType.Ice),
+                0: DoorData(RoomName.Transport_Tunnel_E, defaultLock=DoorLockType.Ice),
             },
         ),
 
@@ -323,8 +324,8 @@ class TallonOverworldAreaData(AreaData):
         RoomName.Transport_Tunnel_E: RoomData(
             area=MetroidPrimeArea.Tallon_Overworld,
             doors={
-                0: RoomData(RoomName.Transport_to_Phazon_Mines_East, defaultLock=DoorLockType.Ice),
-                1: RoomData(RoomName.Great_Tree_Hall, defaultLock=DoorLockType.Ice),
+                0: DoorData(RoomName.Transport_to_Phazon_Mines_East, defaultLock=DoorLockType.Ice),
+                1: DoorData(RoomName.Great_Tree_Hall, defaultLock=DoorLockType.Ice),
             },
         ),
 
