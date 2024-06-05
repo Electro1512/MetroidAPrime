@@ -77,10 +77,21 @@ class RemoveHiveMecha(DefaultOnToggle):
     display_name = "Remove Hive Mecha"
     default = False
 
+
 class FusionSuit(Toggle):
     """Whether to use the fusion suit or not"""
     display_name = "Fusion Suit"
     default = False
+
+
+class TrickDifficulty(Choice):
+    """Determines which tricks, if any, are required to complete the seed. This will affect the logic of the game."""
+    display_name = "Trick Difficulty"
+    option_no_tricks = -1
+    option_easy = 0
+    option_medium = 1
+    option_hard = 2
+    default = -1
 
 
 @dataclass
@@ -98,3 +109,4 @@ class MetroidPrimeOptions(PerGameCommonOptions):
     staggered_suit_damage: StaggeredSuitDamage
     remove_hive_mecha: RemoveHiveMecha
     fusion_suit: FusionSuit
+    trick_difficulty: TrickDifficulty

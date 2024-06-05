@@ -1,11 +1,13 @@
 from dataclasses import dataclass
 from enum import Enum
-from typing import List, Optional
+from typing import Callable, List, Optional
 import typing
+
+from BaseClasses import CollectionState
 
 from ..Locations import METROID_PRIME_LOCATION_BASE, every_location
 from .RoomNames import RoomName
-from .Tricks import Trick, TrickDifficulty
+from .Tricks import Trick_Type, TrickDifficulty, TrickInfo
 
 if typing.TYPE_CHECKING:
     from .. import MetroidPrimeWorld
@@ -50,6 +52,8 @@ class Capabilities(Enum):
     Can_Missile = "Can Missile"
     Can_Super_Missile = "Can Super Missile"
     Can_Wave_Beam = "Can Wave Beam"
+    Can_Ice_Beam = "Can Ice Beam"
+    Can_Plasma_Beam = "Can Plasma Beam"
     Can_Melt_Ice = "Can Melt Ice"
     Can_Grapple = "Can Grapple"
     Can_Space_Jump = "Can Space Jump"
@@ -58,15 +62,7 @@ class Capabilities(Enum):
     Can_Thermal = "Can Thermal"
     Can_Move_Underwater = "Can Move Underwater"
     Can_Charge_Beam = "Can Charge Beam"
-    Cannot_Reach = "Cannot Reach" # Used for doors that are impossible to reach without tricks
-
-
-@dataclass
-class TrickData:
-    type: Trick
-    name: str
-    difficulty: TrickDifficulty
-    additional_required_items: List[Capabilities] = []
+    Cannot_Reach = "Cannot Reach"  # Used for doors that are impossible to reach without tricks
 
 
 class DoorLockType(Enum):
@@ -86,16 +82,18 @@ class DoorData:
     lock: Optional[DoorLockType]
     destination: Optional[RoomName]
     destinationArea: Optional[MetroidPrimeArea]  # Used for rooms that have the same name in different areas like Transport Tunnel A
-    required_items: List[typing.Union[Capabilities, List[Capabilities]]] = []  # If multiple lists are present, it will treat each group as a separate OR
-    tricks: List[TrickData] = []
-    exclude_from_rando: bool = False # Used primarily for door rando when a door doesn't actually exist
+    # deprecated, going to move towards rules_func instead
+    rule_func: Optional[Callable[[CollectionState, int], bool]] = None
+    tricks: List[TrickInfo] = []
+    exclude_from_rando: bool = False  # Used primarily for door rando when a door doesn't actually exist
 
 
 @ dataclass
 class PickupData:
     name: str
     required_items: List[typing.Union[Capabilities, List[Capabilities]]] = []  # If multiple lists are present, it will treat each group as a separate OR
-    tricks: List[TrickData] = []
+    rule_func: Optional[Callable[[CollectionState, int], bool]] = None
+    tricks: List[TrickInfo] = []
 
     def get_config_data(self, world: 'MetroidPrimeWorld'):
         return {
