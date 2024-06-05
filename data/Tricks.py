@@ -45,7 +45,13 @@ class Tricks:
     landing_site_scan_dash: TrickInfo = TrickInfo("Landing Site Scan Dash", "Perform a scan dash to reach the landing site without bombs", TrickDifficulty.Medium, can_scan)
 
     frigate_no_gravity: TrickInfo = TrickInfo("Frigate No Gravity", "Complete the Frigate without Gravity Suit", TrickDifficulty.Medium,
-                                              lambda state, player: can_morph_ball(state, player) and can_space_jump(state, player) and can_wave_beam(state, player) and can_thermal(state, player) and can_boost(state, player))
+                                              lambda state, player: can_bomb(state, player) and can_space_jump(state, player) and can_wave_beam(state, player) and can_thermal(state, player))
+
+    hydro_access_tunnel_no_gravity: TrickInfo = TrickInfo("Hydro Access Tunnel No Gravity", "Complete the Hydro Access Tunnel without Gravity Suit using Wall Boosting", TrickDifficulty.Hard,
+                                                          lambda state, player: can_boost(state, player))
+
+    frigate_backwards_no_gravity: TrickInfo = TrickInfo("Frigate No Gravity", "Complete the Frigate without Gravity Suit", TrickDifficulty.Medium,
+                                                        lambda state, player: can_morph_ball(state, player) and can_space_jump(state, player) and can_boost(state, player))
 
     frigate_crash_site_scan_dash: TrickInfo = TrickInfo("Crashed Frigate Scan Dash", "Perform a scan dash to reach the item at Crashed Frigate", TrickDifficulty.Hard, can_scan)
 

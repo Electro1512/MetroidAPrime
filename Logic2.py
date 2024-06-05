@@ -85,7 +85,11 @@ def can_scan(state: CollectionState, player: int) -> bool:
 
 
 def can_crashed_frigate(state: CollectionState, player: int) -> bool:
-    return state.has_all([SuitUpgrade.Morph_Ball.value, SuitUpgrade.Space_Jump_Boots.value, SuitUpgrade.Wave_Beam.value, SuitUpgrade.Gravity_Suit.value, SuitUpgrade.Thermal_Visor.value], player)
+    return state.has_all([SuitUpgrade.Morph_Ball.value, SuitUpgrade.Space_Jump_Boots.value, SuitUpgrade.Wave_Beam.value, SuitUpgrade.Gravity_Suit.value, SuitUpgrade.Thermal_Visor.value, SuitUpgrade.Morph_Ball_Bomb], player)
+
+
+def can_crashed_frigate_backwards(state: CollectionState, player: int) -> bool:
+    return state.has_all([SuitUpgrade.Morph_Ball.value, SuitUpgrade.Space_Jump_Boots.value, SuitUpgrade.Gravity_Suit.value, SuitUpgrade.Morph_Ball_Bomb], player)
 
 
 def can_heat(state: CollectionState, player: int) -> bool:
