@@ -64,7 +64,7 @@ class ChozoRuinsAreaData(AreaData):
             },
             pickups=[PickupData('Chozo Ruins: Elder Chamber')]),
         RoomName.Elder_Hall_Access: RoomData(doors={
-            0: DoorData(RoomName.Elder_Hall_Access),
+            0: DoorData(RoomName.Hall_of_the_Elders),
             1: DoorData(RoomName.Crossway, defaultLock=DoorLockType.Missile),
         }),
         RoomName.Energy_Core_Access: RoomData(doors={
@@ -298,7 +298,9 @@ class ChozoRuinsAreaData(AreaData):
         RoomName.Transport_to_Tallon_Overworld_North: RoomData(doors={
             0: DoorData(RoomName.Ruins_Entrance)
         }),
-        RoomName.Transport_to_Tallon_Overworld_South: RoomData(doors={}, pickups=[]),
+        RoomName.Transport_to_Tallon_Overworld_South: RoomData(doors={
+            0: DoorData(RoomName.Transport_Access_South),
+        }),
         RoomName.Vault_Access: RoomData(
             doors={
                 0: DoorData(RoomName.Vault, rule_func=can_morph_ball),

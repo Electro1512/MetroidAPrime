@@ -34,7 +34,7 @@ def can_missile(state: CollectionState, player: int) -> bool:
 
 
 def can_super_missile(state: CollectionState, player: int) -> bool:
-    return state.has_all([SuitUpgrade.Charge_Beam.value, SuitUpgrade.Super_Missile.value], player)
+    return can_missile(state, player) and state.has_all([SuitUpgrade.Charge_Beam.value, SuitUpgrade.Super_Missile.value], player)
 
 
 def can_wave_beam(state: CollectionState, player: int) -> bool:
