@@ -8,13 +8,13 @@ from .RoomNames import RoomName
 
 class ChozoRuinsAreaData(AreaData):
     rooms = {
-        RoomName.Antechamber: RoomData(doors={}, pickups=[PickupData('Chozo Ruins: Antechamber', rule_func=lambda state, player: False, tricks=[]), ]),
+        RoomName.Antechamber: RoomData(doors={0: DoorData(RoomName.Reflecting_Pool, defaultLock=DoorLockType.Ice)}, pickups=[PickupData('Chozo Ruins: Antechamber'), ]),
         RoomName.Arboretum_Access: RoomData(doors={
             0: DoorData(RoomName.Arboretum),
             1: DoorData(RoomName.Ruined_Fountain),
         }),
         RoomName.Arboretum: RoomData(doors={
-            0: DoorData(RoomName.Sunchamber_Lobby, rule_func=lambda state, player: can_bomb(state, player) and can_scan(state, player), defaultLockType=DoorLockType.Missile, tricks=[Tricks.arboretum_scan_gate_skip]),
+            0: DoorData(RoomName.Sunchamber_Lobby, rule_func=lambda state, player: can_bomb(state, player) and can_scan(state, player), defaultLock=DoorLockType.Missile, tricks=[Tricks.arboretum_scan_gate_skip]),
             1: DoorData(RoomName.Arboretum_Access, defaultLock=DoorLockType.Missile),
             2: DoorData(RoomName.Gathering_Hall_Access, defaultLock=DoorLockType.Missile),
         }),
@@ -62,7 +62,7 @@ class ChozoRuinsAreaData(AreaData):
             doors={
                 0: DoorData(RoomName.Hall_of_the_Elders, defaultLock=DoorLockType.Ice),
             },
-            pickups=[PickupData('Chozo Ruins: Elder Chamber', rule_func=lambda state, player: False, tricks=[]), ]),
+            pickups=[PickupData('Chozo Ruins: Elder Chamber')]),
         RoomName.Elder_Hall_Access: RoomData(doors={
             0: DoorData(RoomName.Elder_Hall_Access),
             1: DoorData(RoomName.Crossway, defaultLock=DoorLockType.Missile),
@@ -84,7 +84,7 @@ class ChozoRuinsAreaData(AreaData):
             doors={
                 0: DoorData(RoomName.East_Furnace_Access, defaultLock=DoorLockType.Ice, rule_func=can_space_jump),
                 1: DoorData(RoomName.West_Furnace_Access, rule_func=can_bomb),
-                2: DoorData(RoomName.Crossway_Access_West, exclude_from_random=True, rule_func=can_morph_ball, defaultLock=DoorLockType.None_),
+                2: DoorData(RoomName.Crossway_Access_West, exclude_from_rando=True, rule_func=can_morph_ball, defaultLock=DoorLockType.None_),
             },
             pickups=[
                 PickupData('Chozo Ruins: Furnace - Spider Tracks', rule_func=lambda state, player: can_power_bomb(state, player) and can_boost(state, player) and can_spider(state, player),
@@ -127,12 +127,12 @@ class ChozoRuinsAreaData(AreaData):
             2: DoorData(RoomName.Ruined_Shrine_Access, defaultLock=DoorLockType.Missile),
             3: DoorData(RoomName.Nursery_Access),
             4: DoorData(RoomName.Plaza_Access, tricks=[Tricks.vault_via_plaza]),
-            # 5: DoorData(RoomName.Piston_Tunnel), # Piston tunnel to training chamber is blocked by a chozo head that needs to be destroyed from the other side
+            5: DoorData(RoomName.Piston_Tunnel, rule_func=lambda state, player: False),  # Piston tunnel to training chamber is blocked by a chozo head that needs to be destroyed from the other side
         },
             pickups=[PickupData('Chozo Ruins: Main Plaza - Half-Pipe', rule_func=can_boost, tricks=[Tricks.plaza_half_pipe_no_boost]),
-                     PickupData('Chozo Ruins: Main Plaza - Grapple Ledge', rule_func=lambda state, player: state.can_reach_location(RoomName.Piston_Tunnel, player) and can_grapple(state, player), tricks=[Tricks.plaza_grapple_ledge_r_jump]),
+                     PickupData('Chozo Ruins: Main Plaza - Grapple Ledge', rule_func=lambda state, player: state.can_reach_region(RoomName.Piston_Tunnel.value, player) and can_grapple(state, player), tricks=[Tricks.plaza_grapple_ledge_r_jump]),
                      PickupData('Chozo Ruins: Main Plaza - Tree', rule_func=can_super_missile, tricks=[]),
-                     PickupData('Chozo Ruins: Main Plaza - Locked Door', rule_func=lambda state, player: state.can_reach_location(RoomName.Plaza_Access, player), tricks=[Tricks.vault_via_plaza]), ]),  # If we do room rando, the logic for this will need to be adjusted
+                     PickupData('Chozo Ruins: Main Plaza - Locked Door', rule_func=lambda state, player: state.can_reach_region(RoomName.Plaza_Access.value, player), tricks=[Tricks.vault_via_plaza]), ]),  # If we do room rando, the logic for this will need to be adjusted
         RoomName.Map_Station: RoomData(doors={}, pickups=[]),
         RoomName.Meditation_Fountain: RoomData(doors={
             0: DoorData(RoomName.Magma_Pool),

@@ -1,5 +1,6 @@
 import typing
 
+from worlds.metroidprime.data.ChozoRuins import ChozoRuinsAreaData
 from worlds.metroidprime.data.RoomNames import RoomName
 from worlds.metroidprime.data.TallonOverworld import TallonOverworldAreaData
 from .Logic import MetroidPrimeLogic as logic
@@ -15,12 +16,8 @@ def create_regions(world: 'MetroidPrimeWorld', final_boss_selection):
     menu = Region("Menu", world.player, world.multiworld)
     world.multiworld.regions.append(menu)
 
-
     TallonOverworldAreaData().create_world_region(world)
-
-    chozo_ruins = Region("Chozo Ruins", world.player, world.multiworld)
-    chozo_ruins.add_locations(chozo_location_table, MetroidPrimeLocation)
-    world.multiworld.regions.append(chozo_ruins)
+    ChozoRuinsAreaData().create_world_region(world)
 
     magmoor_caverns = Region("Magmoor Caverns", world.player, world.multiworld)
     magmoor_caverns.add_locations(magmoor_location_table, MetroidPrimeLocation)
@@ -43,10 +40,23 @@ def create_regions(world: 'MetroidPrimeWorld', final_boss_selection):
     # entrances
     menu.connect(world.multiworld.get_region(RoomName.Landing_Site.value, world.player), "Landing Site")
 
-# TODO: Nuke these 3
-    world.multiworld.get_region(RoomName.Transport_to_Chozo_Ruins_West.value, world.player).connect(chozo_ruins, "West Chozo Elevator")
-    world.multiworld.get_region(RoomName.Transport_to_Chozo_Ruins_East.value, world.player).connect(chozo_ruins, "East Chozo Elevator")
-    world.multiworld.get_region(RoomName.Transport_to_Chozo_Ruins_South.value, world.player).connect(chozo_ruins, "South Chozo Elevator")
+# TODO: Nuke these
+    tallon_transport_to_chozo_west = world.multiworld.get_region(RoomName.Transport_to_Chozo_Ruins_West.value, world.player)
+    tallon_transport_to_chozo_east = world.multiworld.get_region(RoomName.Transport_to_Chozo_Ruins_East.value, world.player)
+    tallon_transport_to_chozo_south = world.multiworld.get_region(RoomName.Transport_to_Chozo_Ruins_South.value, world.player)
+
+    chozo_transport_to_tallon_north = world.multiworld.get_region(RoomName.Transport_to_Tallon_Overworld_North.value, world.player)
+    chozo_transport_to_magmoor_north = world.multiworld.get_region(RoomName.Transport_to_Magmoor_Caverns_North.value, world.player)
+    chozo_transport_to_tallon_east = world.multiworld.get_region(RoomName.Transport_to_Tallon_Overworld_East.value, world.player)
+    chozo_transport_to_tallon_south = world.multiworld.get_region(RoomName.Transport_to_Tallon_Overworld_South.value, world.player)
+
+    tallon_transport_to_chozo_west.connect(chozo_transport_to_tallon_north, "West Chozo Elevator")
+    tallon_transport_to_chozo_east.connect(chozo_transport_to_tallon_east, "East Chozo Elevator")
+    tallon_transport_to_chozo_south.connect(chozo_transport_to_tallon_south, "South Chozo Elevator")
+
+    chozo_transport_to_tallon_north.connect(tallon_transport_to_chozo_west, "North Tallon Elevator")
+    chozo_transport_to_tallon_east.connect(tallon_transport_to_chozo_east, "East Tallon Elevator")
+    chozo_transport_to_tallon_south.connect(tallon_transport_to_chozo_south, "South Tallon Elevator")
 
     world.multiworld.get_region(RoomName.Transport_to_Magmoor_Caverns_East.value, world.player).connect(magmoor_caverns, "East Magmoor Elevator", lambda state: (
         logic.prime_has_missiles(state, world.multiworld, world.player) and
@@ -72,7 +82,7 @@ def create_regions(world: 'MetroidPrimeWorld', final_boss_selection):
             logic.prime_has_missiles(state, world.multiworld, world.player) and
             logic.prime_artifact_count(state, world.multiworld, world.player)))
 
-    chozo_ruins.connect(magmoor_caverns, "North Magmoor Elevator", lambda state: (
+    chozo_transport_to_magmoor_north.connect(magmoor_caverns, "North Magmoor Elevator", lambda state: (
         logic.prime_has_missiles(state, world.multiworld, world.player) and
         logic.prime_can_heat(state, world.multiworld, world.player) and
         state.has("Morph Ball", world.player)))

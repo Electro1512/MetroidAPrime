@@ -46,7 +46,7 @@ def can_ice_beam(state: CollectionState, player: int) -> bool:
 
 
 def can_plasma_beam(state: CollectionState, player: int) -> bool:
-    return state.has(SuitUpgrade.Plasma_Beam_Beam.value, player)
+    return state.has(SuitUpgrade.Plasma_Beam.value, player)
 
 
 def can_melt_ice(state: CollectionState, player: int) -> bool:
@@ -106,7 +106,7 @@ def can_exit_ruined_shrine(state: CollectionState, player: int) -> bool:
 
 
 def can_flaahgra(state: CollectionState, player: int) -> bool:
-    return state.can_reach_region(RoomName.Sunchamber, player) and can_missile(state, player) and can_scan(state, player) and can_bomb(state, player)
+    return state.can_reach_region(RoomName.Sunchamber.value, player) and can_missile(state, player) and can_scan(state, player) and can_bomb(state, player)
 
 
 def can_climb_sun_tower(state: CollectionState, player: int) -> bool:
