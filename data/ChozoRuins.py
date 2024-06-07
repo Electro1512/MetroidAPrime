@@ -118,7 +118,7 @@ class ChozoRuinsAreaData(AreaData):
         RoomName.Magma_Pool: RoomData(
             doors={
                 0: DoorData(RoomName.Training_Chamber_Access, defaultLock=DoorLockType.Wave, rule_func=lambda state, player: can_grapple(state, player) and can_heat(state, player), tricks=[Tricks.magma_pool_scan_dash]),
-                1: DoorData(RoomName.Meditation_Fountain, rule_func=lambda state, player: state.has(SuitUpgrade.Energy_Tank, player, 2) or state.has(SuitUpgrade.Varia_Suit, player) or state.has(SuitUpgrade.Gravity_Suit, player) or state.has(SuitUpgrade.Phazon_Suit, player)),  # Damage reduction let's player cross
+                1: DoorData(RoomName.Meditation_Fountain, rule_func=lambda state, player: state.has(SuitUpgrade.Energy_Tank.value, player, 2) or state.has(SuitUpgrade.Varia_Suit.value, player) or state.has(SuitUpgrade.Gravity_Suit.value, player) or state.has(SuitUpgrade.Phazon_Suit.value, player)),  # Damage reduction let's player cross
             },
             pickups=[PickupData('Chozo Ruins: Magma Pool', rule_func=lambda state, player:  can_grapple(state, player) and can_heat(state, player) and can_power_bomb(state, player), tricks=[Tricks.magma_pool_item_infinite_speed, Tricks.magma_pool_item_scan_dash]), ]),
         RoomName.Main_Plaza: RoomData(doors={
