@@ -37,8 +37,10 @@ def create_regions(world: 'MetroidPrimeWorld', final_boss_selection):
     mission_complete = Region("Mission Complete", world.player, world.multiworld)
     world.multiworld.regions.append(mission_complete)
 
+    landing_site = world.multiworld.get_region(RoomName.Landing_Site.value, world.player)
     # entrances
-    menu.connect(world.multiworld.get_region(RoomName.Landing_Site.value, world.player), "Landing Site")
+    menu.connect(landing_site, "Landing Site")
+
 
 # TODO: Nuke these
     tallon_transport_to_chozo_west = world.multiworld.get_region(RoomName.Transport_to_Chozo_Ruins_West.value, world.player)

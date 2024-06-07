@@ -5,6 +5,7 @@ import typing
 
 from BaseClasses import CollectionState, LocationProgressType, Region
 from worlds.metroidprime.Items import SuitUpgrade
+from worlds.metroidprime.Logic2 import can_bomb, can_ice_beam, can_missile, can_plasma_beam, can_wave_beam
 from worlds.metroidprime.PrimeOptions import MetroidPrimeOptions
 
 from ..Locations import METROID_PRIME_LOCATION_BASE, MetroidPrimeLocation, every_location
@@ -211,15 +212,15 @@ def _can_access_door(state: CollectionState, player: int, door_data: DoorData) -
         elif lock == DoorLockType.Blue:
             can_open = True
         elif lock == DoorLockType.Wave:
-            can_open = state.has(SuitUpgrade.Wave_Beam.value, player)
+            can_open = can_wave_beam(state, player)
         elif lock == DoorLockType.Ice:
-            can_open = state.has(SuitUpgrade.Ice_Beam.value, player)
+            can_open = can_ice_beam(state, player)
         elif lock == DoorLockType.Plasma:
-            can_open = state.has(SuitUpgrade.Plasma_Beam.value, player)
+            can_open = can_plasma_beam(state, player)
         elif lock == DoorLockType.Missile:
-            can_open = state.has(SuitUpgrade.Missile_Launcher.value, player)
+            can_open = can_missile(state, player)
         elif lock == DoorLockType.Bomb:
-            can_open = state.has(SuitUpgrade.Morph_Ball_Bomb.value, player)
+            can_open = can_bomb(state, player)
     else:
         can_open = True
 
