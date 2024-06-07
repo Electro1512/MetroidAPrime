@@ -1,7 +1,7 @@
 from BaseClasses import LocationProgressType
 from worlds.metroidprime.Items import SuitUpgrade
 from .RoomData import AreaData, DoorData, DoorLockType, MetroidPrimeArea, PickupData, RoomData
-from worlds.metroidprime.Logic2 import can_bomb, can_boost, can_charge_beam, can_climb_sun_tower, can_crashed_frigate, can_crashed_frigate_backwards, can_exit_ruined_shrine, can_flaahgra, can_grapple, can_heat, can_missile, can_morph_ball, can_move_underwater, can_power_bomb, can_scan, can_space_jump, can_spider, can_super_missile, can_xray
+from worlds.metroidprime.Logic2 import can_bomb, can_boost, can_charge_beam, can_climb_sun_tower, can_crashed_frigate, can_crashed_frigate_backwards, can_exit_ruined_shrine, can_flaahgra, can_grapple, can_heat, can_ice_beam, can_missile, can_morph_ball, can_move_underwater, can_plasma_beam, can_power_bomb, can_scan, can_space_jump, can_spider, can_super_missile, can_wave_beam, can_xray
 from worlds.metroidprime.data.Tricks import Tricks
 from .RoomNames import RoomName
 
@@ -23,9 +23,21 @@ class ChozoRuinsAreaData(AreaData):
             1: DoorData(RoomName.Energy_Core, rule_func=can_bomb, defaultLock=DoorLockType.None_, exclude_from_rando=True),
         }),
         RoomName.Burn_Dome: RoomData(doors={}, pickups=[PickupData('Chozo Ruins: Burn Dome - Missile', rule_func=can_bomb), PickupData('Chozo Ruins: Burn Dome - Incinerator Drone'), ]),
-        RoomName.Crossway_Access_South: RoomData(doors={}, pickups=[]),
-        RoomName.Crossway_Access_West: RoomData(doors={}, pickups=[]),
-        RoomName.Crossway: RoomData(doors={}, pickups=[PickupData('Chozo Ruins: Crossway', rule_func=lambda state, player: False, tricks=[]), ]),
+        RoomName.Crossway_Access_South: RoomData(doors={
+            0: DoorData(RoomName.Crossway, defaultLock=DoorLockType.Ice, rule_func=can_morph_ball),
+            1: DoorData(RoomName.Hall_of_the_Elders, defaultLock=DoorLockType.Ice, rule_func=can_morph_ball),
+        }),
+        RoomName.Crossway_Access_West: RoomData(doors={
+            0: DoorData(RoomName.Crossway, defaultLock=DoorLockType.Wave, rule_func=can_morph_ball),
+            1: DoorData(RoomName.Furnace, rule_func=can_morph_ball, exclude_from_rando=True),
+        }, pickups=[]),
+        RoomName.Crossway: RoomData(
+            doors={
+                0: DoorData(RoomName.Crossway_Access_South, defaultLock=DoorLockType.Ice),
+                1: DoorData(RoomName.Crossway_Access_West),
+                2: DoorData(RoomName.Elder_Hall_Access, defaultLock=DoorLockType.Missile, rule_func=lambda state, player: can_boost(state, player), tricks=[Tricks.crossway_hpbj]),
+            },
+            pickups=[PickupData('Chozo Ruins: Crossway', rule_func=lambda state, player: can_bomb(state, player) and can_boost(state, player) and can_spider(state, player) and can_super_missile(state, player) and can_scan(state, player), tricks=[Tricks.crossway_item_fewer_reqs]), ]),
         RoomName.Dynamo_Access: RoomData(
             area=MetroidPrimeArea.Chozo_Ruins,
             doors={
@@ -42,9 +54,19 @@ class ChozoRuinsAreaData(AreaData):
             0: DoorData(RoomName.Gathering_Hall),
             1: DoorData(RoomName.Energy_Core_Access),
         }),
-        RoomName.East_Furnace_Access: RoomData(doors={}, pickups=[]),
-        RoomName.Elder_Chamber: RoomData(doors={}, pickups=[PickupData('Chozo Ruins: Elder Chamber', rule_func=lambda state, player: False, tricks=[]), ]),
-        RoomName.Elder_Hall_Access: RoomData(doors={}, pickups=[]),
+        RoomName.East_Furnace_Access: RoomData(doors={
+            0: DoorData(RoomName.Hall_of_the_Elders, defaultLock=DoorLockType.Ice),
+            1: DoorData(RoomName.Furnace, defaultLock=DoorLockType.Ice)
+        }),
+        RoomName.Elder_Chamber: RoomData(
+            doors={
+                0: DoorData(RoomName.Hall_of_the_Elders, defaultLock=DoorLockType.Ice),
+            },
+            pickups=[PickupData('Chozo Ruins: Elder Chamber', rule_func=lambda state, player: False, tricks=[]), ]),
+        RoomName.Elder_Hall_Access: RoomData(doors={
+            0: DoorData(RoomName.Elder_Hall_Access),
+            1: DoorData(RoomName.Crossway, defaultLock=DoorLockType.Missile),
+        }),
         RoomName.Energy_Core_Access: RoomData(doors={
             0: DoorData(RoomName.Energy_Core),
             1: DoorData(RoomName.East_Atrium),
@@ -78,7 +100,15 @@ class ChozoRuinsAreaData(AreaData):
             2: DoorData(RoomName.Save_Station_2, defaultLock=DoorLockType.Missile),
             3: DoorData(RoomName.East_Atrium, rule_func=lambda state, player: can_morph_ball(state, player) or can_space_jump(state, player)),
         }, pickups=[PickupData('Chozo Ruins: Gathering Hall', rule_func=lambda state, player: can_space_jump(state, player) and can_power_bomb(state, player), tricks=[Tricks.gathering_hall_without_space_jump]), ]),
-        RoomName.Hall_of_the_Elders: RoomData(doors={}, pickups=[PickupData('Chozo Ruins: Hall of the Elders', rule_func=lambda state, player: False, tricks=[]), ]),
+        RoomName.Hall_of_the_Elders: RoomData(
+            doors={
+                0: DoorData(RoomName.Reflecting_Pool_Access, rule_func=lambda state, player: can_bomb(state, player) and can_spider(state, player) and can_wave_beam(state, player), tricks=[Tricks.hall_of_elders_reflecting_pool_no_spider, Tricks.hall_of_elders_reflecting_pool_no_wave_beam]),
+                1: DoorData(RoomName.Elder_Hall_Access, rule_func=lambda state, player: can_boost(state, player) and can_missile(state, player)),
+                2: DoorData(RoomName.East_Furnace_Access, defaultLock=DoorLockType.Ice),
+                3: DoorData(RoomName.Crossway_Access_South, defaultLock=DoorLockType.Ice),
+                4: DoorData(RoomName.Elder_Chamber, defaultLock=DoorLockType.Ice, rule_func=lambda state, player: can_bomb(state, player) and can_plasma_beam(state, player) and can_space_jump(state, player) and can_spider(state, player), tricks=[Tricks.hall_of_elders_elder_chamber_no_spider]),
+            },
+            pickups=[PickupData('Chozo Ruins: Hall of the Elders', rule_func=lambda state, player: can_bomb(state, player) and can_spider(state, player) and can_ice_beam(state, player) and can_space_jump(state, player), tricks=[Tricks.hall_of_elders_item_no_spider]), ]),
         RoomName.Hive_Totem: RoomData(
             doors={
                 0: DoorData(RoomName.Totem_Access),
@@ -123,9 +153,17 @@ class ChozoRuinsAreaData(AreaData):
         RoomName.Plaza_Access: RoomData(doors={
             0: DoorData(RoomName.Main_Plaza),
             1: DoorData(RoomName.Vault),
-        }, pickups=[]),
-        RoomName.Reflecting_Pool_Access: RoomData(doors={}, pickups=[]),
-        RoomName.Reflecting_Pool: RoomData(doors={}, pickups=[]),
+        }),
+        RoomName.Reflecting_Pool_Access: RoomData(doors={
+            0: DoorData(RoomName.Reflecting_Pool),
+            1: DoorData(RoomName.Hall_of_the_Elders),
+        }),
+        RoomName.Reflecting_Pool: RoomData(doors={
+            0: DoorData(RoomName.Save_Station_3, defaultLock=DoorLockType.Missile, tricks=[Tricks.reflecting_pool_space_jump_climb]),
+            1: DoorData(RoomName.Transport_Access_South, defaultLock=DoorLockType.Ice, tricks=[Tricks.reflecting_pool_space_jump_climb]),
+            2: DoorData(RoomName.Reflecting_Pool_Access),
+            3: DoorData(RoomName.Antechamber, defaultLock=DoorLockType.Missile, rule_func=lambda state, player: can_boost(state, player) and can_bomb(state, player), tricks=[Tricks.reflecting_pool_space_jump_climb]),
+        }),
         RoomName.Ruined_Fountain_Access: RoomData(doors={
             0: DoorData(RoomName.Main_Plaza, rule_func=can_morph_ball),
             1: DoorData(RoomName.Ruined_Fountain, rule_func=can_morph_ball),
@@ -181,7 +219,10 @@ class ChozoRuinsAreaData(AreaData):
         RoomName.Save_Station_2: RoomData(doors={
             0: DoorData(RoomName.Gathering_Hall, defaultLock=DoorLockType.Missile),
         }),
-        RoomName.Save_Station_3: RoomData(doors={}, pickups=[]),
+        RoomName.Save_Station_3: RoomData(doors={
+            0: DoorData(RoomName.Reflecting_Pool, defaultLock=DoorLockType.Missile, rule_func=can_bomb),
+            1: DoorData(RoomName.Transport_to_Tallon_Overworld_East, rule_func=can_bomb),
+        }),
         RoomName.Sun_Tower: RoomData(doors={
             0: DoorData(RoomName.Sun_Tower_Access, rule_func=can_climb_sun_tower, exclude_from_rando=True),
             1: DoorData(RoomName.Transport_to_Magmoor_Caverns_North),
@@ -242,13 +283,18 @@ class ChozoRuinsAreaData(AreaData):
                 1: DoorData(RoomName.Transport_to_Magmoor_Caverns_North, rule_func=can_morph_ball),
             },
             pickups=[PickupData('Chozo Ruins: Transport Access North')]),
-        RoomName.Transport_Access_South: RoomData(doors={}, pickups=[]),
+        RoomName.Transport_Access_South: RoomData(doors={
+            0: DoorData(RoomName.Reflecting_Pool, defaultLock=DoorLockType.Ice),
+            1: DoorData(RoomName.Transport_to_Tallon_Overworld_South),
+        }),
         RoomName.Transport_to_Magmoor_Caverns_North: RoomData(doors={
             0: DoorData(RoomName.Sun_Tower),
             1: DoorData(RoomName.Vault_Access),
             2: DoorData(RoomName.Transport_Access_North),
         }),
-        RoomName.Transport_to_Tallon_Overworld_East: RoomData(doors={}, pickups=[]),
+        RoomName.Transport_to_Tallon_Overworld_East: RoomData(doors={
+            0: DoorData(RoomName.Save_Station_3),
+        }),
         RoomName.Transport_to_Tallon_Overworld_North: RoomData(doors={
             0: DoorData(RoomName.Ruins_Entrance)
         }),
