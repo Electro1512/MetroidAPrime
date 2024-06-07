@@ -1,5 +1,6 @@
 from BaseClasses import CollectionState
 from worlds.metroidprime.PrimeOptions import MetroidPrimeOptions
+from worlds.metroidprime.data.RoomNames import RoomName
 from .Items import SuitUpgrade
 
 
@@ -94,3 +95,19 @@ def can_crashed_frigate_backwards(state: CollectionState, player: int) -> bool:
 
 def can_heat(state: CollectionState, player: int) -> bool:
     return state.has(SuitUpgrade.Varia_Suit.value, player)
+
+
+def can_infinite_speed(state: CollectionState, player: int) -> bool:
+    return can_boost(state, player) and can_bomb(state, player)
+
+
+def can_exit_ruined_shrine(state: CollectionState, player: int) -> bool:
+    return can_morph_ball(state, player) or can_space_jump(state, player)
+
+
+def can_flaahgra(state: CollectionState, player: int) -> bool:
+    return state.can_reach_region(RoomName.Sunchamber, player) and can_missile(state, player) and can_scan(state, player) and can_bomb(state, player)
+
+
+def can_climb_sun_tower(state: CollectionState, player: int) -> bool:
+    return can_spider(state, player) and can_super_missile(state, player)

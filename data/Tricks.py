@@ -4,7 +4,7 @@ from typing import Callable, Dict
 
 from BaseClasses import CollectionState
 from worlds.metroidprime.Items import SuitUpgrade
-from worlds.metroidprime.Logic2 import can_bomb, can_boost, can_morph_ball, can_scan, can_space_jump, can_thermal, can_wave_beam
+from worlds.metroidprime.Logic2 import can_bomb, can_boost, can_grapple, can_infinite_speed, can_morph_ball, can_power_bomb, can_scan, can_space_jump, can_spider, can_thermal, can_wave_beam
 
 
 class TrickDifficulty(Enum):
@@ -67,6 +67,33 @@ class Tricks:
 
     root_cave_arbor_chamber_no_grapple_xray: TrickInfo = TrickInfo("Root Cave Arbor Chamber No Grapple XRay", "Reach the Arbor Chamber without Grapple Beam or XRay Visor using a Combat Dash", TrickDifficulty.Hard, lambda state, player: can_space_jump(state, player) and can_scan(state, player))
   # Chozo
+    vault_via_plaza: TrickInfo = TrickInfo("Vault Via Plaza", "Reach the Vault via the Main Plaza using an L Jump", TrickDifficulty.Easy, can_space_jump)
+    plaza_half_pipe_no_boost: TrickInfo = TrickInfo("Plaza Half Pipe No Boost", "Reach the Half Pipe in the Main Plaza using a slope jump", TrickDifficulty.Easy, can_space_jump)
+    plaza_grapple_ledge_r_jump: TrickInfo = TrickInfo("Plaza Grapple Ledge R Jump", "Reach the Grapple Ledge in the Main Plaza using an R Jump", TrickDifficulty.Easy, can_space_jump)
+
+    ruined_shrine_upper_door_no_spider_ball: TrickInfo = TrickInfo("Ruined Shrine Upper Door L Jump", "Reach the upper door in the Ruined Shrine by L Jumping off the root", TrickDifficulty.Easy, can_space_jump)
+    ruined_shrine_upper_door_scan_dash: TrickInfo = TrickInfo("Ruined Shrine Upper Door Scan Dash", "Reach the upper door in the Ruined Shrine by scan dashing without space jump", TrickDifficulty.Hard, can_scan)
+    ruined_shrine_scan_dash_escape: TrickInfo = TrickInfo("Ruined Shrine Scan Dash Escape", "Escape the Ruined Shrine by scan dashing  off the branches", TrickDifficulty.Easy, can_scan)
+
+    tower_of_light_climb_without_missiles: TrickInfo = TrickInfo("Tower of Light Climb Without Missiles", "Tower of Light can be climbed by dashing to the outside edges, skipping the 40 missile requirement.", TrickDifficulty.Easy, can_space_jump)
+    tower_chamber_no_gravity: TrickInfo = TrickInfo("Tower Chamber No Gravity", "Reach the Tower Chamber without Gravity Suit by using a slope jump", TrickDifficulty.Easy, can_space_jump)
+
+    ruined_nursery_no_bombs: TrickInfo = TrickInfo("Ruined Nursery No Bombs", "Reach the Ruined Nursery Item by space jumping and morphing near the item", TrickDifficulty.Hard, lambda state, player: can_space_jump(state, player) and can_morph_ball(state, player))
+
+    magma_pool_scan_dash: TrickInfo = TrickInfo("Cross Magma Pool Suitless", "Cross magma pool using a scan dash on the crate items", TrickDifficulty.Medium, lambda state, player: can_space_jump(state, player) and can_scan(state, player))
+    magma_pool_item_scan_dash: TrickInfo = TrickInfo("Magma Pool Item No Grapple", "Use the scan dash and a power bomb to get the item in the magma pool", TrickDifficulty.Medium, lambda state, player: can_space_jump(state, player) and can_scan(state, player) and can_power_bomb(state, player))
+    magma_pool_item_infinite_speed: TrickInfo = TrickInfo("Magma Pool Item Infinite Speed", "Use infinite speed to get the item in the magma pool", TrickDifficulty.Medium, can_infinite_speed)
+
+    arboretum_scan_gate_skip: TrickInfo = TrickInfo("Arboretum Scan Gate Skip", "Skip the gate in the Arboretum by double bomb jumping", TrickDifficulty.Easy, can_bomb)
+
+    gathering_hall_without_space_jump: TrickInfo = TrickInfo("Gathering Hall Without Space Jump", "Double bomb jump from the side platform to the grate where the item is", TrickDifficulty.Easy, lambda state, player: can_bomb(state, player) and can_power_bomb(state, player))
+
+    watery_hall_no_gravity: TrickInfo = TrickInfo("Watery Hall No Gravity", "Reach the Watery Hall Underwater Item without Gravity Suit by using a slope jump", TrickDifficulty.Easy, can_space_jump)
+
+    furnace_no_spider_ball = TrickInfo("Furnace No Spider Ball", "Reach the Item inside the Furnace without Spider Ball by jumping on the side of the spider track", TrickDifficulty.Easy, lambda state, player: can_bomb(state, player))
+    furnace_spider_track_hbj = TrickInfo("Furnace Spider Track HBJ", "Reach the first track in furnace with a hyper bomb jump", TrickDifficulty.Medium, lambda state, player: can_bomb(state, player) and can_spider(state, player))
+    furnace_spider_track_sj_bombs = TrickInfo("Furnace Spider Track SJ Bombs", "You can climb the Furnace and its spider tracks using Space Jump, reach the top of the room, then bomb jump across to the item.", TrickDifficulty.Medium, lambda state, player: can_bomb(state, player) and can_space_jump(state, player))
+
   # Magmoor
   # Phendrana
   # Phazon Mines

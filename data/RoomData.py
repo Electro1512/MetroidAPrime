@@ -3,7 +3,7 @@ from enum import Enum
 from typing import Callable, List, Optional
 import typing
 
-from BaseClasses import CollectionState, Region
+from BaseClasses import CollectionState, LocationProgressType, Region
 from worlds.metroidprime.Items import SuitUpgrade
 from worlds.metroidprime.PrimeOptions import MetroidPrimeOptions
 
@@ -101,6 +101,7 @@ class PickupData:
     required_items: List[typing.Union[Capabilities, List[Capabilities]]] = field(default_factory=list)  # If multiple lists are present, it will treat each group as a separate OR
     rule_func: Optional[Callable[[CollectionState, int], bool]] = None
     tricks: List[TrickInfo] = field(default_factory=list)
+    priority: LocationProgressType = LocationProgressType.DEFAULT
 
     def get_config_data(self, world: 'MetroidPrimeWorld'):
         return {
