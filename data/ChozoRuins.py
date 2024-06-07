@@ -1,7 +1,7 @@
 from BaseClasses import LocationProgressType
 from worlds.metroidprime.Items import SuitUpgrade
 from .RoomData import AreaData, DoorData, DoorLockType, MetroidPrimeArea, PickupData, RoomData
-from worlds.metroidprime.Logic2 import can_bomb, can_boost, can_charge_beam, can_climb_sun_tower, can_crashed_frigate, can_crashed_frigate_backwards, can_exit_ruined_shrine, can_flaahgra, can_grapple, can_heat, can_ice_beam, can_missile, can_morph_ball, can_move_underwater, can_plasma_beam, can_power_bomb, can_scan, can_space_jump, can_spider, can_super_missile, can_wave_beam, can_xray
+from worlds.metroidprime.Logic2 import can_bomb, can_boost, can_climb_sun_tower, can_climb_tower_of_light, can_exit_ruined_shrine, can_flaahgra, can_grapple, can_heat, can_ice_beam, can_missile, can_morph_ball, can_move_underwater, can_plasma_beam, can_power_bomb, can_scan, can_space_jump, can_spider, can_super_missile, can_wave_beam
 from worlds.metroidprime.data.Tricks import Tricks
 from .RoomNames import RoomName
 
@@ -132,7 +132,7 @@ class ChozoRuinsAreaData(AreaData):
             pickups=[PickupData('Chozo Ruins: Main Plaza - Half-Pipe', rule_func=can_boost, tricks=[Tricks.plaza_half_pipe_no_boost]),
                      PickupData('Chozo Ruins: Main Plaza - Grapple Ledge', rule_func=lambda state, player: state.can_reach_region(RoomName.Piston_Tunnel.value, player) and can_grapple(state, player), tricks=[Tricks.plaza_grapple_ledge_r_jump]),
                      PickupData('Chozo Ruins: Main Plaza - Tree', rule_func=can_super_missile, tricks=[]),
-                     PickupData('Chozo Ruins: Main Plaza - Locked Door', rule_func=lambda state, player: state.can_reach_region(RoomName.Plaza_Access.value, player), tricks=[Tricks.vault_via_plaza]), ]),  # If we do room rando, the logic for this will need to be adjusted
+                     PickupData('Chozo Ruins: Main Plaza - Locked Door', rule_func=lambda state, player: state.can_reach_region(RoomName.Plaza_Access.value, player) and can_morph_ball(state, player), tricks=[Tricks.vault_via_plaza]), ]),  # If we do room rando, the logic for this will need to be adjusted
         RoomName.Map_Station: RoomData(doors={}, pickups=[]),
         RoomName.Meditation_Fountain: RoomData(doors={
             0: DoorData(RoomName.Magma_Pool),
@@ -263,7 +263,7 @@ class ChozoRuinsAreaData(AreaData):
             },
             pickups=[
                 PickupData('Chozo Ruins: Tower of Light',
-                           rule_func=lambda state, player: can_missile(state, player) and state.has(SuitUpgrade.Missile_Expansion, player, 8),
+                           rule_func=can_climb_tower_of_light,
                            tricks=[Tricks.tower_of_light_climb_without_missiles])]),
         RoomName.Training_Chamber_Access: RoomData(
             doors={

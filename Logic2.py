@@ -111,3 +111,7 @@ def can_flaahgra(state: CollectionState, player: int) -> bool:
 
 def can_climb_sun_tower(state: CollectionState, player: int) -> bool:
     return can_spider(state, player) and can_super_missile(state, player)
+
+
+def can_climb_tower_of_light(state: CollectionState, player: int) -> bool:
+    return can_missile(state, player) and state.has(SuitUpgrade.Missile_Expansion.value, player, 8)
