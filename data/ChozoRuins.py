@@ -209,7 +209,7 @@ class ChozoRuinsAreaData(AreaData):
             pickups=[
                 PickupData('Chozo Ruins: Ruined Shrine - Plated Beetle', rule_func=can_exit_ruined_shrine, tricks=[Tricks.ruined_shrine_scan_dash_escape]),
                 PickupData('Chozo Ruins: Ruined Shrine - Half-Pipe', rule_func=can_boost),
-                PickupData('Chozo Ruins: Ruined Shrine - Lower Tunnel', rule_func=lambda state, player: can_exit_ruined_shrine(state, player) and can_bomb(state, player), tricks=[Tricks.ruined_shrine_scan_dash_escape]),
+                PickupData('Chozo Ruins: Ruined Shrine - Lower Tunnel', rule_func=lambda state, player: can_bomb(state, player)),
             ]),
         RoomName.Ruins_Entrance: RoomData(doors={
             0: DoorData(RoomName.Main_Plaza),
