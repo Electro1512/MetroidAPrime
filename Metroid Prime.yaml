@@ -24,7 +24,7 @@ Metroid Prime:
   artifact_hints: "true"
 
   # If enabled, the missile launcher will be added to the item pool. This will only allow you to use missiles once the missile launcher is found (regardless of missile expansions received).
-  missile_launcher: "true"
+  missile_launcher: "false"
 
   # If enabled, the main power bomb will be added to the item pool. This will only allow you to use power bombs once the main power bomb is found (regardless of power bomb expansions received)."""
   main_power_bomb: "true"

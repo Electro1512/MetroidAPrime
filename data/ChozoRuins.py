@@ -1,14 +1,14 @@
 from BaseClasses import LocationProgressType
 from worlds.metroidprime.Items import SuitUpgrade
 from .RoomData import AreaData, DoorData, DoorLockType, MetroidPrimeArea, PickupData, RoomData
-from worlds.metroidprime.Logic2 import can_bomb, can_boost, can_climb_sun_tower, can_climb_tower_of_light, can_exit_ruined_shrine, can_flaahgra, can_grapple, can_heat, can_ice_beam, can_missile, can_morph_ball, can_move_underwater, can_plasma_beam, can_power_bomb, can_scan, can_space_jump, can_spider, can_super_missile, can_wave_beam
+from worlds.metroidprime.Logic2 import can_bomb, can_boost, can_climb_sun_tower, can_climb_tower_of_light, can_exit_ruined_shrine, can_flaahgra, can_grapple, can_heat, can_ice_beam, can_missile, can_morph_ball, can_move_underwater, can_plasma_beam, can_power_bomb, can_scan, can_space_jump, can_spider, can_super_missile, can_wave_beam, has_energy_tanks
 from worlds.metroidprime.data.Tricks import Tricks
 from .RoomNames import RoomName
 
 
 class ChozoRuinsAreaData(AreaData):
     rooms = {
-        RoomName.Antechamber: RoomData(doors={0: DoorData(RoomName.Reflecting_Pool, defaultLock=DoorLockType.Ice)}, pickups=[PickupData('Chozo Ruins: Antechamber', rule_func=can_ice_beam), ]), # Requires Ice beam to exit
+        RoomName.Antechamber: RoomData(doors={0: DoorData(RoomName.Reflecting_Pool, defaultLock=DoorLockType.Ice)}, pickups=[PickupData('Chozo Ruins: Antechamber', rule_func=can_ice_beam), ]),  # Requires Ice beam to exit
         RoomName.Arboretum_Access: RoomData(doors={
             0: DoorData(RoomName.Arboretum),
             1: DoorData(RoomName.Ruined_Fountain),
@@ -118,7 +118,7 @@ class ChozoRuinsAreaData(AreaData):
         RoomName.Magma_Pool: RoomData(
             doors={
                 0: DoorData(RoomName.Training_Chamber_Access, defaultLock=DoorLockType.Wave, rule_func=lambda state, player: can_grapple(state, player) and can_heat(state, player), tricks=[Tricks.magma_pool_scan_dash]),
-                1: DoorData(RoomName.Meditation_Fountain, rule_func=lambda state, player: state.has(SuitUpgrade.Energy_Tank.value, player, 2) or state.has(SuitUpgrade.Varia_Suit.value, player) or state.has(SuitUpgrade.Gravity_Suit.value, player) or state.has(SuitUpgrade.Phazon_Suit.value, player)),  # Damage reduction let's player cross
+                1: DoorData(RoomName.Meditation_Fountain, rule_func=lambda state, player: has_energy_tanks(state, player, 2) or state.has(SuitUpgrade.Varia_Suit.value, player) or state.has(SuitUpgrade.Gravity_Suit.value, player) or state.has(SuitUpgrade.Phazon_Suit.value, player)),  # Damage reduction let's player cross
             },
             pickups=[PickupData('Chozo Ruins: Magma Pool', rule_func=lambda state, player:  can_grapple(state, player) and can_heat(state, player) and can_power_bomb(state, player), tricks=[Tricks.magma_pool_item_infinite_speed, Tricks.magma_pool_item_scan_dash]), ]),
         RoomName.Main_Plaza: RoomData(doors={

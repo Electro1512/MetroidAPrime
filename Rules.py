@@ -145,44 +145,6 @@ def set_rules(multiworld: MultiWorld, player, locations):
                                                            state.has_all({'X-Ray Visor', 'Plasma Beam'},
                                                                          player)),
 
-        # magmoor caverns locations
-        'Magmoor Caverns: Lava Lake': lambda state: (logic.prime_can_heat(state, multiworld, player) and
-                                                     logic.prime_has_missiles(state, multiworld, player) and
-                                                     state.has_all({'Morph Ball', 'Space Jump Boots'}, player)),
-        'Magmoor Caverns: Triclops Pit': lambda state: (logic.prime_early_magmoor(state, multiworld, player) and
-                                                        logic.prime_has_missiles(state, multiworld, player) and
-                                                        state.has_all({'Space Jump Boots', 'X-Ray Visor'}, player)),
-        'Magmoor Caverns: Storage Cavern': lambda state: (logic.prime_early_magmoor(state, multiworld, player) and
-                                                          state.has('Morph Ball', player)),
-        'Magmoor Caverns: Transport Tunnel A': lambda state: (logic.prime_early_magmoor(state, multiworld, player) and
-                                                              logic.prime_can_bomb(state, multiworld, player)),
-        'Magmoor Caverns: Warrior Shrine': lambda state: (logic.prime_early_magmoor(state, multiworld, player) and
-                                                          logic.prime_can_bomb(state, multiworld, player) and
-                                                          logic.prime_can_boost(state, multiworld, player) and
-                                                          state.has('Space Jump Boots', player)),
-        'Magmoor Caverns: Shore Tunnel': lambda state: (logic.prime_early_magmoor(state, multiworld, player) and
-                                                        logic.prime_can_pb(state, multiworld, player) and
-                                                        state.has('Space Jump Boots', player)),
-        'Magmoor Caverns: Fiery Shores - Morph Track': lambda state: (
-            logic.prime_can_heat(state, multiworld, player) and
-            logic.prime_has_missiles(state, multiworld, player) and
-            logic.prime_can_bomb(state, multiworld, player)),
-        'Magmoor Caverns: Fiery Shores - Warrior Shrine Tunnel': lambda state: (
-            logic.prime_early_magmoor(state, multiworld, player)
-            and logic.prime_can_bomb(state, multiworld, player)
-            and logic.prime_can_boost(state, multiworld, player)
-            and logic.prime_can_pb(state, multiworld, player)
-            and state.has('Space Jump Boots', player)),
-        'Magmoor Caverns: Plasma Processing': lambda state: (logic.prime_late_magmoor(state, multiworld, player) and
-                                                             logic.prime_can_bomb(state, multiworld, player) and
-                                                             logic.prime_can_boost(state, multiworld, player) and
-                                                             logic.prime_can_spider(state, multiworld, player) and
-                                                             state.has_all({'Ice Beam', 'Plasma Beam', 'Grapple Beam'},
-                                                                           player)),
-        'Magmoor Caverns: Magmoor Workstation': lambda state: (logic.prime_late_magmoor(state, multiworld, player) and
-                                                               state.has_all(
-                                                                   {'Morph Ball', 'Wave Beam', 'Thermal Visor'},
-                                                                   player))
     }
 
     for i in locations:

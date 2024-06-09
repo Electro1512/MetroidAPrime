@@ -1,6 +1,7 @@
 import typing
 
 from worlds.metroidprime.data.ChozoRuins import ChozoRuinsAreaData
+from worlds.metroidprime.data.MagmoorCaverns import MagmoorCavernsAreaData
 from worlds.metroidprime.data.RoomNames import RoomName
 from worlds.metroidprime.data.TallonOverworld import TallonOverworldAreaData
 from .Logic import MetroidPrimeLogic as logic
@@ -18,10 +19,7 @@ def create_regions(world: 'MetroidPrimeWorld', final_boss_selection):
 
     TallonOverworldAreaData().create_world_region(world)
     ChozoRuinsAreaData().create_world_region(world)
-
-    magmoor_caverns = Region("Magmoor Caverns", world.player, world.multiworld)
-    magmoor_caverns.add_locations(magmoor_location_table, MetroidPrimeLocation)
-    world.multiworld.regions.append(magmoor_caverns)
+    MagmoorCavernsAreaData().create_world_region(world)
 
     phendrana_drifts = Region("Phendrana Drifts", world.player, world.multiworld)
     phendrana_drifts.add_locations(phen_location_table, MetroidPrimeLocation)
@@ -46,25 +44,36 @@ def create_regions(world: 'MetroidPrimeWorld', final_boss_selection):
     tallon_transport_to_chozo_west = world.multiworld.get_region(RoomName.Transport_to_Chozo_Ruins_West.value, world.player)
     tallon_transport_to_chozo_east = world.multiworld.get_region(RoomName.Transport_to_Chozo_Ruins_East.value, world.player)
     tallon_transport_to_chozo_south = world.multiworld.get_region(RoomName.Transport_to_Chozo_Ruins_South.value, world.player)
+    tallon_transport_to_magmoor_east = world.multiworld.get_region(RoomName.Transport_to_Magmoor_Caverns_East.value, world.player)
+    tallon_transport_to_phazon_east = world.multiworld.get_region(RoomName.Transport_to_Phazon_Mines_East.value, world.player)
 
     chozo_transport_to_tallon_north = world.multiworld.get_region(RoomName.Transport_to_Tallon_Overworld_North.value, world.player)
     chozo_transport_to_magmoor_north = world.multiworld.get_region(RoomName.Transport_to_Magmoor_Caverns_North.value, world.player)
     chozo_transport_to_tallon_east = world.multiworld.get_region(RoomName.Transport_to_Tallon_Overworld_East.value, world.player)
     chozo_transport_to_tallon_south = world.multiworld.get_region(RoomName.Transport_to_Tallon_Overworld_South.value, world.player)
 
+    magmoor_transport_to_chozo_north = world.multiworld.get_region(RoomName.Transport_to_Chozo_Ruins_North.value, world.player)
+    magmoor_transport_to_phazon_west = world.multiworld.get_region(RoomName.Transport_to_Phazon_Mines_West.value, world.player)
+    magmoor_transport_to_phendrana_north = world.multiworld.get_region(RoomName.Transport_to_Phendrana_Drifts_North.value, world.player)
+    magmoor_transport_to_phendrana_south = world.multiworld.get_region(RoomName.Transport_to_Phendrana_Drifts_South.value, world.player)
+    magmoor_transport_to_tallon_west = world.multiworld.get_region(RoomName.Transport_to_Tallon_Overworld_West.value, world.player)
+
     tallon_transport_to_chozo_west.connect(chozo_transport_to_tallon_north, "West Chozo Elevator")
     tallon_transport_to_chozo_east.connect(chozo_transport_to_tallon_east, "East Chozo Elevator")
     tallon_transport_to_chozo_south.connect(chozo_transport_to_tallon_south, "South Chozo Elevator")
+    tallon_transport_to_magmoor_east.connect(magmoor_transport_to_tallon_west, "East Magmoor Elevator")
+    tallon_transport_to_phazon_east.connect(phazon_mines, "East Mines Elevator")
 
     chozo_transport_to_tallon_north.connect(tallon_transport_to_chozo_west, "North Tallon Elevator")
     chozo_transport_to_tallon_east.connect(tallon_transport_to_chozo_east, "East Tallon Elevator")
     chozo_transport_to_tallon_south.connect(tallon_transport_to_chozo_south, "South Tallon Elevator")
 
-    world.multiworld.get_region(RoomName.Transport_to_Magmoor_Caverns_East.value, world.player).connect(magmoor_caverns, "East Magmoor Elevator", lambda state: (
-        logic.prime_has_missiles(state, world.multiworld, world.player) and
-        logic.prime_can_heat(state, world.multiworld, world.player)))
-    world.multiworld.get_region(RoomName.Transport_to_Phazon_Mines_East.value, world.player).connect(phazon_mines, "East Mines Elevator", lambda state: (
-        logic.prime_frigate(state, world.multiworld, world.player)))
+    magmoor_transport_to_chozo_north.connect(chozo_transport_to_magmoor_north, "North Chozo Elevator")
+    magmoor_transport_to_phazon_west.connect(phazon_mines, "West Mines Elevator")
+    magmoor_transport_to_phendrana_north.connect(phendrana_drifts, "North Phendrana Elevator")
+    magmoor_transport_to_phendrana_south.connect(phendrana_drifts, "South Phendrana Elevator")
+    magmoor_transport_to_tallon_west.connect(tallon_transport_to_magmoor_east, "West Tallon Elevator")
+
     if final_boss_selection == 0 or final_boss_selection == 2:
         world.multiworld.get_region(RoomName.Artifact_Temple.value, world.player).connect(impact_crater, "Crater Access", lambda state: (
             logic.prime_has_missiles(state, world.multiworld, world.player) and
@@ -83,17 +92,6 @@ def create_regions(world: 'MetroidPrimeWorld', final_boss_selection):
         world.multiworld.get_region(RoomName.Artifact_Temple.value, world.player).connect(mission_complete, "Mission Complete", lambda state: (
             logic.prime_has_missiles(state, world.multiworld, world.player) and
             logic.prime_artifact_count(state, world.multiworld, world.player)))
-
-    chozo_transport_to_magmoor_north.connect(magmoor_caverns, "North Magmoor Elevator", lambda state: (
-        logic.prime_has_missiles(state, world.multiworld, world.player) and
-        logic.prime_can_heat(state, world.multiworld, world.player) and
-        state.has("Morph Ball", world.player)))
-
-    magmoor_caverns.connect(phendrana_drifts, "Magmoor-Phendrana Elevators", lambda state: (
-        logic.prime_front_phen(state, world.multiworld, world.player) or
-        logic.prime_late_magmoor(state, world.multiworld, world.player)))
-    magmoor_caverns.connect(phazon_mines, "West Mines Elevator", lambda state: (
-        logic.prime_late_magmoor(state, world.multiworld, world.player) and state.has("Ice Beam", world.player)))
 
     if (final_boss_selection == 0 or
             final_boss_selection == 2):
