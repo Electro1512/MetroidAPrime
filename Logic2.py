@@ -97,6 +97,10 @@ def can_heat(state: CollectionState, player: int) -> bool:
     return state.has(SuitUpgrade.Varia_Suit.value, player)
 
 
+def has_energy_tanks(state: CollectionState, player: int, count: int) -> bool:
+    return state.has(SuitUpgrade.Energy_Tank.value, player, count)
+
+
 def can_infinite_speed(state: CollectionState, player: int) -> bool:
     return can_boost(state, player) and can_bomb(state, player)
 

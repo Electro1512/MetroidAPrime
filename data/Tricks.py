@@ -4,7 +4,7 @@ from typing import Callable, Dict
 
 from BaseClasses import CollectionState
 from worlds.metroidprime.Items import SuitUpgrade
-from worlds.metroidprime.Logic2 import can_bomb, can_boost, can_grapple, can_ice_beam, can_infinite_speed, can_morph_ball, can_plasma_beam, can_power_bomb, can_scan, can_space_jump, can_spider, can_thermal, can_wave_beam
+from worlds.metroidprime.Logic2 import can_bomb, can_boost, can_charge_beam, can_grapple, can_ice_beam, can_infinite_speed, can_missile, can_morph_ball, can_plasma_beam, can_power_bomb, can_scan, can_space_jump, can_spider, can_super_missile, can_thermal, can_wave_beam, can_xray, has_energy_tanks
 
 
 class TrickDifficulty(Enum):
@@ -107,5 +107,27 @@ class Tricks:
     reflecting_pool_space_jump_climb = TrickInfo("Reflecting Pool Space Jump Climb", "Climb the reflecting pool by space jumping off a stone toad", TrickDifficulty.Easy, can_space_jump)
 
   # Magmoor
+
+    lava_lake_item_suitless = TrickInfo("Lava Lake Item Suitless", "Reach the Lava Lake item without the Varia Suit", TrickDifficulty.Medium, lambda state, player: can_missile(state, player) and can_space_jump(state, player) and state.has(SuitUpgrade.Energy_Tank.value, player, 4))
+    lava_lake_item_missiles_only = TrickInfo("Lava Lake Item Suitless", "Reach lava lake item without space jump by jumping on base of column", TrickDifficulty.Easy, lambda state, player: can_missile(state, player))
+
+    triclops_pit_item_no_sj = TrickInfo("Triclops Pit Item No SJ", "Reach the Triclops Pit item without Space Jump, assumes has xray and can use charge or missiles", TrickDifficulty.Medium, lambda state, player: can_xray(state, player) and (can_missile(state, player) or can_charge_beam(state, player)))
+    triclops_pit_item_no_xray = TrickInfo("Triclops Pit Item No XRay", "Reach the Triclops Pit item without XRay Visor, assumes has space jump and can use charge or missiles", TrickDifficulty.Medium, lambda state, player: can_space_jump(state, player) and (can_missile(state, player) or can_charge_beam(state, player)))
+    triclops_pit_item_no_sj_no_xray = TrickInfo("Triclops Pit Item No SJ No XRay", "Reach the Triclops Pit item without Space Jump or XRay Visor, assumes has charge or missiles", TrickDifficulty.Medium, lambda state, player: can_missile(state, player) or can_charge_beam(state, player))
+    triclops_pit_item_no_missiles = TrickInfo("Triclops Pit Item No Missiles", "Reach the Triclops Pit item without Missiles, and instead use Charge Beam", TrickDifficulty.Easy, lambda state, player: can_space_jump(state, player) and can_xray(state, player) and can_charge_beam(state, player))
+
+    warrior_shrine_no_boost = TrickInfo("Warrior Shrine No Boost", "Reach the Warrior by using an R Jump or Scan Dash", TrickDifficulty.Easy, can_space_jump)
+    warrior_shrine_minimal_reqs = TrickInfo("Warrior Shrine Minimal Reqs", "Reach the Warrior Shrine without the Boost Ball or space jump", TrickDifficulty.Medium, can_scan)
+
+    shore_tunnel_escape_no_sj = TrickInfo("Shore Tunnel Escape No SJ", "Escape the Shore Tunnel without Space Jump by using a slope jump or double bomb jump", TrickDifficulty.Medium, lambda state, player: can_power_bomb(state, player))
+
+    fiery_shores_morphball_track_sj = TrickInfo("Fiery Shores Morphball Track SJ", "Reach the Morph Ball Track in Fiery Shores using the space jump boots", TrickDifficulty.Easy, can_space_jump)
+
+    twin_fires_tunnel_no_spider = TrickInfo("Twin Fires Tunnel No Spider Ball", "Traverse the Twin Fires Tunnel by using an R Jump and geometrey near the transport door", TrickDifficulty.Easy, lambda state, player: can_bomb(state, player) and can_space_jump(state, player))
+    cross_twin_fires_suitless = TrickInfo("Cross Twin Fires Suitless", "Removes the suit requirement when crossing this room. Twin Fires Tunnel is the only room in late Magmoor that is superheated. This trick automatically assumes you have 2 Energy Tanks and can cross without Spider Ball, since it cannot be used while you are taking heat damage.", TrickDifficulty.Medium, lambda state, player: can_space_jump(state, player) and has_energy_tanks(state, player, 2))
+
+    geothermal_core_no_grapple_spider = TrickInfo("Geothermal Core No Grapple Spider", "You can R jump or dash to reach the boost spinners, and either slope R jump or abuse standable collision to skip the spider track.", TrickDifficulty.Medium, lambda state, player: can_bomb(state, player) and can_boost(state, player) and can_space_jump(state, player))
+
+    magmoor_workstation_no_thermal = TrickInfo("Magmoor Workstation No Thermal", "Reach the Magmoor Workstation Item without the Thermal Visor", TrickDifficulty.Easy, lambda state, player: can_scan(state, player) and can_wave_beam(state, player) and can_morph_ball(state, player))
   # Phendrana
   # Phazon Mines

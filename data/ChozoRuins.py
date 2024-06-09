@@ -8,7 +8,7 @@ from .RoomNames import RoomName
 
 class ChozoRuinsAreaData(AreaData):
     rooms = {
-        RoomName.Antechamber: RoomData(doors={0: DoorData(RoomName.Reflecting_Pool, defaultLock=DoorLockType.Ice)}, pickups=[PickupData('Chozo Ruins: Antechamber'), ]),
+        RoomName.Antechamber: RoomData(doors={0: DoorData(RoomName.Reflecting_Pool, defaultLock=DoorLockType.Ice)}, pickups=[PickupData('Chozo Ruins: Antechamber', rule_func=can_ice_beam), ]), # Requires Ice beam to exit
         RoomName.Arboretum_Access: RoomData(doors={
             0: DoorData(RoomName.Arboretum),
             1: DoorData(RoomName.Ruined_Fountain),
