@@ -4,7 +4,7 @@ from typing import Callable, Dict
 
 from BaseClasses import CollectionState
 from worlds.metroidprime.Items import SuitUpgrade
-from worlds.metroidprime.Logic2 import can_bomb, can_boost, can_charge_beam, can_grapple, can_ice_beam, can_infinite_speed, can_missile, can_morph_ball, can_plasma_beam, can_power_bomb, can_scan, can_space_jump, can_spider, can_super_missile, can_thermal, can_wave_beam, can_xray, has_energy_tanks
+from worlds.metroidprime.Logic2 import can_bomb, can_boost, can_charge_beam, can_defeat_sheegoth, can_grapple, can_ice_beam, can_infinite_speed, can_melt_ice, can_missile, can_morph_ball, can_plasma_beam, can_power_bomb, can_scan, can_space_jump, can_spider, can_super_missile, can_thermal, can_wave_beam, can_xray, has_energy_tanks
 
 
 class TrickDifficulty(Enum):
@@ -130,4 +130,11 @@ class Tricks:
 
     magmoor_workstation_no_thermal = TrickInfo("Magmoor Workstation No Thermal", "Reach the Magmoor Workstation Item without the Thermal Visor", TrickDifficulty.Easy, lambda state, player: can_scan(state, player) and can_wave_beam(state, player) and can_morph_ball(state, player))
   # Phendrana
+
+    ice_temple_no_sj = TrickInfo("Ice Temple No SJ", "You can reach these locations by doing a hyper bomb jump in Phendrana Shorelines to reach the temple, and double bomb jumping to climb the temple itself", TrickDifficulty.Medium, )
+    shorelines_spider_track_no_sj = TrickInfo("Shorelines Spider Track No SJ", "You can reach the item in the Phendrana Shorelines Spider Track without Space Jump by using a hyper bomb jump", TrickDifficulty.Medium, lambda state, player: can_bomb(state, player) and can_spider(state, player) and can_super_missile(state, player) and can_scan(state, player))
+
+    ice_temple_item_no_sj = TrickInfo("Ice Temple Item No SJ", "Reach the Ice Temple item without Space Jump by double bomb jumps", TrickDifficulty.Medium, lambda state, player: can_bomb(state, player) and can_melt_ice(state, player))
+    chapel_of_elders_escape_no_sj = TrickInfo("Chapel of Elders Escape No SJ", "Escape the Chapel of Elders without Space Jump by using a double bomb jump", TrickDifficulty.Medium, lambda state, player: can_defeat_sheegoth(state, player) and can_bomb(state, player) and can_wave_beam(state, player))
+
   # Phazon Mines
