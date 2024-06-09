@@ -108,7 +108,7 @@ class Tricks:
 
   # Magmoor
 
-    lava_lake_item_suitless = TrickInfo("Lava Lake Item Suitless", "Reach the Lava Lake item without the Varia Suit", TrickDifficulty.Medium, lambda state, player: can_missile(state, player) and can_space_jump(state, player) and state.has(SuitUpgrade.Energy_Tank.value, player, 4))
+    lava_lake_item_suitless = TrickInfo("Lava Lake Item Suitless", "Reach the Lava Lake item without the Varia Suit", TrickDifficulty.Medium, lambda state, player: can_missile(state, player) and can_space_jump(state, player) and has_energy_tanks(state, player, 4))
     lava_lake_item_missiles_only = TrickInfo("Lava Lake Item Suitless", "Reach lava lake item without space jump by jumping on base of column", TrickDifficulty.Easy, lambda state, player: can_missile(state, player))
 
     triclops_pit_item_no_sj = TrickInfo("Triclops Pit Item No SJ", "Reach the Triclops Pit item without Space Jump, assumes has xray and can use charge or missiles", TrickDifficulty.Medium, lambda state, player: can_xray(state, player) and (can_missile(state, player) or can_charge_beam(state, player)))
