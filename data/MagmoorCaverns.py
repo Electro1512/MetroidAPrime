@@ -16,7 +16,10 @@ class MagmoorCavernsAreaData(AreaData):
             0: DoorData(RoomName.Shore_Tunnel, rule_func=lambda state, player: can_heat(state, player) and (can_bomb(state, player) or can_grapple(state, player) or has_energy_tanks(state, player, 4))),
             1: DoorData(RoomName.Transport_Tunnel_B, destinationArea=MetroidPrimeArea.Magmoor_Caverns, rule_func=lambda state, player: can_heat(state, player) and (can_bomb(state, player) or can_grapple(state, player))),
             # 2: DoorData(RoomName.Warrior_Shrine, rule_func=lambda state, player: False), Can't access, one way trip
-        }, pickups=[PickupData('Magmoor Caverns: Fiery Shores - Morph Track', tricks=[Tricks.fiery_shores_morphball_track_sj], rule_func=can_bomb), ]),
+        }, pickups=[
+            PickupData('Magmoor Caverns: Fiery Shores - Morph Track', tricks=[Tricks.fiery_shores_morphball_track_sj], rule_func=can_bomb),
+            PickupData('Magmoor Caverns: Fiery Shores - Warrior Shrine Tunnel', rule_func=lambda state, player:  can_power_bomb(state, player) and can_bomb(state, player) and state.can_reach(RoomName.Warrior_Shrine.value, None, player))  # Not an item in this room but can only be accessed from here
+        ]),
         RoomName.Geothermal_Core: RoomData(doors={
             0: DoorData(RoomName.North_Core_Tunnel, rule_func=can_space_jump),
             1: DoorData(RoomName.Plasma_Processing, defaultLock=DoorLockType.Ice,
@@ -132,9 +135,7 @@ class MagmoorCavernsAreaData(AreaData):
         RoomName.Warrior_Shrine: RoomData(doors={
             0: DoorData(RoomName.Monitor_Station, rule_func=lambda state, player: can_heat(state, player)),
             1: DoorData(RoomName.Fiery_Shores, defaultLock=DoorLockType.None_, rule_func=lambda state, player: can_heat(state, player) and can_power_bomb(state, player) and can_bomb(state, player), exclude_from_rando=True),
-        }, pickups=[PickupData('Magmoor Caverns: Warrior Shrine'),
-                    PickupData('Magmoor Caverns: Fiery Shores - Warrior Shrine Tunnel', rule_func=lambda state, player:  can_power_bomb(state, player) and can_bomb(state, player))  # Not an item in this room but can only be accessed from here
-                    ]),
+        }, pickups=[PickupData('Magmoor Caverns: Warrior Shrine')]),
         RoomName.Workstation_Tunnel: RoomData(doors={
             0: DoorData(RoomName.Transport_to_Phazon_Mines_West, rule_func=can_power_bomb, defaultLock=DoorLockType.Ice),
             1: DoorData(RoomName.Magmoor_Workstation, rule_func=can_power_bomb),

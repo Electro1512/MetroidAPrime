@@ -88,6 +88,7 @@ class ChozoRuinsAreaData(AreaData):
             pickups=[
                 PickupData('Chozo Ruins: Furnace - Spider Tracks', rule_func=lambda state, player: can_power_bomb(state, player) and can_boost(state, player) and can_spider(state, player),
                            tricks=[Tricks.furnace_spider_track_hbj, Tricks.furnace_spider_track_sj_bombs]),
+                PickupData('Chozo Ruins: Furnace - Inside Furnace', rule_func=can_bomb)
             ]),
         RoomName.Gathering_Hall_Access: RoomData(doors={
             0: DoorData(RoomName.Gathering_Hall),
@@ -331,5 +332,5 @@ class ChozoRuinsAreaData(AreaData):
         RoomName.West_Furnace_Access: RoomData(doors={
             0: DoorData(RoomName.Energy_Core),
             1: DoorData(RoomName.Furnace, rule_func=lambda state, player: can_spider(state, player) and can_bomb(state, player), tricks=[Tricks.furnace_no_spider_ball]),
-        }, pickups=[PickupData('Chozo Ruins: Furnace - Inside Furnace', rule_func=can_bomb),])  # This is not actually in west furnace but it can only be accessed from west furnace, logic-wise
+        }, pickups=[])  # This is not actually in west furnace but it can only be accessed from west furnace, logic-wise
     }
