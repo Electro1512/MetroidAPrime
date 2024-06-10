@@ -88,7 +88,7 @@ class ChozoRuinsAreaData(AreaData):
             pickups=[
                 PickupData('Chozo Ruins: Furnace - Spider Tracks', rule_func=lambda state, player: can_power_bomb(state, player) and can_boost(state, player) and can_spider(state, player),
                            tricks=[Tricks.furnace_spider_track_hbj, Tricks.furnace_spider_track_sj_bombs]),
-                PickupData('Chozo Ruins: Furnace - Inside Furnace', rule_func=lambda state, player: can_bomb(state, player) and state.can_reach(RoomName.West_Furnace_Access, None, player))
+                PickupData('Chozo Ruins: Furnace - Inside Furnace', rule_func=lambda state, player: can_bomb(state, player) and state.can_reach(RoomName.West_Furnace_Access.value, None, player))
             ]),
         RoomName.Gathering_Hall_Access: RoomData(doors={
             0: DoorData(RoomName.Gathering_Hall),
@@ -120,7 +120,7 @@ class ChozoRuinsAreaData(AreaData):
                 0: DoorData(RoomName.Training_Chamber_Access, defaultLock=DoorLockType.Wave, rule_func=lambda state, player: can_grapple(state, player) and can_heat(state, player), tricks=[Tricks.magma_pool_scan_dash]),
                 1: DoorData(RoomName.Meditation_Fountain, rule_func=lambda state, player: has_energy_tanks(state, player, 2) or state.has(SuitUpgrade.Varia_Suit.value, player) or state.has(SuitUpgrade.Gravity_Suit.value, player) or state.has(SuitUpgrade.Phazon_Suit.value, player)),  # Damage reduction let's player cross
             },
-            pickups=[PickupData('Chozo Ruins: Magma Pool', rule_func=lambda state, player:  can_grapple(state, player) and can_heat(state, player) and can_power_bomb(state, player), tricks=[Tricks.magma_pool_item_infinite_speed, Tricks.magma_pool_item_scan_dash]), ]),
+            pickups=[PickupData('Chozo Ruins: Magma Pool', rule_func=lambda state, player: can_grapple(state, player) and can_heat(state, player) and can_power_bomb(state, player), tricks=[Tricks.magma_pool_item_infinite_speed, Tricks.magma_pool_item_scan_dash]), ]),
         RoomName.Main_Plaza: RoomData(doors={
             0: DoorData(RoomName.Ruined_Fountain_Access),
             1: DoorData(RoomName.Ruins_Entrance),
@@ -133,7 +133,11 @@ class ChozoRuinsAreaData(AreaData):
                      PickupData('Chozo Ruins: Main Plaza - Grapple Ledge', rule_func=lambda state, player: state.can_reach_region(RoomName.Piston_Tunnel.value, player) and can_grapple(state, player), tricks=[Tricks.plaza_grapple_ledge_r_jump]),
                      PickupData('Chozo Ruins: Main Plaza - Tree', rule_func=can_super_missile, tricks=[]),
                      PickupData('Chozo Ruins: Main Plaza - Locked Door', rule_func=lambda state, player: state.can_reach_region(RoomName.Plaza_Access.value, player) and can_morph_ball(state, player), tricks=[Tricks.vault_via_plaza]), ]),  # If we do room rando, the logic for this will need to be adjusted
-        RoomName.Map_Station: RoomData(doors={}, pickups=[]),
+        RoomName.Map_Station: RoomData(
+            area=MetroidPrimeArea.Chozo_Ruins,
+            doors={
+                0: DoorData(RoomName.Ruined_Gallery),
+            }),
         RoomName.Meditation_Fountain: RoomData(doors={
             0: DoorData(RoomName.Magma_Pool),
             1: DoorData(RoomName.Ruined_Fountain),
@@ -159,8 +163,8 @@ class ChozoRuinsAreaData(AreaData):
             1: DoorData(RoomName.Hall_of_the_Elders),
         }),
         RoomName.Reflecting_Pool: RoomData(doors={
-            0: DoorData(RoomName.Save_Station_3, defaultLock=DoorLockType.Missile, tricks=[Tricks.reflecting_pool_space_jump_climb]),
-            1: DoorData(RoomName.Transport_Access_South, defaultLock=DoorLockType.Ice, tricks=[Tricks.reflecting_pool_space_jump_climb]),
+            0: DoorData(RoomName.Save_Station_3, defaultLock=DoorLockType.Missile, rule_func=lambda state, player: can_boost(state, player) and can_bomb(state, player), tricks=[Tricks.reflecting_pool_space_jump_climb]),
+            1: DoorData(RoomName.Transport_Access_South, defaultLock=DoorLockType.Ice, rule_func=lambda state, player: can_boost(state, player) and can_bomb(state, player), tricks=[Tricks.reflecting_pool_space_jump_climb]),
             2: DoorData(RoomName.Reflecting_Pool_Access),
             3: DoorData(RoomName.Antechamber, defaultLock=DoorLockType.Missile, rule_func=lambda state, player: can_boost(state, player) and can_bomb(state, player), tricks=[Tricks.reflecting_pool_space_jump_climb]),
         }),
@@ -179,7 +183,7 @@ class ChozoRuinsAreaData(AreaData):
             doors={
                 0: DoorData(RoomName.North_Atrium),
                 1: DoorData(RoomName.Totem_Access),
-                2: DoorData(RoomName.Map_Station),
+                2: DoorData(RoomName.Map_Station, destinationArea=MetroidPrimeArea.Chozo_Ruins),
             },
             pickups=[
                 PickupData('Chozo Ruins: Ruined Gallery - Missile Wall', rule_func=can_missile),

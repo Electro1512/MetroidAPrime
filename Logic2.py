@@ -18,7 +18,7 @@ def can_bomb(state: CollectionState, player: int) -> bool:
 
 def can_power_bomb(state: CollectionState, player: int) -> bool:
     if _get_options(state, player).main_power_bomb.value:
-        return state.has_all([SuitUpgrade.Morph_Ball.value, SuitUpgrade.Main_Power_Bomb.value], player),
+        return state.has_all([SuitUpgrade.Morph_Ball.value, SuitUpgrade.Main_Power_Bomb.value], player)
 
     return state.has_all([SuitUpgrade.Power_Bomb_Expansion.value, SuitUpgrade.Morph_Ball.value], player)
 

@@ -70,8 +70,8 @@ class PhendranaDriftsAreaData(AreaData):
         }),
         RoomName.Gravity_Chamber: RoomData(
             doors={
-                0: DoorData(RoomName.Lake_Tunnel, defaultLock=DoorLockType.Wave, rule_func=lambda state, player: can_move_underwater(state, player) and can_space_jump(state, player)),  # Must have gravity
-                1: DoorData(RoomName.Lake_Tunnel, defaultLock=DoorLockType.Wave, rule_func=lambda state, player: can_move_underwater(state, player) and can_space_jump(state, player)),  # Must have gravity
+                0: DoorData(RoomName.Lake_Tunnel, destinationArea=MetroidPrimeArea.Phendrana_Drifts, defaultLock=DoorLockType.Wave, rule_func=lambda state, player: can_move_underwater(state, player) and can_space_jump(state, player)),  # Must have gravity
+                1: DoorData(RoomName.Chamber_Access, defaultLock=DoorLockType.Wave, rule_func=lambda state, player: can_move_underwater(state, player) and can_space_jump(state, player)),  # Must have gravity
             },
             pickups=[
                 PickupData('Phendrana Drifts: Gravity Chamber - Underwater', rule_func=lambda state, player: can_move_underwater(state, player) and can_space_jump(state, player)),  # Must have gravity
@@ -84,7 +84,7 @@ class PhendranaDriftsAreaData(AreaData):
             0: DoorData(RoomName.Hunter_Cave_Access, defaultLock=DoorLockType.Wave, rule_func=lambda state, player: can_missile(state, player) and can_grapple(state, player) and can_space_jump(state, player)),
             1: DoorData(RoomName.Lower_Edge_Tunnel, defaultLock=DoorLockType.Wave, rule_func=can_space_jump),
             2: DoorData(RoomName.Chamber_Access, defaultLock=DoorLockType.Wave, rule_func=lambda state, player: can_space_jump(state, player) and can_grapple(state, player)),
-            3: DoorData(RoomName.Lake_Tunnel, defaultLock=DoorLockType.Wave, rule_func=lambda state, player: can_space_jump(state, player) and can_missile(state, player)),
+            3: DoorData(RoomName.Lake_Tunnel, destinationArea=MetroidPrimeArea.Phendrana_Drifts, defaultLock=DoorLockType.Wave, rule_func=lambda state, player: can_space_jump(state, player) and can_missile(state, player)),
         }),
         RoomName.Hydra_Lab_Entryway: RoomData(doors={
             0: DoorData(RoomName.Research_Lab_Hydra, defaultLock=DoorLockType.Wave),
@@ -110,17 +110,21 @@ class PhendranaDriftsAreaData(AreaData):
                 2: DoorData(RoomName.Canyon_Entryway, defaultLock=DoorLockType.Missile),
             },
             pickups=[PickupData('Phendrana Drifts: Ice Ruins West', rule_func=lambda state, player: can_melt_ice(state, player) and can_space_jump(state, player) and can_missile(state, player)), ]),
-        RoomName.Lake_Tunnel: RoomData(doors={
-            0: DoorData(RoomName.Hunter_Cave, defaultLock=DoorLockType.Wave),
-            1: DoorData(RoomName.Gravity_Chamber, defaultLock=DoorLockType.Wave),
-        }),
+        RoomName.Lake_Tunnel: RoomData(
+            area=MetroidPrimeArea.Phendrana_Drifts,
+            doors={
+                0: DoorData(RoomName.Hunter_Cave, defaultLock=DoorLockType.Wave),
+                1: DoorData(RoomName.Gravity_Chamber, defaultLock=DoorLockType.Wave),
+            }),
         RoomName.Lower_Edge_Tunnel: RoomData(doors={
             0: DoorData(RoomName.Phendranas_Edge, defaultLock=DoorLockType.Wave, rule_func=can_morph_ball),
             1: DoorData(RoomName.Hunter_Cave, defaultLock=DoorLockType.Wave, rule_func=can_morph_ball),
         }),
-        RoomName.Map_Station: RoomData(doors={
-            0: DoorData(RoomName.Research_Entrance),
-        }),
+        RoomName.Map_Station: RoomData(
+            area=MetroidPrimeArea.Phendrana_Drifts,
+            doors={
+                0: DoorData(RoomName.Research_Entrance),
+            }),
         RoomName.North_Quarantine_Tunnel: RoomData(doors={
             0: DoorData(RoomName.Quarantine_Cave, rule_func=can_morph_ball, defaultLock=DoorLockType.Wave),
             1: DoorData(RoomName.Quarantine_Access, rule_func=can_morph_ball, defaultLock=DoorLockType.Wave),
@@ -245,7 +249,7 @@ class PhendranaDriftsAreaData(AreaData):
         }),
         RoomName.South_Quarantine_Tunnel: RoomData(doors={
             0: DoorData(RoomName.Quarantine_Cave, defaultLock=DoorLockType.Wave),
-            1: DoorData(RoomName.Transport_to_Magmoor_Caverns_South, defaultLock=DoorLockType.Wave),
+            1: DoorData(RoomName.Transport_to_Magmoor_Caverns_South, defaultLock=DoorLockType.Wave, destinationArea=MetroidPrimeArea.Phendrana_Drifts),
         }),
         RoomName.Specimen_Storage: RoomData(doors={
             0: DoorData(RoomName.Research_Entrance, defaultLock=DoorLockType.Wave),
@@ -261,13 +265,15 @@ class PhendranaDriftsAreaData(AreaData):
         RoomName.Transport_Access: RoomData(
             area=MetroidPrimeArea.Phendrana_Drifts,
             doors={
-                0: DoorData(RoomName.Transport_to_Magmoor_Caverns_South, defaultLock=DoorLockType.Ice),
+                0: DoorData(RoomName.Transport_to_Magmoor_Caverns_South, defaultLock=DoorLockType.Ice, destinationArea=MetroidPrimeArea.Phendrana_Drifts),
                 1: DoorData(RoomName.Frozen_Pike, defaultLock=DoorLockType.Ice),
             }, pickups=[PickupData('Phendrana Drifts: Transport Access', rule_func=can_melt_ice), ]),
-        RoomName.Transport_to_Magmoor_Caverns_South: RoomData(doors={
-            0: DoorData(RoomName.Transport_Access, defaultLock=DoorLockType.Ice, destinationArea=MetroidPrimeArea.Phendrana_Drifts),
-            1: DoorData(RoomName.South_Quarantine_Tunnel, defaultLock=DoorLockType.Wave)
-        }),
+        RoomName.Transport_to_Magmoor_Caverns_South: RoomData(
+            area=MetroidPrimeArea.Phendrana_Drifts,
+            doors={
+                0: DoorData(RoomName.Transport_Access, defaultLock=DoorLockType.Ice, destinationArea=MetroidPrimeArea.Phendrana_Drifts),
+                1: DoorData(RoomName.South_Quarantine_Tunnel, defaultLock=DoorLockType.Wave)
+            }),
         RoomName.Transport_to_Magmoor_Caverns_West: RoomData(doors={
             0: DoorData(RoomName.Shoreline_Entrance),
         }),

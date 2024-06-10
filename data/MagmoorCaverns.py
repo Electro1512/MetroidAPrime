@@ -8,7 +8,7 @@ from .RoomNames import RoomName
 class MagmoorCavernsAreaData(AreaData):
     rooms = {
         RoomName.Burning_Trail: RoomData(doors={
-            0: DoorData(RoomName.Lake_Tunnel),
+            0: DoorData(RoomName.Lake_Tunnel, destinationArea=MetroidPrimeArea.Magmoor_Caverns),
             1: DoorData(RoomName.Transport_to_Chozo_Ruins_North),
             2: DoorData(RoomName.Save_Station_Magmoor_A, defaultLock=DoorLockType.Missile),
         }),
@@ -28,13 +28,15 @@ class MagmoorCavernsAreaData(AreaData):
                         ),
             2: DoorData(RoomName.South_Core_Tunnel, rule_func=can_space_jump),
         }),
-        RoomName.Lake_Tunnel: RoomData(doors={
-            0: DoorData(RoomName.Lava_Lake, rule_func=can_heat, tricks=[Tricks.lava_lake_item_suitless]),
-            1: DoorData(RoomName.Burning_Trail, rule_func=can_heat, tricks=[Tricks.lava_lake_item_suitless]),
-        }),
+        RoomName.Lake_Tunnel: RoomData(
+            area=MetroidPrimeArea.Magmoor_Caverns,
+            doors={
+                0: DoorData(RoomName.Lava_Lake, rule_func=can_heat, tricks=[Tricks.lava_lake_item_suitless]),
+                1: DoorData(RoomName.Burning_Trail, rule_func=can_heat, tricks=[Tricks.lava_lake_item_suitless]),
+            }),
         RoomName.Lava_Lake: RoomData(
             doors={
-                0: DoorData(RoomName.Lake_Tunnel, rule_func=lambda state, player: can_heat(state, player) and (can_bomb(state, player) or can_power_bomb(state, player)), tricks=[Tricks.lava_lake_item_suitless]),
+                0: DoorData(RoomName.Lake_Tunnel, destinationArea=MetroidPrimeArea.Magmoor_Caverns, rule_func=lambda state, player: can_heat(state, player) and (can_bomb(state, player) or can_power_bomb(state, player)), tricks=[Tricks.lava_lake_item_suitless]),
                 1: DoorData(RoomName.Pit_Tunnel, rule_func=lambda state, player: can_heat(state, player) and (can_bomb(state, player) or can_power_bomb(state, player)), tricks=[Tricks.lava_lake_item_suitless]),
             },
             pickups=[PickupData('Magmoor Caverns: Lava Lake', rule_func=lambda state, player: can_missile(state, player) and can_space_jump(state, player),  tricks=[Tricks.lava_lake_item_missiles_only, Tricks.lava_lake_item_suitless]), ]),
