@@ -4,7 +4,7 @@ from typing import Callable, Dict
 
 from BaseClasses import CollectionState
 from worlds.metroidprime.Items import SuitUpgrade
-from worlds.metroidprime.Logic2 import can_bomb, can_boost, can_charge_beam, can_defeat_sheegoth, can_grapple, can_ice_beam, can_infinite_speed, can_melt_ice, can_missile, can_morph_ball, can_plasma_beam, can_power_bomb, can_scan, can_space_jump, can_spider, can_super_missile, can_thermal, can_wave_beam, can_xray, has_energy_tanks
+from worlds.metroidprime.Logic2 import can_bomb, can_boost, can_charge_beam, can_defeat_sheegoth, can_grapple, can_ice_beam, can_infinite_speed, can_melt_ice, can_missile, can_morph_ball, can_move_underwater, can_plasma_beam, can_power_bomb, can_scan, can_space_jump, can_spider, can_super_missile, can_thermal, can_wave_beam, can_xray, has_energy_tanks
 
 
 class TrickDifficulty(Enum):
@@ -131,10 +131,28 @@ class Tricks:
     magmoor_workstation_no_thermal = TrickInfo("Magmoor Workstation No Thermal", "Reach the Magmoor Workstation Item without the Thermal Visor", TrickDifficulty.Easy, lambda state, player: can_scan(state, player) and can_wave_beam(state, player) and can_morph_ball(state, player))
   # Phendrana
 
-    ice_temple_no_sj = TrickInfo("Ice Temple No SJ", "You can reach these locations by doing a hyper bomb jump in Phendrana Shorelines to reach the temple, and double bomb jumping to climb the temple itself", TrickDifficulty.Medium, )
+    ice_temple_no_sj = TrickInfo("Ice Temple No SJ", "You can reach these locations by doing a hyper bomb jump in Phendrana Shorelines to reach the temple, and double bomb jumping to climb the temple itself", TrickDifficulty.Medium, rule_func=can_bomb)
     shorelines_spider_track_no_sj = TrickInfo("Shorelines Spider Track No SJ", "You can reach the item in the Phendrana Shorelines Spider Track without Space Jump by using a hyper bomb jump", TrickDifficulty.Medium, lambda state, player: can_bomb(state, player) and can_spider(state, player) and can_super_missile(state, player) and can_scan(state, player))
 
     ice_temple_item_no_sj = TrickInfo("Ice Temple Item No SJ", "Reach the Ice Temple item without Space Jump by double bomb jumps", TrickDifficulty.Medium, lambda state, player: can_bomb(state, player) and can_melt_ice(state, player))
     chapel_of_elders_escape_no_sj = TrickInfo("Chapel of Elders Escape No SJ", "Escape the Chapel of Elders without Space Jump by using a double bomb jump", TrickDifficulty.Medium, lambda state, player: can_defeat_sheegoth(state, player) and can_bomb(state, player) and can_wave_beam(state, player))
 
+    phendrana_canyon_escape_no_items = TrickInfo("Phendrana Canyon Escape No Items", "You can leave Phendrana Canyon without any items by jumping on the crates. However, if you destroy the crates and don't have Boost Ball or Space Jump, you will softlock.", TrickDifficulty.Easy, lambda state, player: True)
+    phendrana_courtyard_no_boost_spider = TrickInfo("Phendrana Courtyard No Boost Spider", "There is standable collision near the lower door that can be used to climb to the top of the room.", TrickDifficulty.Easy, lambda state, player: can_space_jump(state, player))
+
+    monitor_cave_no_grapple = TrickInfo("Monitor Cave No Grapple", "Reach the Monitor Station without the Grapple Beam by using a scan dash", TrickDifficulty.Medium, lambda state, player: can_spider(state, player) and can_space_jump(state, player) and can_scan(state, player))
+    quarantine_to_north_courtyard_slope_jump = TrickInfo("Quarantine to North Courtyard Slope Jump", "You can exit Quarantine Cave to Ruined Courtyard by slope jumping next to the Spider Ball track.", TrickDifficulty.Medium, lambda state, player: can_space_jump(state, player))
+
+    observatory_puzzle_skip = TrickInfo("Observatory Puzzle Skip", "This trick expects you to dash to climb Observatory without Boost Ball and Bombs, and then slope jump to the pipes to reach the item.", TrickDifficulty.Medium, lambda state, player: can_space_jump(state, player) and can_scan(state, player))
+    frozen_pike_no_bombs = TrickInfo("Frozen Pike No Bombs", "To skip the morph ball bomb tunnel, you can R jump or dash to the upper platform on the opposite end of the tunnel.", TrickDifficulty.Easy, lambda state, player: can_space_jump(state, player))
+    frozen_pike_no_gravity_suit = TrickInfo("Frozen Pike No Gravity Suit", "Reach hunter cave without gravity suit by doing a slope jump", TrickDifficulty.Medium, lambda state, player: can_space_jump(state, player))
+
+    frost_cave_no_grapple = TrickInfo("Frost Cave No Grapple", "Reach the Frost Cave item without the Grapple Beam", TrickDifficulty.Easy, lambda state, player: can_missile(state, player) and can_space_jump(state, player) and can_move_underwater(state, player))  # Requires gravity
+
+    phendranas_edge_storage_cavern_no_grapple = TrickInfo("Phendrana's Edge No Grapple", "Reach the Phendrana's Edge storage cavern without the Grapple Beam", TrickDifficulty.Easy, lambda state, player: (can_thermal(state, player) or can_xray(state, player)) and can_power_bomb(state, player) and can_space_jump(state, player))
+    phendranas_edge_security_cavern_no_grapple = TrickInfo("Phendrana's Edge No Grapple", "Reach the Phendrana's Edge security cavern without the Grapple Beam", TrickDifficulty.Easy, lambda state, player: can_grapple(state, player) and can_morph_ball(state, player) and can_space_jump(state, player))
+
+    hunter_cave_no_grapple = TrickInfo("Hunter Cave No Grapple", "Reach the Hunter Cave upper levels without the grapple beam using an r jump", TrickDifficulty.Easy, lambda state, player: can_space_jump(state, player))
+
+    gravity_chamber_no_grapple_plasma = TrickInfo("Gravity Chamber No Grapple Plasma", "You can R jump to reach the ledge without Grapple and Plasma Beam.", TrickDifficulty.Medium, lambda state, player: can_space_jump(state, player) and can_move_underwater(state, player))
   # Phazon Mines
