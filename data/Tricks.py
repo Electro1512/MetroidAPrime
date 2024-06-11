@@ -155,4 +155,14 @@ class Tricks:
     hunter_cave_no_grapple = TrickInfo("Hunter Cave No Grapple", "Reach the Hunter Cave upper levels without the grapple beam using an r jump", TrickDifficulty.Easy, lambda state, player: can_space_jump(state, player))
 
     gravity_chamber_no_grapple_plasma = TrickInfo("Gravity Chamber No Grapple Plasma", "You can R jump to reach the ledge without Grapple and Plasma Beam.", TrickDifficulty.Medium, lambda state, player: can_space_jump(state, player) and can_move_underwater(state, player))
+
   # Phazon Mines
+
+    main_quarry_item_no_spider = TrickInfo("Main Quarry Item No Spider Ball", "You can slope jump onto the top of the crane and R jump over to the item.", TrickDifficulty.Medium, lambda state, player:  can_morph_ball(state, player) and can_bomb(state, player) and can_thermal(state, player) and can_wave_beam(state, player) and can_scan(state, player) and can_space_jump(state, player))
+    main_quarry_to_waste_disposal_no_grapple = TrickInfo("Main Quarry to Waste Disposal No Grapple", "You can scan dash from the top of the structure (using the crane spider track scan point) to reach the door to Waste Disposal.", TrickDifficulty.Easy, lambda state, player: can_scan(state, player) and can_space_jump(state, player))
+
+    ore_processing_to_storage_depot_b_no_spider = TrickInfo("Ore Processing Climb No Grapple Spider", "You can stand on various collision in the room, such as on the rotating column, to climb to the top of Ore Processing.", TrickDifficulty.Easy, lambda state, player: can_bomb(state, player) and can_power_bomb(state, player) and can_space_jump(state, player))
+    ore_processing_climb_no_grapple_spider = TrickInfo("Ore Processing Climb No Grapple Spider", "You can stand on various collision in the room, such as on the rotating column, to climb to the top of Ore Processing.", TrickDifficulty.Easy, lambda state, player:  can_bomb(state, player) and can_power_bomb(state, player) and can_space_jump(state, player))
+
+    mines_climb_shafts_no_spider = TrickInfo("Mines Climb Shafts No Spider Ball", "Elevator Access A and Research Access can be climbed without Spider Ball.", TrickDifficulty.Hard, lambda state, player: can_space_jump(state, player))
+    elite_research_spinner_no_boost = TrickInfo("Elite Research laser No Boost", "You can get the laser turret to spin by wedging the morph ball in the spinner, bombing out, and then spinning the morph ball while in the laser before it locks you in.", TrickDifficulty.Easy, lambda state, player: can_bomb(state, player) and can_scan(state, player) and can_space_jump(state, player))

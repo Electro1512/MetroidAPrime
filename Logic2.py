@@ -65,11 +65,11 @@ def can_morph_ball(state: CollectionState, player: int) -> bool:
     return state.has(SuitUpgrade.Morph_Ball.value, player)
 
 
-def can_xray(state: CollectionState, player: int) -> bool:
+def can_xray(state: CollectionState, player: int, hard_required: bool = False) -> bool:
     return state.has(SuitUpgrade.X_Ray_Visor.value, player)
 
 
-def can_thermal(state: CollectionState, player: int) -> bool:
+def can_thermal(state: CollectionState, player: int, hard_required: bool = False) -> bool:
     return state.has(SuitUpgrade.Thermal_Visor.value, player)
 
 
