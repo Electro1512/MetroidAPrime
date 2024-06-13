@@ -16,13 +16,13 @@ if typing.TYPE_CHECKING:
     from .. import MetroidPrimeWorld
 
 
-def get_config_item_text(world, location) -> str:
+def get_config_item_text(world: 'MetroidPrimeWorld', location) -> str:
     loc = world.multiworld.get_location(location, world.player)
     player_name = f"{world.multiworld.player_name[loc.item.player]}'s " if loc.item.player != world.player else ""
     return f"{player_name}{loc.item.name}"
 
 
-def get_config_item_model(world, location) -> str:
+def get_config_item_model(world: 'MetroidPrimeWorld', location) -> str:
     loc = world.multiworld.get_location(location, world.player)
     if loc.native_item:
         name = loc.item.name
@@ -45,27 +45,6 @@ class MetroidPrimeArea(Enum):
     Tallon_Overworld = "Tallon Overworld"
     Phazon_Mines = "Phazon Mines"
     Impact_Crater = "Impact Crater"
-
-
-class Capabilities(Enum):
-    Can_Boost = "Can Boost"
-    Can_Bomb = "Can Bomb"
-    Can_Power_Bomb = "Can Power Bomb"
-    Can_Spider = "Can Spider"
-    Can_Missile = "Can Missile"
-    Can_Super_Missile = "Can Super Missile"
-    Can_Wave_Beam = "Can Wave Beam"
-    Can_Ice_Beam = "Can Ice Beam"
-    Can_Plasma_Beam = "Can Plasma Beam"
-    Can_Melt_Ice = "Can Melt Ice"
-    Can_Grapple = "Can Grapple"
-    Can_Space_Jump = "Can Space Jump"
-    Can_Morph_Ball = "Can Morph Ball"
-    Can_XRay = "Can XRay"
-    Can_Thermal = "Can Thermal"
-    Can_Move_Underwater = "Can Move Underwater"
-    Can_Charge_Beam = "Can Charge Beam"
-    Cannot_Reach = "Cannot Reach"  # Used for doors that are impossible to reach without tricks
 
 
 class DoorLockType(Enum):
@@ -99,7 +78,6 @@ class DoorData:
 @ dataclass
 class PickupData:
     name: str
-    required_items: List[typing.Union[Capabilities, List[Capabilities]]] = field(default_factory=list)  # If multiple lists are present, it will treat each group as a separate OR
     rule_func: Optional[Callable[[CollectionState, int], bool]] = None
     tricks: List[TrickInfo] = field(default_factory=list)
     priority: LocationProgressType = LocationProgressType.DEFAULT
