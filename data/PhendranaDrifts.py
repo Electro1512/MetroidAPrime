@@ -212,8 +212,8 @@ class PhendranaDriftsAreaData(AreaData):
                 PickupData('Phendrana Drifts: Research Lab Aether - Morph Track', rule_func=lambda state, player: can_bomb(state, player) and can_space_jump(state, player)),
             ]),
         RoomName.Research_Lab_Hydra: RoomData(doors={
-            0: DoorData(RoomName.Hydra_Lab_Entryway, defaultLock=DoorLockType.Wave, rule_func=lambda state, player: state.can_reach(RoomName.Hydra_Lab_Entryway.value, None, player)),  # Has a scan door in front of it that can only be accessed via the other entryway, verify can reach other room
-            1: DoorData(RoomName.Observatory_Access, defaultLock=DoorLockType.Wave, rule_func=lambda state, player: can_scan(state, player)),
+            0: DoorData(RoomName.Hydra_Lab_Entryway, defaultLock=DoorLockType.Wave, rule_func=can_scan),  # scan door is two way w/ random prime
+            1: DoorData(RoomName.Observatory_Access, defaultLock=DoorLockType.Wave, rule_func=can_scan),
         }, pickups=[PickupData('Phendrana Drifts: Research Lab Hydra', rule_func=lambda state, player: can_super_missile(state, player) and can_scan(state, player)), ]),
         RoomName.Ruined_Courtyard: RoomData(
             doors={

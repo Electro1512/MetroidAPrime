@@ -66,6 +66,7 @@ def can_morph_ball(state: CollectionState, player: int) -> bool:
 
 
 def can_xray(state: CollectionState, player: int, hard_required: bool = False) -> bool:
+
     return state.has(SuitUpgrade.X_Ray_Visor.value, player)
 
 
@@ -96,6 +97,9 @@ def can_crashed_frigate_backwards(state: CollectionState, player: int) -> bool:
 def can_heat(state: CollectionState, player: int) -> bool:
     return state.has(SuitUpgrade.Varia_Suit.value, player)
 
+def can_phazon(state: CollectionState, player: int) -> bool:
+    return state.has(SuitUpgrade.Phazon_Suit.value, player)
+
 
 def has_energy_tanks(state: CollectionState, player: int, count: int) -> bool:
     return state.has(SuitUpgrade.Energy_Tank.value, player, count)
@@ -123,3 +127,7 @@ def can_climb_tower_of_light(state: CollectionState, player: int) -> bool:
 
 def can_defeat_sheegoth(state: CollectionState, player: int) -> bool:
     return can_bomb(state, player) or can_missile(state, player) or can_power_bomb(state, player) or can_plasma_beam(state, player)
+
+
+def can_backwards_lower_mines(state, player) -> bool:
+    return bool(_get_options(state, player).backwards_lower_mines.value)

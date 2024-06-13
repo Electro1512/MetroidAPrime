@@ -72,7 +72,7 @@ class StaggeredSuitDamage(Choice):
     default = "Progressive"
 
 
-class RemoveHiveMecha(DefaultOnToggle):
+class RemoveHiveMecha(Toggle):
     """If enabled, the trigger for the Hive Mecha boss will be removed from the game"""
     display_name = "Remove Hive Mecha"
     default = False
@@ -94,6 +94,11 @@ class TrickDifficulty(Choice):
     default = -1
 
 
+class BackwardsLowerMines(DefaultOnToggle):
+    """If enabled, allows the player to progress through the lower mines in reverse"""
+    display_name = "Backwards Lower Mines"
+
+
 @dataclass
 class MetroidPrimeOptions(PerGameCommonOptions):
     start_inventory_from_pool: StartInventoryPool
@@ -110,3 +115,4 @@ class MetroidPrimeOptions(PerGameCommonOptions):
     remove_hive_mecha: RemoveHiveMecha
     fusion_suit: FusionSuit
     trick_difficulty: TrickDifficulty
+    backwards_lower_mines: BackwardsLowerMines

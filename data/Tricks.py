@@ -166,3 +166,16 @@ class Tricks:
 
     mines_climb_shafts_no_spider = TrickInfo("Mines Climb Shafts No Spider Ball", "Elevator Access A and Research Access can be climbed without Spider Ball.", TrickDifficulty.Hard, lambda state, player: can_space_jump(state, player))
     elite_research_spinner_no_boost = TrickInfo("Elite Research laser No Boost", "You can get the laser turret to spin by wedging the morph ball in the spinner, bombing out, and then spinning the morph ball while in the laser before it locks you in.", TrickDifficulty.Easy, lambda state, player: can_bomb(state, player) and can_scan(state, player) and can_space_jump(state, player))
+    ventilation_shaft_hpbj = TrickInfo("Ventilation Shaft HPBJ", "It's possible to return to Elite Control by performing a half pipe bomb jump to reach the Elite Control door.", TrickDifficulty.Hard, lambda state, player: can_bomb(state, player) and can_space_jump(state, player))
+
+    metroid_quarantine_a_no_spider = TrickInfo("Metroid Quarantine A No Spider Ball", "Using R jumps, slope jumps, and dashes, you can traverse the entirety of lower Phazon Mines without Spider Ball and Grapple Beam.", TrickDifficulty.Medium, lambda state, player: can_scan(state, player) and can_xray(state, player) and can_space_jump(state, player))
+
+    fungal_hall_access_no_phazon_suit = TrickInfo("Fungal Hall Access No Phazon Suit", "You can reach the Fungal Hall Access item without the Phazon Suit", TrickDifficulty.Easy, lambda state, player: can_morph_ball(state, player) and has_energy_tanks(state, player, 1))
+
+    fungal_hall_a_no_grapple = TrickInfo("Fungal Hall A No Grapple", "Traverse Fungal Hall A with Slope Jumps and R Jumps", TrickDifficulty.Medium, can_space_jump)
+    fungal_hall_b_no_grapple = TrickInfo("Fungal Hall B No Grapple", "Traverse Fungal Hall B with Slope Jumps and R Jumps", TrickDifficulty.Medium, can_space_jump)
+
+    metroid_quarantine_b_no_spider_grapple = TrickInfo("Metroid Quarantine B No Spider Grapple", "You can reach the other side of the quarantine by using a slope jump and an r jump", TrickDifficulty.Medium, lambda state, player: lambda state, player: can_space_jump(state, player) and can_scan(state, player))
+
+    phazon_processing_center_item_no_spider = TrickInfo("Phazon Processing Center No Spider Ball", "You can abuse standable collision such as the morph track and the scaffolding to access the top of the room without needing Spider Ball.", TrickDifficulty.Easy, lambda state, player: can_space_jump(state, player) and can_power_bomb(state, player))
+    climb_phazon_processing_center_no_spider = TrickInfo("Phazon Processing Center No Spider Ball", "You can abuse standable collision such as the morph track and the scaffolding to access the top of the room without needing Spider Ball.", TrickDifficulty.Easy, can_space_jump)

@@ -197,7 +197,7 @@ def make_config(world):
             "backwardsLabs": True,
             "backwardsFrigate": True,
             "backwardsUpperMines": True,
-            "backwardsLowerMines": True,
+            "backwardsLowerMines": bool(world.options.backwards_lower_mines.value),
             "patchPowerConduits": False,
             "removeMineSecurityStationLocks": False,
             "powerBombArboretumSandstone": False,

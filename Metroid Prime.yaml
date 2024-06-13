@@ -48,6 +48,9 @@ Metroid Prime:
   # no_tricks, easy, medium, hard
   trick_difficulty: "no_tricks"
 
+  # If enabled, will allow the player to progress through the lower levels of the mines backwards
+  backwards_lower_mines: "true"
+
   # Whether to send death events to other players with deathlink enabled or not
   death_link: "false"
 
