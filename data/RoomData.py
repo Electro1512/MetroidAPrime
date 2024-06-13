@@ -5,7 +5,7 @@ import typing
 
 from BaseClasses import CollectionState, LocationProgressType, Region
 from worlds.metroidprime.Items import SuitUpgrade
-from worlds.metroidprime.Logic2 import can_bomb, can_ice_beam, can_missile, can_plasma_beam, can_wave_beam
+from worlds.metroidprime.Logic import can_bomb, can_ice_beam, can_missile, can_plasma_beam, can_wave_beam
 from worlds.metroidprime.PrimeOptions import MetroidPrimeOptions
 
 from ..Locations import METROID_PRIME_LOCATION_BASE, MetroidPrimeLocation, every_location

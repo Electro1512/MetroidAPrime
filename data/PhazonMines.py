@@ -2,7 +2,7 @@
 from worlds.metroidprime.data.Tricks import Tricks
 from .RoomNames import RoomName
 from .RoomData import AreaData, DoorData, DoorLockType, MetroidPrimeArea, PickupData, RoomData
-from worlds.metroidprime.Logic2 import can_backwards_lower_mines, can_bomb, can_boost, can_charge_beam, can_defeat_sheegoth, can_grapple, can_melt_ice, can_missile, can_morph_ball, can_move_underwater, can_phazon, can_plasma_beam, can_power_bomb, can_scan, can_space_jump, can_spider, can_super_missile, can_thermal, can_wave_beam, can_xray
+from worlds.metroidprime.Logic import can_backwards_lower_mines, can_bomb, can_boost, can_charge_beam, can_defeat_sheegoth, can_grapple, can_melt_ice, can_missile, can_morph_ball, can_move_underwater, can_phazon, can_plasma_beam, can_power_bomb, can_scan, can_space_jump, can_spider, can_super_missile, can_thermal, can_wave_beam, can_xray
 
 
 class PhazonMinesAreaData(AreaData):
@@ -73,9 +73,9 @@ class PhazonMinesAreaData(AreaData):
             },
             pickups=[PickupData('Phazon Mines: Fungal Hall Access', rule_func=lambda state, player: can_morph_ball(state, player) and can_phazon(state, player), tricks=[Tricks.fungal_hall_access_no_phazon_suit]), ]),
         RoomName.Fungal_Hall_B: RoomData(doors={
-            0: DoorData(RoomName.Missile_Station_Mines, defaultLock=DoorLockType.Plasma, rule_func=lambda state, player: can_space_jump(state, player) and can_grapple(state, player), defaultLock=DoorLockType.Plasma, tricks=[Tricks.fungal_hall_b_no_grapple]),
-            1: DoorData(RoomName.Quarantine_Access_B, defaultLock=DoorLockType.Plasma, rule_func=lambda state, player: can_space_jump(state, player) and can_grapple(state, player), defaultLock=DoorLockType.Plasma, tricks=[Tricks.fungal_hall_b_no_grapple]),
-            2: DoorData(RoomName.Phazon_Mining_Tunnel, defaultLock=DoorLockType.Plasma, rule_func=can_space_jump, defaultLock=DoorLockType.Plasma, tricks=[Tricks.fungal_hall_b_no_grapple]),
+            0: DoorData(RoomName.Missile_Station_Mines, defaultLock=DoorLockType.Plasma, rule_func=lambda state, player: can_space_jump(state, player) and can_grapple(state, player),  tricks=[Tricks.fungal_hall_b_no_grapple]),
+            1: DoorData(RoomName.Quarantine_Access_B, defaultLock=DoorLockType.Plasma, rule_func=lambda state, player: can_space_jump(state, player) and can_grapple(state, player),  tricks=[Tricks.fungal_hall_b_no_grapple]),
+            2: DoorData(RoomName.Phazon_Mining_Tunnel, defaultLock=DoorLockType.Plasma, rule_func=can_space_jump, tricks=[Tricks.fungal_hall_b_no_grapple]),
         }, pickups=[PickupData('Phazon Mines: Fungal Hall B', rule_func=lambda state, player: can_bomb(state, player) or can_power_bomb(state, player)), ]),
         RoomName.Main_Quarry: RoomData(
             doors={
@@ -155,6 +155,7 @@ class PhazonMinesAreaData(AreaData):
         }),
         RoomName.Quarry_Access: RoomData(doors={
             0: DoorData(RoomName.Main_Quarry, defaultLock=DoorLockType.Wave),
+            1: DoorData(RoomName.Transport_to_Tallon_Overworld_South, defaultLock=DoorLockType.Wave, destinationArea=MetroidPrimeArea.Phazon_Mines),
         }),
         RoomName.Research_Access: RoomData(doors={
             0: DoorData(RoomName.Ore_Processing, defaultLock=DoorLockType.Ice),
@@ -188,9 +189,11 @@ class PhazonMinesAreaData(AreaData):
             doors={
                 0: DoorData(RoomName.Transport_Access, defaultLock=DoorLockType.Ice, destinationArea=MetroidPrimeArea.Phazon_Mines),
             }),
-        RoomName.Transport_to_Tallon_Overworld_South: RoomData(doors={
-            0: DoorData(RoomName.Quarry_Access, defaultLock=DoorLockType.Wave),
-        }),
+        RoomName.Transport_to_Tallon_Overworld_South: RoomData(
+            area=MetroidPrimeArea.Phazon_Mines,
+            doors={
+                0: DoorData(RoomName.Quarry_Access, defaultLock=DoorLockType.Wave,),
+            }),
         RoomName.Ventilation_Shaft: RoomData(
             doors={
                 0: DoorData(RoomName.Omega_Research, defaultLock=DoorLockType.Ice),

@@ -1,6 +1,6 @@
 from worlds.metroidprime.Items import SuitUpgrade
 from .RoomData import AreaData, DoorData, DoorLockType, MetroidPrimeArea, PickupData, RoomData
-from worlds.metroidprime.Logic2 import can_bomb, can_boost, can_climb_sun_tower, can_climb_tower_of_light, can_exit_ruined_shrine, can_flaahgra, can_grapple, can_heat, can_ice_beam, can_missile, can_morph_ball, can_move_underwater, can_plasma_beam, can_power_bomb, can_scan, can_space_jump, can_spider, can_super_missile, can_wave_beam, has_energy_tanks
+from worlds.metroidprime.Logic import can_bomb, can_boost, can_climb_sun_tower, can_climb_tower_of_light, can_exit_ruined_shrine, can_flaahgra, can_grapple, can_heat, can_ice_beam, can_missile, can_morph_ball, can_move_underwater, can_plasma_beam, can_power_bomb, can_scan, can_space_jump, can_spider, can_super_missile, can_wave_beam, has_energy_tanks
 from worlds.metroidprime.data.Tricks import Tricks
 from .RoomNames import RoomName
 
@@ -289,7 +289,7 @@ class ChozoRuinsAreaData(AreaData):
             pickups=[PickupData('Chozo Ruins: Transport Access North')]),
         RoomName.Transport_Access_South: RoomData(doors={
             0: DoorData(RoomName.Reflecting_Pool, defaultLock=DoorLockType.Ice),
-            1: DoorData(RoomName.Transport_to_Tallon_Overworld_South),
+            1: DoorData(RoomName.Transport_to_Tallon_Overworld_South, destinationArea=MetroidPrimeArea.Chozo_Ruins),
         }),
         RoomName.Transport_to_Magmoor_Caverns_North: RoomData(doors={
             0: DoorData(RoomName.Sun_Tower),
@@ -302,9 +302,11 @@ class ChozoRuinsAreaData(AreaData):
         RoomName.Transport_to_Tallon_Overworld_North: RoomData(doors={
             0: DoorData(RoomName.Ruins_Entrance)
         }),
-        RoomName.Transport_to_Tallon_Overworld_South: RoomData(doors={
-            0: DoorData(RoomName.Transport_Access_South),
-        }),
+        RoomName.Transport_to_Tallon_Overworld_South: RoomData(
+            area=MetroidPrimeArea.Chozo_Ruins,
+            doors={
+                0: DoorData(RoomName.Transport_Access_South),
+            }),
         RoomName.Vault_Access: RoomData(
             doors={
                 0: DoorData(RoomName.Vault, rule_func=can_morph_ball),

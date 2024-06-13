@@ -6,7 +6,6 @@ from .Items import MetroidPrimeItem, suit_upgrade_table, artifact_table, item_ta
 from .PrimeOptions import MetroidPrimeOptions
 from .Locations import every_location
 from .Regions import create_regions
-from .Rules import set_rules
 from .config import make_config
 from worlds.AutoWorld import World
 from ..AutoWorld import WebWorld
@@ -134,7 +133,6 @@ class MetroidPrimeWorld(World):
             self.multiworld.itempool += [self.create_item("Missile Expansion")]
 
     def set_rules(self) -> None:
-        set_rules(self.multiworld, self.player, every_location)
         self.multiworld.completion_condition[self.player] = lambda state: (
             state.can_reach("Mission Complete", "Region", self.player))
 
