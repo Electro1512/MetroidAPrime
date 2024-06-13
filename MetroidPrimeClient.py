@@ -143,9 +143,10 @@ async def handle_checked_location(ctx: MetroidPrimeContext, current_inventory: d
 
 
 async def handle_check_goal_complete(ctx: MetroidPrimeContext):
-    current_level = ctx.game_interface.get_current_level()
-    if current_level == MetroidPrimeLevel.End_of_Game:
-        await ctx.send_msgs([{"cmd": "StatusUpdate", "status": ClientStatus.CLIENT_GOAL}])
+    if ctx.game_interface.current_game is not None:
+        current_level = ctx.game_interface.get_current_level()
+        if current_level == MetroidPrimeLevel.End_of_Game:
+            await ctx.send_msgs([{"cmd": "StatusUpdate", "status": ClientStatus.CLIENT_GOAL}])
 
 
 async def handle_check_deathlink(ctx: MetroidPrimeContext):
@@ -195,9 +196,48 @@ async def run_game(romfile):
                          stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 
+def get_version_from_iso(path: str) -> str:
+    if not os.path.exists(path):
+        raise FileNotFoundError(f"Couldn't get version for iso {path}!")
+    with open(path, "rb") as f:
+        game_id = f.read(6).decode("utf-8")
+        f.read(1)
+        game_rev = f.read(1)[0]
+        if game_id[:3] != "GM8":
+            raise Exception("This is not Metroid Prime GC")
+        match game_id[3]:
+            case "E":
+                match game_rev:
+                    case 0:
+                        return "0-00"
+                    case 1:
+                        return "0-01"
+                    case 2:
+                        return "0-02"
+                    case 48:
+                        return "kor"
+                    case _rev:
+                        raise Exception(f"Unknown revision of Metroid Prime GC US (game_rev : {_rev})")
+            case "J":
+                match game_rev:
+                    case 0:
+                        return "jpn"
+                    case _rev:
+                        raise Exception(f"Unknown revision of Metroid Prime GC JPN (game_rev : {_rev})")
+            case "P":
+                match game_rev:
+                    case 0:
+                        return "pal"
+                    case _rev:
+                        raise Exception(f"Unknown revision of Metroid Prime GC PAL (game_rev : {_rev})")
+            case _id:
+                raise Exception(f"Unknown version of Metroid Prime GC (game_id : {game_id} | game_rev : {game_rev})")
+
+
 async def patch_and_run_game(apmp1_file: str):
     apmp1_file = os.path.abspath(apmp1_file)
     input_iso_path = Utils.get_options()["metroidprime_options"]["rom_file"]
+    game_version = get_version_from_iso(input_iso_path)
     base_name = os.path.splitext(apmp1_file)[0]
     output_path = base_name + '.iso'
 
@@ -216,7 +256,7 @@ async def patch_and_run_game(apmp1_file: str):
                 config_json = file.read().decode("utf-8")
                 config_json = json.loads(config_json)
 
-        config_json["gameConfig"]["updateHintStateReplacement"] = construct_hud_message_patch()
+        config_json["gameConfig"]["updateHintStateReplacement"] = construct_hud_message_patch(game_version)
         notifier = py_randomprime.ProgressNotifier(
             lambda progress, message: print("Generating ISO: ", progress, message))
         py_randomprime.patch_iso(input_iso_path, output_path, config_json, notifier)
