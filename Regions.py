@@ -30,8 +30,7 @@ def create_regions(world: 'MetroidPrimeWorld', final_boss_selection):
     world.multiworld.regions.append(mission_complete)
 
     starting_room = world.multiworld.get_region(RoomName.Landing_Site.value, world.player)
-    # entrances
-    menu.connect(starting_room, "Landing Site")
+    menu.connect(starting_room, "Starting Room")
 
     tallon_transport_to_chozo_west = world.multiworld.get_region(RoomName.Transport_to_Chozo_Ruins_West.value, world.player)
     tallon_transport_to_chozo_east = world.multiworld.get_region(RoomName.Transport_to_Chozo_Ruins_East.value, world.player)
@@ -78,19 +77,19 @@ def create_regions(world: 'MetroidPrimeWorld', final_boss_selection):
     artifact_temple = world.multiworld.get_region(RoomName.Artifact_Temple.value, world.player)
 
     if final_boss_selection == 0 or final_boss_selection == 2:
-        world.multiworld.get_region(RoomName.Artifact_Temple.value, world.player).connect(impact_crater, "Crater Access", lambda state: (
+        artifact_temple.connect(impact_crater, "Crater Access", lambda state: (
             can_missile(state, world.player) and
             has_required_artifact_count(state, world.player) and
             has_energy_tanks(state, world.player, 8) and
             can_plasma_beam(state, world.player) and can_wave_beam(state, world.player) and can_ice_beam(state, world.player) and can_power_beam(state, world.player) and
             can_xray(state, world.player, True) and can_thermal(state, world.player, True)))
     elif final_boss_selection == 1:
-        world.multiworld.get_region(RoomName.Artifact_Temple.value, world.player).connect(mission_complete, "Mission Complete", lambda state:
-                                                                                          can_missile(state, world.player) and
-                                                                                          has_required_artifact_count(state, world.player) and (can_plasma_beam(state, world.player) or can_super_missile(state, world.multiworld, world.player)) and
-                                                                                          has_energy_tanks(state, world.player, 8))
+        artifact_temple.connect(mission_complete, "Mission Complete", lambda state:
+                                can_missile(state, world.player) and
+                                has_required_artifact_count(state, world.player) and (can_plasma_beam(state, world.player) or can_super_missile(state, world.multiworld, world.player)) and
+                                has_energy_tanks(state, world.player, 8))
     elif final_boss_selection == 3:
-        world.multiworld.get_region(RoomName.Artifact_Temple.value, world.player).connect(mission_complete, "Mission Complete", lambda state: (
+        artifact_temple.connect(mission_complete, "Mission Complete", lambda state: (
             can_missile(state, world.player) and
             has_required_artifact_count(state, world.player)))
 
@@ -98,5 +97,5 @@ def create_regions(world: 'MetroidPrimeWorld', final_boss_selection):
             final_boss_selection == 2):
         impact_crater.connect(mission_complete, "Mission Complete")
 
-    from Utils import visualize_regions
-    visualize_regions(world.multiworld.get_region("Menu", world.player), "my_world.puml")
+    # from Utils import visualize_regions
+    # visualize_regions(world.multiworld.get_region("Menu", world.player), "my_world.puml")

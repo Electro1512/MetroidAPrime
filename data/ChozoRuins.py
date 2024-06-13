@@ -126,7 +126,7 @@ class ChozoRuinsAreaData(AreaData):
             1: DoorData(RoomName.Ruins_Entrance),
             2: DoorData(RoomName.Ruined_Shrine_Access, defaultLock=DoorLockType.Missile),
             3: DoorData(RoomName.Nursery_Access),
-            4: DoorData(RoomName.Plaza_Access, tricks=[Tricks.vault_via_plaza]),
+            4: DoorData(RoomName.Plaza_Access, rule_func=lambda state, player: False, tricks=[Tricks.vault_via_plaza]),
             5: DoorData(RoomName.Piston_Tunnel, rule_func=lambda state, player: False),  # Piston tunnel to training chamber is blocked by a chozo head that needs to be destroyed from the other side
         },
             pickups=[PickupData('Chozo Ruins: Main Plaza - Half-Pipe', rule_func=can_boost, tricks=[Tricks.plaza_half_pipe_no_boost]),

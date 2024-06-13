@@ -101,13 +101,13 @@ class BackwardsLowerMines(DefaultOnToggle):
 
 class RemoveXrayRequirements(Toggle):
     """If enabled, removes xray visor requirements for everything but omega pirate and metroid prime"""
-    display_name = "Remove Xray Requirements"
+    display_name = "Remove Xray Visor Requirements"
     default = False
 
 
 class RemoveThermalRequirements(Toggle):
     """If enabled, removes thermal visor requirements for everything but metroid prime (note this means wave beam panels will be in logic without the visor to see them)"""
-    display_name = "Remove Xray Requirements"
+    display_name = "Remove Thermal Visor Requirements"
     default = False
 
 
