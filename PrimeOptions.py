@@ -99,6 +99,18 @@ class BackwardsLowerMines(DefaultOnToggle):
     display_name = "Backwards Lower Mines"
 
 
+class RemoveXrayRequirements(Toggle):
+    """If enabled, removes xray visor requirements for everything but omega pirate and metroid prime"""
+    display_name = "Remove Xray Requirements"
+    default = False
+
+
+class RemoveThermalRequirements(Toggle):
+    """If enabled, removes thermal visor requirements for everything but metroid prime (note this means wave beam panels will be in logic without the visor to see them)"""
+    display_name = "Remove Xray Requirements"
+    default = False
+
+
 @dataclass
 class MetroidPrimeOptions(PerGameCommonOptions):
     start_inventory_from_pool: StartInventoryPool
@@ -116,3 +128,5 @@ class MetroidPrimeOptions(PerGameCommonOptions):
     fusion_suit: FusionSuit
     trick_difficulty: TrickDifficulty
     backwards_lower_mines: BackwardsLowerMines
+    remove_xray_requirements: RemoveXrayRequirements
+    remove_thermal_requirements: RemoveThermalRequirements

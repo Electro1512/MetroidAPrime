@@ -51,6 +51,12 @@ Metroid Prime:
   # If enabled, will allow the player to progress through the lower levels of the mines backwards
   backwards_lower_mines: "true"
 
+  # If enabled, removes xray visor requirements for everything but omega pirate and metroid prime
+  remove_xray_requirements: "false"
+
+  # If enabled, removes thermal visor requirements for everything but metroid prime (note this means wave beam panels will be in logic without the visor to see them)
+  remove_thermal_requirements: "false"
+
   # Whether to send death events to other players with deathlink enabled or not
   death_link: "false"
 
