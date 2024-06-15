@@ -1,13 +1,13 @@
 from worlds.metroidprime.Items import SuitUpgrade
 from .RoomData import AreaData, DoorData, DoorLockType, MetroidPrimeArea, PickupData, RoomData
-from worlds.metroidprime.Logic import can_bomb, can_boost, can_climb_sun_tower, can_climb_tower_of_light, can_exit_ruined_shrine, can_flaahgra, can_grapple, can_heat, can_ice_beam, can_missile, can_morph_ball, can_move_underwater, can_plasma_beam, can_power_bomb, can_scan, can_space_jump, can_spider, can_super_missile, can_wave_beam, has_energy_tanks
+from worlds.metroidprime.Logic import can_bomb, can_boost, can_climb_sun_tower, can_climb_tower_of_light, can_exit_ruined_shrine, can_flaahgra, can_grapple, can_heat, can_ice_beam, can_missile, can_morph_ball, can_move_underwater, can_plasma_beam, can_power_beam, can_power_bomb, can_scan, can_space_jump, can_spider, can_super_missile, can_wave_beam, has_energy_tanks
 from worlds.metroidprime.data.Tricks import Tricks
 from .RoomNames import RoomName
 
 
 class ChozoRuinsAreaData(AreaData):
     rooms = {
-        RoomName.Antechamber: RoomData(doors={0: DoorData(RoomName.Reflecting_Pool, defaultLock=DoorLockType.Ice)}, pickups=[PickupData('Chozo Ruins: Antechamber', rule_func=can_ice_beam), ]),  # Requires Ice beam to exit
+        RoomName.Antechamber: RoomData(doors={0: DoorData(RoomName.Reflecting_Pool, defaultLock=DoorLockType.Ice, rule_func=can_missile)}, pickups=[PickupData('Chozo Ruins: Antechamber', rule_func=can_ice_beam), ]),  # Requires Ice beam to exit
         RoomName.Arboretum_Access: RoomData(doors={
             0: DoorData(RoomName.Arboretum),
             1: DoorData(RoomName.Ruined_Fountain),
@@ -102,23 +102,23 @@ class ChozoRuinsAreaData(AreaData):
         }, pickups=[PickupData('Chozo Ruins: Gathering Hall', rule_func=lambda state, player: can_space_jump(state, player) and can_power_bomb(state, player), tricks=[Tricks.gathering_hall_without_space_jump]), ]),
         RoomName.Hall_of_the_Elders: RoomData(
             doors={
-                0: DoorData(RoomName.Reflecting_Pool_Access, rule_func=lambda state, player: can_bomb(state, player) and can_spider(state, player) and can_wave_beam(state, player), tricks=[Tricks.hall_of_elders_reflecting_pool_no_spider, Tricks.hall_of_elders_reflecting_pool_no_wave_beam]),
-                1: DoorData(RoomName.Elder_Hall_Access, rule_func=lambda state, player: can_boost(state, player) and can_missile(state, player)),
-                2: DoorData(RoomName.East_Furnace_Access, defaultLock=DoorLockType.Ice),
-                3: DoorData(RoomName.Crossway_Access_South, defaultLock=DoorLockType.Ice),
-                4: DoorData(RoomName.Elder_Chamber, defaultLock=DoorLockType.Ice, rule_func=lambda state, player: can_bomb(state, player) and can_plasma_beam(state, player) and can_space_jump(state, player) and can_spider(state, player), tricks=[Tricks.hall_of_elders_elder_chamber_no_spider]),
+                0: DoorData(RoomName.Reflecting_Pool_Access, rule_func=lambda state, player: can_power_beam(state, player) and can_bomb(state, player) and can_spider(state, player) and can_wave_beam(state, player), tricks=[Tricks.hall_of_elders_reflecting_pool_no_spider, Tricks.hall_of_elders_reflecting_pool_no_wave_beam]),
+                1: DoorData(RoomName.Elder_Hall_Access, rule_func=lambda state, player: can_power_beam(state, player) and can_boost(state, player) and can_missile(state, player)),
+                2: DoorData(RoomName.East_Furnace_Access, defaultLock=DoorLockType.Ice, rule_func=can_power_beam),
+                3: DoorData(RoomName.Crossway_Access_South, defaultLock=DoorLockType.Ice, rule_func=can_power_beam),
+                4: DoorData(RoomName.Elder_Chamber, defaultLock=DoorLockType.Ice, rule_func=lambda state, player: can_power_beam(state, player) and can_bomb(state, player) and can_plasma_beam(state, player) and can_space_jump(state, player) and can_spider(state, player), tricks=[Tricks.hall_of_elders_elder_chamber_no_spider]),
             },
             pickups=[PickupData('Chozo Ruins: Hall of the Elders', rule_func=lambda state, player: can_bomb(state, player) and can_spider(state, player) and can_ice_beam(state, player) and can_space_jump(state, player), tricks=[Tricks.hall_of_elders_item_no_spider]), ]),
         RoomName.Hive_Totem: RoomData(
             doors={
                 0: DoorData(RoomName.Totem_Access),
-                1: DoorData(RoomName.Transport_Access_North, defaultLock=DoorLockType.Missile),
+                1: DoorData(RoomName.Transport_Access_North, defaultLock=DoorLockType.Missile, rule_func=lambda state, player: can_power_beam(state, player) or bool(state.multiworld.worlds[player].options.remove_hive_mecha.value)),
             },
-            pickups=[PickupData('Chozo Ruins: Hive Totem'), ]),
+            pickups=[PickupData('Chozo Ruins: Hive Totem', rule_func=lambda state, player: can_power_beam(state, player) or bool(state.multiworld.worlds[player].options.remove_hive_mecha.value)), ]),
         RoomName.Magma_Pool: RoomData(
             doors={
                 0: DoorData(RoomName.Training_Chamber_Access, defaultLock=DoorLockType.Wave, rule_func=lambda state, player: can_grapple(state, player) and can_heat(state, player), tricks=[Tricks.magma_pool_scan_dash]),
-                1: DoorData(RoomName.Meditation_Fountain, rule_func=lambda state, player: has_energy_tanks(state, player, 2) or state.has(SuitUpgrade.Varia_Suit.value, player) or state.has(SuitUpgrade.Gravity_Suit.value, player) or state.has(SuitUpgrade.Phazon_Suit.value, player)),  # Damage reduction let's player cross
+                1: DoorData(RoomName.Meditation_Fountain, rule_func=lambda state, player: has_energy_tanks(state, player, 1) and (state.has(SuitUpgrade.Varia_Suit.value, player) or state.has(SuitUpgrade.Gravity_Suit.value, player) or state.has(SuitUpgrade.Phazon_Suit.value, player))),  # Damage reduction let's player cross
             },
             pickups=[PickupData('Chozo Ruins: Magma Pool', rule_func=lambda state, player: can_grapple(state, player) and can_heat(state, player) and can_power_bomb(state, player), tricks=[Tricks.magma_pool_item_infinite_speed, Tricks.magma_pool_item_scan_dash]), ]),
         RoomName.Main_Plaza: RoomData(doors={
@@ -286,7 +286,7 @@ class ChozoRuinsAreaData(AreaData):
                 0: DoorData(RoomName.Hive_Totem, defaultLock=DoorLockType.Missile, rule_func=can_bomb),
                 1: DoorData(RoomName.Transport_to_Magmoor_Caverns_North, rule_func=can_morph_ball),
             },
-            pickups=[PickupData('Chozo Ruins: Transport Access North')]),
+            pickups=[PickupData('Chozo Ruins: Transport Access North', lambda state, player: can_bomb(state, player) or (state.can_reach(RoomName.Hive_Totem.value, None, player) and can_missile(state, player)))]),
         RoomName.Transport_Access_South: RoomData(doors={
             0: DoorData(RoomName.Reflecting_Pool, defaultLock=DoorLockType.Ice),
             1: DoorData(RoomName.Transport_to_Tallon_Overworld_South, destinationArea=MetroidPrimeArea.Chozo_Ruins),

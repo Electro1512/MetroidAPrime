@@ -1,7 +1,7 @@
 
 from worlds.metroidprime.data.Tricks import Tricks
 from .RoomData import AreaData, DoorData, DoorLockType, MetroidPrimeArea, PickupData, RoomData
-from worlds.metroidprime.Logic import can_bomb, can_boost, can_charge_beam, can_defeat_sheegoth, can_grapple, can_melt_ice, can_missile, can_morph_ball, can_move_underwater, can_power_bomb, can_scan, can_space_jump, can_spider, can_super_missile, can_thermal, can_wave_beam, can_xray
+from worlds.metroidprime.Logic import can_bomb, can_boost, can_charge_beam, can_defeat_sheegoth, can_grapple, can_melt_ice, can_missile, can_morph_ball, can_move_underwater, can_plasma_beam, can_power_bomb, can_scan, can_space_jump, can_spider, can_super_missile, can_thermal, can_wave_beam, can_xray
 from .RoomNames import RoomName
 
 
@@ -259,8 +259,8 @@ class PhendranaDriftsAreaData(AreaData):
             0: DoorData(RoomName.Phendranas_Edge, defaultLock=DoorLockType.Plasma),
         }, pickups=[PickupData('Phendrana Drifts: Storage Cave'), ]),
         RoomName.Temple_Entryway: RoomData(doors={
-            0: DoorData(RoomName.Chozo_Ice_Temple, rule_func=lambda state, player: can_missile(state, player) or can_charge_beam(state, player)),
-            1: DoorData(RoomName.Phendrana_Shorelines, rule_func=lambda state, player: can_missile(state, player) or can_charge_beam(state, player)),
+            0: DoorData(RoomName.Chozo_Ice_Temple, rule_func=lambda state, player: can_missile(state, player) or can_charge_beam(state, player) or can_plasma_beam(state, player)),
+            1: DoorData(RoomName.Phendrana_Shorelines, rule_func=lambda state, player: can_missile(state, player) or can_charge_beam(state, player) or can_plasma_beam(state, player)),
         }),
         RoomName.Transport_Access: RoomData(
             area=MetroidPrimeArea.Phendrana_Drifts,

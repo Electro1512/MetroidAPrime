@@ -21,7 +21,7 @@ def can_bomb(state: CollectionState, player: int) -> bool:
     return state.has_all([SuitUpgrade.Morph_Ball.value, SuitUpgrade.Morph_Ball_Bomb.value], player)
 
 
-def can_power_beam(state, player) -> bool:
+def can_power_beam(state: CollectionState, player: int) -> bool:
     return state.has(SuitUpgrade.Power_Beam.value, player)
 
 
@@ -43,7 +43,7 @@ def can_missile(state: CollectionState, player: int) -> bool:
 
 
 def can_super_missile(state: CollectionState, player: int) -> bool:
-    return can_missile(state, player) and state.has_all([SuitUpgrade.Charge_Beam.value, SuitUpgrade.Super_Missile.value], player)
+    return can_power_beam(state, player) and can_missile(state, player) and state.has_all([SuitUpgrade.Charge_Beam.value, SuitUpgrade.Super_Missile.value], player)
 
 
 def can_wave_beam(state: CollectionState, player: int) -> bool:
@@ -75,11 +75,18 @@ def can_morph_ball(state: CollectionState, player: int) -> bool:
 
 
 def can_xray(state: CollectionState, player: int, hard_required: bool = False) -> bool:
-
+    if hard_required:
+        return state.has(SuitUpgrade.X_Ray_Visor.value, player)
+    elif _get_options(state, player).remove_xray_requirements.value:
+        return True
     return state.has(SuitUpgrade.X_Ray_Visor.value, player)
 
 
 def can_thermal(state: CollectionState, player: int, hard_required: bool = False) -> bool:
+    if hard_required:
+        return state.has(SuitUpgrade.Thermal_Visor.value, player)
+    elif _get_options(state, player).remove_thermal_requirements.value:
+        return True
     return state.has(SuitUpgrade.Thermal_Visor.value, player)
 
 

@@ -29,7 +29,7 @@ def create_regions(world: 'MetroidPrimeWorld', final_boss_selection):
     mission_complete = Region("Mission Complete", world.player, world.multiworld)
     world.multiworld.regions.append(mission_complete)
 
-    starting_room = world.multiworld.get_region(RoomName.Landing_Site.value, world.player)
+    starting_room = world.multiworld.get_region(world.starting_room_data.name, world.player)
     menu.connect(starting_room, "Starting Room")
 
     tallon_transport_to_chozo_west = world.multiworld.get_region(RoomName.Transport_to_Chozo_Ruins_West.value, world.player)

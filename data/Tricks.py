@@ -4,7 +4,7 @@ from typing import Callable, Dict
 
 from BaseClasses import CollectionState
 from worlds.metroidprime.Items import SuitUpgrade
-from worlds.metroidprime.Logic import can_bomb, can_boost, can_charge_beam, can_defeat_sheegoth, can_grapple, can_ice_beam, can_infinite_speed, can_melt_ice, can_missile, can_morph_ball, can_move_underwater, can_plasma_beam, can_power_bomb, can_scan, can_space_jump, can_spider, can_super_missile, can_thermal, can_wave_beam, can_xray, has_energy_tanks
+from worlds.metroidprime.Logic import can_bomb, can_boost, can_charge_beam, can_defeat_sheegoth, can_grapple, can_ice_beam, can_infinite_speed, can_melt_ice, can_missile, can_morph_ball, can_move_underwater, can_plasma_beam, can_power_beam, can_power_bomb, can_scan, can_space_jump, can_spider, can_super_missile, can_thermal, can_wave_beam, can_xray, has_energy_tanks
 
 
 class TrickDifficulty(Enum):
@@ -97,12 +97,12 @@ class Tricks:
     crossway_item_fewer_reqs = TrickInfo("Crossway Item Fewer Reqs", "Reach the crossway item using only SJB and Morph Ball", TrickDifficulty.Easy, lambda state, player: can_bomb(state, player) and can_space_jump(state, player))
     crossway_hpbj = TrickInfo("Crossway Half pip bomb jump", "Reach the hall of the elders using a half pipe bomb jump", TrickDifficulty.Hard, lambda state, player: can_bomb(state, player))
 
-    hall_of_elders_bomb_slots_no_spider = TrickInfo("Hall of Elders No Spider Ball", "Reach the bomb slots without the spider ball by jumping on a peg to activate the top bomb slot", TrickDifficulty.Easy, lambda state, player: can_space_jump(state, player) and can_bomb(state, player))
-    hall_of_elders_reflecting_pool_no_spider = TrickInfo("Hall of Elders Reflecting Pool No Spider Ball", "Reach the reflecting pool without the spider ball", TrickDifficulty.Easy, lambda state, player: can_space_jump(state, player) and can_wave_beam(state, player) and can_bomb(state, player))
-    hall_of_elders_reflecting_pool_no_wave_beam = TrickInfo("Hall of Elders Reflecting Pool No Wave Beam", "In Hall of the Elders, you can Hyper Bomb Jump (HBJ) to the morph ball track and reach the door to Reflecting Pool Access.", TrickDifficulty.Medium, lambda state, player: can_space_jump(state, player) and can_bomb(state, player))
+    hall_of_elders_bomb_slots_no_spider = TrickInfo("Hall of Elders No Spider Ball", "Reach the bomb slots without the spider ball by jumping on a peg to activate the top bomb slot", TrickDifficulty.Easy, lambda state, player: can_space_jump(state, player) and can_bomb(state, player) and can_power_beam(state, player))
+    hall_of_elders_reflecting_pool_no_spider = TrickInfo("Hall of Elders Reflecting Pool No Spider Ball", "Reach the reflecting pool without the spider ball", TrickDifficulty.Easy, lambda state, player: can_space_jump(state, player) and can_wave_beam(state, player) and can_bomb(state, player) and can_power_beam(state, player))
+    hall_of_elders_reflecting_pool_no_wave_beam = TrickInfo("Hall of Elders Reflecting Pool No Wave Beam", "In Hall of the Elders, you can Hyper Bomb Jump (HBJ) to the morph ball track and reach the door to Reflecting Pool Access.", TrickDifficulty.Medium, lambda state, player: can_space_jump(state, player) and can_bomb(state, player) and can_power_beam(state, player))
 
-    hall_of_elders_elder_chamber_no_spider = TrickInfo("Hall of Elders Elder Chamber No Spider Ball", "Reach the bomb slots without the spider ball by jumping on a peg to activate the top bomb slot", TrickDifficulty.Easy, lambda state, player: can_bomb(state, player) and can_plasma_beam(state, player) and can_space_jump(state, player))
-    hall_of_elders_item_no_spider = TrickInfo("Hall of Elders Item No Spider Ball", "Reach the bomb slots without the spider ball by jumping on a peg to activate the top bomb slot", TrickDifficulty.Easy, lambda state, player: can_bomb(state, player) and can_ice_beam(state, player) and can_space_jump(state, player))
+    hall_of_elders_elder_chamber_no_spider = TrickInfo("Hall of Elders Elder Chamber No Spider Ball", "Reach the bomb slots without the spider ball by jumping on a peg to activate the top bomb slot", TrickDifficulty.Easy, lambda state, player: can_bomb(state, player) and can_plasma_beam(state, player) and can_space_jump(state, player) and can_power_beam(state, player))
+    hall_of_elders_item_no_spider = TrickInfo("Hall of Elders Item No Spider Ball", "Reach the bomb slots without the spider ball by jumping on a peg to activate the top bomb slot", TrickDifficulty.Easy, lambda state, player: can_bomb(state, player) and can_ice_beam(state, player) and can_space_jump(state, player) and can_power_beam(state, player))
 
     reflecting_pool_space_jump_climb = TrickInfo("Reflecting Pool Space Jump Climb", "Climb the reflecting pool by space jumping off a stone toad", TrickDifficulty.Easy, can_space_jump)
 

@@ -104,7 +104,7 @@ class MagmoorCavernsAreaData(AreaData):
         RoomName.Transport_Tunnel_A: RoomData(doors={
             0: DoorData(RoomName.Transport_to_Phendrana_Drifts_North, rule_func=lambda state, player: can_heat(state, player) and can_bomb(state, player)),
             1: DoorData(RoomName.Monitor_Station, rule_func=lambda state, player: can_heat(state, player) and can_bomb(state, player)),
-        }, pickups=[PickupData('Magmoor Caverns: Transport Tunnel A', rule_func=can_bomb)], area=MetroidPrimeArea.Magmoor_Caverns),
+        }, pickups=[PickupData('Magmoor Caverns: Transport Tunnel A', rule_func=lambda state, player: can_heat(state, player) and can_bomb(state, player))], area=MetroidPrimeArea.Magmoor_Caverns),
         RoomName.Transport_Tunnel_B: RoomData(doors={
             0: DoorData(RoomName.Transport_to_Tallon_Overworld_West, rule_func=lambda state, player: can_heat(state, player) and (can_morph_ball(state, player) or has_energy_tanks(state, player, 3))),
             1: DoorData(RoomName.Fiery_Shores, rule_func=lambda state, player: can_heat(state, player) and (can_morph_ball(state, player) or has_energy_tanks(state, player, 3))),
