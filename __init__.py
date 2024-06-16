@@ -92,8 +92,6 @@ class MetroidPrimeWorld(World):
         for i in {*suit_upgrade_table}:
             if i == "Power Beam" or i == "Scan Visor" or i == "Power Suit" or i == "Combat Visor":
                 self.multiworld.push_precollected(self.create_item(i))
-            elif i in excluded.keys():
-                continue
             elif i == "Missile Expansion":
                 for j in range(0, 8):
                     self.multiworld.itempool += [
@@ -109,13 +107,18 @@ class MetroidPrimeWorld(World):
                 items_added += 14
                 continue
             elif i == "Ice Trap":
+                #for j in range(0, self.options.ice_traps.value):
+                #    self.multiworld.itempool += [self.create_item("Ice Trap")]
                 continue
+                items_added += self.options.ice_traps.value
             elif i == "Power Bomb Expansion":
                 self.multiworld.itempool += [self.create_item('Power Bomb Expansion', True)]
                 for j in range(0, 4):
                     self.multiworld.itempool += [
                         self.create_item("Power Bomb Expansion")]
                 items_added += 5
+            elif i in excluded.keys():
+                continue
             else:
                 self.multiworld.itempool += [self.create_item(i)]
                 items_added += 1
@@ -132,6 +135,9 @@ class MetroidPrimeWorld(World):
         remain = 100 - items_added
         for i in range(0, remain):
             self.multiworld.itempool += [self.create_item("Missile Expansion")]
+
+    def get_filler_item_name(self) -> str:
+        return "Missile Expansion"
 
     def set_rules(self) -> None:
         set_rules(self.multiworld, self.player, every_location)

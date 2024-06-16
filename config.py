@@ -10,7 +10,11 @@ def starting_inventory(world, item) -> bool:
     else:
         return False
 
-
+def ice_traps(ice) -> bool:
+    if ice > 0:
+        return True
+    else:
+        return False
 def starting_ammo(world, item) -> int:
     items = world.multiworld.precollected_items.values()
     count = 0

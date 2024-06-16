@@ -82,7 +82,11 @@ class FusionSuit(Toggle):
     display_name = "Fusion Suit"
     default = False
 
-
+#class IceTraps(Range):
+#    """If you enjoy pain, how many ice traps would you like shuffled? Note: This will probably eat into your max missiles."""
+#    range_start = 0
+#    range_end = 30
+#    default = 0
 @dataclass
 class MetroidPrimeOptions(PerGameCommonOptions):
     start_inventory_from_pool: StartInventoryPool
@@ -98,3 +102,4 @@ class MetroidPrimeOptions(PerGameCommonOptions):
     staggered_suit_damage: StaggeredSuitDamage
     remove_hive_mecha: RemoveHiveMecha
     fusion_suit: FusionSuit
+    ice_traps: IceTraps
