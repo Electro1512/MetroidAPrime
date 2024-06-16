@@ -100,7 +100,7 @@ class MetroidPrimeWorld(World):
     def pre_fill(self) -> None:
         for location_name, item_name in self.prefilled_item_map.items():
             location = self.get_location(location_name)
-            item = self.create_item(item_name)
+            item = self.create_item(item_name, True)
             location.place_locked_item(item)
 
     def create_items(self) -> None:
@@ -113,22 +113,27 @@ class MetroidPrimeWorld(World):
         excluded = self.options.exclude_items
 
         # Create initial inventory from yaml and starting room
-        start_inventory = ALWAYS_START_INVENTORY
+        start_inventory = []
+        start_inventory += ALWAYS_START_INVENTORY
         start_inventory += [item.value for item in self.starting_room_data.selected_loadout.loadout]
         start_inventory += [item.name for item in self.multiworld.precollected_items[self.player]]
 
         if "Beam" not in "".join(start_inventory):
             start_inventory += [SuitUpgrade.Power_Beam.value]
-        for i in {*suit_upgrade_table}:
 
-            # Don't add items that are already placed locally via start room logic or starting loadout to the multiworld pool
-            if i in self.prefilled_item_map.values():
+        for i in start_inventory:
+            self.multiworld.push_precollected(self.create_item(i))
+
+        for i in {*suit_upgrade_table}:
+            # Don't add items that are already placed locally via start room logic or starting loadout to the multiworld pool.
+            # Missile expansions should still be added since there are multiple
+            if i in self.prefilled_item_map.values() and i != SuitUpgrade.Missile_Expansion.value:
                 items_added += 1
                 continue
             elif i in start_inventory:
-                self.multiworld.push_precollected(self.create_item(i))
+                continue
 
-            elif i in excluded.keys():
+            if i in excluded.keys():
                 continue
             elif i == "Missile Expansion":
                 for j in range(0, 8):

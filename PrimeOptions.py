@@ -115,14 +115,12 @@ class RemoveThermalRequirements(Toggle):
 
 class StartingRoom(Choice):
     """Determines the starting room of the game. This will change your starting loadout depending on the room
-  - normal: Start at the Talon Overworld Landing Site
-  - safe: Start in rooms that will not require combat to progress from
-  - unsafe: Start in rooms that will require combat to progress from
-  - buckle_up: Start in rooms that will pose a significant challenge to players with no energy tanks or suit upgrades. Fun for the aspiring masochist (less fun for their friends in BK).
+  normal: Start at the Talon Overworld Landing Site
+  safe: Start in rooms that will not require a significant combat challenge to progress from
+  buckle_up: Start in rooms that will pose a significant challenge to players with no energy tanks or suit upgrades. Fun for the aspiring masochist (less fun for their friends in BK).
     """
     option_normal = StartRoomDifficulty.Normal.value
     option_safe = StartRoomDifficulty.Safe.value
-    option_dangerous = StartRoomDifficulty.Dangerous.value
     option_buckle_up = StartRoomDifficulty.Buckle_Up.value
     default = StartRoomDifficulty.Normal.value
 
