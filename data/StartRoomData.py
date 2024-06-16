@@ -3,7 +3,8 @@ from dataclasses import dataclass, field
 from enum import Enum
 import random
 from typing import TYPE_CHECKING, Callable, Dict, List, Optional
-from worlds.metroidprime.Items import MetroidPrimeItem, SuitUpgrade
+from worlds.metroidprime.Items import SuitUpgrade
+from worlds.metroidprime.data.AreaNames import MetroidPrimeArea
 from worlds.metroidprime.data.RoomNames import RoomName
 
 if TYPE_CHECKING:
@@ -26,6 +27,7 @@ class StartRoomLoadout:
 
 @dataclass
 class StartRoomData:
+    area: MetroidPrimeArea
     loadouts: List[StartRoomLoadout] = field(default_factory=list)
     difficulty: StartRoomDifficulty = StartRoomDifficulty.Safe
     selected_loadout: Optional[StartRoomLoadout] = None
@@ -33,26 +35,26 @@ class StartRoomData:
 
 
 all_start_rooms: Dict[str, StartRoomData] = {
-    RoomName.Landing_Site.value: StartRoomData(difficulty=StartRoomDifficulty.Normal, loadouts=[StartRoomLoadout([SuitUpgrade.Power_Beam], [
+    RoomName.Landing_Site.value: StartRoomData(difficulty=StartRoomDifficulty.Normal, area=MetroidPrimeArea.Tallon_Overworld, loadouts=[StartRoomLoadout([SuitUpgrade.Power_Beam], [
         {"Chozo Ruins: Hive Totem": [SuitUpgrade.Missile_Launcher]}
     ])]),
-    RoomName.Arboretum.value: StartRoomData([StartRoomLoadout([SuitUpgrade.Missile_Launcher])]),
-    RoomName.Burn_Dome_Access.value: StartRoomData([StartRoomLoadout([SuitUpgrade.Morph_Ball],
-                                                                     item_rules=[
+    RoomName.Arboretum.value: StartRoomData(area=MetroidPrimeArea.Chozo_Ruins, loadouts=[StartRoomLoadout([SuitUpgrade.Missile_Launcher])]),
+    RoomName.Burn_Dome_Access.value: StartRoomData(area=MetroidPrimeArea.Chozo_Ruins, loadouts=[StartRoomLoadout([SuitUpgrade.Morph_Ball],
+                                                                                                                 item_rules=[
         {
             'Chozo Ruins: Burn Dome - Incinerator Drone': [SuitUpgrade.Morph_Ball_Bomb],
             'Chozo Ruins: Burn Dome - Missile': [SuitUpgrade.Missile_Launcher]
         }
     ]
-    )], StartRoomDifficulty.Safe),
-    RoomName.Ruined_Fountain.value: StartRoomData([StartRoomLoadout([SuitUpgrade.Missile_Launcher]), StartRoomLoadout([SuitUpgrade.Morph_Ball])]),
-    RoomName.Save_Station_1.value: StartRoomData([StartRoomLoadout([SuitUpgrade.Power_Beam],
-                                                                   item_rules=[
+    )], difficulty=StartRoomDifficulty.Safe),
+    RoomName.Ruined_Fountain.value: StartRoomData(area=MetroidPrimeArea.Chozo_Ruins, loadouts=[StartRoomLoadout([SuitUpgrade.Missile_Launcher]), StartRoomLoadout([SuitUpgrade.Morph_Ball])]),
+    RoomName.Save_Station_1.value: StartRoomData(area=MetroidPrimeArea.Chozo_Ruins, loadouts=[StartRoomLoadout([SuitUpgrade.Power_Beam],
+                                                                                                               item_rules=[
         {"Chozo Ruins: Hive Totem": [SuitUpgrade.Missile_Launcher]}
     ])]),
-    RoomName.Save_Station_2.value: StartRoomData([StartRoomLoadout([SuitUpgrade.Missile_Launcher])]),
-    RoomName.Tower_Chamber.value: StartRoomData([StartRoomLoadout([SuitUpgrade.Wave_Beam],
-                                                                  item_rules=[
+    RoomName.Save_Station_2.value: StartRoomData(area=MetroidPrimeArea.Chozo_Ruins, loadouts=[StartRoomLoadout([SuitUpgrade.Missile_Launcher])]),
+    RoomName.Tower_Chamber.value: StartRoomData(area=MetroidPrimeArea.Chozo_Ruins, loadouts=[StartRoomLoadout([SuitUpgrade.Wave_Beam],
+                                                                                                              item_rules=[
         {
             "Chozo Ruins: Tower Chamber": [SuitUpgrade.Morph_Ball],
             "Chozo Ruins: Ruined Shrine - Plated Beetle": [SuitUpgrade.Morph_Ball_Bomb],
@@ -60,40 +62,40 @@ all_start_rooms: Dict[str, StartRoomData] = {
         },
     ]
     )]),
-    RoomName.Warrior_Shrine.value: StartRoomData([
+    RoomName.Warrior_Shrine.value: StartRoomData(area=MetroidPrimeArea.Magmoor_Caverns, loadouts=[
         StartRoomLoadout([SuitUpgrade.Varia_Suit], [
             {
                 "Magmoor Caverns: Warrior Shrine": [SuitUpgrade.Morph_Ball],
                 "Magmoor Caverns: Storage Cavern": [SuitUpgrade.Morph_Ball_Bomb, SuitUpgrade.Main_Power_Bomb],
             }
         ]),
-    ], StartRoomDifficulty.Safe),
-    RoomName.East_Tower.value: StartRoomData([StartRoomLoadout([SuitUpgrade.Wave_Beam, SuitUpgrade.Missile_Launcher],
-                                                               [
+    ]),
+    RoomName.East_Tower.value: StartRoomData(area=MetroidPrimeArea.Phendrana_Drifts, loadouts=[StartRoomLoadout([SuitUpgrade.Wave_Beam, SuitUpgrade.Missile_Launcher],
+                                                                                                                [
         {
             "Phendrana Drifts: Phendrana Canyon": [SuitUpgrade.Space_Jump_Boots],
             "Phendrana Drifts: Research Lab Aether - Tank": [SuitUpgrade.Plasma_Beam]
         }
     ]
-    )], StartRoomDifficulty.Buckle_Up),
+    )], difficulty=StartRoomDifficulty.Buckle_Up),
 
-    RoomName.Save_Station_B.value: StartRoomData([
+    RoomName.Save_Station_B.value: StartRoomData(area=MetroidPrimeArea.Phendrana_Drifts, loadouts=[
         StartRoomLoadout([SuitUpgrade.Plasma_Beam, SuitUpgrade.Missile_Launcher],
                          item_rules=[
             {"Phendrana Drifts: Phendrana Shorelines - Behind Ice": [SuitUpgrade.Space_Jump_Boots, SuitUpgrade.Morph_Ball]},
         ]
         )
     ]),
-    RoomName.Arbor_Chamber.value: StartRoomData([StartRoomLoadout([SuitUpgrade.Missile_Launcher])]),
-    RoomName.Transport_to_Chozo_Ruins_East.value: StartRoomData([StartRoomLoadout([SuitUpgrade.Ice_Beam, SuitUpgrade.Morph_Ball],
+    RoomName.Arbor_Chamber.value: StartRoomData(area=MetroidPrimeArea.Tallon_Overworld, loadouts=[StartRoomLoadout([SuitUpgrade.Missile_Launcher])]),
+    RoomName.Transport_to_Chozo_Ruins_East.value: StartRoomData(area=MetroidPrimeArea.Tallon_Overworld, loadouts=[StartRoomLoadout([SuitUpgrade.Ice_Beam, SuitUpgrade.Morph_Ball],
                                                                                   item_rules=[
         {
             "Tallon Overworld: Overgrown Cavern": [SuitUpgrade.Missile_Launcher]
         }
     ]
     )]),
-    RoomName.Quarantine_Monitor.value: StartRoomData([StartRoomLoadout([SuitUpgrade.Wave_Beam, SuitUpgrade.Morph_Ball],
-                                                                       item_rules=[
+    RoomName.Quarantine_Monitor.value: StartRoomData(area=MetroidPrimeArea.Phendrana_Drifts, loadouts=[StartRoomLoadout([SuitUpgrade.Wave_Beam, SuitUpgrade.Morph_Ball],
+                                                                                                                        item_rules=[
         {
             "Phendrana Drifts: Quarantine Monitor": [SuitUpgrade.Thermal_Visor],
             "Phendrana Drifts: Quarantine Cave": [SuitUpgrade.Spider_Ball],
@@ -101,9 +103,9 @@ all_start_rooms: Dict[str, StartRoomData] = {
             "Phendrana Drifts: Ruined Courtyard": [SuitUpgrade.Plasma_Beam]
         },
     ]
-    )], StartRoomDifficulty.Buckle_Up
+    )], difficulty=StartRoomDifficulty.Buckle_Up
     ),
-    RoomName.Sunchamber_Lobby.value: StartRoomData([StartRoomLoadout([SuitUpgrade.Morph_Ball, SuitUpgrade.Missile_Launcher, SuitUpgrade.Morph_Ball_Bomb])], StartRoomDifficulty.Buckle_Up),
+    RoomName.Sunchamber_Lobby.value: StartRoomData(area=MetroidPrimeArea.Chozo_Ruins, loadouts=[StartRoomLoadout([SuitUpgrade.Morph_Ball, SuitUpgrade.Missile_Launcher, SuitUpgrade.Morph_Ball_Bomb])], difficulty=StartRoomDifficulty.Buckle_Up),
 
 }
 

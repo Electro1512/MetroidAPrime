@@ -1,4 +1,4 @@
-from typing import Dict, Any, Optional
+from typing import TYPE_CHECKING, Dict, Any, Optional
 
 
 from .PrimeOptions import MetroidPrimeOptions
@@ -9,6 +9,9 @@ from .data.PhazonMines import PhazonMinesAreaData
 from .data.PhendranaDrifts import PhendranaDriftsAreaData
 from .data.TallonOverworld import TallonOverworldAreaData
 from .data.ChozoRuins import ChozoRuinsAreaData
+
+if TYPE_CHECKING:
+    from worlds.metroidprime import MetroidPrimeWorld
 
 
 def starting_inventory(world, item) -> bool:
@@ -81,7 +84,7 @@ def make_artifact_hints(world) -> str:
     }
 
 
-def make_config(world):
+def make_config(world: 'MetroidPrimeWorld'):
     options: MetroidPrimeOptions = world.options
     config = {
         "$schema": "https://randovania.org/randomprime/randomprime.schema.json",
@@ -101,7 +104,7 @@ def make_config(world):
         },
         "gameConfig": {
             "mainMenuMessage": "Archipelago Metroid Prime",
-            "startingRoom": "Tallon Overworld:Landing Site",
+            "startingRoom": f"{world.starting_room_data.area.value}:{world.starting_room_data.name}",
             "springBall": spring_check(options.spring_ball.value),
             "warpToStart": True,
             "multiworldDolPatches": True,
@@ -117,7 +120,7 @@ def make_config(world):
             "multiworldDolPatches": False,
             "startingItems": {
                 "combatVisor": True,  # starting_inventory(world, "Combat Visor"),
-                "powerBeam": True,  # starting_inventory(world, "Power Beam"), disabling this for now since we don't have this worked into logic
+                "powerBeam": starting_inventory(world, "Power Beam"),
                 "scanVisor": True,  # starting_inventory(world, "Scan Visor"),
                 "missiles": starting_ammo(world, "Missile Launcher"),
                 "energyTanks": starting_ammo(world, "Energy Tank"),

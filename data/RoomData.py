@@ -7,6 +7,7 @@ from BaseClasses import CollectionState, LocationProgressType, Region
 from worlds.metroidprime.Items import SuitUpgrade
 from worlds.metroidprime.Logic import can_bomb, can_ice_beam, can_missile, can_plasma_beam, can_wave_beam
 from worlds.metroidprime.PrimeOptions import MetroidPrimeOptions
+from worlds.metroidprime.data.AreaNames import MetroidPrimeArea
 
 from ..Locations import METROID_PRIME_LOCATION_BASE, MetroidPrimeLocation, every_location
 from .RoomNames import RoomName
@@ -36,15 +37,6 @@ def get_config_item_model(world: 'MetroidPrimeWorld', location) -> str:
             return name
     else:
         return "Nothing"
-
-
-class MetroidPrimeArea(Enum):
-    Phendrana_Drifts = "Phendrana Drifts"
-    Chozo_Ruins = "Chozo Ruins"
-    Magmoor_Caverns = "Magmoor Caverns"
-    Tallon_Overworld = "Tallon Overworld"
-    Phazon_Mines = "Phazon Mines"
-    Impact_Crater = "Impact Crater"
 
 
 class DoorLockType(Enum):

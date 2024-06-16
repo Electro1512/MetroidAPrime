@@ -1,6 +1,7 @@
 
 from worlds.metroidprime.data.Tricks import Tricks
-from .RoomData import AreaData, DoorData, DoorLockType, MetroidPrimeArea, PickupData, RoomData
+from worlds.metroidprime.data.AreaNames import MetroidPrimeArea
+from .RoomData import AreaData, DoorData, DoorLockType, PickupData, RoomData
 from worlds.metroidprime.Logic import can_bomb, can_boost, can_charge_beam, can_defeat_sheegoth, can_grapple, can_melt_ice, can_missile, can_morph_ball, can_move_underwater, can_plasma_beam, can_power_bomb, can_scan, can_space_jump, can_spider, can_super_missile, can_thermal, can_wave_beam, can_xray
 from .RoomNames import RoomName
 
