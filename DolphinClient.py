@@ -103,10 +103,13 @@ def assert_no_running_dolphin() -> bool:
 
 
 def get_num_dolphin_instances() -> int:
-    """Only checks on windows for now"""
-    if Utils.is_windows:
-        output = subprocess.check_output("tasklist", shell=True).decode()
-        lines = output.strip().split("\n")
-        count = sum("Dolphin.exe" in line for line in lines)
-        return count
-    return 0
+    """Only checks on windows for now, kind of brittle so if it causes problems then just ignore it"""
+    try:
+        if Utils.is_windows:
+            output = subprocess.check_output("tasklist", shell=True).decode()
+            lines = output.strip().split("\n")
+            count = sum("Dolphin.exe" in line for line in lines)
+            return count
+        return 0
+    except:
+        return 0
