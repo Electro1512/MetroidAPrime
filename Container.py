@@ -3,7 +3,7 @@ import struct
 from typing import List
 import zipfile
 from worlds.Files import APContainer
-import py_randomprime
+import worlds.metroidprime.lib.py_randomprime as py_randomprime
 
 from worlds.metroidprime.MetroidPrimeInterface import HUD_MESSAGE_ADDRESS, HUD_MESSAGE_DURATION, HUD_TRIGGER_ADDRESS
 
@@ -24,8 +24,8 @@ class MetroidPrimeContainer(APContainer):
 
 
 def construct_hud_message_patch() -> List[int]:
-    from ppc_asm.assembler.ppc import addi, bl, li, lwz, r1, r3, r4, r5, r6, r31, stw, cmpwi, bne, mtspr, blr, lmw, r0, LR, stwu, mfspr, or_, lbz, stmw, stb, lis, r7, r9, nop, ori, GeneralRegister
-    from ppc_asm import assembler
+    from worlds.metroidprime.lib.ppc_asm.assembler.ppc import addi, bl, li, lwz, r1, r3, r4, r5, r6, r31, stw, cmpwi, bne, mtspr, blr, lmw, r0, LR, stwu, mfspr, or_, lbz, stmw, stb, lis, r7, r9, nop, ori, GeneralRegister
+    from worlds.metroidprime.lib.ppc_asm import assembler
     symbols = py_randomprime.symbols_for_version("0-00")
 
     # UpdateHintState is 0x1BC in length, 111 instructions

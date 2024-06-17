@@ -6,7 +6,7 @@ import subprocess
 import traceback
 from typing import List
 import zipfile
-import py_randomprime
+import worlds.metroidprime.lib.py_randomprime as py_randomprime
 
 from CommonClient import ClientCommandProcessor, CommonContext, get_base_parser, logger, server_loop, gui_enabled
 from NetUtils import ClientStatus, NetworkItem

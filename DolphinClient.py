@@ -1,5 +1,5 @@
 from logging import Logger
-import dolphin_memory_engine
+import worlds.metroidprime.lib.dolphin_memory_engine as dolphin_memory_engine
 import subprocess
 import Utils
 
