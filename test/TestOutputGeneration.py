@@ -1,6 +1,7 @@
 import json
 import os
 from BaseClasses import ItemClassification
+from Fill import distribute_items_restrictive
 from ..config import make_config
 from . import MetroidPrimeTestBase
 
@@ -23,11 +24,13 @@ def dict_diff(d1, d2, path=""):
 
 
 class TestDefaultOutputGeneration(MetroidPrimeTestBase):
+    auto_construct = False
     options = {
     }
 
     def test_output_generates_correctly(self) -> None:
-        self.test_fill()
+        self.world_setup()
+        distribute_items_restrictive(self.multiworld)
         output = make_config(self.world)
         expected_output = {}
         path = os.path.join(os.path.dirname(__file__), "data", "default_config.json")
@@ -39,13 +42,15 @@ class TestDefaultOutputGeneration(MetroidPrimeTestBase):
 
 
 class TestMainPBAndMissileLauncherOutputGeneration(MetroidPrimeTestBase):
+    auto_construct = False
     options = {
-      "missile_launcher": 1,
-      "main_power_bomb": 1
+        "missile_launcher": 1,
+        "main_power_bomb": 1
     }
 
     def test_output_generates_correctly_with_main_pb_and_missile_launcher(self) -> None:
-        self.test_fill()
+        self.world_setup()
+        distribute_items_restrictive(self.multiworld)
         output = make_config(self.world)
         expected_output = {}
         path = os.path.join(os.path.dirname(__file__), "data", "missile_launcher_main_pb_config.json")
