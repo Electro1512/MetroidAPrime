@@ -94,10 +94,10 @@ all_start_rooms: Dict[str, StartRoomData] = {
         }
     ]
     )]),
-    RoomName.Quarantine_Monitor.value: StartRoomData(area=MetroidPrimeArea.Phendrana_Drifts, loadouts=[StartRoomLoadout([SuitUpgrade.Wave_Beam, SuitUpgrade.Morph_Ball],
+    RoomName.Quarantine_Monitor.value: StartRoomData(area=MetroidPrimeArea.Phendrana_Drifts, loadouts=[StartRoomLoadout([SuitUpgrade.Wave_Beam, SuitUpgrade.Thermal_Visor],
                                                                                                                         item_rules=[
         {
-            "Phendrana Drifts: Quarantine Monitor": [SuitUpgrade.Thermal_Visor],
+            "Phendrana Drifts: Quarantine Monitor": [SuitUpgrade.Morph_Ball],
             "Phendrana Drifts: Quarantine Cave": [SuitUpgrade.Spider_Ball],
             "Phendrana Drifts: Ice Ruins East - Spider Track": [SuitUpgrade.Space_Jump_Boots],
             "Phendrana Drifts: Ruined Courtyard": [SuitUpgrade.Plasma_Beam]
