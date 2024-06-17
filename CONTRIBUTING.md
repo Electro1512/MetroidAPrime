@@ -5,7 +5,7 @@ To develop and run the MetroidPrime world locally, you need to complete a few st
 ## Installation
 
 - Nest the project inside of the Archipelago main project. Go to the archipelago github, clone it, and then copy/paste this project into the `worlds/metroidprime` folder (you will need to create it). I prefer removing the `.git` directory in the AP parent project so I don't accidentally commit to the wrong project
-- In a shell, navigate to `worlds/metroidprime` and run `bash build/install_local_requirements.sh`. This should create `lib` folder with the required dependencies in your `metroidprime` world folder.
+- In a shell, navigate to `worlds/metroidprime` and run `bash build/build.sh`. This should create `lib` folder with the required dependencies in your `metroidprime` world folder.
 
 ## Generating a seed
 

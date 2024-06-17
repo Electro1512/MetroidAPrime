@@ -183,6 +183,8 @@ function main() {
                 requirements_file="${project}/requirements-linux.txt"
             fi
             get_deps "${platform}" ${requirements_file} "${destdir}/lib"
+            # copy deps to project folder as well for local dev
+            cp -r "${destdir}/lib" "${project}"
         done
 
         mk_apworld "${project}" "${destdir}"
