@@ -1,6 +1,8 @@
 
-from Options import DeathLink, DefaultOnToggle, Toggle, Range, ItemDict, StartInventoryPool, Choice, PerGameCommonOptions
+from Options import DeathLink, DefaultOnToggle, TextChoice, Toggle, Range, ItemDict, StartInventoryPool, Choice, PerGameCommonOptions, Visibility
 from dataclasses import dataclass
+
+from worlds.metroidprime.data.StartRoomData import StartRoomDifficulty
 
 
 class SpringBall(Toggle):
@@ -72,21 +74,63 @@ class StaggeredSuitDamage(Choice):
     default = "Progressive"
 
 
-class RemoveHiveMecha(DefaultOnToggle):
+class RemoveHiveMecha(Toggle):
     """If enabled, the trigger for the Hive Mecha boss will be removed from the game"""
     display_name = "Remove Hive Mecha"
     default = False
+
 
 class FusionSuit(Toggle):
     """Whether to use the fusion suit or not"""
     display_name = "Fusion Suit"
     default = False
 
-#class IceTraps(Range):
-#    """If you enjoy pain, how many ice traps would you like shuffled? Note: This will probably eat into your max missiles."""
-#    range_start = 0
-#    range_end = 30
-#    default = 0
+
+class TrickDifficulty(Choice):
+    """Determines which tricks, if any, are required to complete the seed. This will affect the logic of the game."""
+    display_name = "Trick Difficulty"
+    option_no_tricks = -1
+    option_easy = 0
+    option_medium = 1
+    option_hard = 2
+    default = -1
+
+
+class BackwardsLowerMines(DefaultOnToggle):
+    """If enabled, allows the player to progress through the lower mines in reverse"""
+    display_name = "Backwards Lower Mines"
+
+
+class RemoveXrayRequirements(Toggle):
+    """If enabled, removes xray visor requirements for everything but omega pirate and metroid prime"""
+    display_name = "Remove Xray Visor Requirements"
+    default = False
+
+
+class RemoveThermalRequirements(Toggle):
+    """If enabled, removes thermal visor requirements for everything but metroid prime (note this means wave beam panels will be in logic without the visor to see them)"""
+    display_name = "Remove Thermal Visor Requirements"
+    default = False
+
+
+class StartingRoom(Choice):
+    """Determines the starting room of the game. This will change your starting loadout depending on the room
+  normal: Start at the Talon Overworld Landing Site
+  safe: Start in rooms that will not require a significant combat challenge to progress from
+  buckle_up: Start in rooms that will pose a significant challenge to players with no energy tanks or suit upgrades. Fun for the aspiring masochist (less fun for their friends in BK).
+    """
+    option_normal = StartRoomDifficulty.Normal.value
+    option_safe = StartRoomDifficulty.Safe.value
+    option_buckle_up = StartRoomDifficulty.Buckle_Up.value
+    default = StartRoomDifficulty.Normal.value
+
+
+class StartingRoomName(TextChoice):
+    """Should not be shown in ui, can be used to override the starting room"""
+    display_name = "Starting Room Name"
+    default = ""
+    visibility = Visibility.spoiler
+
 @dataclass
 class MetroidPrimeOptions(PerGameCommonOptions):
     start_inventory_from_pool: StartInventoryPool
@@ -102,4 +146,9 @@ class MetroidPrimeOptions(PerGameCommonOptions):
     staggered_suit_damage: StaggeredSuitDamage
     remove_hive_mecha: RemoveHiveMecha
     fusion_suit: FusionSuit
-    ice_traps: IceTraps
+    trick_difficulty: TrickDifficulty
+    backwards_lower_mines: BackwardsLowerMines
+    remove_xray_requirements: RemoveXrayRequirements
+    remove_thermal_requirements: RemoveThermalRequirements
+    starting_room: StartingRoom
+    starting_room_name: StartingRoomName
