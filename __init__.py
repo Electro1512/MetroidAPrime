@@ -163,6 +163,7 @@ class MetroidPrimeWorld(World):
             "required_artifacts": self.options.required_artifacts.value,
             "missile_launcher": self.options.missile_launcher.value,
             "main_power_bomb": self.options.main_power_bomb.value,
+            "non_varia_heat_damage": self.options.non_varia_heat_damage.value,
             "exclude_items": self.options.exclude_items.value,
             "final_bosses": self.options.final_bosses.value,
         }
