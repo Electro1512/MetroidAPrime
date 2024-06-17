@@ -212,8 +212,7 @@ class MetroidPrimeInterface:
         try:
             connected = self.dolphin_client.is_connected()
             if not connected:
-                # If multiple instances of dolphin are open then it will not connect
-                return ConnectionState.MULTIPLE_DOLPHIN_INSTANCES if get_num_dolphin_instances() > 1 else ConnectionState.DISCONNECTED
+                return ConnectionState.DISCONNECTED
             elif self.is_in_playable_state():
                 return ConnectionState.IN_GAME
             else:

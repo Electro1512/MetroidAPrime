@@ -149,8 +149,6 @@ class MetroidPrimeWorld(World):
                         self.create_item("Energy Tank")]
                 items_added += 14
                 continue
-            elif i == "Ice Trap":
-                continue
             elif i == "Power Bomb Expansion":
                 self.multiworld.itempool += [self.create_item('Power Bomb Expansion', True)]
                 for j in range(0, 4):
