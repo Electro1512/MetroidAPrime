@@ -86,7 +86,7 @@ def create_regions(world: 'MetroidPrimeWorld', final_boss_selection):
     elif final_boss_selection == 1:
         artifact_temple.connect(mission_complete, "Mission Complete", lambda state:
                                 can_missile(state, world.player) and
-                                has_required_artifact_count(state, world.player) and (can_plasma_beam(state, world.player) or can_super_missile(state, world.multiworld, world.player)) and
+                                has_required_artifact_count(state, world.player) and (can_plasma_beam(state, world.player) or can_super_missile(state, world.player)) and
                                 has_energy_tanks(state, world.player, 8))
     elif final_boss_selection == 3:
         artifact_temple.connect(mission_complete, "Mission Complete", lambda state: (
