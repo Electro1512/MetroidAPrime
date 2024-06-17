@@ -38,7 +38,6 @@ class TrickInfo:
     rule_func: Callable[[CollectionState, int], bool]
 
 
-@dataclass
 class Tricks:
   # Tallon
     alcove_escape: TrickInfo = TrickInfo("Alcove Escape", "Escape the Alcove without space jump", TrickDifficulty.Medium, lambda state, player: True)

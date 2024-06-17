@@ -22,25 +22,6 @@ def starting_inventory(world, item) -> bool:
         return False
 
 
-def starting_ammo(world, item) -> int:
-    items = world.multiworld.precollected_items.values()
-    count = 0
-    if item == "Missile Expansion":
-        for i in items:
-            if i == "Missile Expansion" or i == "Missile Launcher":
-                count += 5
-        return count
-    if item == "Energy Tank":
-        for i in items:
-            if i == "Energy Tank":
-                count += 1
-    if item == "Power Bomb (Main)":
-        for i in items:
-            if i == "Power Bomb (Main)" or i == "Power Bomb Expansion":
-                count += 1
-    return count
-
-
 def spring_check(spring) -> bool:
     if spring == 1:
         return True
@@ -122,9 +103,10 @@ def make_config(world: 'MetroidPrimeWorld'):
                 "combatVisor": True,  # starting_inventory(world, "Combat Visor"),
                 "powerBeam": starting_inventory(world, "Power Beam"),
                 "scanVisor": True,  # starting_inventory(world, "Scan Visor"),
-                "missiles": starting_ammo(world, "Missile Launcher"),
-                "energyTanks": starting_ammo(world, "Energy Tank"),
-                "powerBombs": starting_ammo(world, "Power Bomb (Main)"),
+                # These are handled by the client
+                "missiles": 0,
+                "energyTanks": 0,
+                "powerBombs": 0,
                 "wave": starting_inventory(world, "Wave Beam"),
                 "ice": starting_inventory(world, "Ice Beam"),
                 "plasma": starting_inventory(world, "Plasma Beam"),
