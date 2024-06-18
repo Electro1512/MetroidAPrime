@@ -6,8 +6,7 @@ from worlds.metroidprime.data.StartRoomData import StartRoomDifficulty
 
 
 class SpringBall(Toggle):
-    """Adds Spring Ball to the item pool. This item will allow you to jump in Morph Ball mode,
-    significantly reducing the necessity of bomb jumps. Does not change the logic at this current time."""
+    """Enables the spring ball when you receive Morph Ball Bombs. This will allow you to jump while in morph ball form by pressing up on the c stick, reducing the complexity of double bomb jumps."""
     display_name = "Add Spring Ball"
 
 
