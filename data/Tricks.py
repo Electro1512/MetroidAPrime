@@ -40,16 +40,16 @@ class TrickInfo:
 
 class Tricks:
   # Tallon
-    alcove_escape: TrickInfo = TrickInfo("Alcove Escape", "Escape the Alcove without space jump", TrickDifficulty.Medium, lambda state, player: True)
+    alcove_escape: TrickInfo = TrickInfo("Alcove Escape", "Escape the Alcove without space jump", TrickDifficulty.Easy, lambda state, player: True)
     landing_site_scan_dash: TrickInfo = TrickInfo("Landing Site Scan Dash", "Perform a scan dash to reach the landing site without bombs", TrickDifficulty.Medium, can_scan)
 
-    frigate_no_gravity: TrickInfo = TrickInfo("Frigate No Gravity", "Complete the Frigate without Gravity Suit", TrickDifficulty.Medium,
+    frigate_no_gravity: TrickInfo = TrickInfo("Frigate No Gravity", "Complete the Frigate without Gravity Suit", TrickDifficulty.Easy,
                                               lambda state, player: can_bomb(state, player) and can_space_jump(state, player) and can_wave_beam(state, player) and can_thermal(state, player))
 
     hydro_access_tunnel_no_gravity: TrickInfo = TrickInfo("Hydro Access Tunnel No Gravity", "Complete the Hydro Access Tunnel without Gravity Suit using Wall Boosting", TrickDifficulty.Hard,
                                                           lambda state, player: can_boost(state, player))
 
-    frigate_backwards_no_gravity: TrickInfo = TrickInfo("Frigate No Gravity", "Complete the Frigate without Gravity Suit", TrickDifficulty.Medium,
+    frigate_backwards_no_gravity: TrickInfo = TrickInfo("Frigate No Gravity", "Complete the Frigate without Gravity Suit", TrickDifficulty.Easy,
                                                         lambda state, player: can_morph_ball(state, player) and can_space_jump(state, player) and can_boost(state, player))
 
     frigate_crash_site_scan_dash: TrickInfo = TrickInfo("Crashed Frigate Scan Dash", "Perform a scan dash to reach the item at Crashed Frigate", TrickDifficulty.Hard, can_scan)
@@ -122,7 +122,7 @@ class Tricks:
 
     fiery_shores_morphball_track_sj = TrickInfo("Fiery Shores Morphball Track SJ", "Reach the Morph Ball Track in Fiery Shores using the space jump boots", TrickDifficulty.Easy, can_space_jump)
 
-    twin_fires_tunnel_no_spider = TrickInfo("Twin Fires Tunnel No Spider Ball", "Traverse the Twin Fires Tunnel by using an R Jump and geometrey near the transport door", TrickDifficulty.Easy, lambda state, player: can_bomb(state, player) and can_space_jump(state, player))
+    twin_fires_tunnel_no_spider = TrickInfo("Twin Fires Tunnel No Spider Ball", "Traverse the Twin Fires Tunnel by using an R Jump and geometrey near the transport door", TrickDifficulty.Medium, lambda state, player: can_bomb(state, player) and can_space_jump(state, player))
     cross_twin_fires_suitless = TrickInfo("Cross Twin Fires Suitless", "Removes the suit requirement when crossing this room. Twin Fires Tunnel is the only room in late Magmoor that is superheated. This trick automatically assumes you have 2 Energy Tanks and can cross without Spider Ball, since it cannot be used while you are taking heat damage.", TrickDifficulty.Medium, lambda state, player: can_space_jump(state, player) and has_energy_tanks(state, player, 2))
 
     geothermal_core_no_grapple_spider = TrickInfo("Geothermal Core No Grapple Spider", "You can R jump or dash to reach the boost spinners, and either slope R jump or abuse standable collision to skip the spider track.", TrickDifficulty.Medium, lambda state, player: can_bomb(state, player) and can_boost(state, player) and can_space_jump(state, player))
