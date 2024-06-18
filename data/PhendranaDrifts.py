@@ -272,7 +272,7 @@ class PhendranaDriftsAreaData(AreaData):
         RoomName.Transport_to_Magmoor_Caverns_South: RoomData(
             area=MetroidPrimeArea.Phendrana_Drifts,
             doors={
-                0: DoorData(RoomName.Transport_Access, defaultLock=DoorLockType.Ice, destinationArea=MetroidPrimeArea.Phendrana_Drifts),
+                0: DoorData(RoomName.Transport_Access, defaultLock=DoorLockType.Ice, destinationArea=MetroidPrimeArea.Phendrana_Drifts, rule_func=can_spider),
                 1: DoorData(RoomName.South_Quarantine_Tunnel, defaultLock=DoorLockType.Wave)
             }),
         RoomName.Transport_to_Magmoor_Caverns_West: RoomData(doors={
