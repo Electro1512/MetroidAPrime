@@ -65,7 +65,7 @@ class TallonOverworldAreaData(AreaData):
                             tricks=[Tricks.frigate_no_gravity]),
             },
             pickups=[
-                PickupData('Tallon Overworld: Cargo Freight Lift to Deck Gamma', rule_func=lambda state, player: can_missile(state, player) or can_charge_beam(state, player)),
+                PickupData('Tallon Overworld: Cargo Freight Lift to Deck Gamma', rule_func=lambda state, player: (can_missile(state, player) or can_charge_beam(state, player)) and (can_crashed_frigate(state, player) or can_crashed_frigate_backwards(state, player))),
             ]),
 
         # RoomName.Connection_Elevator_to_Deck_Beta: RoomData(

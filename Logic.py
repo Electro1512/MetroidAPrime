@@ -107,7 +107,7 @@ def can_crashed_frigate(state: CollectionState, player: int) -> bool:
 
 
 def can_crashed_frigate_backwards(state: CollectionState, player: int) -> bool:
-    return can_bomb(state, player) and can_space_jump(state, player) and can_move_underwater(state, player) and can_bomb(state, player)
+    return can_space_jump(state, player) and can_move_underwater(state, player) and can_bomb(state, player)
 
 
 def can_heat(state: CollectionState, player: int) -> bool:
