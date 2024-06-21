@@ -30,7 +30,7 @@ class PhendranaDriftsAreaData(AreaData):
         }),
         RoomName.Chapel_of_the_Elders: RoomData(doors={
             0: DoorData(RoomName.Chapel_Tunnel, defaultLock=DoorLockType.Wave, rule_func=lambda state, player: can_defeat_sheegoth(state, player) and can_space_jump(state, player) and can_wave_beam(state, player), tricks=[Tricks.chapel_of_elders_escape_no_sj]),
-        }, pickups=[PickupData('Phendrana Drifts: Chapel of the Elders', tricks=[Tricks.chapel_of_elders_escape_no_sj]), ]),
+        }, pickups=[PickupData('Phendrana Drifts: Chapel of the Elders', rule_func=lambda state, player: can_space_jump(state, player) and can_wave_beam(state, player), tricks=[Tricks.chapel_of_elders_escape_no_sj]), ]),
         RoomName.Chapel_Tunnel: RoomData(doors={
             0: DoorData(RoomName.Chapel_of_the_Elders, rule_func=lambda state, player: can_bomb(state, player)),
             1: DoorData(RoomName.Chozo_Ice_Temple, rule_func=lambda state, player: can_bomb(state, player)),
