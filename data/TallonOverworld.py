@@ -88,7 +88,6 @@ class TallonOverworldAreaData(AreaData):
                 0: DoorData(RoomName.Waterfall_Cavern, defaultLock=DoorLockType.Missile, rule_func=can_missile),
                 1: DoorData(RoomName.Cargo_Freight_Lift_to_Deck_Gamma, defaultLock=DoorLockType.Ice,
                             rule_func=can_crashed_frigate,
-                            tricks=[Tricks.frigate_crash_site_slope_jump],
                             exclude_from_rando=True
                             ),
                 2: DoorData(RoomName.Overgrown_Cavern, defaultLock=DoorLockType.Ice,
