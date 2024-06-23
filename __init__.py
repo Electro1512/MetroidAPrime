@@ -203,3 +203,9 @@ class MetroidPrimeWorld(World):
         }
 
         return slot_data
+
+    def post_fill(self) -> None:
+      if self.options.artifact_hints.value:
+        start_hints: typing.Set[str] = self.options.start_hints.value
+        for i in artifact_table.keys():
+          start_hints.add(i)

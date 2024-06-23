@@ -37,7 +37,7 @@ class FinalBosses(Choice):
 
 
 class ArtifactHints(DefaultOnToggle):
-    """If enabled, scanning the artifact stones in the temple will give a hint to their location"""
+    """If enabled, scanning the artifact stones in the temple will give a hint to their location. Additionally, hints will be pre collected in the client"""
     display_name = "Artifact Hints"
     default = True
 

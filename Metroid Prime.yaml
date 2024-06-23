@@ -40,16 +40,13 @@ Metroid Prime:
     false: 50
     true: 0
 
-  required_artifacts:
+  required_artifacts: 12
     # Determines the amount of Artifacts needed to begin the endgame sequence.
     #
     # You can define additional values between the minimum and maximum values.
     # Minimum value is 1
     # Maximum value is 12
-    12: 50
-    random: 0
-    random-low: 0
-    random-high: 0
+
 
   exclude_items:
     # Replaces the following items with filler. INPUT AT YOUR OWN RISK. I cannot promise that removing
@@ -70,7 +67,7 @@ Metroid Prime:
     true: 0
 
   artifact_hints:
-    # If enabled, scanning the artifact stones in the temple will give a hint to their location
+    # If enabled, scanning the artifact stones in the temple will give a hint to their location. Additionally, hints will be pre collected in the client
     false: 0
     true: 50
 
