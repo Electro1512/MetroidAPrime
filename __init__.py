@@ -32,7 +32,7 @@ components.append(
 class MetroidPrimeSettings(settings.Group):
     class RomFile(settings.UserFilePath):
         """File name of the Metroid Prime ISO"""
-        description = "Metroid Prime (US) v1.0 ISO file"
+        description = "Metroid Prime GC ISO file"
         copy_to = "Metroid_Prime.iso"
 
     class RomStart(str):

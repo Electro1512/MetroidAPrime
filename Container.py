@@ -5,7 +5,7 @@ import zipfile
 from worlds.Files import APContainer
 import py_randomprime
 
-from worlds.metroidprime.MetroidPrimeInterface import HUD_MESSAGE_ADDRESS, HUD_MESSAGE_DURATION, HUD_TRIGGER_ADDRESS
+from worlds.metroidprime.MetroidPrimeInterface import GAMES, HUD_MESSAGE_DURATION
 
 
 class MetroidPrimeContainer(APContainer):
@@ -23,10 +23,10 @@ class MetroidPrimeContainer(APContainer):
         super().write_contents(opened_zipfile)
 
 
-def construct_hud_message_patch() -> List[int]:
+def construct_hud_message_patch(game_version: str) -> List[int]:
     from ppc_asm.assembler.ppc import addi, bl, li, lwz, r1, r3, r4, r5, r6, r31, stw, cmpwi, bne, mtspr, blr, lmw, r0, LR, stwu, mfspr, or_, lbz, stmw, stb, lis, r7, r9, nop, ori, GeneralRegister
     from ppc_asm import assembler
-    symbols = py_randomprime.symbols_for_version("0-00")
+    symbols = py_randomprime.symbols_for_version(game_version)
 
     # UpdateHintState is 0x1BC in length, 111 instructions
     num_preserved_registers = 2
@@ -42,8 +42,8 @@ def construct_hud_message_patch() -> List[int]:
         or_(r31, r3, r3),
 
         # Check if trigger is set
-        lis(r6, HUD_TRIGGER_ADDRESS >> 16),  # Load upper 16 bits of address
-        ori(r6, r6, HUD_TRIGGER_ADDRESS & 0xFFFF),  # Load lower 16 bits of address
+        lis(r6, GAMES[game_version]["HUD_TRIGGER_ADDRESS"] >> 16),  # Load upper 16 bits of address
+        ori(r6, r6, GAMES[game_version]["HUD_TRIGGER_ADDRESS"] & 0xFFFF),  # Load lower 16 bits of address
         lbz(r5, 0, r6),
 
         cmpwi(r5, 1),
@@ -65,8 +65,8 @@ def construct_hud_message_patch() -> List[int]:
         stb(r7, 0x17, r1),
         stw(r9, 0x18, r1),
         addi(r3, r1, 0x1C),
-        lis(r4, HUD_MESSAGE_ADDRESS >> 16),  # Load upper 16 bits of message address
-        ori(r4, r4, HUD_MESSAGE_ADDRESS & 0xFFFF),  # Load lower 16 bits of message address
+        lis(r4, GAMES[game_version]["HUD_MESSAGE_ADDRESS"] >> 16),  # Load upper 16 bits of message address
+        ori(r4, r4, GAMES[game_version]["HUD_MESSAGE_ADDRESS"] & 0xFFFF),  # Load lower 16 bits of message address
         bl(symbols["wstring_l__4rstlFPCw"]),
         addi(r4, r1, 0x10),
 
