@@ -5,6 +5,7 @@ from typing import Callable, Dict
 from BaseClasses import CollectionState
 from worlds.metroidprime.Items import SuitUpgrade
 from worlds.metroidprime.Logic import can_bomb, can_boost, can_charge_beam, can_defeat_sheegoth, can_grapple, can_ice_beam, can_infinite_speed, can_melt_ice, can_missile, can_morph_ball, can_move_underwater, can_plasma_beam, can_power_beam, can_power_bomb, can_scan, can_space_jump, can_spider, can_super_missile, can_thermal, can_wave_beam, can_xray, has_energy_tanks
+from worlds.metroidprime.data.RoomNames import RoomName
 
 
 class TrickDifficulty(Enum):
@@ -107,8 +108,8 @@ class Tricks:
 
   # Magmoor
 
-    lava_lake_item_suitless = TrickInfo("Lava Lake Item Suitless", "Reach the Lava Lake item without the Varia Suit", TrickDifficulty.Medium, lambda state, player: can_missile(state, player) and can_space_jump(state, player) and has_energy_tanks(state, player, 4))
-    lava_lake_item_missiles_only = TrickInfo("Lava Lake Item Suitless", "Reach lava lake item without space jump by jumping on base of column", TrickDifficulty.Easy, lambda state, player: can_missile(state, player))
+    lava_lake_item_suitless = TrickInfo("Lava Lake Item Suitless", "Reach the Lava Lake item without the Varia Suit", TrickDifficulty.Medium, lambda state, player: can_missile(state, player) and can_space_jump(state, player) and has_energy_tanks(state, player, 4) and state.can_reach("Magmoor Caverns: " + RoomName.Lake_Tunnel.value, None, player))
+    lava_lake_item_missiles_only = TrickInfo("Lava Lake Item Suitless", "Reach lava lake item without space jump by jumping on base of column", TrickDifficulty.Easy, lambda state, player: can_missile(state, player) and state.can_reach("Magmoor Caverns: " + RoomName.Lake_Tunnel.value, None, player))
 
     triclops_pit_item_no_sj = TrickInfo("Triclops Pit Item No SJ", "Reach the Triclops Pit item without Space Jump, assumes has xray and can use charge or missiles", TrickDifficulty.Medium, lambda state, player: can_xray(state, player) and (can_missile(state, player) or can_charge_beam(state, player)))
     triclops_pit_item_no_xray = TrickInfo("Triclops Pit Item No XRay", "Reach the Triclops Pit item without XRay Visor, assumes has space jump and can use charge or missiles", TrickDifficulty.Medium, lambda state, player: can_space_jump(state, player) and (can_missile(state, player) or can_charge_beam(state, player)))

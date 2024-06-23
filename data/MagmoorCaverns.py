@@ -40,7 +40,7 @@ class MagmoorCavernsAreaData(AreaData):
                 0: DoorData(RoomName.Lake_Tunnel, destinationArea=MetroidPrimeArea.Magmoor_Caverns, rule_func=lambda state, player: can_heat(state, player) and (can_bomb(state, player) or can_power_bomb(state, player)), tricks=[Tricks.lava_lake_item_suitless]),
                 1: DoorData(RoomName.Pit_Tunnel, rule_func=lambda state, player: can_heat(state, player) and (can_bomb(state, player) or can_power_bomb(state, player)), tricks=[Tricks.lava_lake_item_suitless]),
             },
-            pickups=[PickupData('Magmoor Caverns: Lava Lake', rule_func=lambda state, player: can_missile(state, player) and can_space_jump(state, player),  tricks=[Tricks.lava_lake_item_missiles_only, Tricks.lava_lake_item_suitless]), ]),
+            pickups=[PickupData('Magmoor Caverns: Lava Lake', rule_func=lambda state, player: can_missile(state, player) and can_space_jump(state, player) and state.can_reach("Magmoor Caverns: " + RoomName.Lake_Tunnel.value, None, player),  tricks=[Tricks.lava_lake_item_missiles_only, Tricks.lava_lake_item_suitless]), ]),
         RoomName.Magmoor_Workstation: RoomData(
             doors={
                 0: DoorData(RoomName.South_Core_Tunnel),
