@@ -160,12 +160,12 @@ class MetroidPrimeWorld(World):
                 items_added += 1
 
         if self.options.missile_launcher.value:
-            if SuitUpgrade.Missile_Launcher.value not in start_inventory:
+            if SuitUpgrade.Missile_Launcher.value not in start_inventory and SuitUpgrade.Missile_Launcher.value not in self.prefilled_item_map.values():
                 self.multiworld.itempool += [self.create_item(SuitUpgrade.Missile_Launcher.value)]
                 items_added += 1
 
         if self.options.main_power_bomb.value:
-            if SuitUpgrade.Main_Power_Bomb.value not in start_inventory:
+            if SuitUpgrade.Main_Power_Bomb.value not in start_inventory and SuitUpgrade.Main_Power_Bomb.value not in self.prefilled_item_map.values():
                 self.multiworld.itempool += [self.create_item(SuitUpgrade.Main_Power_Bomb.value)]
                 items_added += 1
 
