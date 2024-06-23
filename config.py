@@ -1,5 +1,7 @@
 from typing import TYPE_CHECKING, Dict, Any, Optional
 
+from worlds.metroidprime.Items import SuitUpgrade
+
 
 from .PrimeOptions import MetroidPrimeOptions
 from .data.RoomData import MetroidPrimeArea
@@ -14,8 +16,8 @@ if TYPE_CHECKING:
     from worlds.metroidprime import MetroidPrimeWorld
 
 
-def starting_inventory(world, item) -> bool:
-    items = world.multiworld.precollected_items.values()
+def starting_inventory(world: 'MetroidPrimeWorld', item: str) -> bool:
+    items = [item.name for item in world.multiworld.precollected_items[world.player]]
     if item in items:
         return True
     else:
@@ -36,7 +38,17 @@ def ridley(boss) -> bool:
         return True
 
 
-def make_artifact_hints(world) -> str:
+def get_starting_beam(world: 'MetroidPrimeWorld') -> str:
+    starting_items = [item.name for item in world.multiworld.precollected_items[world.player]]
+    starting_beam = "Power"
+    for item in starting_items:
+        if item in [SuitUpgrade.Wave_Beam.value, SuitUpgrade.Ice_Beam.value, SuitUpgrade.Plasma_Beam.value]:
+            starting_beam = item.split(" ")[0]
+            break
+    return starting_beam
+
+
+def make_artifact_hints(world: 'MetroidPrimeWorld') -> str:
     def make_artifact_hint(item) -> str:
         try:
             if world.options.artifact_hints.value:
@@ -129,7 +141,7 @@ def make_config(world: 'MetroidPrimeWorld'):
             },
             "disableItemLoss": True,
             "startingVisor": "Combat",
-            "startingBeam": "Power",
+            "startingBeam": get_starting_beam(world),
             "enableIceTraps": False,
             "missileStationPbRefill": True,
             "doorOpenMode": "Original",
