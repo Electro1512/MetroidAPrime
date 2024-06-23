@@ -254,11 +254,12 @@ class MetroidPrimeInterface:
             except:
                 game_rev = None
             # The first read of the address will be null if the client is faster than the emulator
-            current_game = None
+            self.current_game = None
             for version in _SUPPORTED_VERSIONS:
                 if game_id == GAMES[version]["game_id"] and game_rev == GAMES[version]["game_rev"]:
-                    current_game = version
-            if current_game is None and self.game_id_error != game_id and game_id != b'\x00\x00\x00\x00\x00\x00':
+                    self.current_game = version
+                    break
+            if self.current_game is None and self.game_id_error != game_id and game_id != b'\x00\x00\x00\x00\x00\x00':
                 self.logger.warn(
                     f"Connected to the wrong game ({game_id}, rev {game_rev}), please connect to Metroid Prime GC (Game ID starts with a GM8)")
                 self.game_id_error = game_id
