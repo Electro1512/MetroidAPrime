@@ -41,7 +41,7 @@ class ChozoRuinsAreaData(AreaData):
         RoomName.Dynamo_Access: RoomData(
             area=MetroidPrimeArea.Chozo_Ruins,
             doors={
-                0: DoorData(RoomName.Watery_Hall, defaultLock=DoorLockType.Missile),
+                0: DoorData(RoomName.Watery_Hall, defaultLock=DoorLockType.Missile, rule_func=can_bomb),
                 1: DoorData(RoomName.Dynamo, destinationArea=MetroidPrimeArea.Chozo_Ruins),
             }),
         RoomName.Dynamo: RoomData(
@@ -49,7 +49,7 @@ class ChozoRuinsAreaData(AreaData):
             doors={
                 0: DoorData(RoomName.Dynamo_Access, destinationArea=MetroidPrimeArea.Chozo_Ruins),
             },
-            pickups=[PickupData('Chozo Ruins: Dynamo - Lower', rule_func=can_super_missile), PickupData('Chozo Ruins: Dynamo - Spider Track', rule_func=can_spider), ]),
+            pickups=[PickupData('Chozo Ruins: Dynamo - Lower', rule_func=can_missile), PickupData('Chozo Ruins: Dynamo - Spider Track', rule_func=lambda state, player: can_space_jump(state, player) and can_spider(state, player))]),
         RoomName.East_Atrium: RoomData(doors={
             0: DoorData(RoomName.Gathering_Hall),
             1: DoorData(RoomName.Energy_Core_Access),
@@ -328,7 +328,7 @@ class ChozoRuinsAreaData(AreaData):
             pickups=[PickupData('Chozo Ruins: Watery Hall Access', rule_func=can_missile), ]),
         RoomName.Watery_Hall: RoomData(
             doors={
-                0: DoorData(RoomName.Dynamo_Access, destinationArea=MetroidPrimeArea.Chozo_Ruins, defaultLock=DoorLockType.Missile, rule_func=lambda state, player: can_scan(state, player) and can_power_bomb(state, player)),
+                0: DoorData(RoomName.Dynamo_Access, destinationArea=MetroidPrimeArea.Chozo_Ruins, defaultLock=DoorLockType.Missile, rule_func=lambda state, player: can_scan(state, player) and can_bomb(state, player)),
                 1: DoorData(RoomName.Watery_Hall_Access, defaultLock=DoorLockType.Missile),
 
             },
