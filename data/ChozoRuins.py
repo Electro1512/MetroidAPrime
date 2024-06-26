@@ -49,7 +49,7 @@ class ChozoRuinsAreaData(AreaData):
             doors={
                 0: DoorData(RoomName.Dynamo_Access, destinationArea=MetroidPrimeArea.Chozo_Ruins),
             },
-            pickups=[PickupData('Chozo Ruins: Dynamo - Lower', rule_func=can_missile), PickupData('Chozo Ruins: Dynamo - Spider Track', rule_func=lambda state, player: can_space_jump(state, player) and can_spider(state, player))]),
+            pickups=[PickupData('Chozo Ruins: Dynamo - Lower', rule_func=can_missile), PickupData('Chozo Ruins: Dynamo - Spider Track', rule_func=lambda state, player: can_spider(state, player))]),
         RoomName.East_Atrium: RoomData(doors={
             0: DoorData(RoomName.Gathering_Hall),
             1: DoorData(RoomName.Energy_Core_Access),
