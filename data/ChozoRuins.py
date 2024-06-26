@@ -118,10 +118,10 @@ class ChozoRuinsAreaData(AreaData):
             pickups=[PickupData('Chozo Ruins: Hive Totem', rule_func=lambda state, player: can_power_beam(state, player) or bool(state.multiworld.worlds[player].options.remove_hive_mecha.value)), ]),
         RoomName.Magma_Pool: RoomData(
             doors={
-                0: DoorData(RoomName.Training_Chamber_Access, defaultLock=DoorLockType.Wave, rule_func=lambda state, player: can_grapple(state, player) and can_heat(state, player), tricks=[Tricks.magma_pool_scan_dash]),
+                0: DoorData(RoomName.Training_Chamber_Access, defaultLock=DoorLockType.Wave, rule_func=lambda state, player: can_grapple(state, player) and can_heat(state, player), tricks=[Tricks.magma_pool_scan_dash, Tricks.magma_pool_debris_jump]),
                 1: DoorData(RoomName.Meditation_Fountain, rule_func=lambda state, player: has_energy_tanks(state, player, 1) and (state.has(SuitUpgrade.Varia_Suit.value, player) or state.has(SuitUpgrade.Gravity_Suit.value, player) or state.has(SuitUpgrade.Phazon_Suit.value, player))),  # Damage reduction let's player cross
             },
-            pickups=[PickupData('Chozo Ruins: Magma Pool', rule_func=lambda state, player: can_grapple(state, player) and can_heat(state, player) and can_power_bomb(state, player), tricks=[Tricks.magma_pool_item_infinite_speed, Tricks.magma_pool_item_scan_dash]), ]),
+            pickups=[PickupData('Chozo Ruins: Magma Pool', rule_func=lambda state, player: can_grapple(state, player) and can_heat(state, player) and can_power_bomb(state, player), tricks=[Tricks.magma_pool_item_infinite_speed, Tricks.magma_pool_item_scan_dash, Tricks.magma_pool_item_debris_jump]), ]),
         RoomName.Main_Plaza: RoomData(doors={
             0: DoorData(RoomName.Ruined_Fountain_Access),
             1: DoorData(RoomName.Ruins_Entrance),
@@ -334,7 +334,7 @@ class ChozoRuinsAreaData(AreaData):
             },
             pickups=[
                 PickupData('Chozo Ruins: Watery Hall - Scan Puzzle', rule_func=can_scan),
-                PickupData('Chozo Ruins: Watery Hall - Underwater', rule_func=lambda state, player: can_move_underwater(state, player) and can_space_jump(state, player), tricks=[Tricks.watery_hall_no_gravity]),
+                PickupData('Chozo Ruins: Watery Hall - Underwater', rule_func=lambda state, player: can_move_underwater(state, player) and can_space_jump(state, player), tricks=[Tricks.watery_hall_no_gravity, Tricks.watery_hall_no_gravity_no_space_jump]),
             ]),
         RoomName.West_Furnace_Access: RoomData(doors={
             0: DoorData(RoomName.Energy_Core),

@@ -43,7 +43,9 @@ class PhendranaDriftsAreaData(AreaData):
         RoomName.Control_Tower: RoomData(doors={
             0: DoorData(RoomName.East_Tower, defaultLock=DoorLockType.Wave),
             1: DoorData(RoomName.West_Tower, defaultLock=DoorLockType.Wave),
-        }, pickups=[PickupData('Phendrana Drifts: Control Tower', rule_func=lambda state, player: can_space_jump(state, player) and can_missile(state, player) and can_melt_ice(state, player) and can_bomb(state, player)), ]),
+        }, pickups=[PickupData('Phendrana Drifts: Control Tower',
+                               rule_func=lambda state, player: can_space_jump(state, player) and can_missile(state, player) and can_melt_ice(state, player) and can_bomb(state, player),
+                               tricks=[Tricks.control_tower_item_no_plasma]), ]),
         RoomName.Courtyard_Entryway: RoomData(doors={
             0: DoorData(RoomName.Ruined_Courtyard),
             1: DoorData(RoomName.Ice_Ruins_West),

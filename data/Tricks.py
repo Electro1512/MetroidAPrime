@@ -83,6 +83,8 @@ class Tricks:
     ruined_nursery_no_bombs: TrickInfo = TrickInfo("Ruined Nursery No Bombs", "Reach the Ruined Nursery Item by space jumping and morphing near the item", TrickDifficulty.Hard, lambda state, player: can_space_jump(state, player) and can_morph_ball(state, player))
 
     magma_pool_scan_dash: TrickInfo = TrickInfo("Cross Magma Pool Suitless", "Cross magma pool using a scan dash on the crate items", TrickDifficulty.Medium, lambda state, player: can_space_jump(state, player) and can_scan(state, player))
+    magma_pool_debris_jump: TrickInfo = TrickInfo("Cross Magma Pool With SJB and Gravity", "Use the space jump boots to jump off debris to cross the pool", TrickDifficulty.Easy, lambda state, player: can_space_jump(state, player) and can_move_underwater(state, player) and has_energy_tanks(state, player, 2))
+    magma_pool_item_debris_jump: TrickInfo = TrickInfo("Cross Magma Pool With SJB and Gravity", "Use the space jump boots to jump off debris to cross the pool", TrickDifficulty.Easy, lambda state, player: can_space_jump(state, player) and can_move_underwater(state, player) and has_energy_tanks(state, player, 2) and can_power_bomb(state, player))
     magma_pool_item_scan_dash: TrickInfo = TrickInfo("Magma Pool Item No Grapple", "Use the scan dash and a power bomb to get the item in the magma pool", TrickDifficulty.Medium, lambda state, player: can_space_jump(state, player) and can_scan(state, player) and can_power_bomb(state, player))
     magma_pool_item_infinite_speed: TrickInfo = TrickInfo("Magma Pool Item Infinite Speed", "Use infinite speed to get the item in the magma pool", TrickDifficulty.Medium, can_infinite_speed)
 
@@ -91,6 +93,7 @@ class Tricks:
     gathering_hall_without_space_jump: TrickInfo = TrickInfo("Gathering Hall Without Space Jump", "Double bomb jump from the side platform to the grate where the item is", TrickDifficulty.Easy, lambda state, player: can_bomb(state, player) and can_power_bomb(state, player))
 
     watery_hall_no_gravity: TrickInfo = TrickInfo("Watery Hall No Gravity", "Reach the Watery Hall Underwater Item without Gravity Suit by using a slope jump", TrickDifficulty.Easy, can_space_jump)
+    watery_hall_no_gravity_no_space_jump: TrickInfo = TrickInfo("Watery Hall No Gravity", "Reach the Watery Hall Underwater Item without Gravity Suit by using a slope jump", TrickDifficulty.Medium, lambda state, player: can_move_underwater(state, player) == False or can_bomb(state, player))
 
     furnace_no_spider_ball = TrickInfo("Furnace No Spider Ball", "Reach the Item inside the Furnace without Spider Ball by jumping on the side of the spider track", TrickDifficulty.Easy, lambda state, player: can_bomb(state, player))
     furnace_spider_track_hbj = TrickInfo("Furnace Spider Track HBJ", "Reach the first track in furnace with a hyper bomb jump", TrickDifficulty.Medium, lambda state, player: can_bomb(state, player) and can_spider(state, player))
@@ -141,6 +144,8 @@ class Tricks:
 
     phendrana_canyon_escape_no_items = TrickInfo("Phendrana Canyon Escape No Items", "You can leave Phendrana Canyon without any items by jumping on the crates. However, if you destroy the crates and don't have Boost Ball or Space Jump, you will softlock.", TrickDifficulty.Easy, lambda state, player: True)
     phendrana_courtyard_no_boost_spider = TrickInfo("Phendrana Courtyard No Boost Spider", "There is standable collision near the lower door that can be used to climb to the top of the room.", TrickDifficulty.Easy, lambda state, player: can_space_jump(state, player))
+
+    control_tower_item_no_plasma = TrickInfo("Control Tower Item No Plasma", "Reach the Control Tower item without Plasma Beam by jumping off of crates in the middle and missiling the tower base", TrickDifficulty.Easy, lambda state, player: can_bomb(state, player) and can_missile(state, player) and can_space_jump(state, player))
 
     monitor_cave_no_grapple = TrickInfo("Monitor Cave No Grapple", "Reach the Monitor Station without the Grapple Beam by using a scan dash", TrickDifficulty.Medium, lambda state, player: can_spider(state, player) and can_space_jump(state, player) and can_scan(state, player))
     quarantine_to_north_courtyard_slope_jump = TrickInfo("Quarantine to North Courtyard Slope Jump", "You can exit Quarantine Cave to Ruined Courtyard by slope jumping next to the Spider Ball track.", TrickDifficulty.Medium, lambda state, player: can_space_jump(state, player))
