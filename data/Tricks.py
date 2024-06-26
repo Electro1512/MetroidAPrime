@@ -75,8 +75,9 @@ class Tricks:
     ruined_shrine_upper_door_scan_dash: TrickInfo = TrickInfo("Ruined Shrine Upper Door Scan Dash", "Reach the upper door in the Ruined Shrine by scan dashing without space jump", TrickDifficulty.Hard, can_scan)
     ruined_shrine_scan_dash_escape: TrickInfo = TrickInfo("Ruined Shrine Scan Dash Escape", "Escape the Ruined Shrine by scan dashing  off the branches", TrickDifficulty.Easy, can_scan)
 
-    tower_of_light_climb_without_missiles: TrickInfo = TrickInfo("Tower of Light Climb Without Missiles", "Tower of Light can be climbed by dashing to the outside edges, skipping the 40 missile requirement.", TrickDifficulty.Easy, can_space_jump)
+    tower_of_light_climb_without_missiles: TrickInfo = TrickInfo("Tower of Light Climb Without Missiles", "Tower of Light can be climbed by dashing to the outside edges, skipping the 40 missile requirement.", TrickDifficulty.Easy, rule_func=lambda state, player: can_space_jump(state, player) and can_scan(state, player))
     tower_chamber_no_gravity: TrickInfo = TrickInfo("Tower Chamber No Gravity", "Reach the Tower Chamber without Gravity Suit by using a slope jump", TrickDifficulty.Easy, can_space_jump)
+    tower_chamber_no_space_jump: TrickInfo = TrickInfo("Tower Chamber No Gravity", "Reach the Tower Chamber without Space Jump by using a double bomb jump", TrickDifficulty.Easy, rule_func=lambda state, player: can_bomb(state, player) and can_move_underwater(state, player))
 
     ruined_nursery_no_bombs: TrickInfo = TrickInfo("Ruined Nursery No Bombs", "Reach the Ruined Nursery Item by space jumping and morphing near the item", TrickDifficulty.Hard, lambda state, player: can_space_jump(state, player) and can_morph_ball(state, player))
 

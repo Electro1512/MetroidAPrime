@@ -264,7 +264,7 @@ class ChozoRuinsAreaData(AreaData):
         RoomName.Tower_of_Light: RoomData(
             doors={
                 0: DoorData(RoomName.Tower_of_Light_Access, defaultLock=DoorLockType.Wave),
-                1: DoorData(RoomName.Tower_Chamber, defaultLock=DoorLockType.Wave, rule_func=lambda state, player: can_move_underwater(state, player) and can_space_jump(state, player), tricks=[Tricks.tower_chamber_no_gravity]),
+                1: DoorData(RoomName.Tower_Chamber, defaultLock=DoorLockType.Wave, rule_func=lambda state, player: can_move_underwater(state, player) and can_space_jump(state, player), tricks=[Tricks.tower_chamber_no_gravity, Tricks.tower_chamber_no_space_jump]),
             },
             pickups=[
                 PickupData('Chozo Ruins: Tower of Light',

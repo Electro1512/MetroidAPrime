@@ -139,7 +139,7 @@ def can_climb_sun_tower(state: CollectionState, player: int) -> bool:
 
 
 def can_climb_tower_of_light(state: CollectionState, player: int) -> bool:
-    return can_missile(state, player) and state.has(SuitUpgrade.Missile_Expansion.value, player, 8)
+    return can_missile(state, player) and state.has(SuitUpgrade.Missile_Expansion.value, player, 8) and can_missile(state, player)
 
 
 def can_defeat_sheegoth(state: CollectionState, player: int) -> bool:
