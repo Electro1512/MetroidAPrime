@@ -160,14 +160,16 @@ class MetroidPrimeWorld(World):
                 items_added += 1
 
         if self.options.missile_launcher.value:
-            if SuitUpgrade.Missile_Launcher.value not in start_inventory and SuitUpgrade.Missile_Launcher.value not in self.prefilled_item_map.values():
-                self.multiworld.itempool += [self.create_item(SuitUpgrade.Missile_Launcher.value)]
+            if SuitUpgrade.Missile_Launcher.value not in start_inventory:
                 items_added += 1
+                if SuitUpgrade.Missile_Launcher.value not in self.prefilled_item_map.values():
+                    self.multiworld.itempool += [self.create_item(SuitUpgrade.Missile_Launcher.value)]
 
         if self.options.main_power_bomb.value:
-            if SuitUpgrade.Main_Power_Bomb.value not in start_inventory and SuitUpgrade.Main_Power_Bomb.value not in self.prefilled_item_map.values():
-                self.multiworld.itempool += [self.create_item(SuitUpgrade.Main_Power_Bomb.value)]
+            if SuitUpgrade.Main_Power_Bomb.value not in start_inventory:
                 items_added += 1
+                if SuitUpgrade.Main_Power_Bomb.value not in self.prefilled_item_map.values():
+                    self.multiworld.itempool += [self.create_item(SuitUpgrade.Main_Power_Bomb.value)]
 
         # add missiles in whatever slots we have left
         remain = 100 - items_added
@@ -205,7 +207,7 @@ class MetroidPrimeWorld(World):
         return slot_data
 
     def post_fill(self) -> None:
-      if self.options.artifact_hints.value:
-        start_hints: typing.Set[str] = self.options.start_hints.value
-        for i in artifact_table.keys():
-          start_hints.add(i)
+        if self.options.artifact_hints.value:
+            start_hints: typing.Set[str] = self.options.start_hints.value
+            for i in artifact_table.keys():
+                start_hints.add(i)
