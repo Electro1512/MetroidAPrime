@@ -103,8 +103,8 @@ class ChozoRuinsAreaData(AreaData):
         }, pickups=[PickupData('Chozo Ruins: Gathering Hall', rule_func=lambda state, player: can_space_jump(state, player) and can_power_bomb(state, player), tricks=[Tricks.gathering_hall_without_space_jump]), ]),
         RoomName.Hall_of_the_Elders: RoomData(
             doors={
-                0: DoorData(RoomName.Reflecting_Pool_Access, rule_func=lambda state, player: can_power_beam(state, player) and can_bomb(state, player) and can_spider(state, player) and can_wave_beam(state, player), tricks=[Tricks.hall_of_elders_reflecting_pool_no_spider, Tricks.hall_of_elders_reflecting_pool_no_wave_beam]),
-                1: DoorData(RoomName.Elder_Hall_Access, rule_func=lambda state, player: can_power_beam(state, player) and can_boost(state, player) and can_missile(state, player)),
+                0: DoorData(RoomName.Reflecting_Pool_Access, rule_func=lambda state, player: can_power_beam(state, player) and can_bomb(state, player) and can_spider(state, player) and can_wave_beam(state, player) and can_space_jump(state, player), tricks=[Tricks.hall_of_elders_reflecting_pool_no_spider, Tricks.hall_of_elders_reflecting_pool_no_wave_beam]),
+                1: DoorData(RoomName.Elder_Hall_Access, rule_func=lambda state, player: can_power_beam(state, player) and can_boost(state, player) and can_missile(state, player) and can_space_jump(state, player)),
                 2: DoorData(RoomName.East_Furnace_Access, defaultLock=DoorLockType.Ice, rule_func=can_power_beam),
                 3: DoorData(RoomName.Crossway_Access_South, defaultLock=DoorLockType.Ice, rule_func=can_power_beam),
                 4: DoorData(RoomName.Elder_Chamber, defaultLock=DoorLockType.Ice, rule_func=lambda state, player: can_power_beam(state, player) and can_bomb(state, player) and can_plasma_beam(state, player) and can_space_jump(state, player) and can_spider(state, player), tricks=[Tricks.hall_of_elders_elder_chamber_no_spider]),
@@ -214,7 +214,7 @@ class ChozoRuinsAreaData(AreaData):
             pickups=[
                 PickupData('Chozo Ruins: Ruined Shrine - Plated Beetle', rule_func=can_exit_ruined_shrine, tricks=[Tricks.ruined_shrine_scan_dash_escape]),
                 PickupData('Chozo Ruins: Ruined Shrine - Half-Pipe', rule_func=can_boost),
-                PickupData('Chozo Ruins: Ruined Shrine - Lower Tunnel', rule_func=lambda state, player: can_bomb(state, player)),
+                PickupData('Chozo Ruins: Ruined Shrine - Lower Tunnel', rule_func=lambda state, player: can_bomb(state, player) or can_power_bomb(state, player)),
             ]),
         RoomName.Ruins_Entrance: RoomData(doors={
             0: DoorData(RoomName.Main_Plaza),

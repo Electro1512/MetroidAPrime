@@ -57,7 +57,7 @@ all_start_rooms: Dict[str, StartRoomData] = {
                                                                                                               item_rules=[
         {
             "Chozo Ruins: Tower Chamber": [SuitUpgrade.Morph_Ball],
-            "Chozo Ruins: Ruined Shrine - Plated Beetle": [SuitUpgrade.Morph_Ball_Bomb],
+            "Chozo Ruins: Ruined Shrine - Plated Beetle": [SuitUpgrade.Morph_Ball_Bomb, SuitUpgrade.Main_Power_Bomb],
             "Chozo Ruins: Ruined Shrine - Lower Tunnel": [SuitUpgrade.Missile_Launcher],
         },
     ]
