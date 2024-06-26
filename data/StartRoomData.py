@@ -88,7 +88,7 @@ all_start_rooms: Dict[str, StartRoomData] = {
     ]),
     RoomName.Arbor_Chamber.value: StartRoomData(area=MetroidPrimeArea.Tallon_Overworld, loadouts=[StartRoomLoadout([SuitUpgrade.Missile_Launcher])]),
     RoomName.Transport_to_Chozo_Ruins_East.value: StartRoomData(area=MetroidPrimeArea.Tallon_Overworld, loadouts=[StartRoomLoadout([SuitUpgrade.Ice_Beam, SuitUpgrade.Morph_Ball],
-                                                                                  item_rules=[
+                                                                                                                                   item_rules=[
         {
             "Tallon Overworld: Overgrown Cavern": [SuitUpgrade.Missile_Launcher]
         }
@@ -105,7 +105,14 @@ all_start_rooms: Dict[str, StartRoomData] = {
     ]
     )], difficulty=StartRoomDifficulty.Buckle_Up
     ),
-    RoomName.Sunchamber_Lobby.value: StartRoomData(area=MetroidPrimeArea.Chozo_Ruins, loadouts=[StartRoomLoadout([SuitUpgrade.Morph_Ball, SuitUpgrade.Missile_Launcher, SuitUpgrade.Morph_Ball_Bomb])], difficulty=StartRoomDifficulty.Buckle_Up),
+    RoomName.Sunchamber_Lobby.value: StartRoomData(
+        area=MetroidPrimeArea.Chozo_Ruins,
+        loadouts=[
+          StartRoomLoadout([SuitUpgrade.Morph_Ball, SuitUpgrade.Missile_Launcher, SuitUpgrade.Morph_Ball_Bomb]),
+          StartRoomLoadout([SuitUpgrade.Morph_Ball, SuitUpgrade.Missile_Launcher, SuitUpgrade.Main_Power_Bomb])
+          ],
+        difficulty=StartRoomDifficulty.Buckle_Up
+    ),
 
 }
 
