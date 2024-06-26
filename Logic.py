@@ -131,7 +131,7 @@ def can_exit_ruined_shrine(state: CollectionState, player: int) -> bool:
 
 
 def can_flaahgra(state: CollectionState, player: int) -> bool:
-    return state.can_reach_region(RoomName.Sunchamber.value, player) and can_missile(state, player) and can_scan(state, player) and can_bomb(state, player)
+    return state.can_reach_region(RoomName.Sunchamber.value, player) and can_missile(state, player) and can_scan(state, player) and (can_bomb(state, player) or can_power_bomb(state, player))
 
 
 def can_climb_sun_tower(state: CollectionState, player: int) -> bool:

@@ -14,7 +14,7 @@ class ChozoRuinsAreaData(AreaData):
             1: DoorData(RoomName.Ruined_Fountain),
         }),
         RoomName.Arboretum: RoomData(doors={
-            0: DoorData(RoomName.Sunchamber_Lobby, rule_func=lambda state, player: can_bomb(state, player) and can_scan(state, player), defaultLock=DoorLockType.Missile, tricks=[Tricks.arboretum_scan_gate_skip]),
+            0: DoorData(RoomName.Sunchamber_Lobby, rule_func=lambda state, player: (can_bomb(state, player) or can_power_bomb(state, player)) and can_scan(state, player), defaultLock=DoorLockType.Missile, tricks=[Tricks.arboretum_scan_gate_skip]),
             1: DoorData(RoomName.Arboretum_Access, defaultLock=DoorLockType.Missile),
             2: DoorData(RoomName.Gathering_Hall_Access, defaultLock=DoorLockType.Missile),
         }),
