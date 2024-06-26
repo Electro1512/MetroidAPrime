@@ -56,6 +56,7 @@ class Tricks:
     frigate_crash_site_scan_dash: TrickInfo = TrickInfo("Crashed Frigate Scan Dash", "Perform a scan dash to reach the item at Crashed Frigate", TrickDifficulty.Hard, can_scan)
 
     frigate_crash_site_slope_jump: TrickInfo = TrickInfo("Crashed Frigate Slope Jump", "Perform a slope jump to reach the item at Crashed Frigate", TrickDifficulty.Easy, can_space_jump)
+    frigate_crash_site_slope_jump_no_sjb: TrickInfo = TrickInfo("Crashed Frigate Slope Jump", "Perform a slope jump to reach the item at Crashed Frigate", TrickDifficulty.Medium, lambda state, player: True)
 
     frigate_crash_site_climb_to_overgrown_cavern: TrickInfo = TrickInfo("Crashed Frigate Climb to Overgrown Cavern", "Climb to Overgrown Cavern", TrickDifficulty.Medium,
                                                                         lambda state, player: can_bomb(state, player) and can_space_jump(state, player))
