@@ -2,7 +2,7 @@ from BaseClasses import CollectionState
 from worlds.metroidprime.Items import SuitUpgrade
 from worlds.metroidprime.data.AreaNames import MetroidPrimeArea
 from .RoomData import AreaData, DoorData, DoorLockType, PickupData, RoomData
-from worlds.metroidprime.Logic import can_bomb, can_boost, can_climb_tower_of_light, can_combat_flaaghra, can_grapple, can_heat, can_ice_beam, can_missile, can_morph_ball, can_move_underwater, can_plasma_beam, can_power_beam, can_power_bomb, can_scan, can_space_jump, can_spider, can_super_missile, can_wave_beam, has_energy_tanks, has_power_bomb_count
+from worlds.metroidprime.Logic import can_bomb, can_boost, can_climb_tower_of_light, can_combat_flaaghra, can_combat_ghosts, can_grapple, can_heat, can_ice_beam, can_missile, can_morph_ball, can_move_underwater, can_plasma_beam, can_power_beam, can_power_bomb, can_scan, can_space_jump, can_spider, can_super_missile, can_wave_beam, has_energy_tanks, has_power_bomb_count
 from worlds.metroidprime.data.Tricks import Tricks
 from .RoomNames import RoomName
 
@@ -262,7 +262,7 @@ class ChozoRuinsAreaData(AreaData):
             # 1: DoorData(RoomName.Sunchamber_Lobby, rule_func=can_climb_sun_tower) # gets locked until after you beat the ghosts
         }, pickups=[
             PickupData('Chozo Ruins: Sunchamber - Flaaghra', rule_func=can_flaahgra),
-            PickupData('Chozo Ruins: Sunchamber - Ghosts', rule_func=lambda state, player: can_flaahgra(state, player) and can_climb_sun_tower(state, player))]),
+            PickupData('Chozo Ruins: Sunchamber - Ghosts', rule_func=lambda state, player: can_flaahgra(state, player) and can_combat_ghosts(state, player) and can_climb_sun_tower(state, player))]),
         RoomName.Totem_Access: RoomData(doors={
             0: DoorData(RoomName.Ruined_Gallery),
             1: DoorData(RoomName.Hive_Totem),

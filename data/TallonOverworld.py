@@ -1,5 +1,5 @@
 
-from worlds.metroidprime.Logic import can_bomb, can_boost, can_charge_beam, can_crashed_frigate, can_crashed_frigate_backwards, can_grapple, can_missile, can_morph_ball, can_move_underwater, can_power_beam, can_power_bomb, can_space_jump, can_spider, can_super_missile, can_xray
+from worlds.metroidprime.Logic import can_bomb, can_boost, can_charge_beam, can_combat_ghosts, can_crashed_frigate, can_crashed_frigate_backwards, can_grapple, can_missile, can_morph_ball, can_move_underwater, can_power_beam, can_power_bomb, can_space_jump, can_spider, can_super_missile, can_xray
 from worlds.metroidprime.data.Tricks import Tricks
 from worlds.metroidprime.data.AreaNames import MetroidPrimeArea
 from .RoomData import AreaData, DoorData, DoorLockType, PickupData, RoomData
@@ -163,7 +163,7 @@ class TallonOverworldAreaData(AreaData):
         RoomName.Life_Grove_Tunnel: RoomData(
             doors={
                 0: DoorData(RoomName.Great_Tree_Hall, defaultLock=DoorLockType.Ice, rule_func=lambda state, player: can_power_bomb(state, player) and can_boost(state, player), exclude_from_rando=True),
-                1: DoorData(RoomName.Life_Grove, defaultLock=DoorLockType.None_, rule_func=lambda state, player: can_power_bomb(state, player) and can_boost(state, player), exclude_from_rando=True)
+                1: DoorData(RoomName.Life_Grove, defaultLock=DoorLockType.None_, rule_func=lambda state, player: can_power_beam(state, player) and can_combat_ghosts(state, player) and can_power_bomb(state, player) and can_boost(state, player), exclude_from_rando=True)
             },
             pickups=[
                 PickupData('Tallon Overworld: Life Grove Tunnel', rule_func=lambda state, player: can_power_bomb(state, player) and can_bomb(state, player) and can_boost(state, player)),
