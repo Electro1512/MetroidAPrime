@@ -96,6 +96,16 @@ def make_artifact_hints(world: 'MetroidPrimeWorld') -> str:
     }
 
 
+def get_tweaks(world: 'MetroidPrimeWorld') -> Dict[str, Any]:
+    color = color_options_to_value(world)
+    if color != HudColor.DEFAULT.value:
+        return {
+            "hudColor": color
+        }
+    else:
+        return {}
+
+
 def make_config(world: 'MetroidPrimeWorld'):
     options: MetroidPrimeOptions = world.options
     config = {
@@ -124,9 +134,7 @@ def make_config(world: 'MetroidPrimeWorld'):
                 "variaDeg": world.options.varia_suit_color.value or 0
             }
         },
-        "tweaks": {
-            "hudColor": color_options_to_value(world),
-        },
+        "tweaks": get_tweaks(world),
         "gameConfig": {
             "mainMenuMessage": "Archipelago Metroid Prime",
             "startingRoom": f"{world.starting_room_data.area.value}:{world.starting_room_data.name}",
