@@ -161,13 +161,13 @@ def can_combat_mines(state: CollectionState, player: int) -> bool:
 
 
 def can_combat_labs(state: CollectionState, player: int) -> bool:
-    if _get_options(state, player).starting_room.value == StartRoomDifficulty.Buckle_Up.value:
+    if _get_options(state, player).starting_room_name.value == RoomName.East_Tower.value:
         return True
     return _can_combat_generic(state, player, 3, 1)
 
 
 def can_combat_thardus(state: CollectionState, player: int) -> bool:
-    if _get_options(state, player).starting_room.value == StartRoomDifficulty.Buckle_Up.value:
+    if _get_options(state, player).starting_room_name.value == RoomName.Quarantine_Monitor.value:
         return True
     return _can_combat_generic(state, player, 5, 2)
 
@@ -177,7 +177,7 @@ def can_combat_omega_pirate(state: CollectionState, player: int) -> bool:
 
 
 def can_combat_flaaghra(state: CollectionState, player: int) -> bool:
-    if _get_options(state, player).starting_room.value == StartRoomDifficulty.Buckle_Up.value:
+    if _get_options(state, player).starting_room_name == RoomName.Sunchamber_Lobby.value:
         return True
     return _can_combat_generic(state, player, 3, 2, requires_charge_beam=False)
 

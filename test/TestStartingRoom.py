@@ -25,7 +25,7 @@ class TestStartingRoomsGenerate(MetroidPrimeTestBase):
                     distribute_items_restrictive(self.multiworld)
                     self.assertBeatable(True)
                 except Exception as e:
-                    self.fail(f"Failed to generate beatable game with start room: {room_name}. Error: {str(e)}")
+                    self.fail(f"Failed to generate beatable game with start room: {room_name}. ")
 
     def test_starting_room_rando_with_missile_launcher(self):
           for room_name in all_start_rooms:
@@ -41,5 +41,5 @@ class TestStartingRoomsGenerate(MetroidPrimeTestBase):
                       self.multiworld = None
                       self.world = None
                   except Exception as e:
-                      self.fail(f"Failed to generate beatable game with start room: {room_name}. Error: {str(e)}")
+                      self.fail(f"Failed to generate beatable game with start room: {room_name}. ")
 
