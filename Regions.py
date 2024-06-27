@@ -1,6 +1,6 @@
 import typing
 
-from worlds.metroidprime.Logic import can_ice_beam, can_missile, can_plasma_beam, can_power_beam, can_super_missile, can_thermal, can_wave_beam, can_xray, has_energy_tanks, has_required_artifact_count
+from worlds.metroidprime.Logic import can_combat_prime, can_combat_ridley, can_ice_beam, can_missile, can_plasma_beam, can_power_beam, can_super_missile, can_thermal, can_wave_beam, can_xray, has_energy_tanks, has_required_artifact_count
 from worlds.metroidprime.data.ChozoRuins import ChozoRuinsAreaData
 from worlds.metroidprime.data.MagmoorCaverns import MagmoorCavernsAreaData
 from worlds.metroidprime.data.PhazonMines import PhazonMinesAreaData
@@ -80,14 +80,16 @@ def create_regions(world: 'MetroidPrimeWorld', final_boss_selection):
         artifact_temple.connect(impact_crater, "Crater Access", lambda state: (
             can_missile(state, world.player) and
             has_required_artifact_count(state, world.player) and
-            has_energy_tanks(state, world.player, 8) and
+            can_combat_prime(state, world.player) and
+            can_combat_ridley(state, world.player) and
             can_plasma_beam(state, world.player) and can_wave_beam(state, world.player) and can_ice_beam(state, world.player) and can_power_beam(state, world.player) and
             can_xray(state, world.player, True) and can_thermal(state, world.player, True)))
     elif final_boss_selection == 1:
         artifact_temple.connect(mission_complete, "Mission Complete", lambda state:
                                 can_missile(state, world.player) and
                                 has_required_artifact_count(state, world.player) and (can_plasma_beam(state, world.player) or can_super_missile(state, world.player)) and
-                                has_energy_tanks(state, world.player, 8))
+                                can_combat_ridley(state, world.player)
+                                )
     elif final_boss_selection == 3:
         artifact_temple.connect(mission_complete, "Mission Complete", lambda state: (
             can_missile(state, world.player) and

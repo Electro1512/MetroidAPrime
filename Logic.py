@@ -191,11 +191,11 @@ def can_combat_flaaghra(state: CollectionState, player: int) -> bool:
 
 
 def can_combat_ridley(state: CollectionState, player: int) -> bool:
-    return _can_combat_generic(state, player, 10, 8)
+    return _can_combat_generic(state, player, 8, 8)
 
 
 def can_combat_prime(state: CollectionState, player: int) -> bool:
-    return _can_combat_generic(state, player, 10, 5)
+    return _can_combat_generic(state, player, 8, 5)
 
 
 def can_combat_ghosts(state: CollectionState, player: int) -> bool:

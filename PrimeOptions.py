@@ -158,7 +158,7 @@ class CombatLogicDifficultyOption(Choice):
     option_no_logic = CombatLogicDifficulty.NO_LOGIC
     option_normal = CombatLogicDifficulty.NORMAL
     option_minimal = CombatLogicDifficulty.MINIMAL
-    default = CombatLogicDifficulty.NORMAL
+    default = 'normal'
 
 
 # COSMETIC OPTIONS
