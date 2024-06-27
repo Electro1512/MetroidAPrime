@@ -1,9 +1,11 @@
-from typing import TYPE_CHECKING, Dict, Any, Optional
+from enum import Enum
+import os
+from typing import TYPE_CHECKING, Dict, Any, List, Optional
 
 from worlds.metroidprime.Items import SuitUpgrade
 
 
-from .PrimeOptions import MetroidPrimeOptions
+from .PrimeOptions import HudColor, MetroidPrimeOptions
 from .data.RoomData import MetroidPrimeArea
 from .data.Transports import get_transport_data
 from .data.MagmoorCaverns import MagmoorCavernsAreaData
@@ -11,6 +13,7 @@ from .data.PhazonMines import PhazonMinesAreaData
 from .data.PhendranaDrifts import PhendranaDriftsAreaData
 from .data.TallonOverworld import TallonOverworldAreaData
 from .data.ChozoRuins import ChozoRuinsAreaData
+
 
 if TYPE_CHECKING:
     from worlds.metroidprime import MetroidPrimeWorld
@@ -46,6 +49,15 @@ def get_starting_beam(world: 'MetroidPrimeWorld') -> str:
             starting_beam = item.split(" ")[0]
             break
     return starting_beam
+
+
+def color_to_value(color: str) -> List[float]:
+    # get the key in hudcolor enum that matches all caps color
+    color = color.upper()
+    for key in HudColor.__members__.keys():
+        if key == color:
+            return HudColor[key].value
+    return HudColor.DEFAULT.value
 
 
 def make_artifact_hints(world: 'MetroidPrimeWorld') -> str:
@@ -93,7 +105,14 @@ def make_config(world: 'MetroidPrimeWorld'):
             "qolCutscenes": "Skippable",
             "qolPickupScans": True,
             "mapDefaultState": "Always",
-            "artifactHintBehavior": "All"
+            "artifactHintBehavior": "All",
+            "skipSplashScreens": bool(os.environ.get("DEBUG", False)),
+            "quickplay": bool(os.environ.get("DEBUG", False)),
+            "quickpatch": bool(os.environ.get("DEBUG", False)),
+            "quiet": bool(os.environ.get("DEBUG", False)),
+        },
+        "tweaks": {
+            "hudColor": color_to_value(world.options.hud_color.value),
         },
         "gameConfig": {
             "mainMenuMessage": "Archipelago Metroid Prime",
@@ -197,7 +216,7 @@ def make_config(world: 'MetroidPrimeWorld'):
             "backwardsLowerMines": bool(world.options.backwards_lower_mines.value),
             "patchPowerConduits": False,
             "removeMineSecurityStationLocks": False,
-            "powerBombArboretumSandstone":True,
+            "powerBombArboretumSandstone": True,
             "artifactHints": make_artifact_hints(world),
             "requiredArtifactCount": world.options.required_artifacts.value
         },

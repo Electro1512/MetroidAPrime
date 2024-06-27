@@ -1,8 +1,25 @@
 
+from enum import Enum
 from Options import DeathLink, DefaultOnToggle, TextChoice, Toggle, Range, ItemDict, StartInventoryPool, Choice, PerGameCommonOptions, Visibility
 from dataclasses import dataclass
 
 from worlds.metroidprime.data.StartRoomData import StartRoomDifficulty
+
+
+class HudColor(Enum):
+    DEFAULT = [102/255, 174/255, 225/255]
+    RED = [1, 0, 0]
+    GREEN = [0, 1, 0]
+    BLUE = [0, 0, 1]
+    VIOLET = [1, 0, 1]
+    YELLOW = [1, 1, 0]
+    CYAN = [0, 1, 1]
+    WHITE = [1, 1, 1]
+    ORANGE = [1, 0.5, 0]
+    PINK = [1, 0.5, 1]
+    LIME = [0.5, 1, 0]
+    TEAL = [0.5, 1, 1]
+    PURPLE = [0.5, 0, 1]
 
 
 class SpringBall(Toggle):
@@ -130,6 +147,26 @@ class StartingRoomName(TextChoice):
     default = ""
     visibility = Visibility.spoiler
 
+
+class HudColorOption(Choice):
+    """Determines the color of the HUD in the game."""
+    display_name = "HUD Color"
+    default = "Default"
+    option_default = "Default"
+    option_red = "Red"
+    option_green = "Green"
+    option_blue = "Blue"
+    option_violet = "Violet"
+    option_yellow = "Yellow"
+    option_cyan = "Cyan"
+    option_white = "White"
+    option_orange = "Orange"
+    option_pink = "Pink"
+    option_lime = "Lime"
+    option_teal = "Teal"
+    option_purple = "Purple"
+
+
 @dataclass
 class MetroidPrimeOptions(PerGameCommonOptions):
     start_inventory_from_pool: StartInventoryPool
@@ -151,3 +188,4 @@ class MetroidPrimeOptions(PerGameCommonOptions):
     remove_thermal_requirements: RemoveThermalRequirements
     starting_room: StartingRoom
     starting_room_name: StartingRoomName
+    hud_color: HudColorOption

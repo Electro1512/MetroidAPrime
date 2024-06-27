@@ -136,6 +136,25 @@ Metroid Prime:
     safe: 0
     buckle_up: 0
 
+    hud_color:
+      # Determines the color of the HUD
+      default: 50
+      red: 0
+      green: 0
+      blue: 0
+      violet: 0
+      yellow: 0
+      cyan: 0
+      white: 0
+      black: 0
+      orange: 0
+      pink: 0
+      lime: 0
+      teal: 0
+      purple: 0
+      brown: 0
+      grey: 0
+
   progression_balancing:
     # A system that can move progression earlier, to try and prevent the player from getting stuck and bored early.
     # A lower setting means more getting stuck. A higher setting means less getting stuck.

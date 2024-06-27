@@ -1,4 +1,3 @@
-import random
 from typing import Any, Dict, Optional
 import os
 import typing
@@ -6,7 +5,7 @@ from BaseClasses import Item, Tutorial, ItemClassification
 from worlds.generic.Rules import add_item_rule, forbid_item
 from worlds.metroidprime.Container import MetroidPrimeContainer
 from worlds.metroidprime.data.RoomNames import RoomName
-from worlds.metroidprime.data.StartRoomData import StartRoomData, StartRoomLoadout, get_random_start_room_by_difficulty, all_start_rooms, get_starting_room_by_name, init_starting_room_data
+from worlds.metroidprime.data.StartRoomData import StartRoomData, init_starting_room_data
 from .Items import MetroidPrimeItem, SuitUpgrade, suit_upgrade_table, artifact_table, item_table
 from .PrimeOptions import MetroidPrimeOptions
 from .Locations import every_location
@@ -183,9 +182,14 @@ class MetroidPrimeWorld(World):
     def generate_output(self, output_directory: str) -> None:
         configjson = make_config(self)
 
-        # convert configjson to json
         import json
         configjsons = json.dumps(configjson, indent=4)
+        # Check if the environment variable 'DEBUG' is set to 'True'
+        if os.environ.get('DEBUG') == 'True':
+            with open("test_config.json", "w") as f:
+                f.write(configjsons)
+
+        # convert configjson to json
 
         outfile_name = self.multiworld.get_out_file_name_base(self.player)
         apmp1 = MetroidPrimeContainer(configjsons, outfile_name, output_directory, player=self.player, player_name=self.multiworld.get_player_name(self.player))
