@@ -165,7 +165,7 @@ class TallonOverworldAreaData(AreaData):
                 1: DoorData(RoomName.Life_Grove, defaultLock=DoorLockType.None_, rule_func=lambda state, player: can_power_bomb(state, player) and can_boost(state, player), exclude_from_rando=True)
             },
             pickups=[
-                PickupData('Tallon Overworld: Life Grove Tunnel', rule_func=lambda state, player: can_bomb(state, player) and can_boost(state, player)),
+                PickupData('Tallon Overworld: Life Grove Tunnel', rule_func=lambda state, player: can_power_bomb(state, player) and can_bomb(state, player) and can_boost(state, player)),
             ]),
 
         RoomName.Life_Grove: RoomData(
