@@ -155,3 +155,6 @@ def has_power_bomb_count(state: CollectionState, player: int, required_count: in
     if state.has(SuitUpgrade.Main_Power_Bomb.value, player):
         count += 4
     return count >= required_count
+
+def can_combat_mines(state: CollectionState, player: int) -> bool
+

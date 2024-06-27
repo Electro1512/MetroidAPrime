@@ -21,6 +21,11 @@ class HudColor(Enum):
     TEAL = [0.5, 1, 1]
     PURPLE = [0.5, 0, 1]
 
+class CombatLogicDifficulty(Enum):
+    NO_LOGIC = -1
+    NORMAL = 0
+    MINIMAL = 1
+
 
 class SpringBall(Toggle):
     """Enables the spring ball when you receive Morph Ball Bombs. This will allow you to jump while in morph ball form by pressing up on the c stick, reducing the complexity of double bomb jumps."""
@@ -147,6 +152,16 @@ class StartingRoomName(TextChoice):
     default = ""
     visibility = Visibility.spoiler
 
+class CombatLogicDifficultyOption(Choice):
+    """When enabled, the game will include energy tanks and the charge beam as requirements for certain combat heavy rooms"""
+    display_name = "Combat Logic Difficulty"
+    option_no_logic = CombatLogicDifficulty.NO_LOGIC
+    option_normal = CombatLogicDifficulty.NORMAL
+    option_minimal = CombatLogicDifficulty.MINIMAL
+    default = CombatLogicDifficulty.NORMAL
+
+
+# COSMETIC OPTIONS
 
 class RandomizeSuitColors(Toggle):
     """Randomize the colors of the suits. Is overriden if any of the color overrides are greater than 0."""
@@ -250,6 +265,9 @@ class MetroidPrimeOptions(PerGameCommonOptions):
     remove_thermal_requirements: RemoveThermalRequirements
     starting_room: StartingRoom
     starting_room_name: StartingRoomName
+    combat_logic_difficulty: CombatLogicDifficultyOption
+
+    # Cosmetic options
     hud_color: HudColorOption
     hud_color_red: HudColorOverrideRed
     hud_color_green: HudColorOverrideGreen

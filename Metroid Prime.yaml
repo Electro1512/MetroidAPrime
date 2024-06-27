@@ -135,6 +135,15 @@ Metroid Prime:
     normal: 50
     safe: 0
     buckle_up: 0
+  combat_logic_difficulty:
+    # When enabled, the game will include energy tanks and the charge beam as requirements for certain combat heavy rooms
+    # no_logic: No combat logic will be enforced
+    # normal: Combat logic will be enforced, 5 energy tanks will be required for mines and 3 for the labs and bosses. Charge beam included
+    # minimal: Combat logic will be enforced, 2 energy tanks will be required for mines and 1 for the labs and bosses. Charge beam included
+    no_logic: 0
+    normal: 50
+    minimal: 0
+
 
   hud_color:
     # Determines the color of the HUD
