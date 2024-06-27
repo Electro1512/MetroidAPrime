@@ -155,6 +155,23 @@ Metroid Prime:
     brown: 0
     grey: 0
 
+  # 0 to 255, sets the associated channel of the HUD color. If any are not 0 it will override the previously selected color
+  hud_color_red: 0
+  hud_color_green: 0
+  hud_color_blue: 0
+
+  randomize_suit_colors:
+    # Randomizes the colors of the suits
+    false: 50
+    true: 0
+
+  # Any integer between 0 and 359 (inclusive)
+  # Selects a different color set from the game's color wheel at each index. If random, these values will be visible in the spoiler log
+  power_suit_color: 0
+  varia_suit_color: 0
+  gravity_suit_color: 0
+  phazon_suit_color: 0
+
   progression_balancing:
     # A system that can move progression earlier, to try and prevent the player from getting stuck and bored early.
     # A lower setting means more getting stuck. A higher setting means less getting stuck.

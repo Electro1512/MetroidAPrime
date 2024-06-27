@@ -1,4 +1,5 @@
-from typing import Any, Dict, Optional
+import random
+from typing import Any, Dict, List, Optional
 import os
 import typing
 from BaseClasses import Item, Tutorial, ItemClassification
@@ -7,7 +8,7 @@ from worlds.metroidprime.Container import MetroidPrimeContainer
 from worlds.metroidprime.data.RoomNames import RoomName
 from worlds.metroidprime.data.StartRoomData import StartRoomData, init_starting_room_data
 from .Items import MetroidPrimeItem, SuitUpgrade, suit_upgrade_table, artifact_table, item_table
-from .PrimeOptions import MetroidPrimeOptions
+from .PrimeOptions import MetroidPrimeOptions, VariaSuitColorOverride
 from .Locations import every_location
 from .Regions import create_regions
 from .config import make_config
@@ -180,9 +181,14 @@ class MetroidPrimeWorld(World):
             state.can_reach("Mission Complete", "Region", self.player))
 
     def generate_output(self, output_directory: str) -> None:
-        configjson = make_config(self)
+        if self.options.randomize_suit_colors:
+            options: List[VariaSuitColorOverride] = [self.options.power_suit_color, self.options.varia_suit_color, self.options.gravity_suit_color, self.options.phazon_suit_color]
+            for option in options:
+                if option.value == 0:
+                    option.value = random.randint(0, 359)
 
         import json
+        configjson = make_config(self)
         configjsons = json.dumps(configjson, indent=4)
         # Check if the environment variable 'DEBUG' is set to 'True'
         if os.environ.get('DEBUG') == 'True':

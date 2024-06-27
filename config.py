@@ -1,5 +1,6 @@
 from enum import Enum
 import os
+import random
 from typing import TYPE_CHECKING, Dict, Any, List, Optional
 
 from worlds.metroidprime.Items import SuitUpgrade
@@ -51,8 +52,14 @@ def get_starting_beam(world: 'MetroidPrimeWorld') -> str:
     return starting_beam
 
 
-def color_to_value(color: str) -> List[float]:
+def color_options_to_value(world: 'MetroidPrimeWorld') -> List[float]:
+    options = world.options
+    # If any overrides are set, use that instead
+    if options.hud_color_red.value or options.hud_color_green.value or options.hud_color_blue.value:
+        return [options.hud_color_red.value/255, options.hud_color_green.value/255, options.hud_color_blue.value/255]
+
     # get the key in hudcolor enum that matches all caps color
+    color: str = world.options.hud_color.value
     color = color.upper()
     for key in HudColor.__members__.keys():
         if key == color:
@@ -110,9 +117,15 @@ def make_config(world: 'MetroidPrimeWorld'):
             "quickplay": bool(os.environ.get("DEBUG", False)),
             "quickpatch": bool(os.environ.get("DEBUG", False)),
             "quiet": bool(os.environ.get("DEBUG", False)),
+            "suitColors": {
+                "gravityDeg": world.options.gravity_suit_color.value or 0,
+                "phazonDeg": world.options.phazon_suit_color.value or 0,
+                "powerDeg": world.options.power_suit_color.value or 0,
+                "variaDeg": world.options.varia_suit_color.value or 0
+            }
         },
         "tweaks": {
-            "hudColor": color_to_value(world.options.hud_color.value),
+            "hudColor": color_options_to_value(world),
         },
         "gameConfig": {
             "mainMenuMessage": "Archipelago Metroid Prime",

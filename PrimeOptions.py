@@ -148,8 +148,46 @@ class StartingRoomName(TextChoice):
     visibility = Visibility.spoiler
 
 
+class RandomizeSuitColors(Toggle):
+    """Randomize the colors of the suits. Is overriden if any of the color overrides are greater than 0."""
+    display_name = "Randomize Suit Colors"
+    default = False
+
+
+class PowerSuitColorOverride(Range):
+    """Override the color of the Power Suit using an index from the game's color wheel"""
+    display_name = "Power Suit Color Override"
+    range_start = 0
+    range_end = 359
+    default = 0
+
+
+class VariaSuitColorOverride(Range):
+    """Override the color of the Varia Suit using an index from the game's color wheel"""
+    display_name = "Varia Suit Color Override"
+    range_start = 0
+    range_end = 359
+    default = 0
+
+
+class GravitySuitColorOverride(Range):
+    """Override the color of the Varia Suit using an index from the game's color wheel"""
+    display_name = "Varia Suit Color Override"
+    range_start = 0
+    range_end = 359
+    default = 0
+
+
+class PhazonSuitColorOverride(Range):
+    """Override the color of the Varia Suit using an index from the game's color wheel"""
+    display_name = "Varia Suit Color Override"
+    range_start = 0
+    range_end = 359
+    default = 0
+
+
 class HudColorOption(Choice):
-    """Determines the color of the HUD in the game."""
+    """Determines the color of the HUD in the game. Will be overriden if any of the color overrides are greater than 0."""
     display_name = "HUD Color"
     default = "Default"
     option_default = "Default"
@@ -165,6 +203,30 @@ class HudColorOption(Choice):
     option_lime = "Lime"
     option_teal = "Teal"
     option_purple = "Purple"
+
+
+class HudColorOverrideRed(Range):
+    """0 to 255, sets the Red channel of the HUD color"""
+    display_name = "HUD Color Red"
+    range_start = 0
+    range_end = 255
+    default = 0
+
+
+class HudColorOverrideGreen(Range):
+    """0 to 255, sets the Green channel of the HUD color"""
+    display_name = "HUD Color Green"
+    range_start = 0
+    range_end = 255
+    default = 0
+
+
+class HudColorOverrideBlue(Range):
+    """0 to 255, sets the Blue channel of the HUD color"""
+    display_name = "HUD Color Blue"
+    range_start = 0
+    range_end = 255
+    default = 0
 
 
 @dataclass
@@ -189,3 +251,11 @@ class MetroidPrimeOptions(PerGameCommonOptions):
     starting_room: StartingRoom
     starting_room_name: StartingRoomName
     hud_color: HudColorOption
+    hud_color_red: HudColorOverrideRed
+    hud_color_green: HudColorOverrideGreen
+    hud_color_blue: HudColorOverrideBlue
+    randomize_suit_colors: RandomizeSuitColors
+    power_suit_color: PowerSuitColorOverride
+    varia_suit_color: VariaSuitColorOverride
+    gravity_suit_color: GravitySuitColorOverride
+    phazon_suit_color: PhazonSuitColorOverride
