@@ -131,7 +131,7 @@ def can_exit_ruined_shrine(state: CollectionState, player: int) -> bool:
 
 
 def can_flaahgra(state: CollectionState, player: int) -> bool:
-    return state.can_reach_region(RoomName.Sunchamber.value, player) and can_missile(state, player) and can_scan(state, player) and (can_bomb(state, player) or can_power_bomb(state, player))
+    return state.can_reach_region(RoomName.Sunchamber.value, player) and can_missile(state, player) and can_scan(state, player) and (can_bomb(state, player) or (can_power_bomb(state, player) and has_power_bomb_count(state, player, 4)))
 
 
 def can_climb_sun_tower(state: CollectionState, player: int) -> bool:
@@ -148,3 +148,10 @@ def can_defeat_sheegoth(state: CollectionState, player: int) -> bool:
 
 def can_backwards_lower_mines(state, player) -> bool:
     return bool(_get_options(state, player).backwards_lower_mines.value)
+
+
+def has_power_bomb_count(state: CollectionState, player: int, required_count: int) -> bool:
+    count = state.count(SuitUpgrade.Power_Bomb_Expansion.value, player)
+    if state.has(SuitUpgrade.Main_Power_Bomb.value, player):
+        count += 4
+    return count >= required_count
