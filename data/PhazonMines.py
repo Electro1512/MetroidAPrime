@@ -3,7 +3,7 @@ from worlds.metroidprime.data.Tricks import Tricks
 from .RoomNames import RoomName
 from worlds.metroidprime.data.AreaNames import MetroidPrimeArea
 from .RoomData import AreaData, DoorData, DoorLockType, PickupData, RoomData
-from worlds.metroidprime.Logic import can_backwards_lower_mines, can_bomb, can_boost, can_charge_beam, can_defeat_sheegoth, can_grapple, can_melt_ice, can_missile, can_morph_ball, can_move_underwater, can_phazon, can_plasma_beam, can_power_bomb, can_scan, can_space_jump, can_spider, can_super_missile, can_thermal, can_wave_beam, can_xray
+from worlds.metroidprime.Logic import can_backwards_lower_mines, can_bomb, can_boost, can_charge_beam, can_combat_omega_pirate, can_defeat_sheegoth, can_grapple, can_melt_ice, can_missile, can_morph_ball, can_move_underwater, can_phazon, can_plasma_beam, can_power_bomb, can_scan, can_space_jump, can_spider, can_super_missile, can_thermal, can_wave_beam, can_xray
 
 
 class PhazonMinesAreaData(AreaData):
@@ -52,10 +52,10 @@ class PhazonMinesAreaData(AreaData):
         }),
         RoomName.Elite_Quarters: RoomData(
             doors={
-                0: DoorData(RoomName.Elite_Quarters_Access, defaultLock=DoorLockType.Plasma, rule_func=lambda state, player: can_xray(state, player, True)),
-                1: DoorData(RoomName.Processing_Center_Access, defaultLock=DoorLockType.Plasma, rule_func=lambda state, player: can_xray(state, player, True) and can_scan(state, player)),
+                0: DoorData(RoomName.Elite_Quarters_Access, defaultLock=DoorLockType.Plasma, rule_func=lambda state, player: can_combat_omega_pirate(state, player) and can_xray(state, player, True)),
+                1: DoorData(RoomName.Processing_Center_Access, defaultLock=DoorLockType.Plasma, rule_func=lambda state, player: can_combat_omega_pirate(state, player) and can_xray(state, player, True) and can_scan(state, player)),
             },
-            pickups=[PickupData('Phazon Mines: Elite Quarters', rule_func=lambda state, player: can_xray(state, player, True)), ]),
+            pickups=[PickupData('Phazon Mines: Elite Quarters', rule_func=lambda state, player: can_combat_omega_pirate(state, player) and can_xray(state, player, True)), ]),
         RoomName.Elite_Research: RoomData(
             doors={
                 0: DoorData(RoomName.Research_Access, defaultLock=DoorLockType.Ice, rule_func=lambda state, player: can_bomb(state, player) and can_boost(state, player) and can_space_jump(state, player) and can_scan(state, player), tricks=[Tricks.elite_research_spinner_no_boost]),

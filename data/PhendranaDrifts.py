@@ -2,7 +2,7 @@
 from worlds.metroidprime.data.Tricks import Tricks
 from worlds.metroidprime.data.AreaNames import MetroidPrimeArea
 from .RoomData import AreaData, DoorData, DoorLockType, PickupData, RoomData
-from worlds.metroidprime.Logic import can_bomb, can_boost, can_charge_beam, can_defeat_sheegoth, can_grapple, can_melt_ice, can_missile, can_morph_ball, can_move_underwater, can_plasma_beam, can_power_bomb, can_scan, can_space_jump, can_spider, can_super_missile, can_thermal, can_wave_beam, can_xray
+from worlds.metroidprime.Logic import can_bomb, can_boost, can_charge_beam, can_combat_thardus, can_defeat_sheegoth, can_grapple, can_melt_ice, can_missile, can_morph_ball, can_move_underwater, can_plasma_beam, can_power_bomb, can_scan, can_space_jump, can_spider, can_super_missile, can_thermal, can_wave_beam, can_xray
 from .RoomNames import RoomName
 
 
@@ -185,10 +185,10 @@ class PhendranaDriftsAreaData(AreaData):
             1: DoorData(RoomName.Ruined_Courtyard),
         }),
         RoomName.Quarantine_Cave: RoomData(doors={
-            0: DoorData(RoomName.North_Quarantine_Tunnel, defaultLock=DoorLockType.Wave, rule_func=lambda state, player: can_spider(state, player) and can_thermal(state, player), tricks=[Tricks.quarantine_to_north_courtyard_slope_jump]),
-            1: DoorData(RoomName.South_Quarantine_Tunnel, defaultLock=DoorLockType.Wave, rule_func=lambda state, player: can_thermal(state, player) and ((can_bomb(state, player) and can_spider(state, player)) or (can_space_jump(state, player) and can_grapple(state, player)))),
-            2: DoorData(RoomName.Quarantine_Monitor, defaultLock=DoorLockType.None_, exclude_from_rando=True, rule_func=lambda state, player: can_spider(state, player) and can_grapple(state, player), tricks=[Tricks.monitor_cave_no_grapple])  # Not an annotated door
-        }, pickups=[PickupData('Phendrana Drifts: Quarantine Cave', rule_func=can_thermal),]),
+            0: DoorData(RoomName.North_Quarantine_Tunnel, defaultLock=DoorLockType.Wave, rule_func=lambda state, player: can_combat_thardus(state, player) and can_spider(state, player) and can_thermal(state, player), tricks=[Tricks.quarantine_to_north_courtyard_slope_jump]),
+            1: DoorData(RoomName.South_Quarantine_Tunnel, defaultLock=DoorLockType.Wave, rule_func=lambda state, player: can_combat_thardus(state, player) and can_thermal(state, player) and ((can_bomb(state, player) and can_spider(state, player)) or (can_space_jump(state, player) and can_grapple(state, player)))),
+            2: DoorData(RoomName.Quarantine_Monitor, defaultLock=DoorLockType.None_, exclude_from_rando=True, rule_func=lambda state, player: can_combat_thardus(state, player) and can_spider(state, player) and can_grapple(state, player), tricks=[Tricks.monitor_cave_no_grapple])  # Not an annotated door
+        }, pickups=[PickupData('Phendrana Drifts: Quarantine Cave', rule_func=lambda state, player: can_combat_thardus(state, player) and can_thermal(state, player)),]),
         RoomName.Quarantine_Monitor: RoomData(doors={
             0: DoorData(RoomName.Quarantine_Cave, rule_func=can_morph_ball, defaultLock=DoorLockType.None_, exclude_from_rando=True),  # Not an annotated door
         }, pickups=[PickupData('Phendrana Drifts: Quarantine Monitor'), ]),

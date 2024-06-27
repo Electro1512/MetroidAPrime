@@ -127,18 +127,6 @@ def can_infinite_speed(state: CollectionState, player: int) -> bool:
     return can_boost(state, player) and can_bomb(state, player)
 
 
-def can_exit_ruined_shrine(state: CollectionState, player: int) -> bool:
-    return can_morph_ball(state, player) or can_space_jump(state, player)
-
-
-def can_flaahgra(state: CollectionState, player: int) -> bool:
-    return state.can_reach_region(RoomName.Sunchamber.value, player) and can_missile(state, player) and can_scan(state, player) and (can_bomb(state, player) or (can_power_bomb(state, player) and has_power_bomb_count(state, player, 4)))
-
-
-def can_climb_sun_tower(state: CollectionState, player: int) -> bool:
-    return can_spider(state, player) and can_super_missile(state, player)
-
-
 def can_climb_tower_of_light(state: CollectionState, player: int) -> bool:
     return can_missile(state, player) and state.has(SuitUpgrade.Missile_Expansion.value, player, 8) and can_missile(state, player)
 
@@ -182,6 +170,10 @@ def can_combat_thardus(state: CollectionState, player: int) -> bool:
     if _get_options(state, player).starting_room.value == StartRoomDifficulty.Buckle_Up.value:
         return True
     return _can_combat_generic(state, player, 5, 2)
+
+
+def can_combat_omega_pirate(state: CollectionState, player: int) -> bool:
+    return _can_combat_generic(state, player, 6, 3)
 
 
 def can_combat_flaaghra(state: CollectionState, player: int) -> bool:

@@ -1,9 +1,22 @@
+from BaseClasses import CollectionState
 from worlds.metroidprime.Items import SuitUpgrade
 from worlds.metroidprime.data.AreaNames import MetroidPrimeArea
 from .RoomData import AreaData, DoorData, DoorLockType, PickupData, RoomData
-from worlds.metroidprime.Logic import can_bomb, can_boost, can_climb_sun_tower, can_climb_tower_of_light, can_exit_ruined_shrine, can_flaahgra, can_grapple, can_heat, can_ice_beam, can_missile, can_morph_ball, can_move_underwater, can_plasma_beam, can_power_beam, can_power_bomb, can_scan, can_space_jump, can_spider, can_super_missile, can_wave_beam, has_energy_tanks
+from worlds.metroidprime.Logic import can_bomb, can_boost, can_climb_tower_of_light, can_combat_flaaghra, can_grapple, can_heat, can_ice_beam, can_missile, can_morph_ball, can_move_underwater, can_plasma_beam, can_power_beam, can_power_bomb, can_scan, can_space_jump, can_spider, can_super_missile, can_wave_beam, has_energy_tanks, has_power_bomb_count
 from worlds.metroidprime.data.Tricks import Tricks
 from .RoomNames import RoomName
+
+
+def can_exit_ruined_shrine(state: CollectionState, player: int) -> bool:
+    return can_morph_ball(state, player) or can_space_jump(state, player)
+
+
+def can_climb_sun_tower(state: CollectionState, player: int) -> bool:
+    return can_spider(state, player) and can_super_missile(state, player)
+
+
+def can_flaahgra(state: CollectionState, player: int) -> bool:
+    return state.can_reach_region(RoomName.Sunchamber.value, player) and can_combat_flaaghra(state, player) and can_missile(state, player) and can_scan(state, player) and (can_bomb(state, player) or (can_power_bomb(state, player) and has_power_bomb_count(state, player, 4)))
 
 
 class ChozoRuinsAreaData(AreaData):
