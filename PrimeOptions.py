@@ -171,16 +171,16 @@ class VariaSuitColorOverride(Range):
 
 
 class GravitySuitColorOverride(Range):
-    """Override the color of the Varia Suit using an index from the game's color wheel"""
-    display_name = "Varia Suit Color Override"
+    """Override the color of the Gravity Suit using an index from the game's color wheel"""
+    display_name = "Gravity Suit Color Override"
     range_start = 0
     range_end = 359
     default = 0
 
 
 class PhazonSuitColorOverride(Range):
-    """Override the color of the Varia Suit using an index from the game's color wheel"""
-    display_name = "Varia Suit Color Override"
+    """Override the color of the Phazon Suit using an index from the game's color wheel"""
+    display_name = "Phazon Suit Color Override"
     range_start = 0
     range_end = 359
     default = 0
