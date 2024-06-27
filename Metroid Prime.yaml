@@ -1,30 +1,3 @@
-# Q. What is this file?
-# A. This file contains options which allow you to configure your multiworld experience while allowing
-#    others to play how they want as well.
-#
-# Q. How do I use it?
-# A. The options in this file are weighted. This means the higher number you assign to a value, the
-#    more chances you have for that option to be chosen. For example, an option like this:
-#
-#    map_shuffle:
-#      on: 5
-#      off: 15
-#
-#    Means you have 5 chances for map shuffle to occur, and 15 chances for map shuffle to be turned
-#    off.
-#
-# Q. I've never seen a file like this before. What characters am I allowed to use?
-# A. This is a .yaml file. You are allowed to use most characters.
-#    To test if your yaml is valid or not, you can use this website:
-#        http://www.yamllint.com/
-#    You can also verify that your Archipelago options are valid at this site:
-#        https://archipelago.gg/check
-
-# Your name in-game, limited to 16 characters.
-#     {player} will be replaced with the player's slot number.
-#     {PLAYER} will be replaced with the player's slot number, if that slot number is greater than 1.
-#     {number} will be replaced with the counter value of the name.
-#     {NUMBER} will be replaced with the counter value of the name, if the counter value is greater than 1.
 name: Player{number}
 
 # Used to describe your yaml. Useful if you have multiple files.
@@ -131,10 +104,11 @@ Metroid Prime:
     # Determines the starting room of the game. This will change your starting loadout depending on the room
     # - normal: Start at the Talon Overworld Landing Site
     # - safe: Start in rooms that will not require a significant combat challenge to progress from
-    # - buckle_up: Start in rooms that will pose a significant challenge to players with no energy tanks or suit upgrades. Fun for the aspiring masochist (less fun for their friends in BK).
+    # - buckle_up: Start in rooms that will pose a significant challenge to players with no energy tanks or suit upgrades. Fun for the aspiring masochist (less fun for their friends in BK). NOTE: this will disable combat logic for bosses and labs
     normal: 50
     safe: 0
     buckle_up: 0
+
   combat_logic_difficulty:
     # When enabled, the game will include energy tanks and the charge beam as requirements for certain combat heavy rooms
     # no_logic: No combat logic will be enforced
@@ -240,3 +214,31 @@ Metroid Prime:
     # Start with these items and don't place them in the world.
     # The game decides what the replacement items will be.
     {}
+
+# Q. What is this file?
+# A. This file contains options which allow you to configure your multiworld experience while allowing
+#    others to play how they want as well.
+#
+# Q. How do I use it?
+# A. The options in this file are weighted. This means the higher number you assign to a value, the
+#    more chances you have for that option to be chosen. For example, an option like this:
+#
+#    map_shuffle:
+#      on: 5
+#      off: 15
+#
+#    Means you have 5 chances for map shuffle to occur, and 15 chances for map shuffle to be turned
+#    off.
+#
+# Q. I've never seen a file like this before. What characters am I allowed to use?
+# A. This is a .yaml file. You are allowed to use most characters.
+#    To test if your yaml is valid or not, you can use this website:
+#        http://www.yamllint.com/
+#    You can also verify that your Archipelago options are valid at this site:
+#        https://archipelago.gg/check
+
+# Your name in-game, limited to 16 characters.
+#     {player} will be replaced with the player's slot number.
+#     {PLAYER} will be replaced with the player's slot number, if that slot number is greater than 1.
+#     {number} will be replaced with the counter value of the name.
+#     {NUMBER} will be replaced with the counter value of the name, if the counter value is greater than 1.

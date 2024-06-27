@@ -1,6 +1,7 @@
 from BaseClasses import CollectionState
-from worlds.metroidprime.PrimeOptions import MetroidPrimeOptions
+from worlds.metroidprime.PrimeOptions import CombatLogicDifficulty, MetroidPrimeOptions
 from worlds.metroidprime.data.RoomNames import RoomName
+from worlds.metroidprime.data.StartRoomData import StartRoomDifficulty
 from .Items import SuitUpgrade, artifact_table
 
 
@@ -156,5 +157,52 @@ def has_power_bomb_count(state: CollectionState, player: int, required_count: in
         count += 4
     return count >= required_count
 
-def can_combat_mines(state: CollectionState, player: int) -> bool
 
+def _can_combat_generic(state: CollectionState, player: int, normal_tanks: int, minimal_tanks: int, requires_charge_beam: bool = True) -> bool:
+    difficulty = _get_options(state, player).combat_logic_difficulty.value
+    if difficulty == CombatLogicDifficulty.NO_LOGIC:
+        return True
+    elif difficulty == CombatLogicDifficulty.NORMAL:
+        return has_energy_tanks(state, player, normal_tanks) and (can_charge_beam(state, player) if requires_charge_beam else True)
+    elif difficulty == CombatLogicDifficulty.MINIMAL:
+        return has_energy_tanks(state, player, minimal_tanks) and (can_charge_beam(state, player) if requires_charge_beam else True)
+
+
+def can_combat_mines(state: CollectionState, player: int) -> bool:
+    return _can_combat_generic(state, player, 5, 3)
+
+
+def can_combat_labs(state: CollectionState, player: int) -> bool:
+    if _get_options(state, player).starting_room.value == StartRoomDifficulty.Buckle_Up.value:
+        return True
+    return _can_combat_generic(state, player, 3, 1)
+
+
+def can_combat_thardus(state: CollectionState, player: int) -> bool:
+    if _get_options(state, player).starting_room.value == StartRoomDifficulty.Buckle_Up.value:
+        return True
+    return _can_combat_generic(state, player, 5, 2)
+
+
+def can_combat_flaaghra(state: CollectionState, player: int) -> bool:
+    if _get_options(state, player).starting_room.value == StartRoomDifficulty.Buckle_Up.value:
+        return True
+    return _can_combat_generic(state, player, 3, 2, requires_charge_beam=False)
+
+
+def can_combat_ridley(state: CollectionState, player: int) -> bool:
+    return _can_combat_generic(state, player, 10, 8)
+
+
+def can_combat_prime(state: CollectionState, player: int) -> bool:
+    return _can_combat_generic(state, player, 10, 5)
+
+
+def can_combat_ghosts(state: CollectionState, player: int) -> bool:
+    difficulty = _get_options(state, player).combat_logic_difficulty.value
+    if difficulty == CombatLogicDifficulty.NO_LOGIC:
+        return True
+    elif difficulty == CombatLogicDifficulty.NORMAL:
+        return can_charge_beam(state, player) and can_power_beam(state, player) and can_xray(state, player, True)
+    elif difficulty == CombatLogicDifficulty.MINIMAL:
+        return (can_charge_beam(state, player) and can_power_beam(state, player) or can_xray(state, player, True))

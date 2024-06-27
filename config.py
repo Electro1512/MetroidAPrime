@@ -96,7 +96,7 @@ def make_artifact_hints(world: 'MetroidPrimeWorld') -> str:
     }
 
 
-def get_tweaks(world: 'MetroidPrimeWorld') -> Dict[str, Any]:
+def get_tweaks(world: 'MetroidPrimeWorld') -> Dict[str, List[int]]:
     color = color_options_to_value(world)
     if color != HudColor.DEFAULT.value:
         return {
