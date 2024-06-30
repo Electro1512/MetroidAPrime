@@ -341,7 +341,7 @@ class ChozoRuinsAreaData(AreaData):
             pickups=[PickupData('Chozo Ruins: Watery Hall Access', rule_func=can_missile), ]),
         RoomName.Watery_Hall: RoomData(
             doors={
-                0: DoorData(RoomName.Dynamo_Access, destinationArea=MetroidPrimeArea.Chozo_Ruins, defaultLock=DoorLockType.Missile, rule_func=lambda state, player: can_scan(state, player) and can_power_bomb(state, player)),
+                0: DoorData(RoomName.Dynamo_Access, destinationArea=MetroidPrimeArea.Chozo_Ruins, defaultLock=DoorLockType.Missile, rule_func=lambda state, player: can_scan(state, player) and (can_power_bomb(state, player) or can_bomb(state, player))),
                 1: DoorData(RoomName.Watery_Hall_Access, defaultLock=DoorLockType.Missile),
 
             },
