@@ -12,7 +12,7 @@ def can_exit_ruined_shrine(state: CollectionState, player: int) -> bool:
 
 
 def can_climb_sun_tower(state: CollectionState, player: int) -> bool:
-    return can_spider(state, player) and can_super_missile(state, player)
+    return can_spider(state, player) and can_super_missile(state, player) and can_bomb(state, player)
 
 
 def can_flaahgra(state: CollectionState, player: int) -> bool:
