@@ -2,8 +2,8 @@
 from enum import Enum
 from Options import DeathLink, DefaultOnToggle, TextChoice, Toggle, Range, ItemDict, StartInventoryPool, Choice, PerGameCommonOptions, Visibility
 from dataclasses import dataclass
-
-from worlds.metroidprime.data.StartRoomData import StartRoomDifficulty
+from .data.StartRoomData import StartRoomDifficulty
+from .LogicCombat import CombatLogicDifficulty
 
 
 class HudColor(Enum):
@@ -20,11 +20,6 @@ class HudColor(Enum):
     LIME = [0.5, 1, 0]
     TEAL = [0.5, 1, 1]
     PURPLE = [0.5, 0, 1]
-
-class CombatLogicDifficulty(Enum):
-    NO_LOGIC = -1
-    NORMAL = 0
-    MINIMAL = 1
 
 
 class SpringBall(Toggle):

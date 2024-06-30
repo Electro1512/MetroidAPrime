@@ -3,9 +3,13 @@ from dataclasses import dataclass, field
 from enum import Enum
 import random
 from typing import TYPE_CHECKING, Callable, Dict, List, Optional
-from worlds.metroidprime.Items import SuitUpgrade
-from worlds.metroidprime.data.AreaNames import MetroidPrimeArea
-from worlds.metroidprime.data.RoomNames import RoomName
+
+from ..LogicCombat import CombatLogicDifficulty
+
+# from ..LogicCombat import CombatLogicDifficulty
+from ..Items import SuitUpgrade
+from ..data.AreaNames import MetroidPrimeArea
+from ..data.RoomNames import RoomName
 
 if TYPE_CHECKING:
     from .. import MetroidPrimeWorld
@@ -32,6 +36,7 @@ class StartRoomData:
     difficulty: StartRoomDifficulty = StartRoomDifficulty.Safe
     selected_loadout: Optional[StartRoomLoadout] = None
     name: Optional[str] = None
+    is_eligible: Callable[['MetroidPrimeWorld'], bool] = lambda world: True
 
 
 all_start_rooms: Dict[str, StartRoomData] = {
@@ -83,9 +88,11 @@ all_start_rooms: Dict[str, StartRoomData] = {
         StartRoomLoadout([SuitUpgrade.Plasma_Beam, SuitUpgrade.Missile_Launcher],
                          item_rules=[
             {"Phendrana Drifts: Phendrana Shorelines - Behind Ice": [SuitUpgrade.Space_Jump_Boots, SuitUpgrade.Morph_Ball]},
-        ]
+        ],
         )
-    ]),
+    ], is_eligible=lambda world:
+        world.options.combat_logic_difficulty.value == CombatLogicDifficulty.NO_LOGIC
+    ),
     RoomName.Arbor_Chamber.value: StartRoomData(area=MetroidPrimeArea.Tallon_Overworld, loadouts=[StartRoomLoadout([SuitUpgrade.Missile_Launcher])]),
     RoomName.Transport_to_Chozo_Ruins_East.value: StartRoomData(area=MetroidPrimeArea.Tallon_Overworld, loadouts=[StartRoomLoadout([SuitUpgrade.Ice_Beam, SuitUpgrade.Morph_Ball],
                                                                                                                                    item_rules=[
@@ -108,18 +115,18 @@ all_start_rooms: Dict[str, StartRoomData] = {
     RoomName.Sunchamber_Lobby.value: StartRoomData(
         area=MetroidPrimeArea.Chozo_Ruins,
         loadouts=[
-          StartRoomLoadout([SuitUpgrade.Morph_Ball, SuitUpgrade.Missile_Launcher, SuitUpgrade.Morph_Ball_Bomb]),
-          StartRoomLoadout([SuitUpgrade.Morph_Ball, SuitUpgrade.Missile_Launcher, SuitUpgrade.Main_Power_Bomb])
-          ],
+            StartRoomLoadout([SuitUpgrade.Morph_Ball, SuitUpgrade.Missile_Launcher, SuitUpgrade.Morph_Ball_Bomb]),
+            StartRoomLoadout([SuitUpgrade.Morph_Ball, SuitUpgrade.Missile_Launcher, SuitUpgrade.Main_Power_Bomb])
+        ],
         difficulty=StartRoomDifficulty.Buckle_Up
     ),
 
 }
 
 
-def get_random_start_room_by_difficulty(difficulty: int) -> StartRoomData:
+def get_random_start_room_by_difficulty(world: 'MetroidPrimeWorld', difficulty: int) -> StartRoomData:
     """Returns a random start room based on difficulty as well as a random loadout from that room"""
-    available_room_names = [name for name, room in all_start_rooms.items() if room.difficulty.value == difficulty]
+    available_room_names = [name for name, room in all_start_rooms.items() if room.difficulty.value == difficulty and room.is_eligible(world)]
     room_name = random.choice(available_room_names)
     return get_starting_room_by_name(room_name)
 
@@ -167,7 +174,7 @@ def init_starting_room_data(world: 'MetroidPrimeWorld'):
             world.starting_room_data = StartRoomData(name=world.options.starting_room_name.value)
             world.starting_room_data.loadouts = [StartRoomLoadout(loadout=[SuitUpgrade.Power_Beam])]
     else:
-        world.starting_room_data = get_random_start_room_by_difficulty(difficulty)
+        world.starting_room_data = get_random_start_room_by_difficulty(world, difficulty)
         world.options.starting_room_name.value = world.starting_room_data.name
 
     if SuitUpgrade.Missile_Launcher in world.starting_room_data.selected_loadout.loadout:

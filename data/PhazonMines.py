@@ -1,9 +1,10 @@
 
+from worlds.metroidprime.LogicCombat import can_combat_mines, can_combat_omega_pirate
 from worlds.metroidprime.data.Tricks import Tricks
 from .RoomNames import RoomName
 from worlds.metroidprime.data.AreaNames import MetroidPrimeArea
 from .RoomData import AreaData, DoorData, DoorLockType, PickupData, RoomData
-from worlds.metroidprime.Logic import can_backwards_lower_mines, can_bomb, can_boost, can_charge_beam, can_combat_mines, can_combat_omega_pirate, can_defeat_sheegoth, can_grapple, can_melt_ice, can_missile, can_morph_ball, can_move_underwater, can_phazon, can_plasma_beam, can_power_bomb, can_scan, can_space_jump, can_spider, can_super_missile, can_thermal, can_wave_beam, can_xray
+from worlds.metroidprime.Logic import can_backwards_lower_mines, can_bomb, can_boost, can_charge_beam, can_defeat_sheegoth, can_grapple, can_melt_ice, can_missile, can_morph_ball, can_move_underwater, can_phazon, can_plasma_beam, can_power_bomb, can_scan, can_space_jump, can_spider, can_super_missile, can_thermal, can_wave_beam, can_xray
 
 
 class PhazonMinesAreaData(AreaData):
@@ -110,9 +111,9 @@ class PhazonMinesAreaData(AreaData):
             },
             pickups=[PickupData('Phazon Mines: Metroid Quarantine B', rule_func=lambda state, player: can_combat_mines(state, player) and state.can_reach(RoomName.Elite_Quarters_Access.value, None, player) and can_super_missile(state, player), tricks=[]), ]),
         RoomName.Mine_Security_Station: RoomData(doors={
-            0: DoorData(RoomName.Security_Access_A, defaultLock=DoorLockType.Ice, rule_func=can_combat_mines),
-            1: DoorData(RoomName.Security_Access_B, defaultLock=DoorLockType.Wave, rule_func=can_combat_mines),
-            2: DoorData(RoomName.Storage_Depot_A, defaultLock=DoorLockType.Plasma, rule_func=lambda state, player: can_combat_mines(state, player) and can_power_bomb(state, player) and can_plasma_beam(state, player) and can_scan(state, player)),
+            0: DoorData(RoomName.Security_Access_A, defaultLock=DoorLockType.Ice ),
+            1: DoorData(RoomName.Security_Access_B, defaultLock=DoorLockType.Wave ),
+            2: DoorData(RoomName.Storage_Depot_A, defaultLock=DoorLockType.Plasma, rule_func=lambda state, player: can_power_bomb(state, player) and can_plasma_beam(state, player) and can_scan(state, player)),
         }),
         RoomName.Missile_Station_Mines: RoomData(doors={
             0: DoorData(RoomName.Fungal_Hall_B, defaultLock=DoorLockType.Plasma),

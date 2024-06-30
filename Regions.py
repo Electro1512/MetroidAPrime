@@ -1,6 +1,7 @@
 import typing
 
-from worlds.metroidprime.Logic import can_combat_prime, can_combat_ridley, can_ice_beam, can_missile, can_plasma_beam, can_power_beam, can_super_missile, can_thermal, can_wave_beam, can_xray, has_energy_tanks, has_required_artifact_count
+from worlds.metroidprime.Logic import can_ice_beam, can_missile, can_plasma_beam, can_power_beam, can_super_missile, can_thermal, can_wave_beam, can_xray, has_energy_tanks, has_required_artifact_count
+from worlds.metroidprime.LogicCombat import can_combat_prime, can_combat_ridley
 from worlds.metroidprime.data.ChozoRuins import ChozoRuinsAreaData
 from worlds.metroidprime.data.MagmoorCaverns import MagmoorCavernsAreaData
 from worlds.metroidprime.data.PhazonMines import PhazonMinesAreaData

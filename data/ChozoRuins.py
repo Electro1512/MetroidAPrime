@@ -1,9 +1,10 @@
 from BaseClasses import CollectionState
-from worlds.metroidprime.Items import SuitUpgrade
-from worlds.metroidprime.data.AreaNames import MetroidPrimeArea
+from ..LogicCombat import can_combat_flaaghra, can_combat_ghosts
+from ..Items import SuitUpgrade
+from ..data.AreaNames import MetroidPrimeArea
 from .RoomData import AreaData, DoorData, DoorLockType, PickupData, RoomData
-from worlds.metroidprime.Logic import can_bomb, can_boost, can_climb_tower_of_light, can_combat_flaaghra, can_combat_ghosts, can_grapple, can_heat, can_ice_beam, can_missile, can_morph_ball, can_move_underwater, can_plasma_beam, can_power_beam, can_power_bomb, can_scan, can_space_jump, can_spider, can_super_missile, can_wave_beam, has_energy_tanks, has_power_bomb_count
-from worlds.metroidprime.data.Tricks import Tricks
+from ..Logic import can_bomb, can_boost, can_climb_tower_of_light, can_grapple, can_heat, can_ice_beam, can_missile, can_morph_ball, can_move_underwater, can_plasma_beam, can_power_beam, can_power_bomb, can_scan, can_space_jump, can_spider, can_super_missile, can_wave_beam, has_energy_tanks, has_power_bomb_count
+from ..data.Tricks import Tricks
 from .RoomNames import RoomName
 
 

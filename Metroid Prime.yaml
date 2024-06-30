@@ -115,8 +115,8 @@ Metroid Prime:
     # normal: Combat logic will be enforced, 5 energy tanks will be required for mines and 3 for the labs and bosses. Charge beam included
     # minimal: Combat logic will be enforced, 2 energy tanks will be required for mines and 1 for the labs and bosses. Charge beam included
     no_logic: 0
-    normal: 50
-    minimal: 0
+    normal: 0
+    minimal: 50
 
 
   hud_color:
