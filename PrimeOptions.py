@@ -112,9 +112,16 @@ class TrickDifficulty(Choice):
     default = -1
 
 
-class BackwardsLowerMines(DefaultOnToggle):
-    """If enabled, allows the player to progress through the lower mines in reverse"""
+class BackwardsLowerMines(Toggle):
+    """If enabled, allows the player to progress through the lower mines in reverse by removing the locks in the PCA room"""
     display_name = "Backwards Lower Mines"
+    default = False
+
+
+class FlaahgraPowerBombs(Toggle):
+    """If enabled, makes the sandstone block at the top of arboretum breakable with power bombs. Note that this will require the player to have 4 power bombs in order to defeat flaahgra"""
+    display_name = "Flaahgra Power Bombs"
+    default = False
 
 
 class RemoveXrayRequirements(Toggle):
@@ -146,6 +153,7 @@ class StartingRoomName(TextChoice):
     display_name = "Starting Room Name"
     default = ""
     visibility = Visibility.spoiler
+
 
 class CombatLogicDifficultyOption(Choice):
     """When enabled, the game will include energy tanks and the charge beam as requirements for certain combat heavy rooms"""
@@ -261,6 +269,7 @@ class MetroidPrimeOptions(PerGameCommonOptions):
     starting_room: StartingRoom
     starting_room_name: StartingRoomName
     combat_logic_difficulty: CombatLogicDifficultyOption
+    flaahgra_power_bombs: FlaahgraPowerBombs
 
     # Cosmetic options
     hud_color: HudColorOption

@@ -85,10 +85,15 @@ Metroid Prime:
     medium: 0
     hard: 0
 
+  flaahgra_power_bombs:
+    # If enabled, makes the sandstone block at the top of arboretum breakable with power bombs. Note that this will require the player to have 4 power bombs in order to defeat flaahgra
+    false: 50
+    true: 0
+
   backwards_lower_mines:
-    # If enabled, allows the player to progress through the lower mines in reverse
-    false: 0
-    true: 50
+    # If enabled, allows the player to progress through the lower mines in reverse by removing the locks in the PCA room
+    false: 50
+    true: 0
 
   remove_xray_requirements:
     # If enabled, removes xray visor requirements for everything but omega pirate and metroid prime
