@@ -83,7 +83,7 @@ class Tricks:
 
     magma_pool_scan_dash: TrickInfo = TrickInfo("Cross Magma Pool Suitless", "Cross magma pool using a scan dash on the crate items", TrickDifficulty.Medium, lambda state, player: can_space_jump(state, player) and can_scan(state, player))
     magma_pool_debris_jump: TrickInfo = TrickInfo("Cross Magma Pool With SJB and Gravity", "Use the space jump boots to jump off debris to cross the pool", TrickDifficulty.Easy, lambda state, player: can_space_jump(state, player) and can_move_underwater(state, player) and has_energy_tanks(state, player, 2))
-    magma_pool_item_debris_jump: TrickInfo = TrickInfo("Cross Magma Pool With SJB and Gravity", "Use the space jump boots to jump off debris to cross the pool", TrickDifficulty.Easy, lambda state, player: can_space_jump(state, player) and can_move_underwater(state, player) and has_energy_tanks(state, player, 2) and can_power_bomb(state, player))
+    magma_pool_item_debris_jump: TrickInfo = TrickInfo("Magma Pool Debris Jump", "Use the space jump boots to jump off debris to cross the pool", TrickDifficulty.Easy, lambda state, player: can_space_jump(state, player) and can_move_underwater(state, player) and has_energy_tanks(state, player, 2) and can_power_bomb(state, player))
     magma_pool_item_scan_dash: TrickInfo = TrickInfo("Magma Pool Item No Grapple", "Use the scan dash and a power bomb to get the item in the magma pool", TrickDifficulty.Medium, lambda state, player: can_space_jump(state, player) and can_scan(state, player) and can_power_bomb(state, player))
     magma_pool_item_infinite_speed: TrickInfo = TrickInfo("Magma Pool Item Infinite Speed", "Use infinite speed to get the item in the magma pool", TrickDifficulty.Medium, can_infinite_speed)
 
@@ -92,7 +92,7 @@ class Tricks:
     gathering_hall_without_space_jump: TrickInfo = TrickInfo("Gathering Hall Without Space Jump", "Double bomb jump from the side platform to the grate where the item is", TrickDifficulty.Easy, lambda state, player: can_bomb(state, player) and can_power_bomb(state, player))
 
     watery_hall_no_gravity: TrickInfo = TrickInfo("Watery Hall No Gravity", "Reach the Watery Hall Underwater Item without Gravity Suit by using a slope jump", TrickDifficulty.Easy, can_space_jump)
-    watery_hall_no_gravity_no_space_jump: TrickInfo = TrickInfo("Watery Hall No Gravity", "Reach the Watery Hall Underwater Item without Gravity Suit by using a slope jump", TrickDifficulty.Medium, lambda state, player: can_move_underwater(state, player) == False or can_bomb(state, player))
+    watery_hall_no_gravity_no_space_jump: TrickInfo = TrickInfo("Watery Hall No Gravity No Space Jump", "Reach the Watery Hall Underwater Item without Gravity Suit by using a slope jump", TrickDifficulty.Medium, lambda state, player: can_move_underwater(state, player) == False or can_bomb(state, player))
 
     furnace_no_spider_ball = TrickInfo("Furnace No Spider Ball", "Reach the Item inside the Furnace without Spider Ball by jumping on the side of the spider track", TrickDifficulty.Easy, lambda state, player: can_bomb(state, player))
     furnace_spider_track_hbj = TrickInfo("Furnace Spider Track HBJ", "Reach the first track in furnace with a hyper bomb jump", TrickDifficulty.Medium, lambda state, player: can_bomb(state, player) and can_spider(state, player))
@@ -113,7 +113,7 @@ class Tricks:
   # Magmoor
 
     lava_lake_item_suitless = TrickInfo("Lava Lake Item Suitless", "Reach the Lava Lake item without the Varia Suit", TrickDifficulty.Medium, lambda state, player: can_missile(state, player) and can_space_jump(state, player) and has_energy_tanks(state, player, 4) and state.can_reach("Magmoor Caverns: " + RoomName.Lake_Tunnel.value, None, player))
-    lava_lake_item_missiles_only = TrickInfo("Lava Lake Item Suitless", "Reach lava lake item without space jump by jumping on base of column", TrickDifficulty.Easy, lambda state, player: can_missile(state, player) and state.can_reach("Magmoor Caverns: " + RoomName.Lake_Tunnel.value, None, player))
+    lava_lake_item_missiles_only = TrickInfo("Lava Lake Item Missiles Only", "Reach lava lake item without space jump by jumping on base of column", TrickDifficulty.Easy, lambda state, player: can_missile(state, player) and state.can_reach("Magmoor Caverns: " + RoomName.Lake_Tunnel.value, None, player))
 
     triclops_pit_item_no_sj = TrickInfo("Triclops Pit Item No SJ", "Reach the Triclops Pit item without Space Jump, assumes has xray and can use charge or missiles", TrickDifficulty.Medium, lambda state, player: can_xray(state, player) and (can_missile(state, player) or can_charge_beam(state, player)))
     triclops_pit_item_no_xray = TrickInfo("Triclops Pit Item No XRay", "Reach the Triclops Pit item without XRay Visor, assumes has space jump and can use charge or missiles", TrickDifficulty.Medium, lambda state, player: can_space_jump(state, player) and (can_missile(state, player) or can_charge_beam(state, player)))
@@ -155,8 +155,8 @@ class Tricks:
 
     frost_cave_no_grapple = TrickInfo("Frost Cave No Grapple", "Reach the Frost Cave item without the Grapple Beam", TrickDifficulty.Easy, lambda state, player: can_missile(state, player) and can_space_jump(state, player) and can_move_underwater(state, player))  # Requires gravity
 
-    phendranas_edge_storage_cavern_no_grapple = TrickInfo("Phendrana's Edge No Grapple", "Reach the Phendrana's Edge storage cavern without the Grapple Beam", TrickDifficulty.Easy, lambda state, player: (can_thermal(state, player) or can_xray(state, player)) and can_power_bomb(state, player) and can_space_jump(state, player))
-    phendranas_edge_security_cavern_no_grapple = TrickInfo("Phendrana's Edge No Grapple", "Reach the Phendrana's Edge security cavern without the Grapple Beam", TrickDifficulty.Easy, lambda state, player: can_grapple(state, player) and can_morph_ball(state, player) and can_space_jump(state, player))
+    phendranas_edge_storage_cavern_no_grapple = TrickInfo("Phendrana's Edge Storage Cavern No Grapple", "Reach the Phendrana's Edge storage cavern without the Grapple Beam", TrickDifficulty.Easy, lambda state, player: (can_thermal(state, player) or can_xray(state, player)) and can_power_bomb(state, player) and can_space_jump(state, player))
+    phendranas_edge_security_cavern_no_grapple = TrickInfo("Phendrana's Edge Security Cavern No Grapple", "Reach the Phendrana's Edge security cavern without the Grapple Beam", TrickDifficulty.Easy, lambda state, player: can_grapple(state, player) and can_morph_ball(state, player) and can_space_jump(state, player))
 
     hunter_cave_no_grapple = TrickInfo("Hunter Cave No Grapple", "Reach the Hunter Cave upper levels without the grapple beam using an r jump", TrickDifficulty.Easy, lambda state, player: can_space_jump(state, player))
 
@@ -167,7 +167,7 @@ class Tricks:
     main_quarry_item_no_spider = TrickInfo("Main Quarry Item No Spider Ball", "You can slope jump onto the top of the crane and R jump over to the item.", TrickDifficulty.Medium, lambda state, player:  can_morph_ball(state, player) and can_bomb(state, player) and can_thermal(state, player) and can_wave_beam(state, player) and can_scan(state, player) and can_space_jump(state, player))
     main_quarry_to_waste_disposal_no_grapple = TrickInfo("Main Quarry to Waste Disposal No Grapple", "You can scan dash from the top of the structure (using the crane spider track scan point) to reach the door to Waste Disposal.", TrickDifficulty.Easy, lambda state, player: can_scan(state, player) and can_space_jump(state, player))
 
-    ore_processing_to_storage_depot_b_no_spider = TrickInfo("Ore Processing Climb No Grapple Spider", "You can stand on various collision in the room, such as on the rotating column, to climb to the top of Ore Processing.", TrickDifficulty.Easy, lambda state, player: can_bomb(state, player) and can_power_bomb(state, player) and can_space_jump(state, player))
+    ore_processing_to_storage_depot_b_no_spider = TrickInfo("Ore Processing Climb to Storage No Grapple Spider", "You can stand on various collision in the room, such as on the rotating column, to climb to the top of Ore Processing.", TrickDifficulty.Easy, lambda state, player: can_bomb(state, player) and can_power_bomb(state, player) and can_space_jump(state, player))
     ore_processing_climb_no_grapple_spider = TrickInfo("Ore Processing Climb No Grapple Spider", "You can stand on various collision in the room, such as on the rotating column, to climb to the top of Ore Processing.", TrickDifficulty.Easy, lambda state, player:  can_bomb(state, player) and can_power_bomb(state, player) and can_space_jump(state, player))
 
     mines_climb_shafts_no_spider = TrickInfo("Mines Climb Shafts No Spider Ball", "Elevator Access A and Research Access can be climbed without Spider Ball.", TrickDifficulty.Hard, lambda state, player: can_space_jump(state, player))
@@ -183,5 +183,5 @@ class Tricks:
 
     metroid_quarantine_b_no_spider_grapple = TrickInfo("Metroid Quarantine B No Spider Grapple", "You can reach the other side of the quarantine by using a slope jump and an r jump", TrickDifficulty.Medium, lambda state, player: lambda state, player: can_space_jump(state, player) and can_scan(state, player))
 
-    phazon_processing_center_item_no_spider = TrickInfo("Phazon Processing Center No Spider Ball", "You can abuse standable collision such as the morph track and the scaffolding to access the top of the room without needing Spider Ball.", TrickDifficulty.Easy, lambda state, player: can_space_jump(state, player) and can_power_bomb(state, player))
+    phazon_processing_center_item_no_spider = TrickInfo("Phazon Processing Center Item No Spider Ball", "You can abuse standable collision such as the morph track and the scaffolding to access the top of the room without needing Spider Ball.", TrickDifficulty.Easy, lambda state, player: can_space_jump(state, player) and can_power_bomb(state, player))
     climb_phazon_processing_center_no_spider = TrickInfo("Phazon Processing Center No Spider Ball", "You can abuse standable collision such as the morph track and the scaffolding to access the top of the room without needing Spider Ball.", TrickDifficulty.Easy, can_space_jump)

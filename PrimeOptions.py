@@ -1,6 +1,6 @@
 
 from enum import Enum
-from Options import DeathLink, DefaultOnToggle, TextChoice, Toggle, Range, ItemDict, StartInventoryPool, Choice, PerGameCommonOptions, Visibility
+from Options import DeathLink, DefaultOnToggle, OptionList, TextChoice, Toggle, Range, ItemDict, StartInventoryPool, Choice, PerGameCommonOptions, Visibility
 from dataclasses import dataclass
 from .data.StartRoomData import StartRoomDifficulty
 from .LogicCombat import CombatLogicDifficulty
@@ -110,6 +110,18 @@ class TrickDifficulty(Choice):
     option_medium = 1
     option_hard = 2
     default = -1
+
+
+class TrickAllowList(OptionList):
+    """A list of tricks to explicitly allow in logic, regardless of selected difficulty. Values should match the trick name found here: https://github.com/Electro1512/MetroidAPrime/blob/main/data/Tricks.py#L55
+       For example, "Crashed Frigate Scan Dash" or "Alcove Escape" """
+    default = []
+
+
+class TrickDenyList(OptionList):
+    """A list of tricks to explicitly deny in logic, regardless of selected difficulty. Values should match the trick name found here: https://github.com/Electro1512/MetroidAPrime/blob/main/data/Tricks.py#L55
+       For example, "Crashed Frigate Scan Dash" or "Alcove Escape" """
+    default = []
 
 
 class BackwardsLowerMines(Toggle):
@@ -263,6 +275,8 @@ class MetroidPrimeOptions(PerGameCommonOptions):
     remove_hive_mecha: RemoveHiveMecha
     fusion_suit: FusionSuit
     trick_difficulty: TrickDifficulty
+    trick_allow_list: TrickAllowList
+    trick_deny_list: TrickDenyList
     backwards_lower_mines: BackwardsLowerMines
     remove_xray_requirements: RemoveXrayRequirements
     remove_thermal_requirements: RemoveThermalRequirements

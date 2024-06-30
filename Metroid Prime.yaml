@@ -85,6 +85,16 @@ Metroid Prime:
     medium: 0
     hard: 0
 
+  trick_allow_list:
+    # A list of tricks to explicitly allow in logic, regardless of selected difficulty. Values should match the trick name found here: https://github.com/Electro1512/MetroidAPrime/blob/main/data/Tricks.py#L55
+    # For example, ["Crashed Frigate Scan Dash", "Alcove Escape"]
+    []
+
+  trick_deny_list:
+    # A list of tricks to explicitly deny in logic, regardless of selected difficulty. Values should match the trick name found here: https://github.com/Electro1512/MetroidAPrime/blob/main/data/Tricks.py#L55
+    # For example, ["Crashed Frigate Scan Dash", "Alcove Escape"]
+    []
+
   flaahgra_power_bombs:
     # If enabled, makes the sandstone block at the top of arboretum breakable with power bombs. Note that this will require the player to have 4 power bombs in order to defeat flaahgra
     false: 50
