@@ -4,16 +4,15 @@ import os
 import typing
 from BaseClasses import Item, Tutorial, ItemClassification
 from worlds.generic.Rules import add_item_rule, forbid_item
-from worlds.metroidprime.Container import MetroidPrimeContainer
-from worlds.metroidprime.data.RoomNames import RoomName
-from worlds.metroidprime.data.StartRoomData import StartRoomData, init_starting_room_data
+from .Container import MetroidPrimeContainer
+from .data.RoomNames import RoomName
+from .data.StartRoomData import StartRoomData, init_starting_room_data
 from .Items import MetroidPrimeItem, SuitUpgrade, suit_upgrade_table, artifact_table, item_table
 from .PrimeOptions import MetroidPrimeOptions, VariaSuitColorOverride
 from .Locations import every_location
 from .Regions import create_regions
 from .config import make_config
-from worlds.AutoWorld import World
-from ..AutoWorld import WebWorld
+from worlds.AutoWorld import World, WebWorld
 import settings
 from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess
 

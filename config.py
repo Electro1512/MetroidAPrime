@@ -1,9 +1,8 @@
 from enum import Enum
 import os
-import random
 from typing import TYPE_CHECKING, Dict, Any, List, Optional
 
-from worlds.metroidprime.Items import SuitUpgrade
+from .Items import SuitUpgrade
 
 
 from .PrimeOptions import HudColor, MetroidPrimeOptions
@@ -17,7 +16,7 @@ from .data.ChozoRuins import ChozoRuinsAreaData
 
 
 if TYPE_CHECKING:
-    from worlds.metroidprime import MetroidPrimeWorld
+    from . import MetroidPrimeWorld
 
 
 def starting_inventory(world: 'MetroidPrimeWorld', item: str) -> bool:
@@ -116,7 +115,7 @@ def get_strg(world: 'MetroidPrimeWorld') -> Dict[str, List[str]]:
     }
     # Update the name to include the color index if it is set
     for item in strg[PAUSE_MENU_STRG_KEY]:
-        if item in pause_menu_overrides and pause_menu_overrides[item] is not 0:
+        if item in pause_menu_overrides and pause_menu_overrides[item] != 0:
             index = strg[PAUSE_MENU_STRG_KEY].index(item)
             strg[PAUSE_MENU_STRG_KEY][index] = f"{item} (Color: {pause_menu_overrides[item]})"
     return strg

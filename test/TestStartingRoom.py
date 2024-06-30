@@ -1,10 +1,6 @@
 import os
 
-import pytest
-
-from BaseClasses import MultiWorld
 from Fill import distribute_items_restrictive
-from ..config import make_config
 from ..data.StartRoomData import all_start_rooms
 from . import MetroidPrimeTestBase
 

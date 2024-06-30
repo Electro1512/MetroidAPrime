@@ -4,7 +4,7 @@ from .RoomData import MetroidPrimeArea
 
 
 if typing.TYPE_CHECKING:
-    from . import MetroidPrimeWorld
+    from .. import MetroidPrimeWorld
 
 
 def temple_dest(boss) -> str:

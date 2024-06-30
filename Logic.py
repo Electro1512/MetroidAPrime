@@ -1,9 +1,9 @@
 from BaseClasses import CollectionState
-from worlds.metroidprime.data.RoomNames import RoomName
+from .data.RoomNames import RoomName
 from .Items import SuitUpgrade
 import typing
 if typing.TYPE_CHECKING:
-  from worlds.metroidprime.PrimeOptions import MetroidPrimeOptions
+  from .PrimeOptions import MetroidPrimeOptions
 
 
 def _get_options(state: CollectionState, player: int) -> 'MetroidPrimeOptions':

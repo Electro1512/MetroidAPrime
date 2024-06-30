@@ -5,7 +5,7 @@ import zipfile
 from worlds.Files import APContainer
 import py_randomprime
 
-from worlds.metroidprime.MetroidPrimeInterface import GAMES, HUD_MESSAGE_DURATION
+from .MetroidPrimeInterface import GAMES, HUD_MESSAGE_DURATION
 
 
 class MetroidPrimeContainer(APContainer):

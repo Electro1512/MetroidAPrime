@@ -1,13 +1,13 @@
 import typing
 
-from worlds.metroidprime.Logic import can_ice_beam, can_missile, can_plasma_beam, can_power_beam, can_super_missile, can_thermal, can_wave_beam, can_xray, has_energy_tanks, has_required_artifact_count
-from worlds.metroidprime.LogicCombat import can_combat_prime, can_combat_ridley
-from worlds.metroidprime.data.ChozoRuins import ChozoRuinsAreaData
-from worlds.metroidprime.data.MagmoorCaverns import MagmoorCavernsAreaData
-from worlds.metroidprime.data.PhazonMines import PhazonMinesAreaData
-from worlds.metroidprime.data.PhendranaDrifts import PhendranaDriftsAreaData
-from worlds.metroidprime.data.RoomNames import RoomName
-from worlds.metroidprime.data.TallonOverworld import TallonOverworldAreaData
+from .Logic import can_ice_beam, can_missile, can_plasma_beam, can_power_beam, can_super_missile, can_thermal, can_wave_beam, can_xray, has_energy_tanks, has_required_artifact_count
+from .LogicCombat import can_combat_prime, can_combat_ridley
+from .data.ChozoRuins import ChozoRuinsAreaData
+from .data.MagmoorCaverns import MagmoorCavernsAreaData
+from .data.PhazonMines import PhazonMinesAreaData
+from .data.PhendranaDrifts import PhendranaDriftsAreaData
+from .data.RoomNames import RoomName
+from .data.TallonOverworld import TallonOverworldAreaData
 from BaseClasses import Region
 if typing.TYPE_CHECKING:
     from . import MetroidPrimeWorld
