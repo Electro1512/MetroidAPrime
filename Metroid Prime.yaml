@@ -144,12 +144,12 @@ Metroid Prime:
   hud_color_blue: 0
 
   randomize_suit_colors:
-    # Randomizes the colors of the suits
+    # Randomizes the colors of the suits. The selected suit color index will be shown on the pause menu under "Suits"
     false: 50
     true: 0
 
   # Any integer between 0 and 359 (inclusive)
-  # Selects a different color set from the game's color wheel at each index. If random, these values will be visible in the spoiler log
+  # Selects a different color set from the game's color wheel at each index.
   power_suit_color: 0
   varia_suit_color: 0
   gravity_suit_color: 0

@@ -185,7 +185,7 @@ class MetroidPrimeWorld(World):
             options: List[VariaSuitColorOverride] = [self.options.power_suit_color, self.options.varia_suit_color, self.options.gravity_suit_color, self.options.phazon_suit_color]
             for option in options:
                 if option.value == 0:
-                    option.value = random.randint(0, 359)
+                    option.value = random.randint(1, 35) * 10
 
         import json
         configjson = make_config(self)

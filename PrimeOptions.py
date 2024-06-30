@@ -164,7 +164,7 @@ class CombatLogicDifficultyOption(Choice):
 # COSMETIC OPTIONS
 
 class RandomizeSuitColors(Toggle):
-    """Randomize the colors of the suits. Is overriden if any of the color overrides are greater than 0."""
+    """Randomize the colors of the suits. Is overriden if any of the color overrides are greater than 0. The selected suit color index will be shown on the pause menu under "Suits""""
     display_name = "Randomize Suit Colors"
     default = False
 
