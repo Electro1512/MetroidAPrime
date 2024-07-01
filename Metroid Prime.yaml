@@ -13,13 +13,13 @@ Metroid Prime:
     false: 50
     true: 0
 
-  required_artifacts: 12
+  required_artifacts:
+    12
     # Determines the amount of Artifacts needed to begin the endgame sequence.
     #
     # You can define additional values between the minimum and maximum values.
     # Minimum value is 1
     # Maximum value is 12
-
 
   exclude_items:
     # Replaces the following items with filler. INPUT AT YOUR OWN RISK. I cannot promise that removing
@@ -115,6 +115,11 @@ Metroid Prime:
     false: 50
     true: 0
 
+  elevator_randomization:
+  # Randomizes the elevators between regions
+  false: 50
+  true: 0
+
   starting_room:
     # Determines the starting room of the game. This will change your starting loadout depending on the room
     # - normal: Start at the Talon Overworld Landing Site
@@ -132,7 +137,6 @@ Metroid Prime:
     no_logic: 0
     normal: 0
     minimal: 50
-
 
   hud_color:
     # Determines the color of the HUD
@@ -229,7 +233,6 @@ Metroid Prime:
     # Start with these items and don't place them in the world.
     # The game decides what the replacement items will be.
     {}
-
 # Q. What is this file?
 # A. This file contains options which allow you to configure your multiworld experience while allowing
 #    others to play how they want as well.

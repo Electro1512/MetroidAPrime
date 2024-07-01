@@ -12,6 +12,7 @@ from .PrimeOptions import MetroidPrimeOptions, VariaSuitColorOverride
 from .Locations import every_location
 from .Regions import create_regions
 from .config import make_config
+from .data.Transports import default_elevator_mappings
 from worlds.AutoWorld import World, WebWorld
 import settings
 from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess
@@ -79,6 +80,7 @@ class MetroidPrimeWorld(World):
     }
     starting_room_data: Optional[StartRoomData] = None
     prefilled_item_map: Dict[str, str] = {}  # Dict of location name to item name
+    elevator_mapping: Dict[str, Dict[str, str]] = default_elevator_mappings
 
     def get_filler_item_name(self) -> str:
         return SuitUpgrade.Missile_Expansion.value

@@ -1,10 +1,45 @@
-import typing
+from typing import TYPE_CHECKING, Dict
 
+from .RoomNames import RoomName
 from .RoomData import MetroidPrimeArea
-
-
-if typing.TYPE_CHECKING:
+if TYPE_CHECKING:
     from .. import MetroidPrimeWorld
+
+
+default_elevator_mappings = {
+    MetroidPrimeArea.Tallon_Overworld.value:
+    {
+        RoomName.Transport_to_Chozo_Ruins_West.value: RoomName.Transport_to_Tallon_Overworld_North.value,
+        RoomName.Transport_to_Magmoor_Caverns_East.value: RoomName.Transport_to_Tallon_Overworld_West.value,
+        RoomName.Transport_to_Chozo_Ruins_East.value: RoomName.Transport_to_Tallon_Overworld_East.value,
+        RoomName.Transport_to_Chozo_Ruins_South.value: 'Chozo Ruins: ' + RoomName.Transport_to_Tallon_Overworld_South.value,
+        RoomName.Transport_to_Phazon_Mines_East.value: 'Phazon Mines: ' + RoomName.Transport_to_Tallon_Overworld_South.value
+    },
+    MetroidPrimeArea.Chozo_Ruins.value:
+    {
+        RoomName.Transport_to_Tallon_Overworld_North.value: RoomName.Transport_to_Chozo_Ruins_West.value,
+        RoomName.Transport_to_Magmoor_Caverns_North.value: RoomName.Transport_to_Chozo_Ruins_North.value,
+        RoomName.Transport_to_Tallon_Overworld_East.value: RoomName.Transport_to_Chozo_Ruins_East.value,
+        'Chozo Ruins: ' + RoomName.Transport_to_Tallon_Overworld_South.value: RoomName.Transport_to_Chozo_Ruins_South.value
+    },
+    MetroidPrimeArea.Magmoor_Caverns.value:
+    {
+        RoomName.Transport_to_Chozo_Ruins_North.value: RoomName.Transport_to_Magmoor_Caverns_North.value,
+        RoomName.Transport_to_Phendrana_Drifts_North.value: RoomName.Transport_to_Magmoor_Caverns_West.value,
+        RoomName.Transport_to_Tallon_Overworld_West.value: RoomName.Transport_to_Magmoor_Caverns_East.value,
+        RoomName.Transport_to_Phendrana_Drifts_South.value: 'Phendrana Drifts: ' + RoomName.Transport_to_Magmoor_Caverns_South.value,
+        RoomName.Transport_to_Phazon_Mines_West.value: 'Phazon Mines: ' + RoomName.Transport_to_Magmoor_Caverns_South.value
+    },
+    MetroidPrimeArea.Phendrana_Drifts.value:
+    {
+        RoomName.Transport_to_Magmoor_Caverns_West.value: RoomName.Transport_to_Phendrana_Drifts_North.value,
+        'Phendrana Drifts: ' + RoomName.Transport_to_Magmoor_Caverns_South.value: RoomName.Transport_to_Phendrana_Drifts_South.value
+    },
+    MetroidPrimeArea.Phazon_Mines.value: {
+        'Phazon Mines: ' + RoomName.Transport_to_Tallon_Overworld_South.value: RoomName.Transport_to_Phazon_Mines_East.value,
+        'Phazon Mines: ' + RoomName.Transport_to_Magmoor_Caverns_South.value: RoomName.Transport_to_Phazon_Mines_West.value
+    }
+}
 
 
 def temple_dest(boss) -> str:
@@ -14,38 +49,47 @@ def temple_dest(boss) -> str:
         return "Credits"
 
 
-def get_transport_data(world: 'MetroidPrimeWorld', area: MetroidPrimeArea):
-    data = {
-        MetroidPrimeArea.Tallon_Overworld: {
-            "Tallon Overworld North (Tallon Canyon)":  "Chozo Ruins West (Main Plaza)",
-            "Tallon Overworld West (Root Cave)": "Magmoor Caverns East (Twin Fires)",
-            "Tallon Overworld East (Frigate Crash Site)": "Chozo Ruins East (Reflecting Pool, Save Station)",
-            "Tallon Overworld South (Great Tree Hall, Upper)": "Chozo Ruins South (Reflecting Pool, Far End)",
-            "Tallon Overworld South (Great Tree Hall, Lower)": "Phazon Mines East (Main Quarry)",
-            "Artifact Temple": temple_dest(world.options.final_bosses.value)
-        },
-        MetroidPrimeArea.Chozo_Ruins: {
-            "Chozo Ruins West (Main Plaza)": "Tallon Overworld North (Tallon Canyon)",
-            "Chozo Ruins North (Sun Tower)": "Magmoor Caverns North (Lava Lake)",
-            "Chozo Ruins East (Reflecting Pool, Save Station)": "Tallon Overworld East (Frigate Crash Site)",
-            "Chozo Ruins South (Reflecting Pool, Far End)": "Tallon Overworld South (Great Tree Hall, Upper)",
-        },
-        MetroidPrimeArea.Magmoor_Caverns: {
-            "Magmoor Caverns North (Lava Lake)": "Chozo Ruins North (Sun Tower)",
-            "Magmoor Caverns West (Monitor Station)": "Phendrana Drifts North (Phendrana Shorelines)",
-            "Magmoor Caverns East (Twin Fires)": "Tallon Overworld West (Root Cave)",
-            "Magmoor Caverns South (Magmoor Workstation, Save Station)": "Phendrana Drifts South (Quarantine Cave)",
-            "Magmoor Caverns South (Magmoor Workstation, Debris)": "Phazon Mines West (Phazon Processing Center)",
-        },
-        MetroidPrimeArea.Phendrana_Drifts: {
-            "Phendrana Drifts North (Phendrana Shorelines)": "Magmoor Caverns West (Monitor Station)",
-            "Phendrana Drifts South (Quarantine Cave)": "Magmoor Caverns South (Magmoor Workstation, Save Station)",
-        },
-        MetroidPrimeArea.Phazon_Mines: {
-            "Phazon Mines East (Main Quarry)": "Tallon Overworld South (Great Tree Hall, Lower)",
-            "Phazon Mines West (Phazon Processing Center)": "Magmoor Caverns South (Magmoor Workstation, Debris)",
-        },
+# Names of the transports that the config json expects
+_transport_names_to_room_names: Dict[str, str] = {
+    "Tallon Overworld North (Tallon Canyon)": RoomName.Transport_to_Chozo_Ruins_West.value,
+    "Tallon Overworld West (Root Cave)": RoomName.Transport_to_Magmoor_Caverns_East.value,
+    "Tallon Overworld East (Frigate Crash Site)": RoomName.Transport_to_Chozo_Ruins_East.value,
+    "Tallon Overworld South (Great Tree Hall, Upper)": RoomName.Transport_to_Chozo_Ruins_South.value,
+    "Tallon Overworld South (Great Tree Hall, Lower)": RoomName.Transport_to_Phazon_Mines_East.value,
+    "Chozo Ruins West (Main Plaza)": RoomName.Transport_to_Tallon_Overworld_North.value,
+    "Chozo Ruins North (Sun Tower)": RoomName.Transport_to_Magmoor_Caverns_North.value,
+    "Chozo Ruins East (Reflecting Pool, Save Station)": RoomName.Transport_to_Tallon_Overworld_East.value,
+    "Chozo Ruins South (Reflecting Pool, Far End)": "Chozo Ruins: " + RoomName.Transport_to_Tallon_Overworld_South.value,
+    "Magmoor Caverns North (Lava Lake)": RoomName.Transport_to_Chozo_Ruins_North.value,
+    "Magmoor Caverns West (Monitor Station)": RoomName.Transport_to_Phendrana_Drifts_North.value,
+    "Magmoor Caverns East (Twin Fires)": RoomName.Transport_to_Tallon_Overworld_West.value,
+    "Magmoor Caverns South (Magmoor Workstation, Save Station)": RoomName.Transport_to_Phendrana_Drifts_South.value,
+    "Magmoor Caverns South (Magmoor Workstation, Debris)": RoomName.Transport_to_Phazon_Mines_West.value,
+    "Phendrana Drifts North (Phendrana Shorelines)": RoomName.Transport_to_Magmoor_Caverns_West.value,
+    "Phendrana Drifts South (Quarantine Cave)": "Phendrana Drifts: " + RoomName.Transport_to_Magmoor_Caverns_South.value,
+    "Phazon Mines East (Main Quarry)": "Phazon Mines: " + RoomName.Transport_to_Tallon_Overworld_South.value,
+    "Phazon Mines West (Phazon Processing Center)": "Phazon Mines: " + RoomName.Transport_to_Magmoor_Caverns_South.value,
+}
 
-    }
 
-    return data[area]
+def get_transport_name_by_room_name(room_name: str) -> str:
+    for transport_name, room in _transport_names_to_room_names.items():
+        if room == room_name:
+            return transport_name
+    return room_name
+
+
+def get_room_name_by_transport_name(transport_name: str) -> str:
+    return _transport_names_to_room_names.get(transport_name, transport_name)
+
+
+def get_transport_data(world: 'MetroidPrimeWorld') -> Dict[str, Dict[str, str]]:
+    mapping = world.elevator_mapping
+    data = {}
+    for area in world.elevator_mapping.keys():
+        data[area] = {}
+        for source, dest in mapping[area].items():
+            data[area][get_transport_name_by_room_name(source)] = get_transport_name_by_room_name(dest)
+
+    data[MetroidPrimeArea.Tallon_Overworld.value]["Artifact Temple"] = temple_dest(world.options.final_bosses)
+    return data

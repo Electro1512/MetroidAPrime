@@ -175,6 +175,11 @@ class CombatLogicDifficultyOption(Choice):
     option_minimal = CombatLogicDifficulty.MINIMAL
     default = 'normal'
 
+class ElevatorRandomization(Toggle):
+  """Randomizes the elevators between regions"""
+  display_name = "Elevator Randomization"
+  default = False
+
 
 # COSMETIC OPTIONS
 
@@ -266,26 +271,26 @@ class MetroidPrimeOptions(PerGameCommonOptions):
     required_artifacts: RequiredArtifacts
     exclude_items: ExcludeItems
     final_bosses: FinalBosses
-    death_link: DeathLink
     artifact_hints: ArtifactHints
     missile_launcher: MissileLauncher
     main_power_bomb: MainPowerBomb
     non_varia_heat_damage: NonVariaHeatDamage
     staggered_suit_damage: StaggeredSuitDamage
-    remove_hive_mecha: RemoveHiveMecha
-    fusion_suit: FusionSuit
-    trick_difficulty: TrickDifficulty
-    trick_allow_list: TrickAllowList
-    trick_deny_list: TrickDenyList
-    backwards_lower_mines: BackwardsLowerMines
-    remove_xray_requirements: RemoveXrayRequirements
-    remove_thermal_requirements: RemoveThermalRequirements
+    elevator_randomization: ElevatorRandomization
     starting_room: StartingRoom
     starting_room_name: StartingRoomName
     combat_logic_difficulty: CombatLogicDifficultyOption
+    trick_difficulty: TrickDifficulty
+    trick_allow_list: TrickAllowList
+    trick_deny_list: TrickDenyList
     flaahgra_power_bombs: FlaahgraPowerBombs
+    backwards_lower_mines: BackwardsLowerMines
+    remove_xray_requirements: RemoveXrayRequirements
+    remove_thermal_requirements: RemoveThermalRequirements
+    remove_hive_mecha: RemoveHiveMecha
 
     # Cosmetic options
+    fusion_suit: FusionSuit
     hud_color: HudColorOption
     hud_color_red: HudColorOverrideRed
     hud_color_green: HudColorOverrideGreen
@@ -295,3 +300,5 @@ class MetroidPrimeOptions(PerGameCommonOptions):
     varia_suit_color: VariaSuitColorOverride
     gravity_suit_color: GravitySuitColorOverride
     phazon_suit_color: PhazonSuitColorOverride
+
+    death_link: DeathLink
