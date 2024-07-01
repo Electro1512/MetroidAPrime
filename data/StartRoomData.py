@@ -1,7 +1,6 @@
 import copy
 from dataclasses import dataclass, field
 from enum import Enum
-import random
 from typing import TYPE_CHECKING, Callable, Dict, List, Optional
 
 from ..LogicCombat import CombatLogicDifficulty
@@ -127,11 +126,11 @@ all_start_rooms: Dict[str, StartRoomData] = {
 def get_random_start_room_by_difficulty(world: 'MetroidPrimeWorld', difficulty: int) -> StartRoomData:
     """Returns a random start room based on difficulty as well as a random loadout from that room"""
     available_room_names = [name for name, room in all_start_rooms.items() if room.difficulty.value == difficulty and room.is_eligible(world)]
-    room_name = random.choice(available_room_names)
-    return get_starting_room_by_name(room_name)
+    room_name = world.random.choice(available_room_names)
+    return get_starting_room_by_name(world, room_name)
 
 
-def get_starting_room_by_name(room_name: str) -> StartRoomData:
+def get_starting_room_by_name(world: 'MetroidPrimeWorld',room_name: str) -> StartRoomData:
     """Returns a start room based on name"""
     # Prevent us from modifying the original room data
     room = copy.deepcopy(all_start_rooms[room_name])
@@ -139,7 +138,7 @@ def get_starting_room_by_name(room_name: str) -> StartRoomData:
     if len(room.loadouts) == 0:
         room.selected_loadout = StartRoomLoadout([SuitUpgrade.Power_Beam])
     else:
-        room.selected_loadout = random.choice(room.loadouts)
+        room.selected_loadout = world.random.choice(room.loadouts)
     return room
 
 
@@ -169,7 +168,7 @@ def init_starting_room_data(world: 'MetroidPrimeWorld'):
     world.prefilled_item_map = {}
     if yaml_name:
         if yaml_name in all_start_rooms:
-            world.starting_room_data = get_starting_room_by_name(yaml_name)
+            world.starting_room_data = get_starting_room_by_name(world, yaml_name)
         else:
             world.starting_room_data = StartRoomData(name=world.options.starting_room_name.value)
             world.starting_room_data.loadouts = [StartRoomLoadout(loadout=[SuitUpgrade.Power_Beam])]
@@ -189,5 +188,5 @@ def init_starting_room_data(world: 'MetroidPrimeWorld'):
 
     for mapping in world.starting_room_data.selected_loadout.item_rules:
         for location_name, potential_items in mapping.items():
-            required_item = _get_item_for_options(world, random.choice(potential_items))
+            required_item = _get_item_for_options(world, world.random.choice(potential_items))
             world.prefilled_item_map[location_name] = required_item.value
