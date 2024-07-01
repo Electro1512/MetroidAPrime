@@ -93,3 +93,48 @@ def get_transport_data(world: 'MetroidPrimeWorld') -> Dict[str, Dict[str, str]]:
 
     data[MetroidPrimeArea.Tallon_Overworld.value]["Artifact Temple"] = temple_dest(world.options.final_bosses)
     return data
+
+
+def get_random_elevator_mapping(world: 'MetroidPrimeWorld') -> Dict[str, Dict[str, str]]:
+    mapped_elevators = {area: {} for area in world.elevator_mapping.keys()}
+    available_elevators_by_region = {**default_elevator_mappings}
+
+    def get_region_with_most_unshuffled_elevators():
+        max_elevators = 0
+        region = None
+        for area, elevators in available_elevators_by_region.items():
+            num_elevators = len(elevators)
+            if num_elevators > max_elevators:
+                max_elevators = num_elevators
+                region = area
+        return region
+
+    def get_random_target_region(source_region):
+        target_regions = list(available_elevators_by_region.keys())
+        target_regions.remove(source_region)
+        return world.random.choice(target_regions)
+
+    def delete_region_if_empty(region):
+        if len(available_elevators_by_region[region]) == 0:
+            del available_elevators_by_region[region]
+
+    while len(available_elevators_by_region.keys()) > 0:
+        source_region = get_region_with_most_unshuffled_elevators()
+        source_elevators = available_elevators_by_region[source_region]
+        source_elevator = world.random.choice(list(source_elevators.keys()))
+
+        target_region = get_random_target_region(source_region)
+        target_elevators = available_elevators_by_region[target_region]
+        target_elevator = world.random.choice(list(target_elevators.keys()))
+
+        mapped_elevators[source_region][source_elevator] = target_elevator
+        mapped_elevators[target_region][target_elevator] = source_elevator
+
+        # Remove the elevators from the available list
+        del available_elevators_by_region[source_region][source_elevator]
+        del available_elevators_by_region[target_region][target_elevator]
+
+        # Check if the regions should be deleted
+        delete_region_if_empty(source_region)
+        delete_region_if_empty(target_region)
+    return mapped_elevators
