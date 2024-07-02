@@ -11,7 +11,7 @@ from .PrimeOptions import MetroidPrimeOptions, VariaSuitColorOverride
 from .Locations import every_location
 from .Regions import create_regions
 from .config import make_config
-from .data.Transports import default_elevator_mappings
+from .data.Transports import default_elevator_mappings, get_random_elevator_mapping
 from worlds.AutoWorld import World, WebWorld
 import settings
 from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess
@@ -85,6 +85,8 @@ class MetroidPrimeWorld(World):
         return SuitUpgrade.Missile_Expansion.value
 
     def generate_early(self) -> None:
+        if self.options.elevator_randomization.value:
+            self.elevator_mapping = get_random_elevator_mapping(self)
         init_starting_room_data(self)
 
     def create_regions(self) -> None:

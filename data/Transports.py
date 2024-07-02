@@ -1,3 +1,4 @@
+import copy
 from typing import TYPE_CHECKING, Dict
 
 from .RoomNames import RoomName
@@ -97,7 +98,7 @@ def get_transport_data(world: 'MetroidPrimeWorld') -> Dict[str, Dict[str, str]]:
 
 def get_random_elevator_mapping(world: 'MetroidPrimeWorld') -> Dict[str, Dict[str, str]]:
     mapped_elevators = {area: {} for area in world.elevator_mapping.keys()}
-    available_elevators_by_region = {**default_elevator_mappings}
+    available_elevators_by_region = copy.deepcopy(default_elevator_mappings)
 
     def get_region_with_most_unshuffled_elevators():
         max_elevators = 0

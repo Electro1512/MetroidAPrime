@@ -130,7 +130,7 @@ def get_random_start_room_by_difficulty(world: 'MetroidPrimeWorld', difficulty: 
     return get_starting_room_by_name(world, room_name)
 
 
-def get_starting_room_by_name(world: 'MetroidPrimeWorld',room_name: str) -> StartRoomData:
+def get_starting_room_by_name(world: 'MetroidPrimeWorld', room_name: str) -> StartRoomData:
     """Returns a start room based on name"""
     # Prevent us from modifying the original room data
     room = copy.deepcopy(all_start_rooms[room_name])
@@ -165,6 +165,7 @@ def _get_item_for_options(world: 'MetroidPrimeWorld', item: SuitUpgrade) -> Suit
 def init_starting_room_data(world: 'MetroidPrimeWorld'):
     difficulty = world.options.starting_room.value
     yaml_name = world.options.starting_room_name.value
+
     world.prefilled_item_map = {}
     if yaml_name:
         if yaml_name in all_start_rooms:
@@ -173,7 +174,11 @@ def init_starting_room_data(world: 'MetroidPrimeWorld'):
             world.starting_room_data = StartRoomData(name=world.options.starting_room_name.value)
             world.starting_room_data.loadouts = [StartRoomLoadout(loadout=[SuitUpgrade.Power_Beam])]
     else:
-        world.starting_room_data = get_random_start_room_by_difficulty(world, difficulty)
+        if world.options.elevator_randomization.value and difficulty == StartRoomDifficulty.Normal.value:
+            # Can't start at landing site since there are no pickups without tricks
+            world.starting_room_data = get_starting_room_by_name(world, RoomName.Save_Station_1.value)
+        else:
+            world.starting_room_data = get_random_start_room_by_difficulty(world, difficulty)
         world.options.starting_room_name.value = world.starting_room_data.name
 
     if SuitUpgrade.Missile_Launcher in world.starting_room_data.selected_loadout.loadout:
