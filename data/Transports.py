@@ -119,6 +119,15 @@ def get_random_elevator_mapping(world: 'MetroidPrimeWorld') -> Dict[str, Dict[st
         if len(available_elevators_by_region[region]) == 0:
             del available_elevators_by_region[region]
 
+    plando_elevators = world.options.elevator_mapping.value
+    for area, elevators in plando_elevators.items():
+        for source, dest in elevators.items():
+            source = get_room_name_by_transport_name(source)
+            dest = get_room_name_by_transport_name(dest)
+            mapped_elevators[area][source] = dest
+            del available_elevators_by_region[area][source]
+            delete_region_if_empty(area)
+
     while len(available_elevators_by_region.keys()) > 0:
         source_region = get_region_with_most_unshuffled_elevators()
         source_elevators = available_elevators_by_region[source_region]
