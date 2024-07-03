@@ -1,3 +1,4 @@
+from logging import debug, info
 from typing import Any, Dict, List, Optional
 import os
 import typing
@@ -87,8 +88,10 @@ class MetroidPrimeWorld(World):
     def generate_early(self) -> None:
         if self.options.elevator_randomization.value:
             self.elevator_mapping = get_random_elevator_mapping(self)
+            info(f"{self.multiworld.get_player_name(self.player)}'s Metroid Prime elevator_mapping data: {self.elevator_mapping.__str__()}")
         self.options.elevator_mapping.value = self.elevator_mapping
         init_starting_room_data(self)
+        info(f"{self.multiworld.get_player_name(self.player)}'s Metroid Prime starting room data: {self.starting_room_data.name}")
 
     def create_regions(self) -> None:
         boss_selection = int(self.options.final_bosses)
