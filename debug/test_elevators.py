@@ -12,7 +12,7 @@ from worlds.metroidprime.data.StartRoomData import all_start_rooms
 fail = []
 
 # all_rooms = ["Arbor Chamber", "Transport to Chozo Ruins East", "Quarantine Monitor", "Sunchamber Lobby"]
-all_rooms = ["Quarantine Monitor"]
+all_rooms = ["Save Station B"]
 data = {}
 failures = {}
 times_to_try = 20
@@ -47,12 +47,12 @@ for room in all_rooms:
 
                 config["Metroid Prime"]["elevator_mapping"][target_area] = {}
                 config["Metroid Prime"]["elevator_mapping"][target_area][target_elevator] = source_elevator
+                config["Metroid Prime"]["starting_room"] = room
 
                 with open('Players/Hesto2.yaml', 'w') as file:
                     yaml.safe_dump(config, file, default_flow_style=False)
 
                 for time in range(times_to_try):
-                    os.environ["start_room"] = room
                     os.environ["skip_output"] = "true"
                     loadouts = all_start_rooms[room].loadouts
                     name = f"{room} -> {source_area}: {source_elevator} -> {target_area}: {target_elevator}"

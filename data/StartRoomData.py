@@ -171,8 +171,6 @@ def _get_item_for_options(world: 'MetroidPrimeWorld', item: SuitUpgrade) -> Suit
 def init_starting_room_data(world: 'MetroidPrimeWorld'):
     difficulty = world.options.starting_room.value
     yaml_name = world.options.starting_room_name.value
-    if "start_room" in os.environ:
-        yaml_name = os.environ["start_room"]
 
     world.prefilled_item_map = {}
     if yaml_name:
