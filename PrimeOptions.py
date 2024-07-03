@@ -1,6 +1,6 @@
 
 from enum import Enum
-from Options import DeathLink, DefaultOnToggle, OptionList, TextChoice, Toggle, Range, ItemDict, StartInventoryPool, Choice, PerGameCommonOptions, Visibility
+from Options import DeathLink, DefaultOnToggle, OptionDict, OptionList, TextChoice, Toggle, Range, ItemDict, StartInventoryPool, Choice, PerGameCommonOptions, Visibility
 from dataclasses import dataclass
 from .data.StartRoomData import StartRoomDifficulty
 from .LogicCombat import CombatLogicDifficulty
@@ -180,6 +180,11 @@ class ElevatorRandomization(Toggle):
   display_name = "Elevator Randomization"
   default = False
 
+class ElevatorMapping(OptionDict):
+  """Which elevators go to which regions, only visible for spoiler"""
+  visibility = Visibility.spoiler
+  default = {}
+
 
 # COSMETIC OPTIONS
 
@@ -277,6 +282,7 @@ class MetroidPrimeOptions(PerGameCommonOptions):
     non_varia_heat_damage: NonVariaHeatDamage
     staggered_suit_damage: StaggeredSuitDamage
     elevator_randomization: ElevatorRandomization
+    elevator_mapping: ElevatorMapping
     starting_room: StartingRoom
     starting_room_name: StartingRoomName
     combat_logic_difficulty: CombatLogicDifficultyOption

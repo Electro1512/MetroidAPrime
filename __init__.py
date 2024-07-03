@@ -87,6 +87,7 @@ class MetroidPrimeWorld(World):
     def generate_early(self) -> None:
         if self.options.elevator_randomization.value:
             self.elevator_mapping = get_random_elevator_mapping(self)
+        self.options.elevator_mapping.value = self.elevator_mapping
         init_starting_room_data(self)
 
     def create_regions(self) -> None:

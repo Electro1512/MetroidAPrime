@@ -1,6 +1,7 @@
 import copy
 from dataclasses import dataclass, field
 from enum import Enum
+import os
 from typing import TYPE_CHECKING, Callable, Dict, List, Optional
 
 from ..LogicCombat import CombatLogicDifficulty
@@ -66,14 +67,18 @@ all_start_rooms: Dict[str, StartRoomData] = {
         },
     ]
     )]),
-    RoomName.Warrior_Shrine.value: StartRoomData(area=MetroidPrimeArea.Magmoor_Caverns, loadouts=[
-        StartRoomLoadout([SuitUpgrade.Varia_Suit], [
-            {
-                "Magmoor Caverns: Warrior Shrine": [SuitUpgrade.Morph_Ball],
-                "Magmoor Caverns: Storage Cavern": [SuitUpgrade.Morph_Ball_Bomb, SuitUpgrade.Main_Power_Bomb],
-            }
-        ]),
-    ]),
+    RoomName.Warrior_Shrine.value: StartRoomData(
+        area=MetroidPrimeArea.Magmoor_Caverns,
+        loadouts=[
+            StartRoomLoadout([SuitUpgrade.Varia_Suit], [
+                {
+                    "Magmoor Caverns: Warrior Shrine": [SuitUpgrade.Morph_Ball],
+                    "Magmoor Caverns: Storage Cavern": [SuitUpgrade.Morph_Ball_Bomb, SuitUpgrade.Main_Power_Bomb],
+                }
+            ]),
+        ],
+        is_eligible=lambda world:  bool(world.options.elevator_randomization.value) == False,
+    ),
     RoomName.East_Tower.value: StartRoomData(area=MetroidPrimeArea.Phendrana_Drifts, loadouts=[StartRoomLoadout([SuitUpgrade.Wave_Beam, SuitUpgrade.Missile_Launcher],
                                                                                                                 [
         {
@@ -109,7 +114,8 @@ all_start_rooms: Dict[str, StartRoomData] = {
             "Phendrana Drifts: Ruined Courtyard": [SuitUpgrade.Plasma_Beam]
         },
     ]
-    )], difficulty=StartRoomDifficulty.Buckle_Up
+    )], difficulty=StartRoomDifficulty.Buckle_Up,
+        is_eligible=lambda world: world.options.elevator_mapping[MetroidPrimeArea.Phendrana_Drifts.value]["Phendrana Drifts: " + RoomName.Transport_to_Magmoor_Caverns_South] == RoomName.Transport_to_Phendrana_Drifts_South
     ),
     RoomName.Sunchamber_Lobby.value: StartRoomData(
         area=MetroidPrimeArea.Chozo_Ruins,
@@ -165,6 +171,8 @@ def _get_item_for_options(world: 'MetroidPrimeWorld', item: SuitUpgrade) -> Suit
 def init_starting_room_data(world: 'MetroidPrimeWorld'):
     difficulty = world.options.starting_room.value
     yaml_name = world.options.starting_room_name.value
+    if "start_room" in os.environ:
+        yaml_name = os.environ["start_room"]
 
     world.prefilled_item_map = {}
     if yaml_name:
