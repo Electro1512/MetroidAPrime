@@ -37,26 +37,41 @@ class StartRoomData:
     selected_loadout: Optional[StartRoomLoadout] = None
     name: Optional[str] = None
     is_eligible: Callable[['MetroidPrimeWorld'], bool] = lambda world: True
+    allowed_elevators: Optional[Dict[str, Dict[str, List[str]]]] = None
+    denied_elevators: Optional[Dict[str, Dict[str, List[str]]]] = None
 
 
 all_start_rooms: Dict[str, StartRoomData] = {
     RoomName.Landing_Site.value: StartRoomData(difficulty=StartRoomDifficulty.Normal, area=MetroidPrimeArea.Tallon_Overworld, loadouts=[StartRoomLoadout([SuitUpgrade.Power_Beam], [
         {"Chozo Ruins: Hive Totem": [SuitUpgrade.Missile_Launcher]}
     ])]),
-    RoomName.Arboretum.value: StartRoomData(area=MetroidPrimeArea.Chozo_Ruins, loadouts=[StartRoomLoadout([SuitUpgrade.Missile_Launcher])]),
-    RoomName.Burn_Dome_Access.value: StartRoomData(area=MetroidPrimeArea.Chozo_Ruins, loadouts=[StartRoomLoadout([SuitUpgrade.Morph_Ball],
-                                                                                                                 item_rules=[
-        {
-            'Chozo Ruins: Burn Dome - Incinerator Drone': [SuitUpgrade.Morph_Ball_Bomb],
-            'Chozo Ruins: Burn Dome - Missile': [SuitUpgrade.Missile_Launcher]
-        }
-    ]
-    )], difficulty=StartRoomDifficulty.Safe),
-    RoomName.Ruined_Fountain.value: StartRoomData(area=MetroidPrimeArea.Chozo_Ruins, loadouts=[StartRoomLoadout([SuitUpgrade.Missile_Launcher]), StartRoomLoadout([SuitUpgrade.Morph_Ball])]),
-    RoomName.Save_Station_1.value: StartRoomData(area=MetroidPrimeArea.Chozo_Ruins, loadouts=[StartRoomLoadout([SuitUpgrade.Power_Beam],
-                                                                                                               item_rules=[
-        {"Chozo Ruins: Hive Totem": [SuitUpgrade.Missile_Launcher]}
-    ])]),
+    RoomName.Arboretum.value: StartRoomData(
+        area=MetroidPrimeArea.Chozo_Ruins,
+        loadouts=[StartRoomLoadout([SuitUpgrade.Missile_Launcher])],
+    ),
+    RoomName.Burn_Dome_Access.value: StartRoomData(
+        area=MetroidPrimeArea.Chozo_Ruins,
+        loadouts=[StartRoomLoadout([SuitUpgrade.Morph_Ball],
+                                   item_rules=[
+            {
+                'Chozo Ruins: Burn Dome - Incinerator Drone': [SuitUpgrade.Morph_Ball_Bomb],
+                'Chozo Ruins: Burn Dome - Missile': [SuitUpgrade.Missile_Launcher]
+            }
+        ]
+        )],
+        difficulty=StartRoomDifficulty.Safe,
+    ),
+    RoomName.Ruined_Fountain.value: StartRoomData(
+        area=MetroidPrimeArea.Chozo_Ruins,
+        loadouts=[StartRoomLoadout([SuitUpgrade.Missile_Launcher]),
+                  StartRoomLoadout([SuitUpgrade.Morph_Ball])],
+    ),
+    RoomName.Save_Station_1.value: StartRoomData(
+        area=MetroidPrimeArea.Chozo_Ruins,
+        loadouts=[StartRoomLoadout([SuitUpgrade.Power_Beam],
+                                   item_rules=[
+            {"Chozo Ruins: Hive Totem": [SuitUpgrade.Missile_Launcher]}
+        ])]),
     RoomName.Save_Station_2.value: StartRoomData(area=MetroidPrimeArea.Chozo_Ruins, loadouts=[StartRoomLoadout([SuitUpgrade.Missile_Launcher])]),
     RoomName.Tower_Chamber.value: StartRoomData(area=MetroidPrimeArea.Chozo_Ruins, loadouts=[StartRoomLoadout([SuitUpgrade.Wave_Beam],
                                                                                                               item_rules=[
@@ -77,7 +92,11 @@ all_start_rooms: Dict[str, StartRoomData] = {
                 }
             ]),
         ],
-        is_eligible=lambda world:  bool(world.options.elevator_randomization.value) == False,
+        allowed_elevators={
+            MetroidPrimeArea.Magmoor_Caverns.value: {
+                RoomName.Transport_to_Chozo_Ruins_North.value: [RoomName.Transport_to_Magmoor_Caverns_East.value, RoomName.Transport_to_Chozo_Ruins_West.value, RoomName.Transport_to_Tallon_Overworld_North.value]
+            }
+        }
     ),
     RoomName.East_Tower.value: StartRoomData(area=MetroidPrimeArea.Phendrana_Drifts, loadouts=[StartRoomLoadout([SuitUpgrade.Wave_Beam, SuitUpgrade.Missile_Launcher],
                                                                                                                 [
@@ -95,9 +114,25 @@ all_start_rooms: Dict[str, StartRoomData] = {
         ],
         )
     ], is_eligible=lambda world:
-        world.options.combat_logic_difficulty.value == CombatLogicDifficulty.NO_LOGIC
+        world.options.combat_logic_difficulty.value == CombatLogicDifficulty.NO_LOGIC or world.options.elevator_randomization.value,
+        denied_elevators={
+            MetroidPrimeArea.Phendrana_Drifts.value: {
+                RoomName.Transport_to_Magmoor_Caverns_West.value: [RoomName.Transport_to_Phazon_Mines_East.value, RoomName.Transport_to_Tallon_Overworld_East.value, "Chozo Ruins :" + RoomName.Transport_to_Tallon_Overworld_South.value, RoomName.Transport_to_Tallon_Overworld_West.value, RoomName.Transport_to_Phendrana_Drifts_South.value, RoomName.Transport_to_Phazon_Mines_West.value],
+                "Phendrana Drifts: " + RoomName.Transport_to_Magmoor_Caverns_South.value: [RoomName.Transport_to_Chozo_Ruins_North.value]
+            }
+    }
+
     ),
-    RoomName.Arbor_Chamber.value: StartRoomData(area=MetroidPrimeArea.Tallon_Overworld, loadouts=[StartRoomLoadout([SuitUpgrade.Missile_Launcher])]),
+    RoomName.Arbor_Chamber.value: StartRoomData(
+        area=MetroidPrimeArea.Tallon_Overworld,
+        loadouts=[StartRoomLoadout([SuitUpgrade.Missile_Launcher])],
+        denied_elevators={
+            MetroidPrimeArea.Tallon_Overworld.value: {
+                RoomName.Transport_to_Chozo_Ruins_West.value: ["Phendrana Drifts: " + RoomName.Transport_to_Magmoor_Caverns_South.value, "Phazon Mines: " + RoomName.Transport_to_Magmoor_Caverns_South.value],
+                RoomName.Transport_to_Magmoor_Caverns_East.value: ["Phendrana Drifts: " + RoomName.Transport_to_Magmoor_Caverns_South.value, "Phazon Mines: " + RoomName.Transport_to_Magmoor_Caverns_South.value],
+            }
+        }
+    ),
     RoomName.Transport_to_Chozo_Ruins_East.value: StartRoomData(area=MetroidPrimeArea.Tallon_Overworld, loadouts=[StartRoomLoadout([SuitUpgrade.Ice_Beam, SuitUpgrade.Morph_Ball],
                                                                                                                                    item_rules=[
         {

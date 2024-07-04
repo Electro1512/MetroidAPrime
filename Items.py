@@ -96,18 +96,18 @@ custom_suit_upgrade_table: dict[str, ItemData] = {
 }
 
 artifact_table: dict[str, ItemData] = {
-    "Artifact of Truth": ItemData("Artifact of Truth", 29, ItemClassification.progression),
-    "Artifact of Strength": ItemData("Artifact of Strength", 30, ItemClassification.progression),
-    "Artifact of Elder": ItemData("Artifact of Elder", 31, ItemClassification.progression),
-    "Artifact of Wild": ItemData("Artifact of Wild", 32, ItemClassification.progression),
-    "Artifact of Lifegiver": ItemData("Artifact of Lifegiver", 33, ItemClassification.progression),
-    "Artifact of Warrior": ItemData("Artifact of Warrior", 34, ItemClassification.progression),
-    "Artifact of Chozo": ItemData("Artifact of Chozo", 35, ItemClassification.progression),
-    "Artifact of Nature": ItemData("Artifact of Nature", 36, ItemClassification.progression),
-    "Artifact of Sun": ItemData("Artifact of Sun", 37, ItemClassification.progression),
-    "Artifact of World": ItemData("Artifact of World", 38, ItemClassification.progression),
-    "Artifact of Spirit": ItemData("Artifact of Spirit", 39, ItemClassification.progression),
-    "Artifact of Newborn": ItemData("Artifact of Newborn", 40, ItemClassification.progression),
+    "Artifact of Truth": ItemData("Artifact of Truth", 29, ItemClassification.progression_skip_balancing),
+    "Artifact of Strength": ItemData("Artifact of Strength", 30, ItemClassification.progression_skip_balancing),
+    "Artifact of Elder": ItemData("Artifact of Elder", 31, ItemClassification.progression_skip_balancing),
+    "Artifact of Wild": ItemData("Artifact of Wild", 32, ItemClassification.progression_skip_balancing),
+    "Artifact of Lifegiver": ItemData("Artifact of Lifegiver", 33, ItemClassification.progression_skip_balancing),
+    "Artifact of Warrior": ItemData("Artifact of Warrior", 34, ItemClassification.progression_skip_balancing),
+    "Artifact of Chozo": ItemData("Artifact of Chozo", 35, ItemClassification.progression_skip_balancing),
+    "Artifact of Nature": ItemData("Artifact of Nature", 36, ItemClassification.progression_skip_balancing),
+    "Artifact of Sun": ItemData("Artifact of Sun", 37, ItemClassification.progression_skip_balancing),
+    "Artifact of World": ItemData("Artifact of World", 38, ItemClassification.progression_skip_balancing),
+    "Artifact of Spirit": ItemData("Artifact of Spirit", 39, ItemClassification.progression_skip_balancing),
+    "Artifact of Newborn": ItemData("Artifact of Newborn", 40, ItemClassification.progression_skip_balancing),
 }
 
 item_table: dict[str, ItemData] = {
