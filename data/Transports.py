@@ -96,6 +96,13 @@ def get_transport_data(world: 'MetroidPrimeWorld') -> Dict[str, Dict[str, str]]:
     return data
 
 
+def get_region_by_elavator_name(elevator_name: str) -> str:
+    for region, elevators in default_elevator_mappings.items():
+        if elevator_name in elevators:
+            return region
+    return None
+
+
 def get_random_elevator_mapping(world: 'MetroidPrimeWorld') -> Dict[str, Dict[str, str]]:
     mapped_elevators = {area: {} for area in world.elevator_mapping.keys()}
     available_elevators_by_region = copy.deepcopy(default_elevator_mappings)
@@ -110,6 +117,12 @@ def get_random_elevator_mapping(world: 'MetroidPrimeWorld') -> Dict[str, Dict[st
                 region = area
         return region
 
+    def get_flat_list_of_available_elevators():
+        elevators = []
+        for area, area_elevators in available_elevators_by_region.items():
+            elevators.extend(area_elevators.keys())
+        return elevators
+
     def get_random_target_region(source_region):
         target_regions = list(available_elevators_by_region.keys())
         target_regions.remove(source_region)
@@ -119,7 +132,25 @@ def get_random_elevator_mapping(world: 'MetroidPrimeWorld') -> Dict[str, Dict[st
         if len(available_elevators_by_region[region]) == 0:
             del available_elevators_by_region[region]
 
+    def two_way_map_elevators(source_region, source_elevator, target_region, target_elevator):
+        one_way_map_elevator(source_region, source_elevator, target_elevator)
+        one_way_map_elevator(target_region, target_elevator, source_elevator)
+
+    def one_way_map_elevator(source_region, source_elevator, target_elevator):
+        mapped_elevators[source_region][source_elevator] = target_elevator
+        del available_elevators_by_region[source_region][source_elevator]
+        delete_region_if_empty(source_region)
+
     plando_elevators = world.options.elevator_mapping.value
+    # If there is an allow list for the starting room, then two way map a random set for each elevator
+    if world.starting_room_data.allowed_elevators:
+        for source_area, elevators in world.starting_room_data.allowed_elevators.items():
+            for source_elevator, potential_destinations in elevators.items():
+                available_options = [e for e in get_flat_list_of_available_elevators() if e in potential_destinations]
+                destination_elevator = world.random.choice(available_options)
+                target_area = get_region_by_elavator_name(destination_elevator)
+                two_way_map_elevators(source_area, source_elevator, target_area, destination_elevator)
+
     for area, elevators in plando_elevators.items():
         for source, dest in elevators.items():
             source = get_room_name_by_transport_name(source)
@@ -137,14 +168,6 @@ def get_random_elevator_mapping(world: 'MetroidPrimeWorld') -> Dict[str, Dict[st
         target_elevators = available_elevators_by_region[target_region]
         target_elevator = world.random.choice(list(target_elevators.keys()))
 
-        mapped_elevators[source_region][source_elevator] = target_elevator
-        mapped_elevators[target_region][target_elevator] = source_elevator
+        two_way_map_elevators(source_region, source_elevator, target_region, target_elevator)
 
-        # Remove the elevators from the available list
-        del available_elevators_by_region[source_region][source_elevator]
-        del available_elevators_by_region[target_region][target_elevator]
-
-        # Check if the regions should be deleted
-        delete_region_if_empty(source_region)
-        delete_region_if_empty(target_region)
     return mapped_elevators
