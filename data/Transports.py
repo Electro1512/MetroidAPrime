@@ -51,7 +51,7 @@ def temple_dest(boss) -> str:
 
 
 # Names of the transports that the config json expects
-_transport_names_to_room_names: Dict[str, str] = {
+transport_names_to_room_names: Dict[str, str] = {
     "Tallon Overworld North (Tallon Canyon)": RoomName.Transport_to_Chozo_Ruins_West.value,
     "Tallon Overworld West (Root Cave)": RoomName.Transport_to_Magmoor_Caverns_East.value,
     "Tallon Overworld East (Frigate Crash Site)": RoomName.Transport_to_Chozo_Ruins_East.value,
@@ -74,14 +74,14 @@ _transport_names_to_room_names: Dict[str, str] = {
 
 
 def get_transport_name_by_room_name(room_name: str) -> str:
-    for transport_name, room in _transport_names_to_room_names.items():
+    for transport_name, room in transport_names_to_room_names.items():
         if room == room_name:
             return transport_name
     return room_name
 
 
 def get_room_name_by_transport_name(transport_name: str) -> str:
-    return _transport_names_to_room_names.get(transport_name, transport_name)
+    return transport_names_to_room_names.get(transport_name, transport_name)
 
 
 def get_transport_data(world: 'MetroidPrimeWorld') -> Dict[str, Dict[str, str]]:
@@ -142,7 +142,6 @@ def get_random_elevator_mapping(world: 'MetroidPrimeWorld') -> Dict[str, Dict[st
         del available_elevators_by_region[source_region][source_elevator]
         delete_region_if_empty(source_region)
 
-    plando_elevators = world.options.elevator_mapping.value
     # If there is an allow list for the starting room, then two way map a random set for each elevator
     if world.starting_room_data.allowed_elevators:
         for source_area, elevators in world.starting_room_data.allowed_elevators.items():
@@ -153,13 +152,12 @@ def get_random_elevator_mapping(world: 'MetroidPrimeWorld') -> Dict[str, Dict[st
                 two_way_map_elevators(source_area, source_elevator, target_area, destination_elevator)
 
     # Distribute the plando elevators
+    plando_elevators = world.options.elevator_mapping.value
     for area, elevators in plando_elevators.items():
         for source, dest in elevators.items():
             source = get_room_name_by_transport_name(source)
             dest = get_room_name_by_transport_name(dest)
-            mapped_elevators[area][source] = dest
-            del available_elevators_by_region[area][source]
-            delete_region_if_empty(area)
+            one_way_map_elevator(area, source, dest)
 
     # Distribute denied elevators
     for source_area, elevators in denied_elevators.items():

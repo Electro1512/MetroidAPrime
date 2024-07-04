@@ -1,13 +1,62 @@
-from worlds.metroidprime.data.Transports import get_random_elevator_mapping
-from worlds.metroidprime.test import MetroidPrimeTestBase
+import typing
+
+from worlds.metroidprime.data.AreaNames import MetroidPrimeArea
+from worlds.metroidprime.data.RoomNames import RoomName
+from ..data.StartRoomData import StartRoomData, StartRoomDifficulty
+from ..data.Transports import get_random_elevator_mapping, transport_names_to_room_names
+from . import MetroidPrimeTestBase
+
+if typing.TYPE_CHECKING:
+    from .. import MetroidPrimeWorld
 
 
-class TestStartingRoomsGenerate(MetroidPrimeTestBase):
-    auto_construct = True
+class TestNonRandomStartingRoomWithElevatorRando(MetroidPrimeTestBase):
+    run_default_tests = False
     options = {
-        "elevator_randomization": True
+        "elevator_randomization": True,
+        "starting_room": 'normal'
     }
 
-    def test_elevator_randomization(self):
-      mapping = get_random_elevator_mapping(self.world)
-      pass
+    def test_start_room_gets_set_to_save_1_when_normal_start(self):
+        # When start room is normal then it should be set to save_station_1 since landing site isn't viable for most seeds
+        self.world.generate_early()
+        world: 'MetroidPrimeWorld' = self.world
+        assert world.starting_room_data.name == RoomName.Save_Station_1.value
+
+
+class TestRandomStartingRoomWithElevatorRando(MetroidPrimeTestBase):
+    run_default_tests = False
+    options = {
+        "elevator_randomization": True,
+        "starting_room": 'safe'
+    }
+
+    def test_start_room_gets_set_to_save_1_when_normal_start(self):
+        # When start room is normal then it should be set to save_station_1 since landing site isn't viable for most seeds
+        self.world.generate_early()
+        world: 'MetroidPrimeWorld' = self.world
+        assert world.starting_room_data.name != RoomName.Landing_Site.value
+
+
+class AllowListElevatorRando(MetroidPrimeTestBase):
+    run_default_tests = False
+    options = {
+        "elevator_randomization": True,
+        "starting_room_name": 'Save Station B',
+    }
+
+    def test_start_rooms_with_allow_list_correctly_chooses_elevators(self):
+        fake_start = StartRoomData(
+            difficulty=StartRoomDifficulty.Safe,
+            area=MetroidPrimeArea.Tallon_Overworld,
+            allowed_elevators={
+                MetroidPrimeArea.Tallon_Overworld.value: {
+                    RoomName.Transport_to_Chozo_Ruins_West.value: [RoomName.Transport_to_Magmoor_Caverns_North.value],
+                    RoomName.Transport_to_Magmoor_Caverns_East.value: [RoomName.Transport_to_Phendrana_Drifts_South.value]
+                }
+            })
+        self.world.starting_room_data = fake_start
+        self.world.options.elevator_mapping.value = {}
+        mapping = get_random_elevator_mapping(self.world)
+        assert mapping[MetroidPrimeArea.Tallon_Overworld.value][RoomName.Transport_to_Chozo_Ruins_West.value] == RoomName.Transport_to_Magmoor_Caverns_North.value
+        assert mapping[MetroidPrimeArea.Tallon_Overworld.value][RoomName.Transport_to_Magmoor_Caverns_East.value] == RoomName.Transport_to_Phendrana_Drifts_South.value
