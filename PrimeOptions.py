@@ -79,9 +79,9 @@ class NonVariaHeatDamage(DefaultOnToggle):
 
 class StaggeredSuitDamage(Choice):
     """Configure how suit damage reduction is calculated
-    Default: based on the strongest suit you have
-    Progressive: based on the number of suits you have
-    Additive: Individual suits provide their added damage reduction
+Default: based on the strongest suit you have
+Progressive: based on the number of suits you have
+Additive: Individual suits provide their added damage reduction
     """
     display_name = "Staggered Suit Damage"
     option_default = "Default"
@@ -114,13 +114,13 @@ class TrickDifficulty(Choice):
 
 class TrickAllowList(OptionList):
     """A list of tricks to explicitly allow in logic, regardless of selected difficulty. Values should match the trick name found here: https://github.com/Electro1512/MetroidAPrime/blob/main/data/Tricks.py#L55
-       For example, "Crashed Frigate Scan Dash" or "Alcove Escape" """
+For example, "Crashed Frigate Scan Dash" or "Alcove Escape" """
     default = []
 
 
 class TrickDenyList(OptionList):
     """A list of tricks to explicitly deny in logic, regardless of selected difficulty. Values should match the trick name found here: https://github.com/Electro1512/MetroidAPrime/blob/main/data/Tricks.py#L55
-       For example, "Crashed Frigate Scan Dash" or "Alcove Escape" """
+For example, "Crashed Frigate Scan Dash" or "Alcove Escape" """
     default = []
 
 
@@ -150,14 +150,20 @@ class RemoveThermalRequirements(Toggle):
 
 class StartingRoom(Choice):
     """Determines the starting room of the game. This will change your starting loadout depending on the room
-  normal: Start at the Talon Overworld Landing Site
-  safe: Start in rooms that will not require a significant combat challenge to progress from
-  buckle_up: Start in rooms that will pose a significant challenge to players with no energy tanks or suit upgrades. Fun for the aspiring masochist (less fun for their friends in BK).
+normal: Start at the Talon Overworld Landing Site
+safe: Start in rooms that will not require a significant combat challenge to progress from
+buckle_up: Start in rooms that will pose a significant challenge to players with no energy tanks or suit upgrades. Fun for the aspiring masochist (less fun for their friends in BK).
     """
     option_normal = StartRoomDifficulty.Normal.value
     option_safe = StartRoomDifficulty.Safe.value
     option_buckle_up = StartRoomDifficulty.Buckle_Up.value
     default = StartRoomDifficulty.Normal.value
+
+class DisableStartingRoomBKPrevention(Toggle):
+    """Normally, starting rooms will give you a minimum set of items in order to have access to several checks immediately. This option disables that behavior as well as any pre filled items that would have been set.
+WARNING: This will possibly require multiple attempts to generate, especially in solo worlds"""
+    display_name = "Disable Starting Room BK Prevention"
+    default = False
 
 
 class StartingRoomName(TextChoice):
@@ -175,15 +181,17 @@ class CombatLogicDifficultyOption(Choice):
     option_minimal = CombatLogicDifficulty.MINIMAL
     default = 'normal'
 
+
 class ElevatorRandomization(Toggle):
-  """Randomizes the elevators between regions"""
-  display_name = "Elevator Randomization"
-  default = False
+    """Randomizes the elevators between regions"""
+    display_name = "Elevator Randomization"
+    default = False
+
 
 class ElevatorMapping(OptionDict):
-  """Which elevators go to which regions, only visible for spoiler"""
-  visibility = Visibility.spoiler
-  default = {}
+    """Which elevators go to which regions, only visible for spoiler"""
+    visibility = Visibility.spoiler
+    default = {}
 
 
 # COSMETIC OPTIONS
@@ -285,6 +293,7 @@ class MetroidPrimeOptions(PerGameCommonOptions):
     elevator_mapping: ElevatorMapping
     starting_room: StartingRoom
     starting_room_name: StartingRoomName
+    disable_starting_room_bk_prevention: DisableStartingRoomBKPrevention
     combat_logic_difficulty: CombatLogicDifficultyOption
     trick_difficulty: TrickDifficulty
     trick_allow_list: TrickAllowList

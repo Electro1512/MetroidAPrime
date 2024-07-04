@@ -206,6 +206,7 @@ def _get_item_for_options(world: 'MetroidPrimeWorld', item: SuitUpgrade) -> Suit
 def init_starting_room_data(world: 'MetroidPrimeWorld'):
     difficulty = world.options.starting_room.value
     yaml_name = world.options.starting_room_name.value
+    disable_bk_prevention = world.options.disable_starting_room_bk_prevention.value
 
     world.prefilled_item_map = {}
     if yaml_name:
@@ -222,6 +223,10 @@ def init_starting_room_data(world: 'MetroidPrimeWorld'):
             world.starting_room_data = get_random_start_room_by_difficulty(world, difficulty)
         world.options.starting_room_name.value = world.starting_room_data.name
 
+    # Clear non starting beam upgrades out of loadout
+    if disable_bk_prevention:
+        world.starting_room_data.selected_loadout.loadout = [item for item in world.starting_room_data.selected_loadout.loadout if item in [SuitUpgrade.Power_Beam, SuitUpgrade.Ice_Beam, SuitUpgrade.Wave_Beam, SuitUpgrade.Plasma_Beam]]
+
     if SuitUpgrade.Missile_Launcher in world.starting_room_data.selected_loadout.loadout:
         # Change starting loadout missile launcher to be missile expansion
         world.starting_room_data.selected_loadout.loadout.remove(SuitUpgrade.Missile_Launcher)
@@ -232,7 +237,9 @@ def init_starting_room_data(world: 'MetroidPrimeWorld'):
         world.starting_room_data.selected_loadout.loadout.remove(SuitUpgrade.Main_Power_Bomb)
         world.starting_room_data.selected_loadout.loadout.append(_get_power_bomb_item(world))
 
-    for mapping in world.starting_room_data.selected_loadout.item_rules:
-        for location_name, potential_items in mapping.items():
-            required_item = _get_item_for_options(world, world.random.choice(potential_items))
-            world.prefilled_item_map[location_name] = required_item.value
+    # If we aren't preventing bk then set a few items for prefill if available
+    if not disable_bk_prevention:
+        for mapping in world.starting_room_data.selected_loadout.item_rules:
+            for location_name, potential_items in mapping.items():
+                required_item = _get_item_for_options(world, world.random.choice(potential_items))
+                world.prefilled_item_map[location_name] = required_item.value
