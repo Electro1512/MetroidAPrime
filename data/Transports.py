@@ -106,6 +106,7 @@ def get_region_by_elavator_name(elevator_name: str) -> str:
 def get_random_elevator_mapping(world: 'MetroidPrimeWorld') -> Dict[str, Dict[str, str]]:
     mapped_elevators = {area: {} for area in world.elevator_mapping.keys()}
     available_elevators_by_region = copy.deepcopy(default_elevator_mappings)
+    denied_elevators = world.starting_room_data.denied_elevators or {}
 
     def get_region_with_most_unshuffled_elevators():
         max_elevators = 0
@@ -146,11 +147,12 @@ def get_random_elevator_mapping(world: 'MetroidPrimeWorld') -> Dict[str, Dict[st
     if world.starting_room_data.allowed_elevators:
         for source_area, elevators in world.starting_room_data.allowed_elevators.items():
             for source_elevator, potential_destinations in elevators.items():
-                available_options = [e for e in get_flat_list_of_available_elevators() if e in potential_destinations]
+                available_options = [e for e in get_flat_list_of_available_elevators() if e in potential_destinations and get_region_by_elavator_name(e) != source_area]
                 destination_elevator = world.random.choice(available_options)
                 target_area = get_region_by_elavator_name(destination_elevator)
                 two_way_map_elevators(source_area, source_elevator, target_area, destination_elevator)
 
+    # Distribute the plando elevators
     for area, elevators in plando_elevators.items():
         for source, dest in elevators.items():
             source = get_room_name_by_transport_name(source)
@@ -158,6 +160,13 @@ def get_random_elevator_mapping(world: 'MetroidPrimeWorld') -> Dict[str, Dict[st
             mapped_elevators[area][source] = dest
             del available_elevators_by_region[area][source]
             delete_region_if_empty(area)
+
+    # Distribute denied elevators
+    for source_area, elevators in denied_elevators.items():
+        for source_elevator in elevators:
+            destination_elevator = world.random.choice([e for e in get_flat_list_of_available_elevators() if e not in elevators[source_elevator] and get_region_by_elavator_name(e) != source_area])
+            destination_area = get_region_by_elavator_name(destination_elevator)
+            two_way_map_elevators(source_area, source_elevator, destination_area, destination_elevator)
 
     while len(available_elevators_by_region.keys()) > 0:
         source_region = get_region_with_most_unshuffled_elevators()
