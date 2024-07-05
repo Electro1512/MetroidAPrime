@@ -111,8 +111,8 @@ class PhazonMinesAreaData(AreaData):
             },
             pickups=[PickupData('Phazon Mines: Metroid Quarantine B', rule_func=lambda state, player: can_combat_mines(state, player) and state.can_reach(RoomName.Elite_Quarters_Access.value, None, player) and can_super_missile(state, player), tricks=[]), ]),
         RoomName.Mine_Security_Station: RoomData(doors={
-            0: DoorData(RoomName.Security_Access_A, defaultLock=DoorLockType.Ice ),
-            1: DoorData(RoomName.Security_Access_B, defaultLock=DoorLockType.Wave ),
+            0: DoorData(RoomName.Security_Access_A, defaultLock=DoorLockType.Ice),
+            1: DoorData(RoomName.Security_Access_B, defaultLock=DoorLockType.Wave),
             2: DoorData(RoomName.Storage_Depot_A, defaultLock=DoorLockType.Plasma, rule_func=lambda state, player: can_power_bomb(state, player) and can_plasma_beam(state, player) and can_scan(state, player)),
         }),
         RoomName.Missile_Station_Mines: RoomData(doors={
@@ -138,7 +138,7 @@ class PhazonMinesAreaData(AreaData):
             doors={
                 0: DoorData(RoomName.Transport_Access, destinationArea=MetroidPrimeArea.Phazon_Mines, defaultLock=DoorLockType.Ice, rule_func=lambda state, player: can_spider(state, player) and can_bomb(state, player) and can_space_jump(state, player), tricks=[Tricks.climb_phazon_processing_center_no_spider]),
                 1: DoorData(RoomName.Maintenance_Tunnel, defaultLock=DoorLockType.Ice, rule_func=lambda state, player: can_spider(state, player) and can_bomb(state, player) and can_space_jump(state, player), tricks=[Tricks.climb_phazon_processing_center_no_spider]),
-                2: DoorData(RoomName.Processing_Center_Access, defaultLock=DoorLockType.Plasma),
+                2: DoorData(RoomName.Processing_Center_Access, defaultLock=DoorLockType.Plasma, rule_func=can_phazon, tricks=[Tricks.phazon_processing_center_no_phazon_suit]),
             },
             pickups=[PickupData('Phazon Mines: Phazon Processing Center', rule_func=lambda state, player: can_spider(state, player) and can_bomb(state, player) and can_space_jump(state, player) and can_power_bomb(state, player), tricks=[Tricks.phazon_processing_center_item_no_spider]), ]),
         RoomName.Processing_Center_Access: RoomData(
