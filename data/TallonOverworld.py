@@ -138,7 +138,7 @@ class TallonOverworldAreaData(AreaData):
 
         RoomName.Hydro_Access_Tunnel: RoomData(
             doors={
-                0: DoorData(RoomName.Great_Tree_Hall, rule_func=lambda state, player: can_crashed_frigate(state, player), tricks=[Tricks.hydro_access_tunnel_no_gravity]),  # Boost is needed to open way in great tree hall
+                0: DoorData(RoomName.Great_Tree_Hall, rule_func=lambda state, player: can_crashed_frigate(state, player) and can_boost(state, player), tricks=[Tricks.hydro_access_tunnel_no_gravity]),  # Boost is needed to open way in great tree hall
                 1: DoorData(RoomName.Biohazard_Containment, rule_func=lambda state, player: can_bomb(state, player) and can_crashed_frigate_backwards(state, player),
                             tricks=[Tricks.hydro_access_tunnel_no_gravity]),
 
