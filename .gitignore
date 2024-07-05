@@ -3,3 +3,4 @@ __pycache__
 *.apmp1
 *.iso
 test/test_output
+./lib

@@ -1,9 +1,12 @@
-from logging import debug, info
+# Setup local dependencies if running in an apworld
+from .PrimeUtils import setup_lib_path
+setup_lib_path()
+
+from logging import info
 from typing import Any, Dict, List, Optional
 import os
 import typing
 from BaseClasses import Item, Tutorial, ItemClassification
-from worlds.generic.Rules import add_item_rule, forbid_item
 from .Container import MetroidPrimeContainer
 from .data.RoomNames import RoomName
 from .data.StartRoomData import StartRoomData, init_starting_room_data

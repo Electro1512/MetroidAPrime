@@ -112,6 +112,10 @@ function mk_apworld() {
         --prune-empty-dirs \
         --exclude-from="${CWD}/apworld.ignore" \
         "${root}/" "${destdir}/metroidprime"
+
+    # If this already exists then ovewrite it
+    rm -rf "${destdir}/metroidprime/lib"
+    mv "${destdir}/lib" "${destdir}/metroidprime/lib"
     pushd "${destdir}"
     zip -9r "metroidprime.apworld" "metroidprime"
     popd
@@ -179,9 +183,11 @@ function main() {
                 requirements_file="${project}/requirements-linux.txt"
             fi
             get_deps "${platform}" ${requirements_file} "${destdir}/lib"
+            # copy deps to project folder as well for local dev
+            cp -r "${destdir}/lib" "${project}"
         done
 
-        mk_apworld "${project}" "${destdir}/lib/worlds/"
+        mk_apworld "${project}" "${destdir}"
         cp_data "${project}" "${destdir}"
         bundle "${destdir}" "${target_path}/${bundle}.zip"
         echo "! Bundle finalized as ${target_path}/${bundle}.zip"
