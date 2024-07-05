@@ -1,12 +1,11 @@
 import os
 
 from Fill import distribute_items_restrictive
+from worlds.metroidprime.Items import SuitUpgrade
 from worlds.metroidprime.data.RoomNames import RoomName
 from ..data.StartRoomData import all_start_rooms
 from . import MetroidPrimeTestBase
-
-OUTPUT_DIR = os.path.join(os.path.dirname(__file__), 'test_output')
-
+from .. import MetroidPrimeWorld
 
 class TestStartingRoomsGenerate(MetroidPrimeTestBase):
     auto_construct = False
@@ -69,3 +68,35 @@ class TestStartingRoomsGenerateWithElevatorRando(MetroidPrimeTestBase):
                     failures.append(room_name)
         if len(failures):
             self.fail("Failed to generate beatable game with start rooms: " + ", ".join(failures))
+
+
+class TestStartRoomBKPreventionDisabled(MetroidPrimeTestBase):
+    run_default_tests = False
+    options = {
+        "starting_room_name": RoomName.Save_Station_B.value,
+        "elevator_randomization": False,
+        "disable_starting_room_bk_prevention": True
+    }
+
+    def test_disabling_bk_prevention_does_not_give_items_or_pre_fill(self):
+        self.world.generate_early()
+        world: MetroidPrimeWorld = self.world
+        # Normally you'd also have the misssile launcher
+        assert world.starting_room_data.selected_loadout.loadout == [SuitUpgrade.Plasma_Beam]
+        assert len(world.prefilled_item_map.keys()) == 0
+
+
+class TestStartRoomBKPreventionEnabled(MetroidPrimeTestBase):
+    run_default_tests = False
+    options = {
+        "starting_room_name": RoomName.Save_Station_B.value,
+        "elevator_randomization": False,
+        "disable_starting_room_bk_prevention": False
+    }
+
+    def test_enabling_bk_prevention_gives_items_and_pre_fills_locations(self):
+        self.world.generate_early()
+        world: MetroidPrimeWorld = self.world
+        # Normally you'd also have the misssile launcher
+        assert world.starting_room_data.selected_loadout.loadout == [SuitUpgrade.Plasma_Beam, SuitUpgrade.Missile_Expansion]
+        assert len(world.prefilled_item_map.keys()) == 1
