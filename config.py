@@ -106,6 +106,8 @@ def get_tweaks(world: 'MetroidPrimeWorld') -> Dict[str, List[int]]:
 
 
 def get_strg(world: 'MetroidPrimeWorld') -> Dict[str, List[str]]:
+    if not world.options.show_suit_index_on_pause_menu.value:
+        return {}
     strg = {**PAUSE_STRG}
     pause_menu_overrides = {
         "Power Suit": world.options.power_suit_color.value,

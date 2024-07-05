@@ -198,10 +198,14 @@ class ElevatorMapping(OptionDict):
 # COSMETIC OPTIONS
 
 class RandomizeSuitColors(Toggle):
-    """Randomize the colors of the suits. Is overriden if any of the color overrides are greater than 0. The selected suit color index will be shown on the pause menu under "Suits"""
+    """Randomize the colors of the suits. Is overriden if any of the color overrides are greater than 0. """
     display_name = "Randomize Suit Colors"
     default = False
 
+class ShowSuitIndexOnPauseMenu(DefaultOnToggle):
+    """If enabled, the selected suit color index will be shown on the pause menu under "Suits". This has unexpected behavior on non US versions """
+    display_name = "Show Suit Index on Pause Menu (Disable if using non US version)"
+    default = True
 
 class PowerSuitColorOverride(Range):
     """Override the color of the Power Suit using an index from the game's color wheel"""
@@ -312,6 +316,7 @@ class MetroidPrimeOptions(PerGameCommonOptions):
     hud_color_green: HudColorOverrideGreen
     hud_color_blue: HudColorOverrideBlue
     randomize_suit_colors: RandomizeSuitColors
+    show_suit_index_on_pause_menu: ShowSuitIndexOnPauseMenu
     power_suit_color: PowerSuitColorOverride
     varia_suit_color: VariaSuitColorOverride
     gravity_suit_color: GravitySuitColorOverride
