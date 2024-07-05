@@ -86,9 +86,8 @@ Metroid Prime:
   combat_logic_difficulty:
     # When enabled, the game will include energy tanks and the charge beam as requirements for certain combat heavy rooms
     no_logic: 0
-    normal_logic: 0
+    normal_logic: 50
     minimal_logic: 0
-    normal: 50
 
   trick_difficulty:
     # Determines which tricks, if any, are required to complete the seed. This will affect the logic of the game.
