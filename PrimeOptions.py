@@ -178,9 +178,9 @@ class CombatLogicDifficultyOption(Choice):
     """When enabled, the game will include energy tanks and the charge beam as requirements for certain combat heavy rooms"""
     display_name = "Combat Logic Difficulty"
     default = CombatLogicDifficulty.NORMAL.value
-    option_no_logic = CombatLogicDifficulty.NO_LOGIC
-    option_normal_logic = CombatLogicDifficulty.NORMAL
-    option_minimal_logic = CombatLogicDifficulty.MINIMAL
+    option_no_logic = CombatLogicDifficulty.NO_LOGIC.value
+    option_normal_logic = CombatLogicDifficulty.NORMAL.value
+    option_minimal_logic = CombatLogicDifficulty.MINIMAL.value
 
 
 class ElevatorRandomization(Toggle):

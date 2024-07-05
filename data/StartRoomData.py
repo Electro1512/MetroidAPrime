@@ -6,7 +6,6 @@ from typing import TYPE_CHECKING, Callable, Dict, List, Optional
 
 from ..LogicCombat import CombatLogicDifficulty
 
-# from ..LogicCombat import CombatLogicDifficulty
 from ..Items import SuitUpgrade
 from ..data.AreaNames import MetroidPrimeArea
 from ..data.RoomNames import RoomName
@@ -114,7 +113,7 @@ all_start_rooms: Dict[str, StartRoomData] = {
         ],
         )
     ], is_eligible=lambda world:
-        world.options.combat_logic_difficulty.value == CombatLogicDifficulty.NO_LOGIC or world.options.elevator_randomization.value,
+        world.options.combat_logic_difficulty.value == CombatLogicDifficulty.NO_LOGIC.value or world.options.elevator_randomization.value,
         denied_elevators={
             MetroidPrimeArea.Phendrana_Drifts.value: {
                 RoomName.Transport_to_Magmoor_Caverns_West.value: [RoomName.Transport_to_Phazon_Mines_East.value, RoomName.Transport_to_Tallon_Overworld_East.value, "Chozo Ruins :" + RoomName.Transport_to_Tallon_Overworld_South.value, RoomName.Transport_to_Tallon_Overworld_West.value, RoomName.Transport_to_Phendrana_Drifts_South.value, RoomName.Transport_to_Phazon_Mines_West.value],
