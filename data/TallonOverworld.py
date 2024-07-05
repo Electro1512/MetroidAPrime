@@ -327,7 +327,7 @@ class TallonOverworldAreaData(AreaData):
             area=MetroidPrimeArea.Tallon_Overworld,
             doors={
                 0: DoorData(RoomName.Transport_to_Phazon_Mines_East, defaultLock=DoorLockType.Ice),
-                1: DoorData(RoomName.Great_Tree_Hall, defaultLock=DoorLockType.Ice),
+                1: DoorData(RoomName.Great_Tree_Hall, defaultLock=DoorLockType.Ice, rule_func=can_boost),
                 2: DoorData(RoomName.Hydro_Access_Tunnel, defaultLock=DoorLockType.Ice, exclude_from_rando=True),
             },
         ),
