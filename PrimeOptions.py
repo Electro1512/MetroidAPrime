@@ -114,7 +114,7 @@ class TrickDifficulty(Choice):
 
 class TrickAllowList(OptionList):
     """A list of tricks to explicitly allow in logic, regardless of selected difficulty. Values should match the trick name found here: https://github.com/Electro1512/MetroidAPrime/blob/main/data/Tricks.py#L55
-For example, "Crashed Frigate Scan Dash" or "Alcove Escape" """
+       For example, "Crashed Frigate Scan Dash" or "Alcove Escape" """
     default = []
 
 
