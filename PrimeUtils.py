@@ -5,20 +5,24 @@ import tempfile
 import zipfile
 import glob
 
+
 def setup_lib_path():
     """Takes the local dependencies and moves them out of the apworld zip file to a temporary directory so the DLLs can be loaded."""
     base_path = os.path.dirname(__file__)
     lib_path = os.path.join(base_path, "lib")
 
     if ".apworld" in __file__:
+
         zip_file_path = __file__
         while not zip_file_path.lower().endswith('.apworld'):
             zip_file_path = os.path.dirname(zip_file_path)
 
         # Cleanup step: Attempt to remove any other metroidprime_temp_lib_ folders not in use
         temp_base_dir = tempfile.gettempdir()
-        old_temp_dirs = glob.glob(os.path.join(temp_base_dir, "metroidprime_temp_lib_*"))
+        folder_name = "ap_metroidprime_temp_lib_"
+        old_temp_dirs = glob.glob(os.path.join(temp_base_dir, f"{folder_name}*"))
         for dir_path in old_temp_dirs:
+            print(f"Checking if {dir_path} is in use...")
             try:
                 shutil.rmtree(dir_path)
                 print(f"Removed old temporary directory: {dir_path}")
@@ -26,7 +30,7 @@ def setup_lib_path():
                 print(f"Could not remove {dir_path}: {e}")
 
         # Use tempfile.mkdtemp to create a new temporary directory with a prefix
-        temp_dir_path = tempfile.mkdtemp(prefix="ap_metroidprime_temp_lib_")
+        temp_dir_path = tempfile.mkdtemp(prefix=f"{folder_name}")
 
         with zipfile.ZipFile(zip_file_path, 'r') as zip_ref:
             lib_folder_path = "metroidprime/lib/"
