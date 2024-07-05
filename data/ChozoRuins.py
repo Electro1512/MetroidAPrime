@@ -123,7 +123,7 @@ class ChozoRuinsAreaData(AreaData):
                 3: DoorData(RoomName.Crossway_Access_South, defaultLock=DoorLockType.Ice, rule_func=can_power_beam),
                 4: DoorData(RoomName.Elder_Chamber, defaultLock=DoorLockType.Ice, rule_func=lambda state, player: can_power_beam(state, player) and can_bomb(state, player) and can_plasma_beam(state, player) and can_space_jump(state, player) and can_spider(state, player), tricks=[Tricks.hall_of_elders_elder_chamber_no_spider]),
             },
-            pickups=[PickupData('Chozo Ruins: Hall of the Elders', rule_func=lambda state, player: can_bomb(state, player) and can_spider(state, player) and can_ice_beam(state, player) and can_space_jump(state, player), tricks=[Tricks.hall_of_elders_item_no_spider]), ]),
+            pickups=[PickupData('Chozo Ruins: Hall of the Elders', rule_func=lambda state, player: can_power_beam(state, player) and can_bomb(state, player) and can_spider(state, player) and can_ice_beam(state, player) and can_space_jump(state, player), tricks=[Tricks.hall_of_elders_item_no_spider]), ]),
         RoomName.Hive_Totem: RoomData(
             doors={
                 0: DoorData(RoomName.Totem_Access),
@@ -348,7 +348,7 @@ class ChozoRuinsAreaData(AreaData):
             },
             pickups=[
                 PickupData('Chozo Ruins: Watery Hall - Scan Puzzle', rule_func=can_scan),
-                PickupData('Chozo Ruins: Watery Hall - Underwater', rule_func=lambda state, player: can_move_underwater(state, player) and can_space_jump(state, player), tricks=[Tricks.watery_hall_no_gravity, Tricks.watery_hall_no_gravity_no_space_jump]),
+                PickupData('Chozo Ruins: Watery Hall - Underwater', rule_func=lambda state, player: can_move_underwater(state, player) and can_space_jump(state, player) and can_flaahgra(state, player), tricks=[Tricks.watery_hall_no_gravity, Tricks.watery_hall_no_gravity_no_space_jump]),
             ]),
         RoomName.West_Furnace_Access: RoomData(doors={
             0: DoorData(RoomName.Energy_Core),

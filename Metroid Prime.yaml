@@ -8,23 +8,23 @@ requires:
   version: 0.4.6 # Version of Archipelago required for this yaml to work as expected.
 
 Metroid Prime:
+  start_inventory_from_pool:
+    # Start with these items and don't place them in the world.
+    # The game decides what the replacement items will be.
+    {}
+
   spring_ball:
     # Enables the spring ball when you receive Morph Ball Bombs. This will allow you to jump while in morph ball form by pressing up on the c stick, reducing the complexity of double bomb jumps.
     false: 50
     true: 0
 
-  required_artifacts: 12
+  required_artifacts:
+    12
     # Determines the amount of Artifacts needed to begin the endgame sequence.
     #
     # You can define additional values between the minimum and maximum values.
     # Minimum value is 1
     # Maximum value is 12
-
-
-  exclude_items:
-    # Replaces the following items with filler. INPUT AT YOUR OWN RISK. I cannot promise that removing
-    # progression items will not break logic. (for now please leave the default starting items in)
-    {}
 
   final_bosses:
     # Determines the final bosses required to beat the seed. Choose from Meta Ridley, Metroid Prime,
@@ -33,11 +33,6 @@ Metroid Prime:
     ridley: 0
     prime: 0
     none: 0
-
-  death_link:
-    # When you die, everyone dies. Of course the reverse is true too.
-    false: 50
-    true: 0
 
   artifact_hints:
     # If enabled, scanning the artifact stones in the temple will give a hint to their location. Additionally, hints will be pre collected in the client
@@ -61,22 +56,39 @@ Metroid Prime:
 
   staggered_suit_damage:
     # Configure how suit damage reduction is calculated
-    # Default: based on the strongest suit you have
-    # Progressive: based on the number of suits you have
-    # Additive: Individual suits provide their added damage reduction
+    #    Default: based on the strongest suit you have
+    #    Progressive: based on the number of suits you have
+    #    Additive: Individual suits provide their added damage reduction
     default: 0
     progressive: 50
     additive: 0
 
-  remove_hive_mecha:
-    # If enabled, the trigger for the Hive Mecha boss will be removed from the game
+  elevator_randomization:
+    # Randomizes the elevators between regions
     false: 50
     true: 0
 
-  fusion_suit:
-    # Whether to use the fusion suit or not
+  starting_room:
+    # Determines the starting room of the game. This will change your starting loadout depending on the room
+    #    normal: Start at the Talon Overworld Landing Site
+    #    safe: Start in rooms that will not require a significant combat challenge to progress from
+    #    buckle_up: Start in rooms that will pose a significant challenge to players with no energy tanks or suit upgrades. Fun for the aspiring masochist (less fun for their friends in BK).
+    normal: 50
+    safe: 0
+    buckle_up: 0
+
+  disable_starting_room_bk_prevention:
+    # Normally, starting rooms will give you a minimum set of items in order to have access to several checks immediately. This option disables that behavior as well as any pre filled items that would have been set.
+    #    WARNING: This will possibly require multiple attempts to generate, especially in solo worlds
     false: 50
     true: 0
+
+  combat_logic_difficulty:
+    # When enabled, the game will include energy tanks and the charge beam as requirements for certain combat heavy rooms
+    no_logic: 0
+    normal_logic: 0
+    minimal_logic: 0
+    normal: 50
 
   trick_difficulty:
     # Determines which tricks, if any, are required to complete the seed. This will affect the logic of the game.
@@ -87,12 +99,11 @@ Metroid Prime:
 
   trick_allow_list:
     # A list of tricks to explicitly allow in logic, regardless of selected difficulty. Values should match the trick name found here: https://github.com/Electro1512/MetroidAPrime/blob/main/data/Tricks.py#L55
-    # For example, ["Crashed Frigate Scan Dash", "Alcove Escape"]
+    # For example, "Crashed Frigate Scan Dash" or "Alcove Escape"
     []
 
   trick_deny_list:
-    # A list of tricks to explicitly deny in logic, regardless of selected difficulty. Values should match the trick name found here: https://github.com/Electro1512/MetroidAPrime/blob/main/data/Tricks.py#L55
-    # For example, ["Crashed Frigate Scan Dash", "Alcove Escape"]
+    # A list of tricks to explicitly deny in logic, regardless of selected difficulty. Values should match the trick name found here: https://github.com/Electro1512/MetroidAPrime/blob/main/data/Tricks.py#L55. For example, "Crashed Frigate Scan Dash" or "Alcove Escape"
     []
 
   flaahgra_power_bombs:
@@ -115,27 +126,18 @@ Metroid Prime:
     false: 50
     true: 0
 
-  starting_room:
-    # Determines the starting room of the game. This will change your starting loadout depending on the room
-    # - normal: Start at the Talon Overworld Landing Site
-    # - safe: Start in rooms that will not require a significant combat challenge to progress from
-    # - buckle_up: Start in rooms that will pose a significant challenge to players with no energy tanks or suit upgrades. Fun for the aspiring masochist (less fun for their friends in BK). NOTE: this will disable combat logic for bosses and labs
-    normal: 50
-    safe: 0
-    buckle_up: 0
+  remove_hive_mecha:
+    # If enabled, the trigger for the Hive Mecha boss will be removed from the game
+    false: 50
+    true: 0
 
-  combat_logic_difficulty:
-    # When enabled, the game will include energy tanks and the charge beam as requirements for certain combat heavy rooms
-    # no_logic: No combat logic will be enforced
-    # normal: Combat logic will be enforced, 5 energy tanks will be required for mines and 3 for the labs and bosses. Charge beam included
-    # minimal: Combat logic will be enforced, 2 energy tanks will be required for mines and 1 for the labs and bosses. Charge beam included
-    no_logic: 0
-    normal: 0
-    minimal: 50
-
+  fusion_suit:
+    # Whether to use the fusion suit or not
+    false: 50
+    true: 0
 
   hud_color:
-    # Determines the color of the HUD
+    # Determines the color of the HUD in the game. Will be overriden if any of the color overrides are greater than 0.
     default: 50
     red: 0
     green: 0
@@ -144,32 +146,98 @@ Metroid Prime:
     yellow: 0
     cyan: 0
     white: 0
-    black: 0
     orange: 0
     pink: 0
     lime: 0
     teal: 0
     purple: 0
-    brown: 0
-    grey: 0
 
-  # 0 to 255, sets the associated channel of the HUD color. If any are not 0 it will override the previously selected color
-  hud_color_red: 0
-  hud_color_green: 0
-  hud_color_blue: 0
+  hud_color_red:
+    # 0 to 255, sets the Red channel of the HUD color
+    #
+    # You can define additional values between the minimum and maximum values.
+    # Minimum value is 0
+    # Maximum value is 255
+    0: 50
+    random: 0
+    random-low: 0
+    random-high: 0
+
+  hud_color_green:
+    # 0 to 255, sets the Green channel of the HUD color
+    #
+    # You can define additional values between the minimum and maximum values.
+    # Minimum value is 0
+    # Maximum value is 255
+    0: 50
+    random: 0
+    random-low: 0
+    random-high: 0
+
+  hud_color_blue:
+    # 0 to 255, sets the Blue channel of the HUD color
+    #
+    # You can define additional values between the minimum and maximum values.
+    # Minimum value is 0
+    # Maximum value is 255
+    0: 50
+    random: 0
+    random-low: 0
+    random-high: 0
 
   randomize_suit_colors:
-    # Randomizes the colors of the suits. The selected suit color index will be shown on the pause menu under "Suits"
+    # Randomize the colors of the suits. Is overriden if any of the color overrides are greater than 0. The selected suit color index will be shown on the pause menu under "Suits
     false: 50
     true: 0
 
-  # Any integer between 0 and 359 (inclusive)
-  # Selects a different color set from the game's color wheel at each index.
-  power_suit_color: 0
-  varia_suit_color: 0
-  gravity_suit_color: 0
-  phazon_suit_color: 0
+  power_suit_color:
+    # Override the color of the Power Suit using an index from the game's color wheel
+    #
+    # You can define additional values between the minimum and maximum values.
+    # Minimum value is 0
+    # Maximum value is 359
+    0: 50
+    random: 0
+    random-low: 0
+    random-high: 0
 
+  varia_suit_color:
+    # Override the color of the Varia Suit using an index from the game's color wheel
+    #
+    # You can define additional values between the minimum and maximum values.
+    # Minimum value is 0
+    # Maximum value is 359
+    0: 50
+    random: 0
+    random-low: 0
+    random-high: 0
+
+  gravity_suit_color:
+    # Override the color of the Gravity Suit using an index from the game's color wheel
+    #
+    # You can define additional values between the minimum and maximum values.
+    # Minimum value is 0
+    # Maximum value is 359
+    0: 50
+    random: 0
+    random-low: 0
+    random-high: 0
+
+  phazon_suit_color:
+    # Override the color of the Phazon Suit using an index from the game's color wheel
+    #
+    # You can define additional values between the minimum and maximum values.
+    # Minimum value is 0
+    # Maximum value is 359
+    0: 50
+    random: 0
+    random-low: 0
+    random-high: 0
+
+  death_link:
+    # When you die, everyone dies. Of course the reverse is true too.
+    false: 50
+    true: 0
   progression_balancing:
     # A system that can move progression earlier, to try and prevent the player from getting stuck and bored early.
     # A lower setting means more getting stuck. A higher setting means less getting stuck.
@@ -224,36 +292,3 @@ Metroid Prime:
   item_links:
     # Share part of your item pool with other players.
     []
-
-  start_inventory_from_pool:
-    # Start with these items and don't place them in the world.
-    # The game decides what the replacement items will be.
-    {}
-
-# Q. What is this file?
-# A. This file contains options which allow you to configure your multiworld experience while allowing
-#    others to play how they want as well.
-#
-# Q. How do I use it?
-# A. The options in this file are weighted. This means the higher number you assign to a value, the
-#    more chances you have for that option to be chosen. For example, an option like this:
-#
-#    map_shuffle:
-#      on: 5
-#      off: 15
-#
-#    Means you have 5 chances for map shuffle to occur, and 15 chances for map shuffle to be turned
-#    off.
-#
-# Q. I've never seen a file like this before. What characters am I allowed to use?
-# A. This is a .yaml file. You are allowed to use most characters.
-#    To test if your yaml is valid or not, you can use this website:
-#        http://www.yamllint.com/
-#    You can also verify that your Archipelago options are valid at this site:
-#        https://archipelago.gg/check
-
-# Your name in-game, limited to 16 characters.
-#     {player} will be replaced with the player's slot number.
-#     {PLAYER} will be replaced with the player's slot number, if that slot number is greater than 1.
-#     {number} will be replaced with the counter value of the name.
-#     {NUMBER} will be replaced with the counter value of the name, if the counter value is greater than 1.

@@ -1,4 +1,4 @@
-import random
+from logging import debug, info
 from typing import Any, Dict, List, Optional
 import os
 import typing
@@ -12,6 +12,7 @@ from .PrimeOptions import MetroidPrimeOptions, VariaSuitColorOverride
 from .Locations import every_location
 from .Regions import create_regions
 from .config import make_config
+from .data.Transports import default_elevator_mappings, get_random_elevator_mapping
 from worlds.AutoWorld import World, WebWorld
 import settings
 from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess
@@ -79,12 +80,18 @@ class MetroidPrimeWorld(World):
     }
     starting_room_data: Optional[StartRoomData] = None
     prefilled_item_map: Dict[str, str] = {}  # Dict of location name to item name
+    elevator_mapping: Dict[str, Dict[str, str]] = default_elevator_mappings
 
     def get_filler_item_name(self) -> str:
         return SuitUpgrade.Missile_Expansion.value
 
     def generate_early(self) -> None:
         init_starting_room_data(self)
+        info(f"{self.multiworld.get_player_name(self.player)}'s Metroid Prime starting room data: {self.starting_room_data.name}")
+        if self.options.elevator_randomization.value:
+            self.elevator_mapping = get_random_elevator_mapping(self)
+            info(f"{self.multiworld.get_player_name(self.player)}'s Metroid Prime elevator_mapping data: {self.elevator_mapping.__str__()}")
+        self.options.elevator_mapping.value = self.elevator_mapping
 
     def create_regions(self) -> None:
         boss_selection = int(self.options.final_bosses)
@@ -184,7 +191,7 @@ class MetroidPrimeWorld(World):
             options: List[VariaSuitColorOverride] = [self.options.power_suit_color, self.options.varia_suit_color, self.options.gravity_suit_color, self.options.phazon_suit_color]
             for option in options:
                 if option.value == 0:
-                    option.value = random.randint(1, 35) * 10
+                    option.value = self.random.randint(1, 35) * 10
 
         import json
         configjson = make_config(self)

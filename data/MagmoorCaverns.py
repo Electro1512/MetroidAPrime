@@ -107,8 +107,8 @@ class MagmoorCavernsAreaData(AreaData):
             1: DoorData(RoomName.Monitor_Station, rule_func=lambda state, player: can_heat(state, player) and can_bomb(state, player)),
         }, pickups=[PickupData('Magmoor Caverns: Transport Tunnel A', rule_func=lambda state, player: can_heat(state, player) and can_bomb(state, player))], area=MetroidPrimeArea.Magmoor_Caverns),
         RoomName.Transport_Tunnel_B: RoomData(doors={
-            0: DoorData(RoomName.Transport_to_Tallon_Overworld_West, rule_func=lambda state, player: can_heat(state, player) and (can_morph_ball(state, player) or has_energy_tanks(state, player, 3))),
-            1: DoorData(RoomName.Fiery_Shores, rule_func=lambda state, player: can_heat(state, player) and (can_morph_ball(state, player) or has_energy_tanks(state, player, 3))),
+            0: DoorData(RoomName.Transport_to_Tallon_Overworld_West, rule_func=lambda state, player: can_heat(state, player) and can_morph_ball(state, player), tricks=[Tricks.transport_tunnel_b_damage_boost]),
+            1: DoorData(RoomName.Fiery_Shores, rule_func=lambda state, player: can_heat(state, player) and can_morph_ball(state, player), tricks=[Tricks.transport_tunnel_b_damage_boost]),
         }, area=MetroidPrimeArea.Magmoor_Caverns),
         RoomName.Transport_Tunnel_C: RoomData(doors={
             0: DoorData(RoomName.Transport_to_Phendrana_Drifts_South, defaultLock=DoorLockType.Wave),
@@ -129,7 +129,7 @@ class MagmoorCavernsAreaData(AreaData):
             ]), ]),
         RoomName.Twin_Fires_Tunnel: RoomData(doors={
             0: DoorData(RoomName.Twin_Fires, rule_func=lambda state, player: can_heat(state, player) and can_spider(state, player), tricks=[Tricks.twin_fires_tunnel_no_spider, Tricks.cross_twin_fires_suitless]),
-            1: DoorData(RoomName.Transport_to_Tallon_Overworld_West, rule_func=lambda state, player: can_heat(state, player) and (can_spider(state, player) or has_energy_tanks(state, player, 4 and (can_move_underwater(state, player) or can_space_jump(state, player))))),  # Can't jump out of the lava without gravity or sj
+            1: DoorData(RoomName.Transport_to_Tallon_Overworld_West, rule_func=lambda state, player: can_heat(state, player) and (can_spider(state, player) or (can_move_underwater(state, player) or can_space_jump(state, player)))),  # Can't jump out of the lava without gravity or sj
         }),
         RoomName.Twin_Fires: RoomData(doors={
             0: DoorData(RoomName.North_Core_Tunnel, defaultLock=DoorLockType.Wave, rule_func=lambda state, player: (can_space_jump(state, player) and has_energy_tanks(state, player, 2)) or can_grapple(state, player)),

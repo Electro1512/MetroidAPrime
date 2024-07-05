@@ -1,6 +1,6 @@
 
 from enum import Enum
-from Options import DeathLink, DefaultOnToggle, OptionList, TextChoice, Toggle, Range, ItemDict, StartInventoryPool, Choice, PerGameCommonOptions, Visibility
+from Options import DeathLink, DefaultOnToggle, OptionDict, OptionList, TextChoice, Toggle, Range, ItemDict, StartInventoryPool, Choice, PerGameCommonOptions, Visibility
 from dataclasses import dataclass
 from .data.StartRoomData import StartRoomDifficulty
 from .LogicCombat import CombatLogicDifficulty
@@ -79,9 +79,9 @@ class NonVariaHeatDamage(DefaultOnToggle):
 
 class StaggeredSuitDamage(Choice):
     """Configure how suit damage reduction is calculated
-    Default: based on the strongest suit you have
-    Progressive: based on the number of suits you have
-    Additive: Individual suits provide their added damage reduction
+       Default: based on the strongest suit you have
+       Progressive: based on the number of suits you have
+       Additive: Individual suits provide their added damage reduction
     """
     display_name = "Staggered Suit Damage"
     option_default = "Default"
@@ -119,8 +119,7 @@ class TrickAllowList(OptionList):
 
 
 class TrickDenyList(OptionList):
-    """A list of tricks to explicitly deny in logic, regardless of selected difficulty. Values should match the trick name found here: https://github.com/Electro1512/MetroidAPrime/blob/main/data/Tricks.py#L55
-       For example, "Crashed Frigate Scan Dash" or "Alcove Escape" """
+    """A list of tricks to explicitly deny in logic, regardless of selected difficulty. Values should match the trick name found here: https://github.com/Electro1512/MetroidAPrime/blob/main/data/Tricks.py#L55. For example, "Crashed Frigate Scan Dash" or "Alcove Escape" """
     default = []
 
 
@@ -150,14 +149,22 @@ class RemoveThermalRequirements(Toggle):
 
 class StartingRoom(Choice):
     """Determines the starting room of the game. This will change your starting loadout depending on the room
-  normal: Start at the Talon Overworld Landing Site
-  safe: Start in rooms that will not require a significant combat challenge to progress from
-  buckle_up: Start in rooms that will pose a significant challenge to players with no energy tanks or suit upgrades. Fun for the aspiring masochist (less fun for their friends in BK).
+       normal: Start at the Talon Overworld Landing Site
+       safe: Start in rooms that will not require a significant combat challenge to progress from
+       buckle_up: Start in rooms that will pose a significant challenge to players with no energy tanks or suit upgrades. Fun for the aspiring masochist (less fun for their friends in BK).
     """
     option_normal = StartRoomDifficulty.Normal.value
     option_safe = StartRoomDifficulty.Safe.value
     option_buckle_up = StartRoomDifficulty.Buckle_Up.value
     default = StartRoomDifficulty.Normal.value
+
+
+class DisableStartingRoomBKPrevention(Toggle):
+    """Normally, starting rooms will give you a minimum set of items in order to have access to several checks immediately. This option disables that behavior as well as any pre filled items that would have been set.
+       WARNING: This will possibly require multiple attempts to generate, especially in solo worlds
+"""
+    display_name = "Disable Starting Room BK Prevention"
+    default = False
 
 
 class StartingRoomName(TextChoice):
@@ -170,10 +177,22 @@ class StartingRoomName(TextChoice):
 class CombatLogicDifficultyOption(Choice):
     """When enabled, the game will include energy tanks and the charge beam as requirements for certain combat heavy rooms"""
     display_name = "Combat Logic Difficulty"
+    default = CombatLogicDifficulty.NORMAL.value
     option_no_logic = CombatLogicDifficulty.NO_LOGIC
-    option_normal = CombatLogicDifficulty.NORMAL
-    option_minimal = CombatLogicDifficulty.MINIMAL
-    default = 'normal'
+    option_normal_logic = CombatLogicDifficulty.NORMAL
+    option_minimal_logic = CombatLogicDifficulty.MINIMAL
+
+
+class ElevatorRandomization(Toggle):
+    """Randomizes the elevators between regions"""
+    display_name = "Elevator Randomization"
+    default = False
+
+
+class ElevatorMapping(OptionDict):
+    """Which elevators go to which regions, only visible for spoiler"""
+    visibility = Visibility.spoiler
+    default = {}
 
 
 # COSMETIC OPTIONS
@@ -266,26 +285,28 @@ class MetroidPrimeOptions(PerGameCommonOptions):
     required_artifacts: RequiredArtifacts
     exclude_items: ExcludeItems
     final_bosses: FinalBosses
-    death_link: DeathLink
     artifact_hints: ArtifactHints
     missile_launcher: MissileLauncher
     main_power_bomb: MainPowerBomb
     non_varia_heat_damage: NonVariaHeatDamage
     staggered_suit_damage: StaggeredSuitDamage
-    remove_hive_mecha: RemoveHiveMecha
-    fusion_suit: FusionSuit
+    elevator_randomization: ElevatorRandomization
+    elevator_mapping: ElevatorMapping
+    starting_room: StartingRoom
+    starting_room_name: StartingRoomName
+    disable_starting_room_bk_prevention: DisableStartingRoomBKPrevention
+    combat_logic_difficulty: CombatLogicDifficultyOption
     trick_difficulty: TrickDifficulty
     trick_allow_list: TrickAllowList
     trick_deny_list: TrickDenyList
+    flaahgra_power_bombs: FlaahgraPowerBombs
     backwards_lower_mines: BackwardsLowerMines
     remove_xray_requirements: RemoveXrayRequirements
     remove_thermal_requirements: RemoveThermalRequirements
-    starting_room: StartingRoom
-    starting_room_name: StartingRoomName
-    combat_logic_difficulty: CombatLogicDifficultyOption
-    flaahgra_power_bombs: FlaahgraPowerBombs
+    remove_hive_mecha: RemoveHiveMecha
 
     # Cosmetic options
+    fusion_suit: FusionSuit
     hud_color: HudColorOption
     hud_color_red: HudColorOverrideRed
     hud_color_green: HudColorOverrideGreen
@@ -295,3 +316,5 @@ class MetroidPrimeOptions(PerGameCommonOptions):
     varia_suit_color: VariaSuitColorOverride
     gravity_suit_color: GravitySuitColorOverride
     phazon_suit_color: PhazonSuitColorOverride
+
+    death_link: DeathLink

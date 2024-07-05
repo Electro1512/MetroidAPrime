@@ -3,7 +3,7 @@ from enum import Enum
 from typing import Callable, Dict
 
 from BaseClasses import CollectionState
-from ..Logic import can_bomb, can_boost, can_charge_beam, can_defeat_sheegoth, can_grapple, can_ice_beam, can_infinite_speed, can_melt_ice, can_missile, can_morph_ball, can_move_underwater, can_plasma_beam, can_power_beam, can_power_bomb, can_scan, can_space_jump, can_spider, can_super_missile, can_thermal, can_wave_beam, can_xray, has_energy_tanks
+from ..Logic import can_bomb, can_boost, can_charge_beam, can_defeat_sheegoth, can_grapple, can_heat, can_ice_beam, can_infinite_speed, can_melt_ice, can_missile, can_morph_ball, can_move_underwater, can_plasma_beam, can_power_beam, can_power_bomb, can_scan, can_space_jump, can_spider, can_super_missile, can_thermal, can_wave_beam, can_xray, has_energy_tanks
 from ..data.RoomNames import RoomName
 
 
@@ -127,6 +127,8 @@ class Tricks:
 
     fiery_shores_morphball_track_sj = TrickInfo("Fiery Shores Morphball Track SJ", "Reach the Morph Ball Track in Fiery Shores using the space jump boots", TrickDifficulty.Easy, can_space_jump)
 
+    transport_tunnel_b_damage_boost = TrickInfo("Transport Tunnel B Damage Boost", "Cross the tunnel through the lava rather than using the morph ball track", TrickDifficulty.Easy, can_heat)
+
     twin_fires_tunnel_no_spider = TrickInfo("Twin Fires Tunnel No Spider Ball", "Traverse the Twin Fires Tunnel by using an R Jump and geometrey near the transport door", TrickDifficulty.Medium, lambda state, player: can_bomb(state, player) and can_space_jump(state, player))
     cross_twin_fires_suitless = TrickInfo("Cross Twin Fires Suitless", "Removes the suit requirement when crossing this room. Twin Fires Tunnel is the only room in late Magmoor that is superheated. This trick automatically assumes you have 2 Energy Tanks and can cross without Spider Ball, since it cannot be used while you are taking heat damage.", TrickDifficulty.Medium, lambda state, player: can_space_jump(state, player) and has_energy_tanks(state, player, 2))
 
@@ -184,4 +186,5 @@ class Tricks:
     metroid_quarantine_b_no_spider_grapple = TrickInfo("Metroid Quarantine B No Spider Grapple", "You can reach the other side of the quarantine by using a slope jump and an r jump", TrickDifficulty.Medium, lambda state, player: lambda state, player: can_space_jump(state, player) and can_scan(state, player))
 
     phazon_processing_center_item_no_spider = TrickInfo("Phazon Processing Center Item No Spider Ball", "You can abuse standable collision such as the morph track and the scaffolding to access the top of the room without needing Spider Ball.", TrickDifficulty.Easy, lambda state, player: can_space_jump(state, player) and can_power_bomb(state, player))
+    phazon_processing_center_no_phazon_suit = TrickInfo("Phazon Processing Center No Phazon Suit", "Reach the elite quarters by damage boosting through the phazon without the suit", TrickDifficulty.Easy, lambda state, player: True)
     climb_phazon_processing_center_no_spider = TrickInfo("Phazon Processing Center No Spider Ball", "You can abuse standable collision such as the morph track and the scaffolding to access the top of the room without needing Spider Ball.", TrickDifficulty.Easy, can_space_jump)
