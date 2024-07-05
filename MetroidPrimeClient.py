@@ -23,7 +23,7 @@ class MetroidPrimeCommandProcessor(ClientCommandProcessor):
     def __init__(self, ctx: CommonContext):
         super().__init__(ctx)
 
-    def _cmd_message(self, *args):
+    def _cmd_test_message(self, *args):
         """Send a message to the game interface."""
         self.ctx.notification_manager.queue_notification(' '.join(map(str, args)))
 
