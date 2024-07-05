@@ -3,6 +3,110 @@
   "inputIso": "prime.iso",
   "outputIso": "prime_out.iso",
   "forceVanillaLayout": false,
+  "strg": {
+    "1343145632": [
+      "[ Log Book ]",
+      "Pirate Data",
+      "Chozo Lore",
+      "Creatures",
+      "Research",
+      "Artifacts",
+      "LOG BOOK",
+      "OPTIONS",
+      "INVENTORY",
+      "[ Inventory ]",
+      "Arm Cannon",
+      "Morph Ball",
+      "Suits",
+      "Visors",
+      "Secondary Items",
+      "[ Options ]",
+      "Visor",
+      "Display",
+      "Sound",
+      "Controller",
+      "Quit Game",
+      "Visor Opacity",
+      "Helmet Opacity",
+      "HUD Lag",
+      "Hint System",
+      "Screen Brightness",
+      "Screen Offset X",
+      "Screen Offset Y",
+      "Screen Stretch",
+      "SFX Volume",
+      "Music Volume",
+      "Sound Mode",
+      "Reverse Y-Axis",
+      "Rumble",
+      "Swap Beam Controls",
+      "Restore Defaults",
+      "Power Beam",
+      "Ice Beam",
+      "Wave Beam",
+      "Plasma Beam",
+      "Phazon Beam",
+      "Super Missile",
+      "Ice Spreader",
+      "Wavebuster",
+      "Flamethrower",
+      "Phazon Combo",
+      "Morph Ball",
+      "Boost Ball",
+      "Spider Ball",
+      "Morph Ball Bomb",
+      "Power Bomb",
+      "Power Suit",
+      "Varia Suit",
+      "Gravity Suit",
+      "Phazon Suit",
+      "Energy Tank",
+      "Combat Visor",
+      "Scan Visor",
+      "X-Ray Visor",
+      "Thermal Visor",
+      "Space Jump Boots",
+      "Grapple Beam",
+      "Missile Launcher",
+      "Charge Beam",
+      "Beam Combo",
+      "[??????]\n\n",
+      "The &main-color=#89D6FF;Combat Visor&main-color=#FF6705B3; is your default Visor. It provides you with a Heads-Up Display (HUD) containing radar, mini-map, lock-on reticules, threat assessment, energy gauge, and Missile count.\n\nPress &image=SA,3.0,0.6,0.85,F13452F8,C042EC91; to select the Combat Visor.\n\n&main-color=#89D6FF;Samus's Notes:&main-color=#FF6705B3;\nIcons for the Arm Cannons you possess are shown in the lower-right corner of the Combat Visor.\n\nIcons for the Visors you possess are shown in the lower-left corner of the Combat Visor.\n\n",
+      "The &main-color=#89D6FF;Scan Visor&main-color=#FF6705B3; is used to collect data. Some devices will activate when scanned.\n\nPress &image=SA,3.0,0.6,0.85,F13452F8,B306E26F; to select the Scan Visor. Move the Visor over targets with this symbol &image=SI,0.70,0.68,FD41E145;, then press and hold &image=SA,3.0,1.0,1.0,46434ED3,34E79314; to scan. \n\nUse &image=SI,0.6,0.85,F13452F8; to select another available Visor or press &image=SI,0.70,0.68,05AF9CAA; to turn the Visor off.\n\n&main-color=#89D6FF;Samus's Notes:&main-color=#FF6705B3;\nMission-critical scan targets &image=SI,0.70,0.68,BCE843F2; will be red in color. \n\nScanning enemies with this Visor can reveal their vulnerabilities.\n\nYou will be unable to fire any weapons while the Scan Visor is active.\n\nScanned data vital to the success of the mission is downloaded and stored in the &main-color=#89D6FF;Log Book&main-color=#FF6705B3; section of the Pause Screen. \n\nPress &image=A,3.0,08A2E4B9,F2425B21; on this screen to access the Log Book.\n",
+      "The &main-color=#89D6FF;X-Ray Visor&main-color=#FF6705B3; can see through certain types of materials. \n\nPress &image=SA,3.0,0.6,0.85,F13452F8,8ADA8184; to select the X-Ray Visor.\n\n&main-color=#89D6FF;Samus's Notes:&main-color=#FF6705B3;\nThe X-Ray Visor can reveal invisible items, areas, and enemies.\n\nRobotic enemies jam the X-Ray Visor's frequency. Eliminate them to restore function to the Visor.\n",
+      "The &main-color=#89D6FF;Thermal Visor&main-color=#FF6705B3; allows you to see in the infrared spectrum. Hot objects are bright in the Visor, while colder ones are dim.\n\nPress &image=SA,3.0,0.6,0.85,F13452F8,5F556002; to select the Thermal Visor.\n\n&main-color=#89D6FF;Samus's Notes:&main-color=#FF6705B3;\nThe Thermal Visor will show the weak points of certain foes.\n\nUse the Thermal Visor to see in total darkness and poor weather conditions. \n\nBrightly lit areas, explosions, and intense heat can impair the Thermal Visor.\n\nEnemies with temperatures close to their surroundings will be tough to spot with this Visor.\n",
+      "The &main-color=#89D6FF;Power Beam&main-color=#FF6705B3; is the default Arm Cannon. It has the best rate of fire.\n\nPress &image=SA,3.0,0.6,0.85,2A13C23E,A91A7703; to select the Power Beam as your active weapon.\n\n&main-color=#89D6FF;Samus's Notes:&main-color=#FF6705B3;\nThe Power Beam can be used to open Blue Doors.\n\nIf you see your shots ricochet, cease fire. The Power Beam is not working against that target.\n\nYou can use the Power Beam to quickly clear an area of weak foes.\n",
+      "\nThe &main-color=#89D6FF;Super Missile&main-color=#FF6705B3; is the &main-color=#89D6FF;Power&main-color=#FF6705B3; Charge Combo.\n\n&main-color=#89D6FF;Samus's Notes:&main-color=#FF6705B3;\nSuper Missile is a Single Shot Charge Combo. Each shot costs 5 Missiles.\n\nSuper Missiles can destroy objects made of &main-color=#89D6FF;Cordite&main-color=#FF6705B3;.\n",
+      "The &main-color=#89D6FF;Ice Beam&main-color=#FF6705B3; can freeze enemies solid. Hits from the Ice Beam may also slow foes down.  \n\nPress &image=SA,3.0,0.6,0.85,2A13C23E,12A12131; to select the Ice Beam as your active weapon.\n\n&main-color=#89D6FF;Samus's Notes:&main-color=#FF6705B3;\nUse the Ice Beam to open White Doors.\n\nThe Ice Beam is quite effective against fire-based creatures.\n\nCharge the Ice Beam to increase the time an enemy will stay frozen when hit.\n\nSome frozen enemies can be shattered by Missile hits.\n",
+      "\nThe &main-color=#89D6FF;Ice Spreader&main-color=#FF6705B3; is the &main-color=#89D6FF;Ice&main-color=#FF6705B3; Charge Combo. It can freeze targets in a wide area.\n\n&main-color=#89D6FF;Samus's Notes:&main-color=#FF6705B3;\nIce Spreader is a Single Shot Charge Combo. Each shot costs 10 Missiles.\n\nIce Spreader is limited against aerial targets.\n",
+      "The&main-color=#89D6FF; Wave Beam&main-color=#FF6705B3; fires powerful electric bolts. This weapon has a limited homing capability as well.\n\nPress &image=SA,3.0,0.6,0.85,2A13C23E,CD7B1ACA; to select the Wave Beam as your active weapon.\n  \n&main-color=#89D6FF;Samus's Notes:&main-color=#FF6705B3;\nFire the Wave Beam to open Purple Doors.\n\nThe Wave Beam won't home in on targets without a lock-on. Press and hold &image=SA,3.0,1.0,1.0,46434ED3,34E79314; to lock on.\n\nCharge the Wave Beam to fire a fierce electric blast. Enemies struck by this blast will be enveloped in electrical energy for a few moments.\n",
+      "\nThe &main-color=#89D6FF;Wavebuster&main-color=#FF6705B3; is the &main-color=#89D6FF;Wave&main-color=#FF6705B3; Charge Combo. This potent blast auto-seeks targets in the area.\n\n&main-color=#89D6FF;Samus's Notes:&main-color=#FF6705B3;\nThe Wavebuster is a Sustained Fire Charge Combo. It costs 10 Missiles to activate, then 5 Missiles per second afterward.\n\nThe Wavebuster will seek enemies without a lock-on.\n\n\n\n\n\n\n\n\n\n\n",
+      "The&main-color=#89D6FF; Plasma Beam&main-color=#FF6705B3; fires streams of molten energy. This Beam can ignite flammable objects and enemies.\n\nPress &image=SA,3.0,0.6,0.85,A9798329,2A13C23E; to select the Plasma Beam as your active weapon.\n  \n&main-color=#89D6FF;Samus's Notes:&main-color=#FF6705B3;\nFire the Plasma Beam to open Red Doors.\n\nThe Plasma Beam is very effective against cold-based enemies.\n\nCharge the Plasma Beam to fire a sphere of plasma. Enemies struck by this blast will be engulfed in flames for a few moments.\n",
+      "\nThe &main-color=#89D6FF;Flamethrower&main-color=#FF6705B3; is the &main-color=#89D6FF;Plasma&main-color=#FF6705B3; Charge Combo. You can sweep its stream of flame across multiple targets.\n\n&main-color=#89D6FF;Samus's Notes:&main-color=#FF6705B3;\nFlamethrower is a Sustained Fire Charge Combo. It costs 10 Missiles to activate, then 5 Missiles per second afterward.\n\nThe Flamethrower is most effective against multiple targets in an area.\n",
+      "The viral corruption of the Power Suit has altered the Arm Cannon as well. It is now capable of firing the powerful&main-color=#89D6FF; Phazon Beam&main-color=#FF6705B3;.\n \n&main-color=#89D6FF;Samus's Notes:&main-color=#FF6705B3;\nThe Phazon Beam appears to trigger in the presence of high concentrations of Phazon.\n\nRegular Arm Cannon functions return when Phazon is not present.\n\nThe Charge Beam does not function when the Phazon Beam is active.\n",
+      "The &main-color=#89D6FF;Space Jump Boots&main-color=#FF6705B3; increase the leaping capability of the Power Suit through the use of boot-mounted thrusters.  \n\nPress &image=SI,0.70,0.68,833BEE04; to jump, then press &image=SI,0.70,0.68,833BEE04; again during the jump to use the Space Jump Boots.\n\n\n&main-color=#89D6FF;Samus's Notes:&main-color=#FF6705B3;\nTiming is important when using the Space Jump Boots. \n\nExperiment to discover ways to increase the height and length of your jumps.\n",
+      "The &main-color=#89D6FF;Grapple Beam&main-color=#FF6705B3; allows you to swing back and forth from special points in the environment.  \n\nGrapple Points appear in your Visor as a &image=SI,0.70,0.68,2702E5E0; icon. \n\nPress and hold &image=SA,3.0,1.0,1.0,46434ED3,34E79314; to fire the Grapple Beam. \n\nHold &image=SA,3.0,1.0,1.0,46434ED3,34E79314; down to stay connected; let go to release.\n\n&main-color=#89D6FF;Samus's Notes:&main-color=#FF6705B3;\nThe Grapple Beam can be used to cross large gaps.\n\nUse the &image=SA,7.0,0.6,1.0,C6C483AC,4050F102,8B0C22A7,4050F102,3A446C61,BCD01ECF,778CCD6A,BCD01ECF; while grappling to swing in different directions.\n",
+      "The &main-color=#89D6FF;Missile Launcher&main-color=#FF6705B3; adds ballistic weapon capability to the Arm Cannon.\n\nPress &image=SI,1.0,0.68,EA2A1C5C; to fire the Missile Launcher. Press &image=SI,0.70,0.68,05AF9CAA; to return to Beam mode.\n\n&main-color=#89D6FF;Samus's Notes:&main-color=#FF6705B3;\nMissiles fired with a lock-on will seek their targets.\n\nMissiles can destroy objects made from &main-color=#89D6FF;Radion&main-color=#FF6705B3; or &main-color=#89D6FF;Brinstone&main-color=#FF6705B3;.\n\nThere are Charge Combo enhancements scattered throughout the environment. They use the Missile Launcher and the Charge Beam in tandem to fire more effective blasts.\n\nEach Missile Expansion you find will increase the number of Missiles you can carry by 5.\n",
+      "The &main-color=#89D6FF;Power Suit&main-color=#FF6705B3; is an advanced Chozo exoskeleton modified for use by Samus Aran.  \n\n&main-color=#89D6FF;Samus's Notes:&main-color=#FF6705B3;\nThe Power Suit provides life-support functions and is well shielded from attack.  \n  \nThe modular nature of the Power Suit allows for the addition of weapons, Visors, and other gear as needed.\n\nThe Power Suit's shielding loses energy with each hit; collect energy when possible to keep the shielding charged.\n",
+      "The &main-color=#89D6FF;Varia Suit&main-color=#FF6705B3; adds increased heat resistance to the Power Suit.\n\n&main-color=#89D6FF;Samus's Notes:&main-color=#FF6705B3;\nThis modification increases your defensive shielding.\n\nWhile the Varia Suit can handle higher temperatures than normal, extreme heat sources and heat-based attacks will still cause damage.",
+      "The &main-color=#89D6FF;Gravity Suit&main-color=#FF6705B3; eliminates the effects of liquid on movement.\n\n&main-color=#89D6FF;Samus's Notes:&main-color=#FF6705B3;\nThis modification improves your defensive shielding.\n\nThe Gravity Suit allows for improved movement in liquid environments, but does not reduce damage delivered when exposed to hazardous fluids.\n\nVisor modifications in the Gravity Suit make it easier to see underwater.",
+      "The Power Suit has been corrupted by viral exposure, turning it into the &main-color=#89D6FF;Phazon Suit&main-color=#FF6705B3;. \n\n&main-color=#89D6FF;Samus's Notes:&main-color=#FF6705B3;\nThe viral corruption of the Power Suit has some beneficial side effects. \n\nThe suit is now resistant to the effects of Blue Phazon. The suit is not invulnerable to the effects of all Phazon, however.\n\nIn addition to Phazon resistance, the corruption has dramatically increased defensive shielding levels.",
+      "The &main-color=#89D6FF;Energy Tanks&main-color=#FF6705B3; increase the power level available to your Suit's defense screens.\n\n&main-color=#89D6FF;Samus's Notes:&main-color=#FF6705B3;\nEach Energy Tank increases your Suit's energy by 100 units. The more energy your Suit has, the longer you can stay alive.\n\nYou can fully recharge your Energy Tanks at Save Stations. Your gunship has this capability as well.",
+      "The &main-color=#89D6FF;Morph Ball&main-color=#FF6705B3; changes your Suit into a compact, mobile sphere.  \n\nPress &image=SI,0.70,1.0,2176CFF9; to enter Morph Ball mode.\n\nPress &image=SI,0.70,1.0,2176CFF9; again to leave Morph Ball mode.\n\n&main-color=#89D6FF;Samus's Notes:&main-color=#FF6705B3;\nLike the Power Suit, the Morph Ball is modular. There are several modifications that can be added to improve performance.",
+      "The &main-color=#89D6FF;Boost Ball&main-color=#FF6705B3; can be used to increase the Morph Ball's speed for short periods.\n\nPress and hold &image=SI,0.70,0.68,833BEE04; to charge, then release &image=SI,0.70,0.68,833BEE04; to trigger a quick boost of speed.\n \n&main-color=#89D6FF;Samus's Notes:&main-color=#FF6705B3;\nWhen charging, the longer you hold &image=SI,0.70,0.68,833BEE04;, the longer (and faster) the Boost Charge will be.\n\nThroughout the environment you will encounter U-shaped channels known as half-pipes. Using the Boost Ball in these areas will let you reach higher places. \n\nBuild a charge as you descend in the half-pipe, then trigger the Boost as you ascend the other side. This will give you the speed and momentum you need to reach new heights.\n",
+      "The &main-color=#89D6FF;Spider Ball&main-color=#FF6705B3; allows you to move the Morph Ball along magnetic rails.\n\nPress and hold &image=A,3.0,08A2E4B9,F2425B21; to activate the Spider Ball ability.\n \n&main-color=#89D6FF;Samus's Notes:&main-color=#FF6705B3;\nFollow the magnetic rails to explore new areas.\n\nThe Morph Ball Bomb can be used to trigger a Bomb Jump while attached to a rail.\n\n\n",
+      "The &main-color=#89D6FF;Morph Ball Bomb&main-color=#FF6705B3; is the default weapon for the Morph Ball.\n\nPress &image=SI,0.70,0.68,05AF9CAA; when in Morph Ball mode to drop a Morph Ball Bomb. \n\n&main-color=#89D6FF;Samus's Notes:&main-color=#FF6705B3;\nThe Morph Ball Bomb can be used to break cracked walls and activate certain devices.\n\nIf the Morph Ball is near a Morph Ball Bomb when it explodes, it will be popped a short distance into the air. This is called a&main-color=#89D6FF; Bomb Jump&main-color=#FF6705B3;. \n\nWhen a Morph Ball Bomb explodes, it must be close to the enemy to be effective.\n\nThe Morph Ball Bomb can easily break items made of&main-color=#89D6FF; Sandstone&main-color=#FF6705B3; or&main-color=#89D6FF; Talloric Alloy&main-color=#FF6705B3;.\n",
+      "The &main-color=#89D6FF;Power Bomb&main-color=#FF6705B3; is the strongest Morph Ball weapon.\n\nPress &image=SI,1.0,0.68,EA2A1C5C; when in Morph Ball mode to drop a Power Bomb.  \n\n&main-color=#89D6FF;Samus's Notes:&main-color=#FF6705B3;\nPower Bombs do not have unlimited ammo. Use them wisely.\n\nThe Power Bomb can destroy many materials, including &main-color=#89D6FF;Bendezium&main-color=#FF6705B3;.\n\nEach Power Bomb Expansion you find will increase the number of Power Bombs you can carry by 1.\n",
+      "The &main-color=#89D6FF;Charge Beam&main-color=#FF6705B3; allows you to increase the damage and effectiveness of the Arm Cannon.\n\nPress and hold &image=SI,0.70,0.68,05AF9CAA; to charge the Arm Cannon, then release &image=SI,0.70,0.68,05AF9CAA; to fire.\n\n&main-color=#89D6FF;Samus's Notes:&main-color=#FF6705B3;\nThe Charge Beam has a limited 'tractor beam' capacity.  Use it to pull small objects to you.\n\nThere are Charge Combo enhancements scattered through the environment.  They use the Charge Beam and the Missile Launcher in tandem to fire more effective blasts.\n\nThe Charge Beam increases the performance of each Arm Cannon mode.\n",
+      "The &main-color=#89D6FF;Charge Combos&main-color=#FF6705B3; allow you to fire the Missile Launcher and Arm Cannon together. The combined attacks are stronger than normal blasts.\n\nThe Arm Cannon must be charged to use a Charge Combo.\n\nWhen your Arm Cannon is charged, press &image=SI,1.0,0.68,EA2A1C5C; to fire the Charge Combo.\n\n&main-color=#89D6FF;Samus's Notes:&main-color=#FF6705B3;\nThe &main-color=#89D6FF;Single Shot&main-color=#FF6705B3; Charge Combos fire one blast at a time. Each shot uses a number of Missiles.\n\n&main-color=#89D6FF;Sustained Fire&main-color=#FF6705B3; Charge Combos will fire as long as you have Missiles. Hold &image=SI,0.70,0.68,05AF9CAA; down after you fire. It takes ten Missiles to trigger these Charge Combos, then five Missiles per second afterward.\n\nPage down for information on the individual Charge Combos. \n\nThis data will download to the Log Book after each Charge Combo is acquired. \n\n\n\n\n\n\n\n\n\n",
+      "On",
+      "Off",
+      "Mono",
+      "Stereo",
+      "Dolby",
+      "Zoom"
+    ]
+  },
   "preferences": {
     "forceFusion": false,
     "cacheDir": "cache",
@@ -12,8 +116,19 @@
     "qolCutscenes": "Skippable",
     "qolPickupScans": true,
     "mapDefaultState": "Always",
-    "artifactHintBehavior": "All"
+    "artifactHintBehavior": "All",
+    "skipSplashScreens": false,
+    "quickplay": false,
+    "quickpatch": false,
+    "quiet": false,
+    "suitColors": {
+      "gravityDeg": 0,
+      "phazonDeg": 0,
+      "powerDeg": 0,
+      "variaDeg": 0
+    }
   },
+  "tweaks": {},
   "gameConfig": {
     "mainMenuMessage": "Archipelago Metroid Prime",
     "startingRoom": "Tallon Overworld:Landing Site",
@@ -111,23 +226,23 @@
     "backwardsLabs": true,
     "backwardsFrigate": true,
     "backwardsUpperMines": true,
-    "backwardsLowerMines": true,
+    "backwardsLowerMines": false,
     "patchPowerConduits": false,
     "removeMineSecurityStationLocks": false,
-    "powerBombArboretumSandstone": false,
+    "powerBombArboretumSandstone": true,
     "artifactHints": {
-      "Artifact of Chozo": "The &push;&main-color=#c300ff;Artifact of Chozo&pop; can be found in &push;&main-color=#d4cc33;your&pop; &push;&main-color=#89a1ff;Magmoor Caverns: Plasma Processing&pop;.",
-      "Artifact of Nature": "The &push;&main-color=#c300ff;Artifact of Nature&pop; can be found in &push;&main-color=#d4cc33;your&pop; &push;&main-color=#89a1ff;Chozo Ruins: Vault&pop;.",
-      "Artifact of Sun": "The &push;&main-color=#c300ff;Artifact of Sun&pop; can be found in &push;&main-color=#d4cc33;your&pop; &push;&main-color=#89a1ff;Tallon Overworld: Hydro Access Tunnel&pop;.",
-      "Artifact of World": "The &push;&main-color=#c300ff;Artifact of World&pop; can be found in &push;&main-color=#d4cc33;your&pop; &push;&main-color=#89a1ff;Phazon Mines: Storage Depot A&pop;.",
-      "Artifact of Spirit": "The &push;&main-color=#c300ff;Artifact of Spirit&pop; can be found in &push;&main-color=#d4cc33;your&pop; &push;&main-color=#89a1ff;Tallon Overworld: Biohazard Containment&pop;.",
-      "Artifact of Newborn": "The &push;&main-color=#c300ff;Artifact of Newborn&pop; can be found in &push;&main-color=#d4cc33;your&pop; &push;&main-color=#89a1ff;Tallon Overworld: Arbor Chamber&pop;.",
+      "Artifact of Chozo": "The &push;&main-color=#c300ff;Artifact of Chozo&pop; can be found in &push;&main-color=#d4cc33;your&pop; &push;&main-color=#89a1ff;Chozo Ruins: Gathering Hall&pop;.",
+      "Artifact of Nature": "The &push;&main-color=#c300ff;Artifact of Nature&pop; can be found in &push;&main-color=#d4cc33;your&pop; &push;&main-color=#89a1ff;Chozo Ruins: Watery Hall - Scan Puzzle&pop;.",
+      "Artifact of Sun": "The &push;&main-color=#c300ff;Artifact of Sun&pop; can be found in &push;&main-color=#d4cc33;your&pop; &push;&main-color=#89a1ff;Phendrana Drifts: Storage Cave&pop;.",
+      "Artifact of World": "The &push;&main-color=#c300ff;Artifact of World&pop; can be found in &push;&main-color=#d4cc33;your&pop; &push;&main-color=#89a1ff;Phendrana Drifts: Ice Ruins East - Spider Track&pop;.",
+      "Artifact of Spirit": "The &push;&main-color=#c300ff;Artifact of Spirit&pop; can be found in &push;&main-color=#d4cc33;your&pop; &push;&main-color=#89a1ff;Tallon Overworld: Arbor Chamber&pop;.",
+      "Artifact of Newborn": "The &push;&main-color=#c300ff;Artifact of Newborn&pop; can be found in &push;&main-color=#d4cc33;your&pop; &push;&main-color=#89a1ff;Phazon Mines: Central Dynamo&pop;.",
       "Artifact of Truth": "The &push;&main-color=#c300ff;Artifact of Truth&pop; can be found in &push;&main-color=#d4cc33;your&pop; &push;&main-color=#89a1ff;Tallon Overworld: Life Grove Tunnel&pop;.",
-      "Artifact of Strength": "The &push;&main-color=#c300ff;Artifact of Strength&pop; can be found in &push;&main-color=#d4cc33;your&pop; &push;&main-color=#89a1ff;Magmoor Caverns: Lava Lake&pop;.",
-      "Artifact of Elder": "The &push;&main-color=#c300ff;Artifact of Elder&pop; can be found in &push;&main-color=#d4cc33;your&pop; &push;&main-color=#89a1ff;Phendrana Drifts: Gravity Chamber - Grapple Ledge&pop;.",
-      "Artifact of Wild": "The &push;&main-color=#c300ff;Artifact of Wild&pop; can be found in &push;&main-color=#d4cc33;your&pop; &push;&main-color=#89a1ff;Phazon Mines: Fungal Hall B&pop;.",
-      "Artifact of Lifegiver": "The &push;&main-color=#c300ff;Artifact of Lifegiver&pop; can be found in &push;&main-color=#d4cc33;your&pop; &push;&main-color=#89a1ff;Chozo Ruins: Ruined Fountain&pop;.",
-      "Artifact of Warrior": "The &push;&main-color=#c300ff;Artifact of Warrior&pop; can be found in &push;&main-color=#d4cc33;your&pop; &push;&main-color=#89a1ff;Phazon Mines: Security Access A&pop;."
+      "Artifact of Strength": "The &push;&main-color=#c300ff;Artifact of Strength&pop; can be found in &push;&main-color=#d4cc33;your&pop; &push;&main-color=#89a1ff;Magmoor Caverns: Magmoor Workstation&pop;.",
+      "Artifact of Elder": "The &push;&main-color=#c300ff;Artifact of Elder&pop; can be found in &push;&main-color=#d4cc33;your&pop; &push;&main-color=#89a1ff;Magmoor Caverns: Plasma Processing&pop;.",
+      "Artifact of Wild": "The &push;&main-color=#c300ff;Artifact of Wild&pop; can be found in &push;&main-color=#d4cc33;your&pop; &push;&main-color=#89a1ff;Chozo Ruins: Tower Chamber&pop;.",
+      "Artifact of Lifegiver": "The &push;&main-color=#c300ff;Artifact of Lifegiver&pop; can be found in &push;&main-color=#d4cc33;your&pop; &push;&main-color=#89a1ff;Chozo Ruins: Dynamo - Spider Track&pop;.",
+      "Artifact of Warrior": "The &push;&main-color=#c300ff;Artifact of Warrior&pop; can be found in &push;&main-color=#d4cc33;your&pop; &push;&main-color=#89a1ff;Chozo Ruins: Sunchamber - Flaaghra&pop;."
     },
     "requiredArtifactCount": 12
   },
@@ -142,21 +257,6 @@
         "Artifact Temple": "Crater Entry Point"
       },
       "rooms": {
-        "Landing Site": {
-          "pickups": [
-            {
-              "type": "Unknown Item 1",
-              "scanText": "Ice Beam",
-              "hudmemoText": "Ice Beam Acquired!",
-              "currIncrease": 59,
-              "model": "Ice Beam",
-              "showIcon": true
-            }
-          ]
-        },
-        "Gully": {},
-        "Canyon Cavern": {},
-        "Temple Hall": {},
         "Alcove": {
           "pickups": [
             {
@@ -169,46 +269,14 @@
             }
           ]
         },
-        "Waterfall Cavern": {},
-        "Tallon Canyon": {},
-        "Temple Security Station": {},
-        "Frigate Crash Site": {
+        "Arbor Chamber": {
           "pickups": [
             {
               "type": "Unknown Item 1",
-              "scanText": "Missile Expansion",
-              "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 61,
-              "model": "Missile",
-              "showIcon": true
-            }
-          ]
-        },
-        "Transport Tunnel A": {},
-        "Root Tunnel": {},
-        "Temple Lobby": {},
-        "Frigate Access Tunnel": {},
-        "Overgrown Cavern": {
-          "pickups": [
-            {
-              "type": "Unknown Item 1",
-              "scanText": "Ice Spreader",
-              "hudmemoText": "Ice Spreader Acquired!",
-              "currIncrease": 62,
-              "model": "Ice Spreader",
-              "showIcon": true
-            }
-          ]
-        },
-        "Transport to Chozo Ruins West": {},
-        "Root Cave": {
-          "pickups": [
-            {
-              "type": "Unknown Item 1",
-              "scanText": "Missile Expansion",
-              "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 63,
-              "model": "Missile",
+              "scanText": "Artifact of Spirit",
+              "hudmemoText": "Artifact of Spirit Acquired!",
+              "currIncrease": 66,
+              "model": "Artifact of Spirit",
               "showIcon": true
             }
           ]
@@ -225,81 +293,43 @@
             }
           ]
         },
-        "Main Ventilation Shaft Section C": {},
-        "Transport Tunnel C": {},
-        "Transport Tunnel B": {
+        "Biohazard Containment": {
           "pickups": [
             {
               "type": "Unknown Item 1",
-              "scanText": "Super Missile",
-              "hudmemoText": "Super Missile Acquired!",
-              "currIncrease": 65,
-              "model": "Super Missile",
+              "scanText": "Missile Expansion",
+              "hudmemoText": "Missile Expansion Acquired!",
+              "currIncrease": 68,
+              "model": "Missile",
               "showIcon": true
             }
           ]
         },
-        "Arbor Chamber": {
-          "pickups": [
-            {
-              "type": "Unknown Item 1",
-              "scanText": "Artifact of Newborn",
-              "hudmemoText": "Artifact of Newborn Acquired!",
-              "currIncrease": 66,
-              "model": "Artifact of Newborn",
-              "showIcon": true
-            }
-          ]
-        },
-        "Main Ventilation Shaft Section B": {},
-        "Transport to Chozo Ruins East": {},
-        "Transport to Magmoor Caverns East": {},
-        "Main Ventilation Shaft Section A": {},
-        "Reactor Core": {},
-        "Reactor Access": {},
+        "Canyon Cavern": {},
         "Cargo Freight Lift to Deck Gamma": {
+          "pickups": [
+            {
+              "type": "Unknown Item 1",
+              "scanText": "Missile Expansion",
+              "hudmemoText": "Missile Expansion Acquired!",
+              "currIncrease": 67,
+              "model": "Missile",
+              "showIcon": true
+            }
+          ]
+        },
+        "Frigate Crash Site": {
           "pickups": [
             {
               "type": "Unknown Item 1",
               "scanText": "Energy Tank",
               "hudmemoText": "Energy Tank Acquired!",
-              "currIncrease": 67,
+              "currIncrease": 61,
               "model": "Energy Tank",
               "showIcon": true
             }
           ]
         },
-        "Savestation": {},
-        "Deck Beta Transit Hall": {},
-        "Biohazard Containment": {
-          "pickups": [
-            {
-              "type": "Unknown Item 1",
-              "scanText": "Artifact of Spirit",
-              "hudmemoText": "Artifact of Spirit Acquired!",
-              "currIncrease": 68,
-              "model": "Artifact of Spirit",
-              "showIcon": true
-            }
-          ]
-        },
-        "Deck Beta Security Hall": {},
-        "Biotech Research Area 1": {},
-        "Deck Beta Conduit Hall": {},
-        "Connection Elevator to Deck Beta": {},
-        "Hydro Access Tunnel": {
-          "pickups": [
-            {
-              "type": "Unknown Item 1",
-              "scanText": "Artifact of Sun",
-              "hudmemoText": "Artifact of Sun Acquired!",
-              "currIncrease": 69,
-              "model": "Artifact of Sun",
-              "showIcon": true
-            }
-          ]
-        },
-        "Great Tree Hall": {},
         "Great Tree Chamber": {
           "pickups": [
             {
@@ -312,7 +342,32 @@
             }
           ]
         },
-        "Transport Tunnel D": {},
+        "Great Tree Hall": {},
+        "Gully": {},
+        "Hydro Access Tunnel": {
+          "pickups": [
+            {
+              "type": "Unknown Item 1",
+              "scanText": "Energy Tank",
+              "hudmemoText": "Energy Tank Acquired!",
+              "currIncrease": 69,
+              "model": "Energy Tank",
+              "showIcon": true
+            }
+          ]
+        },
+        "Landing Site": {
+          "pickups": [
+            {
+              "type": "Unknown Item 1",
+              "scanText": "Boost Ball",
+              "hudmemoText": "Boost Ball Acquired!",
+              "currIncrease": 59,
+              "model": "Boost Ball",
+              "showIcon": true
+            }
+          ]
+        },
         "Life Grove Tunnel": {
           "pickups": [
             {
@@ -325,8 +380,6 @@
             }
           ]
         },
-        "Transport Tunnel E": {},
-        "Transport to Chozo Ruins South": {},
         "Life Grove": {
           "pickups": [
             {
@@ -347,7 +400,57 @@
             }
           ]
         },
-        "Transport to Phazon Mines East": {}
+        "Overgrown Cavern": {
+          "pickups": [
+            {
+              "type": "Unknown Item 1",
+              "scanText": "Energy Tank",
+              "hudmemoText": "Energy Tank Acquired!",
+              "currIncrease": 62,
+              "model": "Energy Tank",
+              "showIcon": true
+            }
+          ]
+        },
+        "Root Cave": {
+          "pickups": [
+            {
+              "type": "Unknown Item 1",
+              "scanText": "Missile Expansion",
+              "hudmemoText": "Missile Expansion Acquired!",
+              "currIncrease": 63,
+              "model": "Missile",
+              "showIcon": true
+            }
+          ]
+        },
+        "Root Tunnel": {},
+        "Tallon Canyon": {},
+        "Temple Hall": {},
+        "Temple Lobby": {},
+        "Temple Security Station": {},
+        "Transport to Chozo Ruins East": {},
+        "Transport to Chozo Ruins South": {},
+        "Transport to Chozo Ruins West": {},
+        "Transport to Magmoor Caverns East": {},
+        "Transport to Phazon Mines East": {},
+        "Transport Tunnel A": {},
+        "Transport Tunnel B": {
+          "pickups": [
+            {
+              "type": "Unknown Item 1",
+              "scanText": "Morph Ball",
+              "hudmemoText": "Morph Ball Acquired!",
+              "currIncrease": 65,
+              "model": "Morph Ball",
+              "showIcon": true
+            }
+          ]
+        },
+        "Transport Tunnel C": {},
+        "Transport Tunnel D": {},
+        "Transport Tunnel E": {},
+        "Waterfall Cavern": {}
       }
     },
     "Chozo Ruins": {
@@ -358,8 +461,163 @@
         "Chozo Ruins South (Reflecting Pool, Far End)": "Tallon Overworld South (Great Tree Hall, Upper)"
       },
       "rooms": {
-        "Transport to Tallon Overworld North": {},
-        "Ruins Entrance": {},
+        "Antechamber": {
+          "pickups": [
+            {
+              "type": "Unknown Item 1",
+              "scanText": "Missile Expansion",
+              "hudmemoText": "Missile Expansion Acquired!",
+              "currIncrease": 35,
+              "model": "Missile",
+              "showIcon": true
+            }
+          ]
+        },
+        "Arboretum Access": {},
+        "Arboretum": {},
+        "Burn Dome Access": {},
+        "Burn Dome": {
+          "pickups": [
+            {
+              "type": "Unknown Item 1",
+              "scanText": "Missile Expansion",
+              "hudmemoText": "Missile Expansion Acquired!",
+              "currIncrease": 28,
+              "model": "Missile",
+              "showIcon": true
+            },
+            {
+              "type": "Unknown Item 1",
+              "scanText": "Missile Expansion",
+              "hudmemoText": "Missile Expansion Acquired!",
+              "currIncrease": 29,
+              "model": "Missile",
+              "showIcon": true
+            }
+          ]
+        },
+        "Crossway Access South": {},
+        "Crossway Access West": {},
+        "Crossway": {
+          "pickups": [
+            {
+              "type": "Unknown Item 1",
+              "scanText": "Missile Expansion",
+              "hudmemoText": "Missile Expansion Acquired!",
+              "currIncrease": 33,
+              "model": "Missile",
+              "showIcon": true
+            }
+          ]
+        },
+        "Dynamo Access": {},
+        "Dynamo": {
+          "pickups": [
+            {
+              "type": "Unknown Item 1",
+              "scanText": "Wave Beam",
+              "hudmemoText": "Wave Beam Acquired!",
+              "currIncrease": 26,
+              "model": "Wave Beam",
+              "showIcon": true
+            },
+            {
+              "type": "Unknown Item 1",
+              "scanText": "Artifact of Lifegiver",
+              "hudmemoText": "Artifact of Lifegiver Acquired!",
+              "currIncrease": 27,
+              "model": "Artifact of Lifegiver",
+              "showIcon": true
+            }
+          ]
+        },
+        "East Atrium": {},
+        "East Furnace Access": {},
+        "Elder Chamber": {
+          "pickups": [
+            {
+              "type": "Unknown Item 1",
+              "scanText": "Power Bomb Expansion",
+              "hudmemoText": "Power Bomb Expansion Acquired!",
+              "currIncrease": 34,
+              "model": "Power Bomb Expansion",
+              "showIcon": true
+            }
+          ]
+        },
+        "Elder Hall Access": {},
+        "Energy Core Access": {},
+        "Energy Core": {},
+        "Eyon Tunnel": {},
+        "Furnace": {
+          "pickups": [
+            {
+              "type": "Unknown Item 1",
+              "scanText": "Missile Expansion",
+              "hudmemoText": "Missile Expansion Acquired!",
+              "currIncrease": 30,
+              "model": "Missile",
+              "showIcon": true
+            },
+            {
+              "type": "Unknown Item 1",
+              "scanText": "Energy Tank",
+              "hudmemoText": "Energy Tank Acquired!",
+              "currIncrease": 31,
+              "model": "Energy Tank",
+              "showIcon": true
+            }
+          ]
+        },
+        "Gathering Hall Access": {},
+        "Gathering Hall": {
+          "pickups": [
+            {
+              "type": "Unknown Item 1",
+              "scanText": "Artifact of Chozo",
+              "hudmemoText": "Artifact of Chozo Acquired!",
+              "currIncrease": 19,
+              "model": "Artifact of Chozo",
+              "showIcon": true
+            }
+          ]
+        },
+        "Hall of the Elders": {
+          "pickups": [
+            {
+              "type": "Unknown Item 1",
+              "scanText": "Energy Tank",
+              "hudmemoText": "Energy Tank Acquired!",
+              "currIncrease": 32,
+              "model": "Energy Tank",
+              "showIcon": true
+            }
+          ]
+        },
+        "Hive Totem": {
+          "pickups": [
+            {
+              "type": "Unknown Item 1",
+              "scanText": "Missile Expansion",
+              "hudmemoText": "Missile Expansion Acquired!",
+              "currIncrease": 20,
+              "model": "Missile",
+              "showIcon": true
+            }
+          ]
+        },
+        "Magma Pool": {
+          "pickups": [
+            {
+              "type": "Unknown Item 1",
+              "scanText": "Power Bomb Expansion",
+              "hudmemoText": "Power Bomb Expansion Acquired!",
+              "currIncrease": 13,
+              "model": "Power Bomb Expansion",
+              "showIcon": true
+            }
+          ]
+        },
         "Main Plaza": {
           "pickups": [
             {
@@ -380,76 +638,166 @@
             },
             {
               "type": "Unknown Item 1",
-              "scanText": "Morph Ball",
-              "hudmemoText": "Morph Ball Acquired!",
+              "scanText": "Missile Expansion",
+              "hudmemoText": "Missile Expansion Acquired!",
               "currIncrease": 3,
-              "model": "Morph Ball",
-              "showIcon": true
-            },
-            {
-              "type": "Unknown Item 1",
-              "scanText": "Energy Tank",
-              "hudmemoText": "Energy Tank Acquired!",
-              "currIncrease": 4,
-              "model": "Energy Tank",
-              "showIcon": true
-            }
-          ]
-        },
-        "Ruined Fountain Access": {},
-        "Ruined Shrine Access": {},
-        "Nursery Access": {},
-        "Plaza Access": {},
-        "Piston Tunnel": {},
-        "Ruined Fountain": {
-          "pickups": [
-            {
-              "type": "Unknown Item 1",
-              "scanText": "Artifact of Lifegiver",
-              "hudmemoText": "Artifact of Lifegiver Acquired!",
-              "currIncrease": 5,
-              "model": "Artifact of Lifegiver",
-              "showIcon": true
-            }
-          ]
-        },
-        "Ruined Shrine": {
-          "pickups": [
-            {
-              "type": "Unknown Item 1",
-              "scanText": "Power Bomb Expansion",
-              "hudmemoText": "Power Bomb Expansion Acquired!",
-              "currIncrease": 6,
-              "model": "Power Bomb Expansion",
-              "showIcon": true
-            },
-            {
-              "type": "Unknown Item 1",
-              "scanText": "Energy Tank",
-              "hudmemoText": "Energy Tank Acquired!",
-              "currIncrease": 7,
-              "model": "Energy Tank",
+              "model": "Missile",
               "showIcon": true
             },
             {
               "type": "Unknown Item 1",
               "scanText": "Missile Expansion",
               "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 8,
+              "currIncrease": 4,
               "model": "Missile",
               "showIcon": true
             }
           ]
         },
-        "Eyon Tunnel": {},
-        "Vault": {
+        "Map Station": {},
+        "Meditation Fountain": {},
+        "North Atrium": {},
+        "Nursery Access": {},
+        "Piston Tunnel": {},
+        "Plaza Access": {},
+        "Reflecting Pool Access": {},
+        "Reflecting Pool": {},
+        "Ruined Fountain Access": {},
+        "Ruined Fountain": {
           "pickups": [
             {
               "type": "Unknown Item 1",
-              "scanText": "Artifact of Nature",
-              "hudmemoText": "Artifact of Nature Acquired!",
-              "currIncrease": 9,
-              "model": "Artifact of Nature",
+              "scanText": "Missile Expansion",
+              "hudmemoText": "Missile Expansion Acquired!",
+              "currIncrease": 5,
+              "model": "Missile",
+              "showIcon": true
+            }
+          ]
+        },
+        "Ruined Gallery": {
+          "pickups": [
+            {
+              "type": "Unknown Item 1",
+              "scanText": "Missile Expansion",
+              "hudmemoText": "Missile Expansion Acquired!",
+              "currIncrease": 16,
+              "model": "Missile",
+              "showIcon": true
+            },
+            {
+              "type": "Unknown Item 1",
+              "scanText": "Ice Spreader",
+              "hudmemoText": "Ice Spreader Acquired!",
+              "currIncrease": 17,
+              "model": "Ice Spreader",
+              "showIcon": true
+            }
+          ]
+        },
+        "Ruined Nursery": {
+          "pickups": [
+            {
+              "type": "Unknown Item 1",
+              "scanText": "Charge Beam",
+              "hudmemoText": "Charge Beam Acquired!",
+              "currIncrease": 11,
+              "model": "Charge Beam",
+              "showIcon": true
+            }
+          ]
+        },
+        "Ruined Shrine Access": {},
+        "Ruined Shrine": {
+          "pickups": [
+            {
+              "type": "Unknown Item 1",
+              "scanText": "Missile Expansion",
+              "hudmemoText": "Missile Expansion Acquired!",
+              "currIncrease": 6,
+              "model": "Missile",
+              "showIcon": true
+            },
+            {
+              "type": "Unknown Item 1",
+              "scanText": "Morph Ball Bomb",
+              "hudmemoText": "Morph Ball Bomb Acquired!",
+              "currIncrease": 7,
+              "model": "Morph Ball Bomb",
+              "showIcon": true
+            },
+            {
+              "type": "Unknown Item 1",
+              "scanText": "Energy Tank",
+              "hudmemoText": "Energy Tank Acquired!",
+              "currIncrease": 8,
+              "model": "Energy Tank",
+              "showIcon": true
+            }
+          ]
+        },
+        "Ruins Entrance": {},
+        "Save Station 1": {},
+        "Save Station 2": {},
+        "Save Station 3": {},
+        "Sun Tower": {},
+        "Sun Tower Access": {},
+        "Sunchamber Access": {},
+        "Sunchamber Lobby": {},
+        "Sunchamber": {
+          "pickups": [
+            {
+              "type": "Unknown Item 1",
+              "scanText": "Artifact of Warrior",
+              "hudmemoText": "Artifact of Warrior Acquired!",
+              "currIncrease": 21,
+              "model": "Artifact of Warrior",
+              "showIcon": true
+            },
+            {
+              "type": "Unknown Item 1",
+              "scanText": "Missile Expansion",
+              "hudmemoText": "Missile Expansion Acquired!",
+              "currIncrease": 22,
+              "model": "Missile",
+              "showIcon": true
+            }
+          ]
+        },
+        "Totem Access": {},
+        "Tower Chamber": {
+          "pickups": [
+            {
+              "type": "Unknown Item 1",
+              "scanText": "Artifact of Wild",
+              "hudmemoText": "Artifact of Wild Acquired!",
+              "currIncrease": 15,
+              "model": "Artifact of Wild",
+              "showIcon": true
+            }
+          ]
+        },
+        "Tower of Light Access": {},
+        "Tower of Light": {
+          "pickups": [
+            {
+              "type": "Unknown Item 1",
+              "scanText": "Missile Expansion",
+              "hudmemoText": "Missile Expansion Acquired!",
+              "currIncrease": 14,
+              "model": "Missile",
+              "showIcon": true
+            }
+          ]
+        },
+        "Training Chamber Access": {
+          "pickups": [
+            {
+              "type": "Unknown Item 1",
+              "scanText": "Missile Expansion",
+              "hudmemoText": "Missile Expansion Acquired!",
+              "currIncrease": 12,
+              "model": "Missile",
               "showIcon": true
             }
           ]
@@ -466,153 +814,32 @@
             }
           ]
         },
-        "Arboretum Access": {},
-        "Meditation Fountain": {},
-        "Tower of Light Access": {},
-        "Ruined Nursery": {
-          "pickups": [
-            {
-              "type": "Unknown Item 1",
-              "scanText": "Spider Ball",
-              "hudmemoText": "Spider Ball Acquired!",
-              "currIncrease": 11,
-              "model": "Spider Ball",
-              "showIcon": true
-            }
-          ]
-        },
-        "Vault Access": {},
-        "Training Chamber Access": {
-          "pickups": [
-            {
-              "type": "Unknown Item 1",
-              "scanText": "Missile Expansion",
-              "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 12,
-              "model": "Missile",
-              "showIcon": true
-            }
-          ]
-        },
-        "Arboretum": {},
-        "Magma Pool": {
-          "pickups": [
-            {
-              "type": "Unknown Item 1",
-              "scanText": "Missile Expansion",
-              "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 13,
-              "model": "Missile",
-              "showIcon": true
-            }
-          ]
-        },
-        "Tower of Light": {
-          "pickups": [
-            {
-              "type": "Unknown Item 1",
-              "scanText": "Missile Expansion",
-              "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 14,
-              "model": "Missile",
-              "showIcon": true
-            }
-          ]
-        },
-        "Save Station 1": {},
-        "North Atrium": {},
-        "Transport to Magmoor Caverns North": {},
-        "Sunchamber Lobby": {},
-        "Gathering Hall Access": {},
-        "Tower Chamber": {
-          "pickups": [
-            {
-              "type": "Unknown Item 1",
-              "scanText": "Missile Expansion",
-              "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 15,
-              "model": "Missile",
-              "showIcon": true
-            }
-          ]
-        },
-        "Ruined Gallery": {
-          "pickups": [
-            {
-              "type": "Unknown Item 1",
-              "scanText": "Charge Beam",
-              "hudmemoText": "Charge Beam Acquired!",
-              "currIncrease": 16,
-              "model": "Charge Beam",
-              "showIcon": true
-            },
-            {
-              "type": "Unknown Item 1",
-              "scanText": "Boost Ball",
-              "hudmemoText": "Boost Ball Acquired!",
-              "currIncrease": 17,
-              "model": "Boost Ball",
-              "showIcon": true
-            }
-          ]
-        },
-        "Sun Tower": {},
         "Transport Access North": {
           "pickups": [
             {
               "type": "Unknown Item 1",
-              "scanText": "Space Jump Boots",
-              "hudmemoText": "Space Jump Boots Acquired!",
+              "scanText": "Missile Expansion",
+              "hudmemoText": "Missile Expansion Acquired!",
               "currIncrease": 18,
-              "model": "Space Jump Boots",
-              "showIcon": true
-            }
-          ]
-        },
-        "Sunchamber Access": {},
-        "Gathering Hall": {
-          "pickups": [
-            {
-              "type": "Unknown Item 1",
-              "scanText": "Morph Ball Bomb",
-              "hudmemoText": "Morph Ball Bomb Acquired!",
-              "currIncrease": 19,
-              "model": "Morph Ball Bomb",
-              "showIcon": true
-            }
-          ]
-        },
-        "Totem Access": {},
-        "Map Station": {},
-        "Sun Tower Access": {},
-        "Hive Totem": {
-          "pickups": [
-            {
-              "type": "Unknown Item 1",
-              "scanText": "Missile Expansion",
-              "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 20,
               "model": "Missile",
               "showIcon": true
             }
           ]
         },
-        "Sunchamber": {
+        "Transport Access South": {},
+        "Transport to Magmoor Caverns North": {},
+        "Transport to Tallon Overworld East": {},
+        "Transport to Tallon Overworld North": {},
+        "Transport to Tallon Overworld South": {},
+        "Vault Access": {},
+        "Vault": {
           "pickups": [
             {
               "type": "Unknown Item 1",
-              "scanText": "Missile Expansion",
-              "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 21,
-              "model": "Missile",
-              "showIcon": true
-            },
-            {
-              "type": "Unknown Item 1",
-              "scanText": "Gravity Suit",
-              "hudmemoText": "Gravity Suit Acquired!",
-              "currIncrease": 22,
-              "model": "Gravity Suit",
+              "scanText": "Plasma Beam",
+              "hudmemoText": "Plasma Beam Acquired!",
+              "currIncrease": 9,
+              "model": "Plasma Beam",
               "showIcon": true
             }
           ]
@@ -621,159 +848,35 @@
           "pickups": [
             {
               "type": "Unknown Item 1",
-              "scanText": "Energy Tank",
-              "hudmemoText": "Energy Tank Acquired!",
-              "currIncrease": 23,
-              "model": "Energy Tank",
-              "showIcon": true
-            }
-          ]
-        },
-        "Save Station 2": {},
-        "East Atrium": {},
-        "Watery Hall": {
-          "pickups": [
-            {
-              "type": "Unknown Item 1",
-              "scanText": "Wavebuster",
-              "hudmemoText": "Wavebuster Acquired!",
-              "currIncrease": 24,
-              "model": "Wavebuster",
-              "showIcon": true
-            },
-            {
-              "type": "Unknown Item 1",
               "scanText": "Varia Suit",
               "hudmemoText": "Varia Suit Acquired!",
-              "currIncrease": 25,
+              "currIncrease": 23,
               "model": "Varia Suit",
               "showIcon": true
             }
           ]
         },
-        "Energy Core Access": {},
-        "Dynamo Access": {},
-        "Energy Core": {},
-        "Dynamo": {
+        "Watery Hall": {
           "pickups": [
             {
               "type": "Unknown Item 1",
-              "scanText": "Wave Beam",
-              "hudmemoText": "Wave Beam Acquired!",
-              "currIncrease": 26,
-              "model": "Wave Beam",
-              "showIcon": true
-            },
-            {
-              "type": "Unknown Item 1",
-              "scanText": "Energy Tank",
-              "hudmemoText": "Energy Tank Acquired!",
-              "currIncrease": 27,
-              "model": "Energy Tank",
-              "showIcon": true
-            }
-          ]
-        },
-        "Burn Dome Access": {},
-        "West Furnace Access": {},
-        "Burn Dome": {
-          "pickups": [
-            {
-              "type": "Unknown Item 1",
-              "scanText": "Missile Expansion",
-              "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 28,
-              "model": "Missile",
-              "showIcon": true
-            },
-            {
-              "type": "Unknown Item 1",
-              "scanText": "Power Bomb Expansion",
-              "hudmemoText": "Power Bomb Expansion Acquired!",
-              "currIncrease": 29,
-              "model": "Power Bomb Expansion",
-              "showIcon": true
-            }
-          ]
-        },
-        "Furnace": {
-          "pickups": [
-            {
-              "type": "Unknown Item 1",
-              "scanText": "Flamethrower",
-              "hudmemoText": "Flamethrower Acquired!",
-              "currIncrease": 30,
-              "model": "Flamethrower",
+              "scanText": "Artifact of Nature",
+              "hudmemoText": "Artifact of Nature Acquired!",
+              "currIncrease": 24,
+              "model": "Artifact of Nature",
               "showIcon": true
             },
             {
               "type": "Unknown Item 1",
               "scanText": "Missile Expansion",
               "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 31,
+              "currIncrease": 25,
               "model": "Missile",
               "showIcon": true
             }
           ]
         },
-        "East Furnace Access": {},
-        "Crossway Access West": {},
-        "Hall of the Elders": {
-          "pickups": [
-            {
-              "type": "Unknown Item 1",
-              "scanText": "Energy Tank",
-              "hudmemoText": "Energy Tank Acquired!",
-              "currIncrease": 32,
-              "model": "Energy Tank",
-              "showIcon": true
-            }
-          ]
-        },
-        "Crossway": {
-          "pickups": [
-            {
-              "type": "Unknown Item 1",
-              "scanText": "Missile Expansion",
-              "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 33,
-              "model": "Missile",
-              "showIcon": true
-            }
-          ]
-        },
-        "Reflecting Pool Access": {},
-        "Elder Hall Access": {},
-        "Crossway Access South": {},
-        "Elder Chamber": {
-          "pickups": [
-            {
-              "type": "Unknown Item 1",
-              "scanText": "Missile Expansion",
-              "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 34,
-              "model": "Missile",
-              "showIcon": true
-            }
-          ]
-        },
-        "Reflecting Pool": {},
-        "Save Station 3": {},
-        "Transport Access South": {},
-        "Antechamber": {
-          "pickups": [
-            {
-              "type": "Unknown Item 1",
-              "scanText": "Missile Expansion",
-              "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 35,
-              "model": "Missile",
-              "showIcon": true
-            }
-          ]
-        },
-        "Transport to Tallon Overworld East": {},
-        "Transport to Tallon Overworld South": {}
+        "West Furnace Access": {}
       }
     },
     "Magmoor Caverns": {
@@ -785,86 +888,7 @@
         "Magmoor Caverns South (Magmoor Workstation, Debris)": "Phazon Mines West (Phazon Processing Center)"
       },
       "rooms": {
-        "Transport to Chozo Ruins North": {},
         "Burning Trail": {},
-        "Lake Tunnel": {},
-        "Save Station Magmoor A": {},
-        "Lava Lake": {
-          "pickups": [
-            {
-              "type": "Unknown Item 1",
-              "scanText": "Artifact of Strength",
-              "hudmemoText": "Artifact of Strength Acquired!",
-              "currIncrease": 91,
-              "model": "Artifact of Strength",
-              "showIcon": true
-            }
-          ]
-        },
-        "Pit Tunnel": {},
-        "Triclops Pit": {
-          "pickups": [
-            {
-              "type": "Unknown Item 1",
-              "scanText": "Energy Tank",
-              "hudmemoText": "Energy Tank Acquired!",
-              "currIncrease": 92,
-              "model": "Energy Tank",
-              "showIcon": true
-            }
-          ]
-        },
-        "Monitor Tunnel": {},
-        "Storage Cavern": {
-          "pickups": [
-            {
-              "type": "Unknown Item 1",
-              "scanText": "Missile Expansion",
-              "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 93,
-              "model": "Missile",
-              "showIcon": true
-            }
-          ]
-        },
-        "Monitor Station": {},
-        "Transport Tunnel A": {
-          "pickups": [
-            {
-              "type": "Unknown Item 1",
-              "scanText": "X-Ray Visor",
-              "hudmemoText": "X-Ray Visor Acquired!",
-              "currIncrease": 94,
-              "model": "X-Ray Visor",
-              "showIcon": true
-            }
-          ]
-        },
-        "Warrior Shrine": {
-          "pickups": [
-            {
-              "type": "Unknown Item 1",
-              "scanText": "Energy Tank",
-              "hudmemoText": "Energy Tank Acquired!",
-              "currIncrease": 95,
-              "model": "Energy Tank",
-              "showIcon": true
-            }
-          ]
-        },
-        "Shore Tunnel": {
-          "pickups": [
-            {
-              "type": "Unknown Item 1",
-              "scanText": "Missile Expansion",
-              "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 96,
-              "model": "Missile",
-              "showIcon": true
-            }
-          ]
-        },
-        "Transport to Phendrana Drifts North": {},
         "Fiery Shores": {
           "pickups": [
             {
@@ -877,50 +901,129 @@
             },
             {
               "type": "Unknown Item 1",
-              "scanText": "Phazon Suit",
-              "hudmemoText": "Phazon Suit Acquired!",
+              "scanText": "Power Bomb Expansion",
+              "hudmemoText": "Power Bomb Expansion Acquired!",
               "currIncrease": 98,
-              "model": "Phazon Suit",
+              "model": "Power Bomb Expansion",
               "showIcon": true
             }
           ]
         },
-        "Transport Tunnel B": {},
-        "Transport to Tallon Overworld West": {},
-        "Twin Fires Tunnel": {},
-        "Twin Fires": {},
-        "North Core Tunnel": {},
         "Geothermal Core": {},
+        "Lake Tunnel": {},
+        "Lava Lake": {
+          "pickups": [
+            {
+              "type": "Unknown Item 1",
+              "scanText": "Power Bomb Expansion",
+              "hudmemoText": "Power Bomb Expansion Acquired!",
+              "currIncrease": 91,
+              "model": "Power Bomb Expansion",
+              "showIcon": true
+            }
+          ]
+        },
+        "Magmoor Workstation": {
+          "pickups": [
+            {
+              "type": "Unknown Item 1",
+              "scanText": "Artifact of Strength",
+              "hudmemoText": "Artifact of Strength Acquired!",
+              "currIncrease": 100,
+              "model": "Artifact of Strength",
+              "showIcon": true
+            }
+          ]
+        },
+        "Monitor Station": {},
+        "Monitor Tunnel": {},
+        "North Core Tunnel": {},
+        "Pit Tunnel": {},
         "Plasma Processing": {
           "pickups": [
             {
               "type": "Unknown Item 1",
-              "scanText": "Artifact of Chozo",
-              "hudmemoText": "Artifact of Chozo Acquired!",
+              "scanText": "Artifact of Elder",
+              "hudmemoText": "Artifact of Elder Acquired!",
               "currIncrease": 99,
-              "model": "Artifact of Chozo",
+              "model": "Artifact of Elder",
+              "showIcon": true
+            }
+          ]
+        },
+        "Save Station Magmoor A": {},
+        "Save Station Magmoor B": {},
+        "Shore Tunnel": {
+          "pickups": [
+            {
+              "type": "Unknown Item 1",
+              "scanText": "Spider Ball",
+              "hudmemoText": "Spider Ball Acquired!",
+              "currIncrease": 96,
+              "model": "Spider Ball",
               "showIcon": true
             }
           ]
         },
         "South Core Tunnel": {},
-        "Magmoor Workstation": {
+        "Storage Cavern": {
           "pickups": [
             {
               "type": "Unknown Item 1",
-              "scanText": "Grapple Beam",
-              "hudmemoText": "Grapple Beam Acquired!",
-              "currIncrease": 100,
-              "model": "Grapple Beam",
+              "scanText": "Missile Expansion",
+              "hudmemoText": "Missile Expansion Acquired!",
+              "currIncrease": 93,
+              "model": "Missile",
               "showIcon": true
             }
           ]
         },
-        "Workstation Tunnel": {},
-        "Transport Tunnel C": {},
+        "Transport to Chozo Ruins North": {},
         "Transport to Phazon Mines West": {},
+        "Transport to Phendrana Drifts North": {},
         "Transport to Phendrana Drifts South": {},
-        "Save Station Magmoor B": {}
+        "Transport to Tallon Overworld West": {},
+        "Transport Tunnel A": {
+          "pickups": [
+            {
+              "type": "Unknown Item 1",
+              "scanText": "Flamethrower",
+              "hudmemoText": "Flamethrower Acquired!",
+              "currIncrease": 94,
+              "model": "Flamethrower",
+              "showIcon": true
+            }
+          ]
+        },
+        "Transport Tunnel B": {},
+        "Transport Tunnel C": {},
+        "Triclops Pit": {
+          "pickups": [
+            {
+              "type": "Unknown Item 1",
+              "scanText": "Missile Expansion",
+              "hudmemoText": "Missile Expansion Acquired!",
+              "currIncrease": 92,
+              "model": "Missile",
+              "showIcon": true
+            }
+          ]
+        },
+        "Twin Fires Tunnel": {},
+        "Twin Fires": {},
+        "Warrior Shrine": {
+          "pickups": [
+            {
+              "type": "Unknown Item 1",
+              "scanText": "Missile Expansion",
+              "hudmemoText": "Missile Expansion Acquired!",
+              "currIncrease": 95,
+              "model": "Missile",
+              "showIcon": true
+            }
+          ]
+        },
+        "Workstation Tunnel": {}
       }
     },
     "Phendrana Drifts": {
@@ -929,33 +1032,22 @@
         "Phendrana Drifts South (Quarantine Cave)": "Magmoor Caverns South (Magmoor Workstation, Save Station)"
       },
       "rooms": {
-        "Transport to Magmoor Caverns West": {},
-        "Shoreline Entrance": {},
-        "Phendrana Shorelines": {
+        "Aether Lab Entryway": {},
+        "Canyon Entryway": {},
+        "Chamber Access": {},
+        "Chapel of the Elders": {
           "pickups": [
             {
               "type": "Unknown Item 1",
               "scanText": "Missile Expansion",
               "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 36,
-              "model": "Missile",
-              "showIcon": true
-            },
-            {
-              "type": "Unknown Item 1",
-              "scanText": "Missile Expansion",
-              "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 37,
+              "currIncrease": 42,
               "model": "Missile",
               "showIcon": true
             }
           ]
         },
-        "Temple Entryway": {},
-        "Save Station B": {},
-        "Ruins Entryway": {},
-        "Plaza Walkway": {},
-        "Ice Ruins Access": {},
+        "Chapel Tunnel": {},
         "Chozo Ice Temple": {
           "pickups": [
             {
@@ -964,6 +1056,78 @@
               "hudmemoText": "Missile Expansion Acquired!",
               "currIncrease": 38,
               "model": "Missile",
+              "showIcon": true
+            }
+          ]
+        },
+        "Control Tower": {
+          "pickups": [
+            {
+              "type": "Unknown Item 1",
+              "scanText": "Missile Expansion",
+              "hudmemoText": "Missile Expansion Acquired!",
+              "currIncrease": 50,
+              "model": "Missile",
+              "showIcon": true
+            }
+          ]
+        },
+        "Courtyard Entryway": {},
+        "East Tower": {},
+        "Frost Cave Access": {},
+        "Frost Cave": {
+          "pickups": [
+            {
+              "type": "Unknown Item 1",
+              "scanText": "Energy Tank",
+              "hudmemoText": "Energy Tank Acquired!",
+              "currIncrease": 52,
+              "model": "Energy Tank",
+              "showIcon": true
+            }
+          ]
+        },
+        "Frozen Pike": {},
+        "Gravity Chamber": {
+          "pickups": [
+            {
+              "type": "Unknown Item 1",
+              "scanText": "Grapple Beam",
+              "hudmemoText": "Grapple Beam Acquired!",
+              "currIncrease": 55,
+              "model": "Grapple Beam",
+              "showIcon": true
+            },
+            {
+              "type": "Unknown Item 1",
+              "scanText": "Power Bomb Expansion",
+              "hudmemoText": "Power Bomb Expansion Acquired!",
+              "currIncrease": 56,
+              "model": "Power Bomb Expansion",
+              "showIcon": true
+            }
+          ]
+        },
+        "Hunter Cave Access": {},
+        "Hunter Cave": {},
+        "Hydra Lab Entryway": {},
+        "Ice Ruins Access": {},
+        "Ice Ruins East": {
+          "pickups": [
+            {
+              "type": "Unknown Item 1",
+              "scanText": "Space Jump Boots",
+              "hudmemoText": "Space Jump Boots Acquired!",
+              "currIncrease": 40,
+              "model": "Space Jump Boots",
+              "showIcon": true
+            },
+            {
+              "type": "Unknown Item 1",
+              "scanText": "Artifact of World",
+              "hudmemoText": "Artifact of World Acquired!",
+              "currIncrease": 41,
+              "model": "Artifact of World",
               "showIcon": true
             }
           ]
@@ -980,49 +1144,19 @@
             }
           ]
         },
-        "Ice Ruins East": {
+        "Lake Tunnel": {},
+        "Lower Edge Tunnel": {},
+        "Map Station": {},
+        "North Quarantine Tunnel": {},
+        "Observatory Access": {},
+        "Observatory": {
           "pickups": [
             {
               "type": "Unknown Item 1",
               "scanText": "Missile Expansion",
               "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 40,
+              "currIncrease": 48,
               "model": "Missile",
-              "showIcon": true
-            },
-            {
-              "type": "Unknown Item 1",
-              "scanText": "Missile Expansion",
-              "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 41,
-              "model": "Missile",
-              "showIcon": true
-            }
-          ]
-        },
-        "Chapel Tunnel": {},
-        "Courtyard Entryway": {},
-        "Canyon Entryway": {},
-        "Chapel of the Elders": {
-          "pickups": [
-            {
-              "type": "Unknown Item 1",
-              "scanText": "Missile Expansion",
-              "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 42,
-              "model": "Missile",
-              "showIcon": true
-            }
-          ]
-        },
-        "Ruined Courtyard": {
-          "pickups": [
-            {
-              "type": "Unknown Item 1",
-              "scanText": "Plasma Beam",
-              "hudmemoText": "Plasma Beam Acquired!",
-              "currIncrease": 43,
-              "model": "Plasma Beam",
               "showIcon": true
             }
           ]
@@ -1031,29 +1165,92 @@
           "pickups": [
             {
               "type": "Unknown Item 1",
+              "scanText": "Energy Tank",
+              "hudmemoText": "Energy Tank Acquired!",
+              "currIncrease": 44,
+              "model": "Energy Tank",
+              "showIcon": true
+            }
+          ]
+        },
+        "Phendrana Shorelines": {
+          "pickups": [
+            {
+              "type": "Unknown Item 1",
+              "scanText": "Ice Beam",
+              "hudmemoText": "Ice Beam Acquired!",
+              "currIncrease": 36,
+              "model": "Ice Beam",
+              "showIcon": true
+            },
+            {
+              "type": "Unknown Item 1",
               "scanText": "Missile Expansion",
               "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 44,
+              "currIncrease": 37,
               "model": "Missile",
               "showIcon": true
             }
           ]
         },
-        "Save Station A": {},
-        "Specimen Storage": {},
+        "Phendrana's Edge": {},
+        "Pike Access": {},
+        "Plaza Walkway": {},
         "Quarantine Access": {},
-        "Research Entrance": {},
-        "North Quarantine Tunnel": {},
-        "Map Station": {},
-        "Hydra Lab Entryway": {},
         "Quarantine Cave": {
           "pickups": [
             {
               "type": "Unknown Item 1",
-              "scanText": "Power Bomb Expansion",
-              "hudmemoText": "Power Bomb Expansion Acquired!",
+              "scanText": "Energy Tank",
+              "hudmemoText": "Energy Tank Acquired!",
               "currIncrease": 45,
-              "model": "Power Bomb Expansion",
+              "model": "Energy Tank",
+              "showIcon": true
+            }
+          ]
+        },
+        "Quarantine Monitor": {
+          "pickups": [
+            {
+              "type": "Unknown Item 1",
+              "scanText": "Missile Expansion",
+              "hudmemoText": "Missile Expansion Acquired!",
+              "currIncrease": 47,
+              "model": "Missile",
+              "showIcon": true
+            }
+          ]
+        },
+        "Research Core Access": {},
+        "Research Core": {
+          "pickups": [
+            {
+              "type": "Unknown Item 1",
+              "scanText": "Wavebuster",
+              "hudmemoText": "Wavebuster Acquired!",
+              "currIncrease": 51,
+              "model": "Wavebuster",
+              "showIcon": true
+            }
+          ]
+        },
+        "Research Entrance": {},
+        "Research Lab Aether": {
+          "pickups": [
+            {
+              "type": "Unknown Item 1",
+              "scanText": "Missile Expansion",
+              "hudmemoText": "Missile Expansion Acquired!",
+              "currIncrease": 53,
+              "model": "Missile",
+              "showIcon": true
+            },
+            {
+              "type": "Unknown Item 1",
+              "scanText": "Missile Expansion",
+              "hudmemoText": "Missile Expansion Acquired!",
+              "currIncrease": 54,
+              "model": "Missile",
               "showIcon": true
             }
           ]
@@ -1070,33 +1267,51 @@
             }
           ]
         },
+        "Ruined Courtyard": {
+          "pickups": [
+            {
+              "type": "Unknown Item 1",
+              "scanText": "Missile Expansion",
+              "hudmemoText": "Missile Expansion Acquired!",
+              "currIncrease": 43,
+              "model": "Missile",
+              "showIcon": true
+            }
+          ]
+        },
+        "Ruins Entryway": {},
+        "Save Station A": {},
+        "Save Station B": {},
+        "Save Station C": {},
+        "Save Station D": {},
+        "Security Cave": {
+          "pickups": [
+            {
+              "type": "Unknown Item 1",
+              "scanText": "X-Ray Visor",
+              "hudmemoText": "X-Ray Visor Acquired!",
+              "currIncrease": 58,
+              "model": "X-Ray Visor",
+              "showIcon": true
+            }
+          ]
+        },
+        "Shoreline Entrance": {},
         "South Quarantine Tunnel": {},
-        "Quarantine Monitor": {
+        "Specimen Storage": {},
+        "Storage Cave": {
           "pickups": [
             {
               "type": "Unknown Item 1",
-              "scanText": "Missile Expansion",
-              "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 47,
-              "model": "Missile",
+              "scanText": "Artifact of Sun",
+              "hudmemoText": "Artifact of Sun Acquired!",
+              "currIncrease": 57,
+              "model": "Artifact of Sun",
               "showIcon": true
             }
           ]
         },
-        "Observatory Access": {},
-        "Transport to Magmoor Caverns South": {},
-        "Observatory": {
-          "pickups": [
-            {
-              "type": "Unknown Item 1",
-              "scanText": "Missile Expansion",
-              "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 48,
-              "model": "Missile",
-              "showIcon": true
-            }
-          ]
-        },
+        "Temple Entryway": {},
         "Transport Access": {
           "pickups": [
             {
@@ -1109,123 +1324,11 @@
             }
           ]
         },
-        "West Tower Entrance": {},
-        "Save Station D": {},
-        "Frozen Pike": {},
-        "West Tower": {},
-        "Pike Access": {},
-        "Frost Cave Access": {},
-        "Hunter Cave Access": {},
-        "Control Tower": {
-          "pickups": [
-            {
-              "type": "Unknown Item 1",
-              "scanText": "Power Bomb Expansion",
-              "hudmemoText": "Power Bomb Expansion Acquired!",
-              "currIncrease": 50,
-              "model": "Power Bomb Expansion",
-              "showIcon": true
-            }
-          ]
-        },
-        "Research Core": {
-          "pickups": [
-            {
-              "type": "Unknown Item 1",
-              "scanText": "Missile Expansion",
-              "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 51,
-              "model": "Missile",
-              "showIcon": true
-            }
-          ]
-        },
-        "Frost Cave": {
-          "pickups": [
-            {
-              "type": "Unknown Item 1",
-              "scanText": "Missile Expansion",
-              "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 52,
-              "model": "Missile",
-              "showIcon": true
-            }
-          ]
-        },
-        "Hunter Cave": {},
-        "East Tower": {},
-        "Research Core Access": {},
-        "Save Station C": {},
+        "Transport to Magmoor Caverns South": {},
+        "Transport to Magmoor Caverns West": {},
         "Upper Edge Tunnel": {},
-        "Lower Edge Tunnel": {},
-        "Chamber Access": {},
-        "Lake Tunnel": {},
-        "Aether Lab Entryway": {},
-        "Research Lab Aether": {
-          "pickups": [
-            {
-              "type": "Unknown Item 1",
-              "scanText": "Energy Tank",
-              "hudmemoText": "Energy Tank Acquired!",
-              "currIncrease": 53,
-              "model": "Energy Tank",
-              "showIcon": true
-            },
-            {
-              "type": "Unknown Item 1",
-              "scanText": "Missile Expansion",
-              "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 54,
-              "model": "Missile",
-              "showIcon": true
-            }
-          ]
-        },
-        "Phendrana's Edge": {},
-        "Gravity Chamber": {
-          "pickups": [
-            {
-              "type": "Unknown Item 1",
-              "scanText": "Power Bomb Expansion",
-              "hudmemoText": "Power Bomb Expansion Acquired!",
-              "currIncrease": 55,
-              "model": "Power Bomb Expansion",
-              "showIcon": true
-            },
-            {
-              "type": "Unknown Item 1",
-              "scanText": "Artifact of Elder",
-              "hudmemoText": "Artifact of Elder Acquired!",
-              "currIncrease": 56,
-              "model": "Artifact of Elder",
-              "showIcon": true
-            }
-          ]
-        },
-        "Storage Cave": {
-          "pickups": [
-            {
-              "type": "Unknown Item 1",
-              "scanText": "Missile Expansion",
-              "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 57,
-              "model": "Missile",
-              "showIcon": true
-            }
-          ]
-        },
-        "Security Cave": {
-          "pickups": [
-            {
-              "type": "Unknown Item 1",
-              "scanText": "Energy Tank",
-              "hudmemoText": "Energy Tank Acquired!",
-              "currIncrease": 58,
-              "model": "Energy Tank",
-              "showIcon": true
-            }
-          ]
-        }
+        "West Tower Entrance": {},
+        "West Tower": {}
       }
     },
     "Phazon Mines": {
@@ -1234,59 +1337,45 @@
         "Phazon Mines West (Phazon Processing Center)": "Magmoor Caverns South (Magmoor Workstation, Debris)"
       },
       "rooms": {
-        "Transport to Tallon Overworld South": {},
-        "Quarry Access": {},
-        "Main Quarry": {
+        "Central Dynamo": {
           "pickups": [
             {
               "type": "Unknown Item 1",
-              "scanText": "Missile Expansion",
-              "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 74,
-              "model": "Missile",
+              "scanText": "Artifact of Newborn",
+              "hudmemoText": "Artifact of Newborn Acquired!",
+              "currIncrease": 85,
+              "model": "Artifact of Newborn",
               "showIcon": true
             }
           ]
         },
-        "Waste Disposal": {},
-        "Save Station Mines A": {},
-        "Security Access A": {
+        "Dynamo Access": {},
+        "Elevator A": {},
+        "Elevator Access A": {},
+        "Elevator Access B": {},
+        "Elevator B": {},
+        "Elite Control Access": {
           "pickups": [
             {
               "type": "Unknown Item 1",
-              "scanText": "Artifact of Warrior",
-              "hudmemoText": "Artifact of Warrior Acquired!",
-              "currIncrease": 75,
-              "model": "Artifact of Warrior",
+              "scanText": "Thermal Visor",
+              "hudmemoText": "Thermal Visor Acquired!",
+              "currIncrease": 80,
+              "model": "Thermal Visor",
               "showIcon": true
             }
           ]
         },
-        "Ore Processing": {},
-        "Mine Security Station": {},
-        "Research Access": {},
-        "Storage Depot B": {
+        "Elite Control": {},
+        "Elite Quarters Access": {},
+        "Elite Quarters": {
           "pickups": [
             {
               "type": "Unknown Item 1",
               "scanText": "Energy Tank",
               "hudmemoText": "Energy Tank Acquired!",
-              "currIncrease": 76,
+              "currIncrease": 84,
               "model": "Energy Tank",
-              "showIcon": true
-            }
-          ]
-        },
-        "Elevator Access A": {},
-        "Security Access B": {},
-        "Storage Depot A": {
-          "pickups": [
-            {
-              "type": "Unknown Item 1",
-              "scanText": "Artifact of World",
-              "hudmemoText": "Artifact of World Acquired!",
-              "currIncrease": 77,
-              "model": "Artifact of World",
               "showIcon": true
             }
           ]
@@ -1303,36 +1392,88 @@
             },
             {
               "type": "Unknown Item 1",
-              "scanText": "Missile Expansion",
-              "hudmemoText": "Missile Expansion Acquired!",
+              "scanText": "Super Missile",
+              "hudmemoText": "Super Missile Acquired!",
               "currIncrease": 79,
-              "model": "Missile",
+              "model": "Super Missile",
               "showIcon": true
             }
           ]
         },
-        "Elevator A": {},
-        "Elite Control Access": {
+        "Fungal Hall A": {},
+        "Fungal Hall Access": {
           "pickups": [
             {
               "type": "Unknown Item 1",
               "scanText": "Missile Expansion",
               "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 80,
+              "currIncrease": 90,
               "model": "Missile",
               "showIcon": true
             }
           ]
         },
-        "Elite Control": {},
+        "Fungal Hall B": {
+          "pickups": [
+            {
+              "type": "Unknown Item 1",
+              "scanText": "Phazon Suit",
+              "hudmemoText": "Phazon Suit Acquired!",
+              "currIncrease": 88,
+              "model": "Phazon Suit",
+              "showIcon": true
+            }
+          ]
+        },
+        "Main Quarry": {
+          "pickups": [
+            {
+              "type": "Unknown Item 1",
+              "scanText": "Gravity Suit",
+              "hudmemoText": "Gravity Suit Acquired!",
+              "currIncrease": 74,
+              "model": "Gravity Suit",
+              "showIcon": true
+            }
+          ]
+        },
         "Maintenance Tunnel": {},
-        "Ventilation Shaft": {
+        "Map Station Mines": {},
+        "Metroid Quarantine A": {
           "pickups": [
             {
               "type": "Unknown Item 1",
               "scanText": "Missile Expansion",
               "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 81,
+              "currIncrease": 87,
+              "model": "Missile",
+              "showIcon": true
+            }
+          ]
+        },
+        "Metroid Quarantine B": {
+          "pickups": [
+            {
+              "type": "Unknown Item 1",
+              "scanText": "Energy Tank",
+              "hudmemoText": "Energy Tank Acquired!",
+              "currIncrease": 86,
+              "model": "Energy Tank",
+              "showIcon": true
+            }
+          ]
+        },
+        "Mine Security Station": {},
+        "Missile Station Mines": {},
+        "Omega Research": {},
+        "Ore Processing": {},
+        "Phazon Mining Tunnel": {
+          "pickups": [
+            {
+              "type": "Unknown Item 1",
+              "scanText": "Missile Expansion",
+              "hudmemoText": "Missile Expansion Acquired!",
+              "currIncrease": 89,
               "model": "Missile",
               "showIcon": true
             }
@@ -1350,8 +1491,6 @@
             }
           ]
         },
-        "Omega Research": {},
-        "Transport Access": {},
         "Processing Center Access": {
           "pickups": [
             {
@@ -1364,128 +1503,66 @@
             }
           ]
         },
-        "Map Station Mines": {},
-        "Dynamo Access": {},
-        "Transport to Magmoor Caverns South": {},
-        "Elite Quarters": {
-          "pickups": [
-            {
-              "type": "Unknown Item 1",
-              "scanText": "Energy Tank",
-              "hudmemoText": "Energy Tank Acquired!",
-              "currIncrease": 84,
-              "model": "Energy Tank",
-              "showIcon": true
-            }
-          ]
-        },
-        "Central Dynamo": {
-          "pickups": [
-            {
-              "type": "Unknown Item 1",
-              "scanText": "Thermal Visor",
-              "hudmemoText": "Thermal Visor Acquired!",
-              "currIncrease": 85,
-              "model": "Thermal Visor",
-              "showIcon": true
-            }
-          ]
-        },
-        "Elite Quarters Access": {},
         "Quarantine Access A": {},
-        "Save Station Mines B": {},
-        "Metroid Quarantine B": {
-          "pickups": [
-            {
-              "type": "Unknown Item 1",
-              "scanText": "Missile Expansion",
-              "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 86,
-              "model": "Missile",
-              "showIcon": true
-            }
-          ]
-        },
-        "Metroid Quarantine A": {
-          "pickups": [
-            {
-              "type": "Unknown Item 1",
-              "scanText": "Missile Expansion",
-              "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 87,
-              "model": "Missile",
-              "showIcon": true
-            }
-          ]
-        },
         "Quarantine Access B": {},
+        "Quarry Access": {},
+        "Research Access": {},
+        "Save Station Mines A": {},
+        "Save Station Mines B": {},
         "Save Station Mines C": {},
-        "Elevator Access B": {},
-        "Fungal Hall B": {
+        "Security Access A": {
           "pickups": [
             {
               "type": "Unknown Item 1",
-              "scanText": "Artifact of Wild",
-              "hudmemoText": "Artifact of Wild Acquired!",
-              "currIncrease": 88,
-              "model": "Artifact of Wild",
+              "scanText": "Missile Expansion",
+              "hudmemoText": "Missile Expansion Acquired!",
+              "currIncrease": 75,
+              "model": "Missile",
               "showIcon": true
             }
           ]
         },
-        "Elevator B": {},
-        "Missile Station Mines": {},
-        "Phazon Mining Tunnel": {
+        "Security Access B": {},
+        "Storage Depot A": {
           "pickups": [
             {
               "type": "Unknown Item 1",
               "scanText": "Energy Tank",
               "hudmemoText": "Energy Tank Acquired!",
-              "currIncrease": 89,
+              "currIncrease": 77,
               "model": "Energy Tank",
               "showIcon": true
             }
           ]
         },
-        "Fungal Hall Access": {
+        "Storage Depot B": {
+          "pickups": [
+            {
+              "type": "Unknown Item 1",
+              "scanText": "Energy Tank",
+              "hudmemoText": "Energy Tank Acquired!",
+              "currIncrease": 76,
+              "model": "Energy Tank",
+              "showIcon": true
+            }
+          ]
+        },
+        "Transport Access": {},
+        "Transport to Magmoor Caverns South": {},
+        "Transport to Tallon Overworld South": {},
+        "Ventilation Shaft": {
           "pickups": [
             {
               "type": "Unknown Item 1",
               "scanText": "Missile Expansion",
               "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 90,
+              "currIncrease": 81,
               "model": "Missile",
               "showIcon": true
             }
           ]
         },
-        "Fungal Hall A": {}
-      }
-    },
-    "Impact Crater": {
-      "transports": {
-        "Crater Entry Point": "Artifact Temple",
-        "Essence Dead Cutscene": "Credits"
-      },
-      "rooms": {
-        "Crater Entry Point": {},
-        "Crater Tunnel A": {},
-        "Phazon Core": {},
-        "Crater Missile Station": {},
-        "Crater Tunnel B": {},
-        "Phazon Infusion Chamber": {},
-        "Subchamber One": {},
-        "Subchamber Two": {},
-        "Subchamber Three": {},
-        "Subchamber Four": {},
-        "Subchamber Five": {},
-        "Metroid Prime Lair": {}
-      }
-    },
-    "End Cinema": {
-      "transports": {},
-      "rooms": {
-        "End Cinema": {}
+        "Waste Disposal": {}
       }
     }
   }

@@ -6,19 +6,70 @@ from enum import Enum
 import worlds.metroidprime.lib.py_randomprime as py_randomprime
 from .Items import ItemData, item_table
 
-symbols = py_randomprime.symbols_for_version("0-00")
-game_state_pointer = symbols["g_GameState"]
-cstate_manager_global = symbols["g_StateManager"]
-cplayer_vtable = 0x803d96e8
+_SUPPORTED_VERSIONS = ["0-00", "0-01", "0-02", "jpn", "kor", "pal"]
+_SYMBOLS = {version: py_randomprime.symbols_for_version(version) for version in _SUPPORTED_VERSIONS}
+GAMES = {
+    "0-00": {
+        "game_id": b"GM8E01",
+        "game_rev": 0,
+        "game_state_pointer": _SYMBOLS["0-00"]["g_GameState"],
+        "cstate_manager_global": _SYMBOLS["0-00"]["g_StateManager"],
+        "cplayer_vtable": 0x803d96e8,
+        "HUD_MESSAGE_ADDRESS": 0x803efb90,
+        "HUD_TRIGGER_ADDRESS": 0x80572414,  # When this is 1 the game will display the message and then set it back to 0
+    },
+    "0-01": {
+        "game_id": b"GM8E01",
+        "game_rev": 1,
+        "game_state_pointer": _SYMBOLS["0-01"]["g_GameState"],
+        "cstate_manager_global": _SYMBOLS["0-01"]["g_StateManager"],
+        "cplayer_vtable": 0x803d98c8,
+        "HUD_MESSAGE_ADDRESS": 0x803efd70,
+        "HUD_TRIGGER_ADDRESS": 0x805724f4,  # When this is 1 the game will display the message and then set it back to 0
+    },
+    "0-02": {
+        "game_id": b"GM8E01",
+        "game_rev": 2,
+        "game_state_pointer": _SYMBOLS["0-02"]["g_GameState"],
+        "cstate_manager_global": _SYMBOLS["0-02"]["g_StateManager"],
+        "cplayer_vtable": 0x803da7a8,
+        "HUD_MESSAGE_ADDRESS": 0x803f0ba8,
+        "HUD_TRIGGER_ADDRESS": 0x80573494,  # When this is 1 the game will display the message and then set it back to 0
+    },
+    "jpn": {
+        "game_id": b"GM8J01",
+        "game_rev": 0,
+        "game_state_pointer": _SYMBOLS["jpn"]["g_GameState"],
+        "cstate_manager_global": _SYMBOLS["jpn"]["g_StateManager"],
+        "cplayer_vtable": 0x803c5b28,
+        "HUD_MESSAGE_ADDRESS": 0x803d89c8,
+        "HUD_TRIGGER_ADDRESS": 0x8055b474,  # When this is 1 the game will display the message and then set it back to 0
+    },
+    "kor": {
+        "game_id": b"GM8E01",
+        "game_rev": 48,
+        "game_state_pointer": _SYMBOLS["kor"]["g_GameState"],
+        "cstate_manager_global": _SYMBOLS["kor"]["g_StateManager"],
+        "cplayer_vtable": 0x803d97e8,
+        "HUD_MESSAGE_ADDRESS": 0x803efc90,
+        "HUD_TRIGGER_ADDRESS": 0x805720f4,  # When this is 1 the game will display the message and then set it back to 0
+    },
+    "pal": {
+        "game_id": b"GM8P01",
+        "game_rev": 0,
+        "game_state_pointer": _SYMBOLS["pal"]["g_GameState"],
+        "cstate_manager_global": _SYMBOLS["pal"]["g_StateManager"],
+        "cplayer_vtable": 0x803c4b88,
+        "HUD_MESSAGE_ADDRESS": 0x803d7a28,
+        "HUD_TRIGGER_ADDRESS": 0x804344b4,  # When this is 1 the game will display the message and then set it back to 0
+    },
+}
 AREA_SIZE = 16
 ITEM_SIZE = 0x8
 RTSL_VECTOR_OFFSET = 0x4
-METROID_PRIME_ID = b"GM8E01"
 ARTIFACT_TEMPLE_ROOM_INDEX = 16
 HUD_MESSAGE_DURATION = 7.0
-HUD_MESSAGE_ADDRESS = 0x803efb90
 HUD_MAX_MESSAGE_SIZE = 194
-HUD_TRIGGER_ADDRESS = 0x80572414  # When this is 1 the game will display the message and then set it back to 0
 
 
 class ConnectionState(Enum):
@@ -93,6 +144,8 @@ class MetroidPrimeInterface:
     logger: Logger
     _previous_message_size: int = 0
     game_id_error: str = None
+    game_rev_error: int = None
+    current_game: str = None
 
     def __init__(self, logger) -> None:
         self.logger = logger
@@ -124,7 +177,7 @@ class MetroidPrimeInterface:
 
     def get_item(self, item: ItemData) -> InventoryItemData:
         player_state_pointer = int.from_bytes(
-            self.dolphin_client.read_address(cstate_manager_global + 0x8B8, 4), "big")
+            self.dolphin_client.read_address(GAMES[self.current_game]["cstate_manager_global"] + 0x8B8, 4), "big")
         result = self.dolphin_client.read_pointer(
             self.__get_player_state_pointer(), self.__calculate_item_offset(item.id), 8)
         if result is None:
@@ -172,7 +225,7 @@ class MetroidPrimeInterface:
     def get_current_level(self) -> MetroidPrimeLevel:
         """Returns the world that the player is currently in"""
         world_bytes = self.dolphin_client.read_pointer(
-            game_state_pointer, 0x84, struct.calcsize(">I"))
+            GAMES[self.current_game]["game_state_pointer"], 0x84, struct.calcsize(">I"))
         if world_bytes is not None:
             world_asset_id = struct.unpack(">I", world_bytes)[0]
             return world_by_id(world_asset_id)
@@ -196,11 +249,21 @@ class MetroidPrimeInterface:
             self.dolphin_client.connect()
             self.logger.info("Connected to Dolphin Emulator")
             game_id = self.dolphin_client.read_address(GC_GAME_ID_ADDRESS, 6)
+            try:
+                game_rev = self.dolphin_client.read_address(GC_GAME_ID_ADDRESS + 7, 1)[0]
+            except:
+                game_rev = None
             # The first read of the address will be null if the client is faster than the emulator
-            if game_id != METROID_PRIME_ID and self.game_id_error != game_id and game_id != b'\x00\x00\x00\x00\x00\x00':
+            self.current_game = None
+            for version in _SUPPORTED_VERSIONS:
+                if game_id == GAMES[version]["game_id"] and game_rev == GAMES[version]["game_rev"]:
+                    self.current_game = version
+                    break
+            if self.current_game is None and self.game_id_error != game_id and game_id != b'\x00\x00\x00\x00\x00\x00':
                 self.logger.warn(
-                    f"Connected to the wrong game ({game_id}), please connect to Metroid Prime V1 English ({METROID_PRIME_ID})")
+                    f"Connected to the wrong game ({game_id}, rev {game_rev}), please connect to Metroid Prime GC (Game ID starts with a GM8)")
                 self.game_id_error = game_id
+                self.game_rev_error = game_rev
         except DolphinException as e:
             pass
 
@@ -211,7 +274,7 @@ class MetroidPrimeInterface:
     def get_connection_state(self):
         try:
             connected = self.dolphin_client.is_connected()
-            if not connected:
+            if not connected or self.current_game is None:
                 return ConnectionState.DISCONNECTED
             elif self.is_in_playable_state():
                 return ConnectionState.IN_GAME
@@ -222,14 +285,17 @@ class MetroidPrimeInterface:
 
     def is_in_playable_state(self) -> bool:
         """ Check if the player is in the actual game rather than the main menu """
-        return self.get_current_level() != None and self.__is_player_table_ready()
+        return self.get_current_level() is not None and self.__is_player_table_ready()
 
     def send_hud_message(self, message: str) -> bool:
-        current_value = self.dolphin_client.read_address(HUD_TRIGGER_ADDRESS, 1)
+        message = f"&just=center;{message}"
+        if self.current_game == "jpn":
+            message = f"&push;&font=C29C51F1;{message}&pop;"
+        current_value = self.dolphin_client.read_address(GAMES[self.current_game]["HUD_TRIGGER_ADDRESS"], 1)
         if current_value == b"\x01":
             return False
         self._save_message_to_memory(message)
-        self.dolphin_client.write_address(HUD_TRIGGER_ADDRESS, b"\x01")
+        self.dolphin_client.write_address(GAMES[self.current_game]["HUD_TRIGGER_ADDRESS"], b"\x01")
         return True
 
     def _save_message_to_memory(self, message: str):
@@ -249,28 +315,28 @@ class MetroidPrimeInterface:
                 len(encoded_message) + 1
             encoded_message += b"\x00" * num_to_align
 
-        self.dolphin_client.write_address(HUD_MESSAGE_ADDRESS, encoded_message)
+        self.dolphin_client.write_address(GAMES[self.current_game]["HUD_MESSAGE_ADDRESS"], encoded_message)
 
     def __is_player_table_ready(self) -> bool:
         """Check if the player table is ready to be read from memory, indicating the game is in a playable state"""
         player_table_bytes = self.dolphin_client.read_pointer(
-            cstate_manager_global + 0x84C, 0, 4)
-        if (player_table_bytes is None):
+            GAMES[self.current_game]["cstate_manager_global"] + 0x84C, 0, 4)
+        if player_table_bytes is None:
             return False
         player_table = struct.unpack(">I", player_table_bytes)[0]
-        if player_table == cplayer_vtable:
+        if player_table == GAMES[self.current_game]["cplayer_vtable"]:
             return True
         else:
             return False
 
     def __get_player_state_pointer(self):
-        return int.from_bytes(self.dolphin_client.read_address(cstate_manager_global + 0x8B8, 4), "big")
+        return int.from_bytes(self.dolphin_client.read_address(GAMES[self.current_game]["cstate_manager_global"] + 0x8B8, 4), "big")
 
     def __calculate_item_offset(self, item_id):
         return (0x24 + RTSL_VECTOR_OFFSET) + (item_id * ITEM_SIZE)
 
     def __get_world_layer_state_pointer(self):
-        return int.from_bytes(self.dolphin_client.read_address(cstate_manager_global + 0x8c8, 4), "big")
+        return int.from_bytes(self.dolphin_client.read_address(GAMES[self.current_game]["cstate_manager_global"] + 0x8c8, 4), "big")
 
     def __get_vector_item_offset(self):
         # Calculate the address of the Area at index area_idx

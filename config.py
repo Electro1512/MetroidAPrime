@@ -1,37 +1,30 @@
-from typing import Dict, Any, Optional
+from enum import Enum
+import os
+from typing import TYPE_CHECKING, Dict, Any, List, Optional
 
-from worlds.metroidprime.PrimeOptions import MetroidPrimeOptions
+from .Items import SuitUpgrade
 
 
-def starting_inventory(world, item) -> bool:
-    items = world.multiworld.precollected_items.values()
+from .PrimeOptions import HudColor, MetroidPrimeOptions
+from .data.RoomData import MetroidPrimeArea
+from .data.Transports import get_transport_data
+from .data.MagmoorCaverns import MagmoorCavernsAreaData
+from .data.PhazonMines import PhazonMinesAreaData
+from .data.PhendranaDrifts import PhendranaDriftsAreaData
+from .data.TallonOverworld import TallonOverworldAreaData
+from .data.ChozoRuins import ChozoRuinsAreaData
+
+
+if TYPE_CHECKING:
+    from . import MetroidPrimeWorld
+
+
+def starting_inventory(world: 'MetroidPrimeWorld', item: str) -> bool:
+    items = [item.name for item in world.multiworld.precollected_items[world.player]]
     if item in items:
         return True
     else:
         return False
-
-def ice_traps(ice) -> bool:
-    if ice > 0:
-        return True
-    else:
-        return False
-def starting_ammo(world, item) -> int:
-    items = world.multiworld.precollected_items.values()
-    count = 0
-    if item == "Missile Expansion":
-        for i in items:
-            if i == "Missile Expansion" or i == "Missile Launcher":
-                count += 5
-        return count
-    if item == "Energy Tank":
-        for i in items:
-            if i == "Energy Tank":
-                count += 1
-    if item == "Power Bomb (Main)":
-        for i in items:
-            if i == "Power Bomb (Main)" or i == "Power Bomb Expansion":
-                count += 1
-    return count
 
 
 def spring_check(spring) -> bool:
@@ -48,69 +41,96 @@ def ridley(boss) -> bool:
         return True
 
 
-def temple_dest(boss) -> str:
-    if boss == 0 or boss == 2:
-        return "Crater Entry Point"
+def get_starting_beam(world: 'MetroidPrimeWorld') -> str:
+    starting_items = [item.name for item in world.multiworld.precollected_items[world.player]]
+    starting_beam = "Power"
+    for item in starting_items:
+        if item in [SuitUpgrade.Wave_Beam.value, SuitUpgrade.Ice_Beam.value, SuitUpgrade.Plasma_Beam.value]:
+            starting_beam = item.split(" ")[0]
+            break
+    return starting_beam
+
+
+def color_options_to_value(world: 'MetroidPrimeWorld') -> List[float]:
+    options = world.options
+    # If any overrides are set, use that instead
+    if options.hud_color_red.value or options.hud_color_green.value or options.hud_color_blue.value:
+        return [options.hud_color_red.value/255, options.hud_color_green.value/255, options.hud_color_blue.value/255]
+
+    # get the key in hudcolor enum that matches all caps color
+    color: str = world.options.hud_color.value
+    color = color.upper()
+    for key in HudColor.__members__.keys():
+        if key == color:
+            return HudColor[key].value
+    return HudColor.DEFAULT.value
+
+
+def make_artifact_hints(world: 'MetroidPrimeWorld') -> str:
+    def make_artifact_hint(item) -> str:
+        try:
+            if world.options.artifact_hints.value:
+                location = world.multiworld.find_item(item, world.player)
+                player_string = f"{world.multiworld.player_name[location.player]}'s" if location.player != world.player else "your"
+                return f"The &push;&main-color=#c300ff;{item}&pop; can be found in &push;&main-color=#d4cc33;{player_string}&pop; &push;&main-color=#89a1ff;{location.name}&pop;."
+            else:
+                return f"The &push;&main-color=#c300ff;{item}&pop; has not been collected."
+            # This will error when trying to find an artifact that does not have a location since was pre collected
+        except:
+            return f"The &push;&main-color=#c300ff;{item}&pop; does not need to be collected."
+
+    return {
+        "Artifact of Chozo": make_artifact_hint("Artifact of Chozo"),
+        "Artifact of Nature": make_artifact_hint("Artifact of Nature"),
+        "Artifact of Sun": make_artifact_hint("Artifact of Sun"),
+        "Artifact of World": make_artifact_hint("Artifact of World"),
+        "Artifact of Spirit": make_artifact_hint("Artifact of Spirit"),
+        "Artifact of Newborn": make_artifact_hint("Artifact of Newborn"),
+        "Artifact of Truth": make_artifact_hint("Artifact of Truth"),
+        "Artifact of Strength": make_artifact_hint("Artifact of Strength"),
+        "Artifact of Elder": make_artifact_hint("Artifact of Elder"),
+        "Artifact of Wild": make_artifact_hint("Artifact of Wild"),
+        "Artifact of Lifegiver": make_artifact_hint("Artifact of Lifegiver"),
+        "Artifact of Warrior": make_artifact_hint("Artifact of Warrior")
+    }
+
+
+def get_tweaks(world: 'MetroidPrimeWorld') -> Dict[str, List[int]]:
+    color = color_options_to_value(world)
+    if color != HudColor.DEFAULT.value:
+        return {
+            "hudColor": color
+        }
     else:
-        return "Credits"
+        return {}
 
 
-def item_text(world, location) -> str:
-    loc = world.multiworld.get_location(location, world.player)
-    player_name = f"{world.multiworld.player_name[loc.item.player]}'s " if loc.item.player != world.player else ""
-    return f"{player_name}{loc.item.name}"
+def get_strg(world: 'MetroidPrimeWorld') -> Dict[str, List[str]]:
+    if not world.options.show_suit_index_on_pause_menu.value:
+        return {}
+    strg = {**PAUSE_STRG}
+    pause_menu_overrides = {
+        "Power Suit": world.options.power_suit_color.value,
+        "Varia Suit": world.options.varia_suit_color.value,
+        "Gravity Suit": world.options.gravity_suit_color.value,
+        "Phazon Suit": world.options.phazon_suit_color.value
+    }
+    # Update the name to include the color index if it is set
+    for item in strg[PAUSE_MENU_STRG_KEY]:
+        if item in pause_menu_overrides and pause_menu_overrides[item] != 0:
+            index = strg[PAUSE_MENU_STRG_KEY].index(item)
+            strg[PAUSE_MENU_STRG_KEY][index] = f"{item} (Color: {pause_menu_overrides[item]})"
+    return strg
 
 
-def item_model(world, location) -> str:
-    loc = world.multiworld.get_location(location, world.player)
-    if loc.native_item:
-        name = loc.item.name
-        if name == "Missile Expansion":
-            return "Missile"
-        elif name == "Missile Launcher":
-            return "Shiny Missile"
-        elif name == "Power Bomb (Main)":
-          return "Power Bomb"
-        else:
-            return name
-    else:
-        return "Nothing"
-
-def make_artifact_hints(world) -> str:
-  def make_artifact_hint(item) -> str:
-    try:
-      if world.options.artifact_hints.value:
-        location = world.multiworld.find_item(item, world.player)
-        player_string = f"{world.multiworld.player_name[location.player]}'s" if location.player != world.player else "your"
-        return f"The &push;&main-color=#c300ff;{item}&pop; can be found in &push;&main-color=#d4cc33;{player_string}&pop; &push;&main-color=#89a1ff;{location.name}&pop;."
-      else:
-        return f"The &push;&main-color=#c300ff;{item}&pop; has not been collected."
-      # This will error when trying to find an artifact that does not have a location since was pre collected
-    except:
-      return f"The &push;&main-color=#c300ff;{item}&pop; does not need to be collected."
-
-  return  {
-                "Artifact of Chozo": make_artifact_hint("Artifact of Chozo"),
-                "Artifact of Nature": make_artifact_hint("Artifact of Nature"),
-                "Artifact of Sun": make_artifact_hint("Artifact of Sun"),
-                "Artifact of World": make_artifact_hint("Artifact of World"),
-                "Artifact of Spirit": make_artifact_hint("Artifact of Spirit"),
-                "Artifact of Newborn": make_artifact_hint("Artifact of Newborn"),
-                "Artifact of Truth": make_artifact_hint("Artifact of Truth"),
-                "Artifact of Strength": make_artifact_hint("Artifact of Strength"),
-                "Artifact of Elder": make_artifact_hint("Artifact of Elder"),
-                "Artifact of Wild": make_artifact_hint("Artifact of Wild"),
-                "Artifact of Lifegiver": make_artifact_hint("Artifact of Lifegiver"),
-                "Artifact of Warrior": make_artifact_hint("Artifact of Warrior")
-            }
-
-def make_config(world):
+def make_config(world: 'MetroidPrimeWorld'):
     options: MetroidPrimeOptions = world.options
     config = {
         "$schema": "https://randovania.org/randomprime/randomprime.schema.json",
         "inputIso": "prime.iso",
         "outputIso": "prime_out.iso",
         "forceVanillaLayout": False,
+        "strg": get_strg(world),
         "preferences": {
             "forceFusion": bool(options.fusion_suit.value),
             "cacheDir": "cache",
@@ -120,11 +140,22 @@ def make_config(world):
             "qolCutscenes": "Skippable",
             "qolPickupScans": True,
             "mapDefaultState": "Always",
-            "artifactHintBehavior": "All"
+            "artifactHintBehavior": "All",
+            "skipSplashScreens": bool(os.environ.get("DEBUG", False)),
+            "quickplay": bool(os.environ.get("DEBUG", False)),
+            "quickpatch": bool(os.environ.get("DEBUG", False)),
+            "quiet": bool(os.environ.get("DEBUG", False)),
+            "suitColors": {
+                "gravityDeg": world.options.gravity_suit_color.value or 0,
+                "phazonDeg": world.options.phazon_suit_color.value or 0,
+                "powerDeg": world.options.power_suit_color.value or 0,
+                "variaDeg": world.options.varia_suit_color.value or 0
+            }
         },
+        "tweaks": get_tweaks(world),
         "gameConfig": {
             "mainMenuMessage": "Archipelago Metroid Prime",
-            "startingRoom": "Tallon Overworld:Landing Site",
+            "startingRoom": f"{world.starting_room_data.area.value}:{world.starting_room_data.name}",
             "springBall": spring_check(options.spring_ball.value),
             "warpToStart": True,
             "multiworldDolPatches": True,
@@ -139,12 +170,13 @@ def make_config(world):
             "removeHiveMecha": bool(options.remove_hive_mecha.value),
             "multiworldDolPatches": False,
             "startingItems": {
-                "combatVisor":True,  # starting_inventory(world, "Combat Visor"),
-                "powerBeam": True, # starting_inventory(world, "Power Beam"), disabling this for now since we don't have this worked into logic
+                "combatVisor": True,  # starting_inventory(world, "Combat Visor"),
+                "powerBeam": starting_inventory(world, "Power Beam"),
                 "scanVisor": True,  # starting_inventory(world, "Scan Visor"),
-                "missiles": starting_ammo(world, "Missile Launcher"),
-                "energyTanks": starting_ammo(world, "Energy Tank"),
-                "powerBombs": starting_ammo(world, "Power Bomb (Main)"),
+                # These are handled by the client
+                "missiles": 0,
+                "energyTanks": 0,
+                "powerBombs": 0,
                 "wave": starting_inventory(world, "Wave Beam"),
                 "ice": starting_inventory(world, "Ice Beam"),
                 "plasma": starting_inventory(world, "Plasma Beam"),
@@ -167,7 +199,7 @@ def make_config(world):
             },
             "disableItemLoss": True,
             "startingVisor": "Combat",
-            "startingBeam": "Power",
+            "startingBeam": get_starting_beam(world),
             "enableIceTraps": False,
             "missileStationPbRefill": True,
             "doorOpenMode": "Original",
@@ -220,1401 +252,150 @@ def make_config(world):
             "backwardsLabs": True,
             "backwardsFrigate": True,
             "backwardsUpperMines": True,
-            "backwardsLowerMines": True,
+            "backwardsLowerMines": bool(world.options.backwards_lower_mines.value),
             "patchPowerConduits": False,
             "removeMineSecurityStationLocks": False,
-            "powerBombArboretumSandstone": False,
+            "powerBombArboretumSandstone": True,
             "artifactHints": make_artifact_hints(world),
             "requiredArtifactCount": world.options.required_artifacts.value
         },
         "levelData": make_level_data(world)
-        }
+    }
 
     return config
 
+
 def make_level_data(world):
-  return {
-            "Tallon Overworld": {
-                    "transports": {
-                            "Tallon Overworld North (Tallon Canyon)":  "Chozo Ruins West (Main Plaza)",
-                            "Tallon Overworld West (Root Cave)": "Magmoor Caverns East (Twin Fires)",
-                            "Tallon Overworld East (Frigate Crash Site)": "Chozo Ruins East (Reflecting Pool, Save Station)",
-                            "Tallon Overworld South (Great Tree Hall, Upper)": "Chozo Ruins South (Reflecting Pool, Far End)",
-                            "Tallon Overworld South (Great Tree Hall, Lower)": "Phazon Mines East (Main Quarry)",
-                            "Artifact Temple": temple_dest(world.options.final_bosses.value)
-                    },
-                    "rooms": {
-                        "Landing Site": {
-                            "pickups": [{
-                                "type": "Unknown Item 1",
-                                "scanText": item_text(world, "Tallon Overworld: Landing Site"),
-                                "hudmemoText": item_text(world,
-                                                          "Tallon Overworld: Landing Site") + " Acquired!",
-                                "currIncrease": 59,
-                                "model": item_model(world, "Tallon Overworld: Landing Site"),
-                                "showIcon": True
-                            }]
-                        },
-                        "Gully": {},
-                        "Canyon Cavern": {},
-                        "Temple Hall": {},
-                        "Alcove": {
-                            "pickups": [{
-                                "type": "Unknown Item 1",
-                                "scanText": item_text(world, "Tallon Overworld: Alcove"),
-                                "hudmemoText": item_text(world, "Tallon Overworld: Alcove") + " Acquired!",
-                                "currIncrease": 60,
-                                "model": item_model(world, "Tallon Overworld: Alcove"),
-                                "showIcon": True
-                            }]
-                        },
-                        "Waterfall Cavern": {},
-                        "Tallon Canyon": {},
-                        "Temple Security Station": {},
-                        "Frigate Crash Site": {
-                            "pickups": [{
-                                "type": "Unknown Item 1",
-                                "scanText": item_text(world, "Tallon Overworld: Frigate Crash Site"),
-                                "hudmemoText": item_text(world,
-                                                          "Tallon Overworld: Frigate Crash Site") + " Acquired!",
-                                "currIncrease": 61,
-                                "model": item_model(world, "Tallon Overworld: Frigate Crash Site"),
-                                "showIcon": True
-                            }]
-                        },
-                        "Transport Tunnel A": {},
-                        "Root Tunnel": {},
-                        "Temple Lobby": {},
-                        "Frigate Access Tunnel": {},
-                        "Overgrown Cavern": {
-                            "pickups": [{
-                                "type": "Unknown Item 1",
-                                "scanText": item_text(world, "Tallon Overworld: Overgrown Cavern"),
-                                "hudmemoText": item_text(world,
-                                                          "Tallon Overworld: Overgrown Cavern") + " Acquired!",
-                                "currIncrease": 62,
-                                "model": item_model(world, "Tallon Overworld: Overgrown Cavern"),
-                                "showIcon": True
-                            }]
-                        },
-                        "Transport to Chozo Ruins West": {},
-                        "Root Cave": {
-                            "pickups": [{
-                                "type": "Unknown Item 1",
-                                "scanText": item_text(world, "Tallon Overworld: Root Cave"),
-                                "hudmemoText": item_text(world,
-                                                          "Tallon Overworld: Root Cave") + " Acquired!",
-                                "currIncrease": 63,
-                                "model": item_model(world, "Tallon Overworld: Root Cave"),
-                                "showIcon": True
-                            }]
-                        },
-                        "Artifact Temple": {
-                            "pickups": [{
-                                "type": "Unknown Item 1",
-                                "scanText": item_text(world, "Tallon Overworld: Artifact Temple"),
-                                "hudmemoText": item_text(world,
-                                                          "Tallon Overworld: Artifact Temple") + " Acquired!",
-                                "currIncrease": 64,
-                                "model": item_model(world, "Tallon Overworld: Artifact Temple"),
-                                "showIcon": True
-                            }]
-                        },
-                        "Main Ventilation Shaft Section C": {},
-                        "Transport Tunnel C": {},
-                        "Transport Tunnel B": {
-                            "pickups": [{
-                                "type": "Unknown Item 1",
-                                "scanText": item_text(world, "Tallon Overworld: Transport Tunnel B"),
-                                "hudmemoText": item_text(world,
-                                                          "Tallon Overworld: Transport Tunnel B") + " Acquired!",
-                                "currIncrease": 65,
-                                "model": item_model(world, "Tallon Overworld: Transport Tunnel B"),
-                                "showIcon": True
-                            }]
-                        },
-                        "Arbor Chamber": {
-                            "pickups": [{
-                                "type": "Unknown Item 1",
-                                "scanText": item_text(world, "Tallon Overworld: Arbor Chamber"),
-                                "hudmemoText": item_text(world,
-                                                          "Tallon Overworld: Arbor Chamber") + " Acquired!",
-                                "currIncrease": 66,
-                                "model": item_model(world, "Tallon Overworld: Arbor Chamber"),
-                                "showIcon": True
-                            }]},
-                        "Main Ventilation Shaft Section B": {},
-                        "Transport to Chozo Ruins East": {},
-                        "Transport to Magmoor Caverns East": {},
-                        "Main Ventilation Shaft Section A": {},
-                        "Reactor Core": {},
-                        "Reactor Access": {},
-                        "Cargo Freight Lift to Deck Gamma": {
-                            "pickups": [{
-                                "type": "Unknown Item 1",
-                                "scanText": item_text(world,
-                                                      "Tallon Overworld: Cargo Freight Lift to Deck Gamma"),
-                                "hudmemoText": item_text(world,
-                                                          "Tallon Overworld: Cargo Freight Lift to Deck Gamma") + " Acquired!",
-                                "currIncrease": 67,
-                                "model": item_model(world, "Tallon Overworld: Cargo Freight Lift to Deck Gamma"),
-                                "showIcon": True
-                            }]
-                        },
-                        "Savestation": {},
-                        "Deck Beta Transit Hall": {},
-                        "Biohazard Containment": {
-                            "pickups": [{
-                                "type": "Unknown Item 1",
-                                "scanText": item_text(world, "Tallon Overworld: Biohazard Containment"),
-                                "hudmemoText": item_text(world,
-                                                          "Tallon Overworld: Biohazard Containment") + " Acquired!",
-                                "currIncrease": 68,
-                                "model": item_model(world, "Tallon Overworld: Biohazard Containment"),
-                                "showIcon": True
-                            }]
-                        },
-                        "Deck Beta Security Hall": {},
-                        "Biotech Research Area 1": {},
-                        "Deck Beta Conduit Hall": {},
-                        "Connection Elevator to Deck Beta": {},
-                        "Hydro Access Tunnel": {
-                            "pickups": [{
-                                "type": "Unknown Item 1",
-                                "scanText": item_text(world, "Tallon Overworld: Hydro Access Tunnel"),
-                                "hudmemoText": item_text(world,
-                                                          "Tallon Overworld: Hydro Access Tunnel") + " Acquired!",
-                                "currIncrease": 69,
-                                "model": item_model(world, "Tallon Overworld: Hydro Access Tunnel"),
-                                "showIcon": True
-                            }]
-                        },
-                        "Great Tree Hall": {},
-                        "Great Tree Chamber": {
-                            "pickups": [{
-                                "type": "Unknown Item 1",
-                                "scanText": item_text(world, "Tallon Overworld: Great Tree Chamber"),
-                                "hudmemoText": item_text(world,
-                                                          "Tallon Overworld: Great Tree Chamber") + " Acquired!",
-                                "currIncrease": 70,
-                                "model": item_model(world, "Tallon Overworld: Great Tree Chamber"),
-                                "showIcon": True
-                            }]
-                        },
-                        "Transport Tunnel D": {},
-                        "Life Grove Tunnel": {
-                            "pickups": [{
-                                "type": "Unknown Item 1",
-                                "scanText": item_text(world, "Tallon Overworld: Life Grove Tunnel"),
-                                "hudmemoText": item_text(world,
-                                                          "Tallon Overworld: Life Grove Tunnel") + " Acquired!",
-                                "currIncrease": 71,
-                                "model": item_model(world, "Tallon Overworld: Life Grove Tunnel"),
-                                "showIcon": True
-                            }]
-                        },
-                        "Transport Tunnel E": {},
-                        "Transport to Chozo Ruins South": {},
-                        "Life Grove": {
-                            "pickups": [
-                                {
-                                    "type": "Unknown Item 1",
-                                    "scanText": item_text(world, "Tallon Overworld: Life Grove - Start"),
-                                    "hudmemoText": item_text(world,
-                                                              "Tallon Overworld: Life Grove - Start") + " Acquired!",
-                                    "currIncrease": 72,
-                                    "model": item_model(world, "Tallon Overworld: Life Grove - Start"),
-                                    "showIcon": True
-                                },
-                                {
-                                    "type": "Unknown Item 1",
-                                    "scanText": item_text(world,
-                                                          "Tallon Overworld: Life Grove - Underwater Spinner"),
-                                    "hudmemoText": item_text(world,
-                                                              "Tallon Overworld: Life Grove - Underwater Spinner") + " Acquired!",
-                                    "currIncrease": 73,
-                                    "model": item_model(world,
-                                                        "Tallon Overworld: Life Grove - Underwater Spinner"),
-                                    "showIcon": True
-                                }
-                            ]
-                        },
-                        "Transport to Phazon Mines East": {}
-                },
-              },
-            "Chozo Ruins": {
-                  "transports": {
-                      "Chozo Ruins West (Main Plaza)": "Tallon Overworld North (Tallon Canyon)",
-                      "Chozo Ruins North (Sun Tower)": "Magmoor Caverns North (Lava Lake)",
-                      "Chozo Ruins East (Reflecting Pool, Save Station)": "Tallon Overworld East (Frigate Crash Site)",
-                      "Chozo Ruins South (Reflecting Pool, Far End)": "Tallon Overworld South (Great Tree Hall, Upper)",
-                  },
-                  "rooms": {
-                      "Transport to Tallon Overworld North": {},
-                      "Ruins Entrance": {},
-                      "Main Plaza": {
-                          "pickups": [
-                              {
-                                  "type": "Unknown Item 1",
-                                  "scanText": item_text(world,
-                                                        "Chozo Ruins: Main Plaza - Half-Pipe"),
-                                  "hudmemoText": item_text(world,
-                                                            "Chozo Ruins: Main Plaza - Half-Pipe") + " Acquired!",
-                                  "currIncrease": 1,
-                                  "model": item_model(world, "Chozo Ruins: Main Plaza - Half-Pipe"),
-                                  "showIcon": True
-                              },
-                              {
-                                  "type": "Unknown Item 1",
-                                  "scanText": item_text(world,
-                                                        "Chozo Ruins: Main Plaza - Grapple Ledge"),
-                                  "hudmemoText": item_text(world,
-                                                            "Chozo Ruins: Main Plaza - Grapple Ledge") + " Acquired!",
-                                  "currIncrease": 2,
-                                  "model": item_model(world,
-                                                      "Chozo Ruins: Main Plaza - Grapple Ledge"),
-                                  "showIcon": True
-                              },
-                              {
-                                  "type": "Unknown Item 1",
-                                  "scanText": item_text(world,
-                                                        "Chozo Ruins: Main Plaza - Tree"),
-                                  "hudmemoText": item_text(world,
-                                                            "Chozo Ruins: Main Plaza - Tree") + " Acquired!",
-                                  "currIncrease": 3,
-                                  "model": item_model(world,
-                                                      "Chozo Ruins: Main Plaza - Tree"),
-                                  "showIcon": True
-                              },
-                              {
-                                  "type": "Unknown Item 1",
-                                  "scanText": item_text(world,
-                                                        "Chozo Ruins: Main Plaza - Locked Door"),
-                                  "hudmemoText": item_text(world,
-                                                            "Chozo Ruins: Main Plaza - Locked Door") + " Acquired!",
-                                  "currIncrease": 4,
-                                  "model": item_model(world,
-                                                      "Chozo Ruins: Main Plaza - Locked Door"),
-                                  "showIcon": True
-                              }
-                          ]
-                      },
-                      "Ruined Fountain Access": {},
-                      "Ruined Shrine Access": {},
-                      "Nursery Access": {},
-                      "Plaza Access": {},
-                      "Piston Tunnel": {},
-                      "Ruined Fountain": {
-                          "pickups": [{
-                              "type": "Unknown Item 1",
-                              "scanText": item_text(world, "Chozo Ruins: Ruined Fountain"),
-                              "hudmemoText": item_text(world,
-                                                        "Chozo Ruins: Ruined Fountain") + " Acquired!",
-                              "currIncrease": 5,
-                              "model": item_model(world, "Chozo Ruins: Ruined Fountain"),
-                              "showIcon": True
-                          }]
-                      },
-                      "Ruined Shrine": {
-                          "pickups": [
-                              {
-                                  "type": "Unknown Item 1",
-                                  "scanText": item_text(world,
-                                                        "Chozo Ruins: Ruined Shrine - Plated Beetle"),
-                                  "hudmemoText": item_text(world,
-                                                            "Chozo Ruins: Ruined Shrine - Plated Beetle") + " Acquired!",
-                                  "currIncrease": 6,
-                                  "model": item_model(world, "Chozo Ruins: Ruined Shrine - Plated Beetle"),
-                                  "showIcon": True
-                              },
-                              {
-                                  "type": "Unknown Item 1",
-                                  "scanText": item_text(world,
-                                                        "Chozo Ruins: Ruined Shrine - Half-Pipe"),
-                                  "hudmemoText": item_text(world,
-                                                            "Chozo Ruins: Ruined Shrine - Half-Pipe") + " Acquired!",
-                                  "currIncrease": 7,
-                                  "model": item_model(world,
-                                                      "Chozo Ruins: Ruined Shrine - Half-Pipe"),
-                                  "showIcon": True
-                              },
-                              {
-                                  "type": "Unknown Item 1",
-                                  "scanText": item_text(world,
-                                                        "Chozo Ruins: Ruined Shrine - Lower Tunnel"),
-                                  "hudmemoText": item_text(world,
-                                                            "Chozo Ruins: Ruined Shrine - Lower Tunnel") + " Acquired!",
-                                  "currIncrease": 8,
-                                  "model": item_model(world,
-                                                      "Chozo Ruins: Ruined Shrine - Lower Tunnel"),
-                                  "showIcon": True
-                              }
-                          ]
-                      },
-                      "Eyon Tunnel": {},
-                      "Vault": {
-                          "pickups": [{
-                              "type": "Unknown Item 1",
-                              "scanText": item_text(world, "Chozo Ruins: Vault"),
-                              "hudmemoText": item_text(world,
-                                                        "Chozo Ruins: Vault") + " Acquired!",
-                              "currIncrease": 9,
-                              "model": item_model(world, "Chozo Ruins: Vault"),
-                              "showIcon": True
-                          }]
-                      },
-                      "Training Chamber": {
-                          "pickups": [{
-                              "type": "Unknown Item 1",
-                              "scanText": item_text(world, "Chozo Ruins: Training Chamber"),
-                              "hudmemoText": item_text(world,
-                                                        "Chozo Ruins: Training Chamber") + " Acquired!",
-                              "currIncrease": 10,
-                              "model": item_model(world, "Chozo Ruins: Training Chamber"),
-                              "showIcon": True
-                          }]
-                      },
-                      "Arboretum Access": {},
-                      "Meditation Fountain": {},
-                      "Tower of Light Access": {},
-                      "Ruined Nursery": {
-                          "pickups": [{
-                              "type": "Unknown Item 1",
-                              "scanText": item_text(world, "Chozo Ruins: Ruined Nursery"),
-                              "hudmemoText": item_text(world,
-                                                        "Chozo Ruins: Ruined Nursery") + " Acquired!",
-                              "currIncrease": 11,
-                              "model": item_model(world, "Chozo Ruins: Ruined Nursery"),
-                              "showIcon": True
-                          }]
-                      },
-                      "Vault Access": {},
-                      "Training Chamber Access": {
-                          "pickups": [{
-                              "type": "Unknown Item 1",
-                              "scanText": item_text(world, "Chozo Ruins: Training Chamber Access"),
-                              "hudmemoText": item_text(world,
-                                                        "Chozo Ruins: Training Chamber Access") + " Acquired!",
-                              "currIncrease": 12,
-                              "model": item_model(world, "Chozo Ruins: Training Chamber Access"),
-                              "showIcon": True
-                          }]
-                      },
-                      "Arboretum": {},
-                      "Magma Pool": {
-                          "pickups": [{
-                              "type": "Unknown Item 1",
-                              "scanText": item_text(world, "Chozo Ruins: Magma Pool"),
-                              "hudmemoText": item_text(world,
-                                                        "Chozo Ruins: Magma Pool") + " Acquired!",
-                              "currIncrease": 13,
-                              "model": item_model(world, "Chozo Ruins: Magma Pool"),
-                              "showIcon": True
-                          }]
-                      },
-                      "Tower of Light": {
-                          "pickups": [{
-                              "type": "Unknown Item 1",
-                              "scanText": item_text(world, "Chozo Ruins: Tower of Light"),
-                              "hudmemoText": item_text(world,
-                                                        "Chozo Ruins: Tower of Light") + " Acquired!",
-                              "currIncrease": 14,
-                              "model": item_model(world, "Chozo Ruins: Tower of Light"),
-                              "showIcon": True
-                          }]
-                      },
-                      "Save Station 1": {},
-                      "North Atrium": {},
-                      "Transport to Magmoor Caverns North": {},
-                      "Sunchamber Lobby": {},
-                      "Gathering Hall Access": {},
-                      "Tower Chamber": {
-                          "pickups": [{
-                              "type": "Unknown Item 1",
-                              "scanText": item_text(world, "Chozo Ruins: Tower Chamber"),
-                              "hudmemoText": item_text(world,
-                                                        "Chozo Ruins: Tower Chamber") + " Acquired!",
-                              "currIncrease": 15,
-                              "model": item_model(world, "Chozo Ruins: Tower Chamber"),
-                              "showIcon": True
-                          }]
-                      },
-                      "Ruined Gallery": {
-                          "pickups": [
-                              {
-                                  "type": "Unknown Item 1",
-                                  "scanText": item_text(world,
-                                                        "Chozo Ruins: Ruined Gallery - Missile Wall"),
-                                  "hudmemoText": item_text(world,
-                                                            "Chozo Ruins: Ruined Gallery - Missile Wall") + " Acquired!",
-                                  "currIncrease": 16,
-                                  "model": item_model(world,
-                                                      "Chozo Ruins: Ruined Gallery - Missile Wall"),
-                                  "showIcon": True
-                              },
-                              {
-                                  "type": "Unknown Item 1",
-                                  "scanText": item_text(world,
-                                                        "Chozo Ruins: Ruined Gallery - Tunnel"),
-                                  "hudmemoText": item_text(world,
-                                                            "Chozo Ruins: Ruined Gallery - Tunnel") + " Acquired!",
-                                  "currIncrease": 17,
-                                  "model": item_model(world,
-                                                      "Chozo Ruins: Ruined Gallery - Tunnel"),
-                                  "showIcon": True
-                              }
-                          ],
-                      },
-                      "Sun Tower": {},
-                      "Transport Access North": {
-                          "pickups": [{
-                              "type": "Unknown Item 1",
-                              "scanText": item_text(world, "Chozo Ruins: Transport Access North"),
-                              "hudmemoText": item_text(world,
-                                                        "Chozo Ruins: Transport Access North") + " Acquired!",
-                              "currIncrease": 18,
-                              "model": item_model(world, "Chozo Ruins: Transport Access North"),
-                              "showIcon": True
-                          }]
-                      },
-                      "Sunchamber Access": {},
-                      "Gathering Hall": {
-                          "pickups": [{
-                              "type": "Unknown Item 1",
-                              "scanText": item_text(world, "Chozo Ruins: Gathering Hall"),
-                              "hudmemoText": item_text(world,
-                                                        "Chozo Ruins: Gathering Hall") + " Acquired!",
-                              "currIncrease": 19,
-                              "model": item_model(world, "Chozo Ruins: Gathering Hall"),
-                              "showIcon": True
-                          }]
-                      },
-                      "Totem Access": {},
-                      "Map Station": {},
-                      "Sun Tower Access": {},
-                      "Hive Totem": {
-                          "pickups": [{
-                              "type": "Unknown Item 1",
-                              "scanText": item_text(world, "Chozo Ruins: Hive Totem"),
-                              "hudmemoText": item_text(world,
-                                                        "Chozo Ruins: Hive Totem") + " Acquired!",
-                              "currIncrease": 20,
-                              "model": item_model(world, "Chozo Ruins: Hive Totem"),
-                              "showIcon": True
-                          }]
-                      },
-                      "Sunchamber": {
-                          "pickups": [
-                              {
-                                  "type": "Unknown Item 1",
-                                  "scanText": item_text(world,
-                                                        "Chozo Ruins: Sunchamber - Flaaghra"),
-                                  "hudmemoText": item_text(world,
-                                                            "Chozo Ruins: Sunchamber - Flaaghra") + " Acquired!",
-                                  "currIncrease": 21,
-                                  "model": item_model(world,
-                                                      "Chozo Ruins: Sunchamber - Flaaghra"),
-                                  "showIcon": True
-                              },
-                              {
-                                  "type": "Unknown Item 1",
-                                  "scanText": item_text(world,
-                                                        "Chozo Ruins: Sunchamber - Ghosts"),
-                                  "hudmemoText": item_text(world,
-                                                            "Chozo Ruins: Sunchamber - Ghosts") + " Acquired!",
-                                  "currIncrease": 22,
-                                  "model": item_model(world,
-                                                      "Chozo Ruins: Sunchamber - Ghosts"),
-                                  "showIcon": True
-                              }
-                          ]
-                      },
-                      "Watery Hall Access": {
-                          "pickups": [{
-                              "type": "Unknown Item 1",
-                              "scanText": item_text(world, "Chozo Ruins: Watery Hall Access"),
-                              "hudmemoText": item_text(world,
-                                                        "Chozo Ruins: Watery Hall Access") + " Acquired!",
-                              "currIncrease": 23,
-                              "model": item_model(world, "Chozo Ruins: Watery Hall Access"),
-                              "showIcon": True
-                          }]
-                      },
-                      "Save Station 2": {},
-                      "East Atrium": {},
-                      "Watery Hall": {
-                          "pickups": [
-                              {
-                                  "type": "Unknown Item 1",
-                                  "scanText": item_text(world,
-                                                        "Chozo Ruins: Watery Hall - Scan Puzzle"),
-                                  "hudmemoText": item_text(world,
-                                                            "Chozo Ruins: Watery Hall - Scan Puzzle") + " Acquired!",
-                                  "currIncrease": 24,
-                                  "model": item_model(world,
-                                                      "Chozo Ruins: Watery Hall - Scan Puzzle"),
-                                  "showIcon": True
-                              },
-                              {
-                                  "type": "Unknown Item 1",
-                                  "scanText": item_text(world,
-                                                        "Chozo Ruins: Watery Hall - Underwater"),
-                                  "hudmemoText": item_text(world,
-                                                            "Chozo Ruins: Watery Hall - Underwater") + " Acquired!",
-                                  "currIncrease": 25,
-                                  "model": item_model(world,
-                                                      "Chozo Ruins: Watery Hall - Underwater"),
-                                  "showIcon": True
-                              }
-                          ]
-                      },
-                      "Energy Core Access": {},
-                      "Dynamo Access": {},
-                      "Energy Core": {},
-                      "Dynamo": {
-                          "pickups": [
-                              {
-                                  "type": "Unknown Item 1",
-                                  "scanText": item_text(world,
-                                                        "Chozo Ruins: Dynamo - Lower"),
-                                  "hudmemoText": item_text(world,
-                                                            "Chozo Ruins: Dynamo - Lower") + " Acquired!",
-                                  "currIncrease": 26,
-                                  "model": item_model(world,
-                                                      "Chozo Ruins: Dynamo - Lower"),
-                                  "showIcon": True
-                              },
-                              {
-                                  "type": "Unknown Item 1",
-                                  "scanText": item_text(world,
-                                                        "Chozo Ruins: Dynamo - Spider Track"),
-                                  "hudmemoText": item_text(world,
-                                                            "Chozo Ruins: Dynamo - Spider Track") + " Acquired!",
-                                  "currIncrease": 27,
-                                  "model": item_model(world,
-                                                      "Chozo Ruins: Dynamo - Spider Track"),
-                                  "showIcon": True
-                              }
-                          ]
-                      },
-                      "Burn Dome Access": {},
-                      "West Furnace Access": {},
-                      "Burn Dome": {
-                          "pickups": [
-                              {
-                                  "type": "Unknown Item 1",
-                                  "scanText": item_text(world,
-                                                        "Chozo Ruins: Burn Dome - Missile"),
-                                  "hudmemoText": item_text(world,
-                                                            "Chozo Ruins: Burn Dome - Missile") + " Acquired!",
-                                  "currIncrease": 28,
-                                  "model": item_model(world,
-                                                      "Chozo Ruins: Burn Dome - Missile"),
-                                  "showIcon": True
-                              },
-                              {
-                                  "type": "Unknown Item 1",
-                                  "scanText": item_text(world,
-                                                        "Chozo Ruins: Burn Dome - Incinerator Drone"),
-                                  "hudmemoText": item_text(world,
-                                                            "Chozo Ruins: Burn Dome - Incinerator Drone") + " Acquired!",
-                                  "currIncrease": 29,
-                                  "model": item_model(world,
-                                                      "Chozo Ruins: Burn Dome - Incinerator Drone"),
-                                  "showIcon": True
-                              }
-                          ]
-                      },
-                      "Furnace": {
-                          "pickups": [
-                              {
-                                  "type": "Unknown Item 1",
-                                  "scanText": item_text(world,
-                                                        "Chozo Ruins: Furnace - Spider Tracks"),
-                                  "hudmemoText": item_text(world,
-                                                            "Chozo Ruins: Furnace - Spider Tracks") + " Acquired!",
-                                  "currIncrease": 30,
-                                  "model": item_model(world,
-                                                      "Chozo Ruins: Furnace - Spider Tracks"),
-                                  "showIcon": True
-                              },
-                              {
-                                  "type": "Unknown Item 1",
-                                  "scanText": item_text(world,
-                                                        "Chozo Ruins: Furnace - Inside Furnace"),
-                                  "hudmemoText": item_text(world,
-                                                            "Chozo Ruins: Furnace - Inside Furnace") + " Acquired!",
-                                  "currIncrease": 31,
-                                  "model": item_model(world,
-                                                      "Chozo Ruins: Furnace - Inside Furnace"),
-                                  "showIcon": True
-                              }
-                          ]
-                      },
-                      "East Furnace Access": {},
-                      "Crossway Access West": {},
-                      "Hall of the Elders": {
-                          "pickups": [{
-                              "type": "Unknown Item 1",
-                              "scanText": item_text(world, "Chozo Ruins: Hall of the Elders"),
-                              "hudmemoText": item_text(world,
-                                                        "Chozo Ruins: Hall of the Elders") + " Acquired!",
-                              "currIncrease": 32,
-                              "model": item_model(world, "Chozo Ruins: Hall of the Elders"),
-                              "showIcon": True
-                          }]
-                      },
-                      "Crossway": {
-                          "pickups": [{
-                              "type": "Unknown Item 1",
-                              "scanText": item_text(world, "Chozo Ruins: Crossway"),
-                              "hudmemoText": item_text(world,
-                                                        "Chozo Ruins: Crossway") + " Acquired!",
-                              "currIncrease": 33,
-                              "model": item_model(world, "Chozo Ruins: Crossway"),
-                              "showIcon": True
-                          }]
-                      },
-                      "Reflecting Pool Access": {},
-                      "Elder Hall Access": {},
-                      "Crossway Access South": {},
-                      "Elder Chamber": {
-                          "pickups": [{
-                              "type": "Unknown Item 1",
-                              "scanText": item_text(world, "Chozo Ruins: Elder Chamber"),
-                              "hudmemoText": item_text(world,
-                                                        "Chozo Ruins: Elder Chamber") + " Acquired!",
-                              "currIncrease": 34,
-                              "model": item_model(world, "Chozo Ruins: Elder Chamber"),
-                              "showIcon": True
-                          }]
-                      },
-                      "Reflecting Pool": {},
-                      "Save Station 3": {},
-                      "Transport Access South": {},
-                      "Antechamber": {
-                          "pickups": [{
-                              "type": "Unknown Item 1",
-                              "scanText": item_text(world, "Chozo Ruins: Antechamber"),
-                              "hudmemoText": item_text(world,
-                                                        "Chozo Ruins: Antechamber") + " Acquired!",
-                              "currIncrease": 35,
-                              "model": item_model(world, "Chozo Ruins: Antechamber"),
-                              "showIcon": True
-                          }]
-                      },
-                      "Transport to Tallon Overworld East": {},
-                      "Transport to Tallon Overworld South": {}
-                      }
-                },
-                "Magmoor Caverns": {
-                        "transports": {
-                            "Magmoor Caverns North (Lava Lake)": "Chozo Ruins North (Sun Tower)",
-                            "Magmoor Caverns West (Monitor Station)": "Phendrana Drifts North (Phendrana Shorelines)",
-                            "Magmoor Caverns East (Twin Fires)": "Tallon Overworld West (Root Cave)",
-                            "Magmoor Caverns South (Magmoor Workstation, Save Station)": "Phendrana Drifts South (Quarantine Cave)",
-                            "Magmoor Caverns South (Magmoor Workstation, Debris)": "Phazon Mines West (Phazon Processing Center)",
-                        },
-                        "rooms": {
-                            "Transport to Chozo Ruins North": {},
-                            "Burning Trail": {},
-                            "Lake Tunnel": {},
-                            "Save Station Magmoor A": {},
-                            "Lava Lake": {
-                                "pickups": [{
-                                    "type": "Unknown Item 1",
-                                    "scanText": item_text(world, "Magmoor Caverns: Lava Lake"),
-                                    "hudmemoText": item_text(world,
-                                                              "Magmoor Caverns: Lava Lake") + " Acquired!",
-                                    "currIncrease": 91,
-                                    "model": item_model(world, "Magmoor Caverns: Lava Lake"),
-                                    "showIcon": True
-                                }]
-                            },
-                            "Pit Tunnel": {},
-                            "Triclops Pit": {
-                                "pickups": [{
-                                    "type": "Unknown Item 1",
-                                    "scanText": item_text(world, "Magmoor Caverns: Triclops Pit"),
-                                    "hudmemoText": item_text(world,
-                                                              "Magmoor Caverns: Triclops Pit") + " Acquired!",
-                                    "currIncrease": 92,
-                                    "model": item_model(world, "Magmoor Caverns: Triclops Pit"),
-                                    "showIcon": True
-                                }]
-                            },
-                            "Monitor Tunnel": {},
-                            "Storage Cavern": {
-                                "pickups": [{
-                                    "type": "Unknown Item 1",
-                                    "scanText": item_text(world, "Magmoor Caverns: Storage Cavern"),
-                                    "hudmemoText": item_text(world,
-                                                              "Magmoor Caverns: Storage Cavern") + " Acquired!",
-                                    "currIncrease": 93,
-                                    "model": item_model(world, "Magmoor Caverns: Storage Cavern"),
-                                    "showIcon": True
-                                }]
-                            },
-                            "Monitor Station": {},
-                            "Transport Tunnel A": {
-                                "pickups": [{
-                                    "type": "Unknown Item 1",
-                                    "scanText": item_text(world, "Magmoor Caverns: Transport Tunnel A"),
-                                    "hudmemoText": item_text(world,
-                                                              "Magmoor Caverns: Transport Tunnel A") + " Acquired!",
-                                    "currIncrease": 94,
-                                    "model": item_model(world, "Magmoor Caverns: Transport Tunnel A"),
-                                    "showIcon": True
-                                }]
-                            },
-                            "Warrior Shrine": {
-                                "pickups": [{
-                                    "type": "Unknown Item 1",
-                                    "scanText": item_text(world, "Magmoor Caverns: Warrior Shrine"),
-                                    "hudmemoText": item_text(world,
-                                                              "Magmoor Caverns: Warrior Shrine") + " Acquired!",
-                                    "currIncrease": 95,
-                                    "model": item_model(world, "Magmoor Caverns: Warrior Shrine"),
-                                    "showIcon": True
-                                }]
-                            },
-                            "Shore Tunnel": {
-                                "pickups": [{
-                                    "type": "Unknown Item 1",
-                                    "scanText": item_text(world, "Magmoor Caverns: Shore Tunnel"),
-                                    "hudmemoText": item_text(world,
-                                                              "Magmoor Caverns: Shore Tunnel") + " Acquired!",
-                                    "currIncrease": 96,
-                                    "model": item_model(world, "Magmoor Caverns: Shore Tunnel"),
-                                    "showIcon": True
-                                }]
-                            },
-                            "Transport to Phendrana Drifts North": {},
-                            "Fiery Shores": {
-                                "pickups": [
-                                    {
-                                        "type": "Unknown Item 1",
-                                        "scanText": item_text(world,
-                                                              "Magmoor Caverns: Fiery Shores - Morph Track"),
-                                        "hudmemoText": item_text(world,
-                                                                  "Magmoor Caverns: Fiery Shores - Morph Track") + " Acquired!",
-                                        "currIncrease": 97,
-                                        "model": item_model(world,
-                                                            "Magmoor Caverns: Fiery Shores - Morph Track"),
-                                        "showIcon": True
-                                    },
-                                    {
-                                        "type": "Unknown Item 1",
-                                        "scanText": item_text(world,
-                                                              "Magmoor Caverns: Fiery Shores - Warrior Shrine Tunnel"),
-                                        "hudmemoText": item_text(world,
-                                                                  "Magmoor Caverns: Fiery Shores - Warrior Shrine Tunnel") + " Acquired!",
-                                        "currIncrease": 98,
-                                        "model": item_model(world,
-                                                            "Magmoor Caverns: Fiery Shores - Warrior Shrine Tunnel"),
-                                        "showIcon": True
-                                    }
-                                ]
-                            },
-                            "Transport Tunnel B": {},
-                            "Transport to Tallon Overworld West": {},
-                            "Twin Fires Tunnel": {},
-                            "Twin Fires": {},
-                            "North Core Tunnel": {},
-                            "Geothermal Core": {},
-                            "Plasma Processing": {
-                                "pickups": [{
-                                    "type": "Unknown Item 1",
-                                    "scanText": item_text(world, "Magmoor Caverns: Plasma Processing"),
-                                    "hudmemoText": item_text(world,
-                                                              "Magmoor Caverns: Plasma Processing") + " Acquired!",
-                                    "currIncrease": 99,
-                                    "model": item_model(world, "Magmoor Caverns: Plasma Processing"),
-                                    "showIcon": True
-                                }]
-                            },
-                            "South Core Tunnel": {},
-                            "Magmoor Workstation": {
-                                "pickups": [{
-                                    "type": "Unknown Item 1",
-                                    "scanText": item_text(world, "Magmoor Caverns: Magmoor Workstation"),
-                                    "hudmemoText": item_text(world,
-                                                              "Magmoor Caverns: Magmoor Workstation") + " Acquired!",
-                                    "currIncrease": 100,
-                                    "model": item_model(world, "Magmoor Caverns: Magmoor Workstation"),
-                                    "showIcon": True
-                                }]
-                            },
-                            "Workstation Tunnel": {},
-                            "Transport Tunnel C": {},
-                            "Transport to Phazon Mines West": {},
-                            "Transport to Phendrana Drifts South": {},
-                            "Save Station Magmoor B": {}
-                        }
-                },
-                "Phendrana Drifts": {
-                        "transports": {
-                            "Phendrana Drifts North (Phendrana Shorelines)": "Magmoor Caverns West (Monitor Station)",
-                            "Phendrana Drifts South (Quarantine Cave)": "Magmoor Caverns South (Magmoor Workstation, Save Station)",
-                        },
-                        "rooms": {
-                            "Transport to Magmoor Caverns West": {},
-                            "Shoreline Entrance": {},
-                            "Phendrana Shorelines": {
-                                "pickups": [
-                                    {
-                                        "type": "Unknown Item 1",
-                                        "scanText": item_text(world,
-                                                              "Phendrana Drifts: Phendrana Shorelines - Behind Ice"),
-                                        "hudmemoText": item_text(world,
-                                                                  "Phendrana Drifts: Phendrana Shorelines - Behind Ice") + " Acquired!",
-                                        "currIncrease": 36,
-                                        "model": item_model(world,
-                                                            "Phendrana Drifts: Phendrana Shorelines - Behind Ice"),
-                                        "showIcon": True
-                                    },
-                                    {
-                                        "type": "Unknown Item 1",
-                                        "scanText": item_text(world,
-                                                              "Phendrana Drifts: Phendrana Shorelines - Spider Track"),
-                                        "hudmemoText": item_text(world,
-                                                                  "Phendrana Drifts: Phendrana Shorelines - Spider Track") + " Acquired!",
-                                        "currIncrease": 37,
-                                        "model": item_model(world,
-                                                            "Phendrana Drifts: Phendrana Shorelines - Spider Track"),
-                                        "showIcon": True
-                                    }
-                                ]
-                            },
-                            "Temple Entryway": {},
-                            "Save Station B": {},
-                            "Ruins Entryway": {},
-                            "Plaza Walkway": {},
-                            "Ice Ruins Access": {},
-                            "Chozo Ice Temple": {
-                                "pickups": [{
-                                    "type": "Unknown Item 1",
-                                    "scanText": item_text(world, "Phendrana Drifts: Chozo Ice Temple"),
-                                    "hudmemoText": item_text(world,
-                                                              "Phendrana Drifts: Chozo Ice Temple") + " Acquired!",
-                                    "currIncrease": 38,
-                                    "model": item_model(world, "Phendrana Drifts: Chozo Ice Temple"),
-                                    "showIcon": True
-                                }]
-                            },
-                            "Ice Ruins West": {
-                                "pickups": [{
-                                    "type": "Unknown Item 1",
-                                    "scanText": item_text(world, "Phendrana Drifts: Ice Ruins West"),
-                                    "hudmemoText": item_text(world,
-                                                              "Phendrana Drifts: Ice Ruins West") + " Acquired!",
-                                    "currIncrease": 39,
-                                    "model": item_model(world, "Phendrana Drifts: Ice Ruins West"),
-                                    "showIcon": True
-                                }]
-                            },
-                            "Ice Ruins East": {
-                                "pickups": [
-                                    {
-                                        "type": "Unknown Item 1",
-                                        "scanText": item_text(world,
-                                                              "Phendrana Drifts: Ice Ruins East - Behind Ice"),
-                                        "hudmemoText": item_text(world,
-                                                                  "Phendrana Drifts: Ice Ruins East - Behind Ice") + " Acquired!",
-                                        "currIncrease": 40,
-                                        "model": item_model(world,
-                                                            "Phendrana Drifts: Ice Ruins East - Behind Ice"),
-                                        "showIcon": True
-                                    },
-                                    {
-                                        "type": "Unknown Item 1",
-                                        "scanText": item_text(world,
-                                                              "Phendrana Drifts: Ice Ruins East - Spider Track"),
-                                        "hudmemoText": item_text(world,
-                                                                  "Phendrana Drifts: Ice Ruins East - Spider Track") + " Acquired!",
-                                        "currIncrease": 41,
-                                        "model": item_model(world,
-                                                            "Phendrana Drifts: Ice Ruins East - Spider Track"),
-                                        "showIcon": True
-                                    }
-                                ]
-                            },
-                            "Chapel Tunnel": {},
-                            "Courtyard Entryway": {},
-                            "Canyon Entryway": {},
-                            "Chapel of the Elders": {
-                                "pickups": [{
-                                    "type": "Unknown Item 1",
-                                    "scanText": item_text(world, "Phendrana Drifts: Chapel of the Elders"),
-                                    "hudmemoText": item_text(world,
-                                                              "Phendrana Drifts: Chapel of the Elders") + " Acquired!",
-                                    "currIncrease": 42,
-                                    "model": item_model(world, "Phendrana Drifts: Chapel of the Elders"),
-                                    "showIcon": True
-                                }]
-                            },
-                            "Ruined Courtyard": {
-                                "pickups": [{
-                                    "type": "Unknown Item 1",
-                                    "scanText": item_text(world, "Phendrana Drifts: Ruined Courtyard"),
-                                    "hudmemoText": item_text(world,
-                                                              "Phendrana Drifts: Ruined Courtyard") + " Acquired!",
-                                    "currIncrease": 43,
-                                    "model": item_model(world, "Phendrana Drifts: Ruined Courtyard"),
-                                    "showIcon": True
-                                }]
-                            },
-                            "Phendrana Canyon": {
-                                "pickups": [{
-                                    "type": "Unknown Item 1",
-                                    "scanText": item_text(world, "Phendrana Drifts: Phendrana Canyon"),
-                                    "hudmemoText": item_text(world,
-                                                              "Phendrana Drifts: Phendrana Canyon") + " Acquired!",
-                                    "currIncrease": 44,
-                                    "model": item_model(world, "Phendrana Drifts: Phendrana Canyon"),
-                                    "showIcon": True
-                                }]
-                            },
-                            "Save Station A": {},
-                            "Specimen Storage": {},
-                            "Quarantine Access": {},
-                            "Research Entrance": {},
-                            "North Quarantine Tunnel": {},
-                            "Map Station": {},
-                            "Hydra Lab Entryway": {},
-                            "Quarantine Cave": {
-                                "pickups": [{
-                                    "type": "Unknown Item 1",
-                                    "scanText": item_text(world, "Phendrana Drifts: Quarantine Cave"),
-                                    "hudmemoText": item_text(world,
-                                                              "Phendrana Drifts: Quarantine Cave") + " Acquired!",
-                                    "currIncrease": 45,
-                                    "model": item_model(world, "Phendrana Drifts: Quarantine Cave"),
-                                    "showIcon": True
-                                }]
-                            },
-                            "Research Lab Hydra": {
-                                "pickups": [{
-                                    "type": "Unknown Item 1",
-                                    "scanText": item_text(world, "Phendrana Drifts: Research Lab Hydra"),
-                                    "hudmemoText": item_text(world,
-                                                              "Phendrana Drifts: Research Lab Hydra") + " Acquired!",
-                                    "currIncrease": 46,
-                                    "model": item_model(world, "Phendrana Drifts: Research Lab Hydra"),
-                                    "showIcon": True
-                                }]
-                            },
-                            "South Quarantine Tunnel": {},
-                            "Quarantine Monitor": {
-                                "pickups": [{
-                                    "type": "Unknown Item 1",
-                                    "scanText": item_text(world, "Phendrana Drifts: Quarantine Monitor"),
-                                    "hudmemoText": item_text(world,
-                                                              "Phendrana Drifts: Quarantine Monitor") + " Acquired!",
-                                    "currIncrease": 47,
-                                    "model": item_model(world, "Phendrana Drifts: Quarantine Monitor"),
-                                    "showIcon": True
-                                }]
-                            },
-                            "Observatory Access": {},
-                            "Transport to Magmoor Caverns South": {},
-                            "Observatory": {
-                                "pickups": [{
-                                    "type": "Unknown Item 1",
-                                    "scanText": item_text(world, "Phendrana Drifts: Observatory"),
-                                    "hudmemoText": item_text(world,
-                                                              "Phendrana Drifts: Observatory") + " Acquired!",
-                                    "currIncrease": 48,
-                                    "model": item_model(world, "Phendrana Drifts: Observatory"),
-                                    "showIcon": True
-                                }]
-                            },
-                            "Transport Access": {
-                                "pickups": [{
-                                    "type": "Unknown Item 1",
-                                    "scanText": item_text(world, "Phendrana Drifts: Transport Access"),
-                                    "hudmemoText": item_text(world,
-                                                              "Phendrana Drifts: Transport Access") + " Acquired!",
-                                    "currIncrease": 49,
-                                    "model": item_model(world, "Phendrana Drifts: Transport Access"),
-                                    "showIcon": True
-                                }]
-                            },
-                            "West Tower Entrance": {},
-                            "Save Station D": {},
-                            "Frozen Pike": {},
-                            "West Tower": {},
-                            "Pike Access": {},
-                            "Frost Cave Access": {},
-                            "Hunter Cave Access": {},
-                            "Control Tower": {
-                                "pickups": [{
-                                    "type": "Unknown Item 1",
-                                    "scanText": item_text(world, "Phendrana Drifts: Control Tower"),
-                                    "hudmemoText": item_text(world,
-                                                              "Phendrana Drifts: Control Tower") + " Acquired!",
-                                    "currIncrease": 50,
-                                    "model": item_model(world, "Phendrana Drifts: Control Tower"),
-                                    "showIcon": True
-                                }]
-                            },
-                            "Research Core": {
-                                "pickups": [{
-                                    "type": "Unknown Item 1",
-                                    "scanText": item_text(world, "Phendrana Drifts: Research Core"),
-                                    "hudmemoText": item_text(world,
-                                                              "Phendrana Drifts: Research Core") + " Acquired!",
-                                    "currIncrease": 51,
-                                    "model": item_model(world, "Phendrana Drifts: Research Core"),
-                                    "showIcon": True
-                                }]
-                            },
-                            "Frost Cave": {
-                                "pickups": [{
-                                    "type": "Unknown Item 1",
-                                    "scanText": item_text(world, "Phendrana Drifts: Frost Cave"),
-                                    "hudmemoText": item_text(world,
-                                                              "Phendrana Drifts: Frost Cave") + " Acquired!",
-                                    "currIncrease": 52,
-                                    "model": item_model(world, "Phendrana Drifts: Frost Cave"),
-                                    "showIcon": True
-                                }]
-                            },
-                            "Hunter Cave": {},
-                            "East Tower": {},
-                            "Research Core Access": {},
-                            "Save Station C": {},
-                            "Upper Edge Tunnel": {},
-                            "Lower Edge Tunnel": {},
-                            "Chamber Access": {},
-                            "Lake Tunnel": {},
-                            "Aether Lab Entryway": {},
-                            "Research Lab Aether": {
-                                "pickups": [
-                                    {
-                                        "type": "Unknown Item 1",
-                                        "scanText": item_text(world,
-                                                              "Phendrana Drifts: Research Lab Aether - Tank"),
-                                        "hudmemoText": item_text(world,
-                                                                  "Phendrana Drifts: Research Lab Aether - Tank") + " Acquired!",
-                                        "currIncrease": 53,
-                                        "model": item_model(world,
-                                                            "Phendrana Drifts: Research Lab Aether - Tank"),
-                                        "showIcon": True
-                                    },
-                                    {
-                                        "type": "Unknown Item 1",
-                                        "scanText": item_text(world,
-                                                              "Phendrana Drifts: Research Lab Aether - Morph Track"),
-                                        "hudmemoText": item_text(world,
-                                                                  "Phendrana Drifts: Research Lab Aether - Morph Track") + " Acquired!",
-                                        "currIncrease": 54,
-                                        "model": item_model(world,
-                                                            "Phendrana Drifts: Research Lab Aether - Morph Track"),
-                                        "showIcon": True
-                                    }
-                                ]
-                            },
-                            "Phendrana's Edge": {},
-                            "Gravity Chamber": {
-                                "pickups": [
-                                    {
-                                        "type": "Unknown Item 1",
-                                        "scanText": item_text(world,
-                                                              "Phendrana Drifts: Gravity Chamber - Underwater"),
-                                        "hudmemoText": item_text(world,
-                                                                  "Phendrana Drifts: Gravity Chamber - Underwater") + " Acquired!",
-                                        "currIncrease": 55,
-                                        "model": item_model(world,
-                                                            "Phendrana Drifts: Gravity Chamber - Underwater"),
-                                        "showIcon": True
-                                    },
-                                    {
-                                        "type": "Unknown Item 1",
-                                        "scanText": item_text(world,
-                                                              "Phendrana Drifts: Gravity Chamber - Grapple Ledge"),
-                                        "hudmemoText": item_text(world,
-                                                                  "Phendrana Drifts: Gravity Chamber - Grapple Ledge") + " Acquired!",
-                                        "currIncrease": 56,
-                                        "model": item_model(world,
-                                                            "Phendrana Drifts: Gravity Chamber - Grapple Ledge"),
-                                        "showIcon": True
-                                    }
-                                ]
-                            },
-                            "Storage Cave": {
-                                "pickups": [{
-                                    "type": "Unknown Item 1",
-                                    "scanText": item_text(world, "Phendrana Drifts: Storage Cave"),
-                                    "hudmemoText": item_text(world,
-                                                              "Phendrana Drifts: Storage Cave") + " Acquired!",
-                                    "currIncrease": 57,
-                                    "model": item_model(world, "Phendrana Drifts: Storage Cave"),
-                                    "showIcon": True
-                                }]
-                            },
-                            "Security Cave": {
-                                "pickups": [{
-                                    "type": "Unknown Item 1",
-                                    "scanText": item_text(world, "Phendrana Drifts: Security Cave"),
-                                    "hudmemoText": item_text(world,
-                                                              "Phendrana Drifts: Security Cave") + " Acquired!",
-                                    "currIncrease": 58,
-                                    "model": item_model(world, "Phendrana Drifts: Security Cave"),
-                                    "showIcon": True
-                                }]
-                            }
-                        }
-                },
-                "Phazon Mines": {
-                    "transports": {
-                        "Phazon Mines East (Main Quarry)": "Tallon Overworld South (Great Tree Hall, Lower)",
-                        "Phazon Mines West (Phazon Processing Center)": "Magmoor Caverns South (Magmoor Workstation, Debris)",
-                    },
-                    "rooms": {
-                        "Transport to Tallon Overworld South": {},
-                        "Quarry Access": {},
-                        "Main Quarry": {
-                            "pickups": [{
-                                "type": "Unknown Item 1",
-                                "scanText": item_text(world, "Phazon Mines: Main Quarry"),
-                                "hudmemoText": item_text(world,
-                                                          "Phazon Mines: Main Quarry") + " Acquired!",
-                                "currIncrease": 74,
-                                "model": item_model(world, "Phazon Mines: Main Quarry"),
-                                "showIcon": True
-                            }]
-                        },
-                        "Waste Disposal": {},
-                        "Save Station Mines A": {},
-                        "Security Access A": {
-                            "pickups": [{
-                                "type": "Unknown Item 1",
-                                "scanText": item_text(world, "Phazon Mines: Security Access A"),
-                                "hudmemoText": item_text(world,
-                                                          "Phazon Mines: Security Access A") + " Acquired!",
-                                "currIncrease": 75,
-                                "model": item_model(world, "Phazon Mines: Security Access A"),
-                                "showIcon": True
-                            }]
-                        },
-                        "Ore Processing": {},
-                        "Mine Security Station": {},
-                        "Research Access": {},
-                        "Storage Depot B": {
-                            "pickups": [{
-                                "type": "Unknown Item 1",
-                                "scanText": item_text(world, "Phazon Mines: Storage Depot B"),
-                                "hudmemoText": item_text(world,
-                                                          "Phazon Mines: Storage Depot B") + " Acquired!",
-                                "currIncrease": 76,
-                                "model": item_model(world, "Phazon Mines: Storage Depot B"),
-                                "showIcon": True
-                            }]
-                        },
-                        "Elevator Access A": {},
-                        "Security Access B": {},
-                        "Storage Depot A": {
-                            "pickups": [{
-                                "type": "Unknown Item 1",
-                                "scanText": item_text(world, "Phazon Mines: Storage Depot A"),
-                                "hudmemoText": item_text(world,
-                                                          "Phazon Mines: Storage Depot A") + " Acquired!",
-                                "currIncrease": 77,
-                                "model": item_model(world, "Phazon Mines: Storage Depot A"),
-                                "showIcon": True
-                            }]
-                        },
-                        "Elite Research": {
-                            "pickups": [
-                                {
-                                    "type": "Unknown Item 1",
-                                    "scanText": item_text(world,
-                                                          "Phazon Mines: Elite Research - Phazon Elite"),
-                                    "hudmemoText": item_text(world,
-                                                              "Phazon Mines: Elite Research - Phazon Elite") + " Acquired!",
-                                    "currIncrease": 78,
-                                    "model": item_model(world,
-                                                        "Phazon Mines: Elite Research - Phazon Elite"),
-                                    "showIcon": True
-                                },
-                                {
-                                    "type": "Unknown Item 1",
-                                    "scanText": item_text(world,
-                                                          "Phazon Mines: Elite Research - Laser"),
-                                    "hudmemoText": item_text(world,
-                                                              "Phazon Mines: Elite Research - Laser") + " Acquired!",
-                                    "currIncrease": 79,
-                                    "model": item_model(world,
-                                                        "Phazon Mines: Elite Research - Laser"),
-                                    "showIcon": True
-                                }
-                            ]
-                        },
-                        "Elevator A": {},
-                        "Elite Control Access": {
-                            "pickups": [{
-                                "type": "Unknown Item 1",
-                                "scanText": item_text(world, "Phazon Mines: Elite Control Access"),
-                                "hudmemoText": item_text(world,
-                                                          "Phazon Mines: Elite Control Access") + " Acquired!",
-                                "currIncrease": 80,
-                                "model": item_model(world, "Phazon Mines: Elite Control Access"),
-                                "showIcon": True
-                            }]
-                        },
-                        "Elite Control": {},
-                        "Maintenance Tunnel": {},
-                        "Ventilation Shaft": {
-                            "pickups": [{
-                                "type": "Unknown Item 1",
-                                "scanText": item_text(world, "Phazon Mines: Ventilation Shaft"),
-                                "hudmemoText": item_text(world,
-                                                          "Phazon Mines: Ventilation Shaft") + " Acquired!",
-                                "currIncrease": 81,
-                                "model": item_model(world, "Phazon Mines: Ventilation Shaft"),
-                                "showIcon": True
-                            }]
-                        },
-                        "Phazon Processing Center": {
-                            "pickups": [{
-                                "type": "Unknown Item 1",
-                                "scanText": item_text(world, "Phazon Mines: Phazon Processing Center"),
-                                "hudmemoText": item_text(world,
-                                                          "Phazon Mines: Phazon Processing Center") + " Acquired!",
-                                "currIncrease": 82,
-                                "model": item_model(world, "Phazon Mines: Phazon Processing Center"),
-                                "showIcon": True
-                            }]
-                        },
-                        "Omega Research": {},
-                        "Transport Access": {},
-                        "Processing Center Access": {
-                            "pickups": [{
-                                "type": "Unknown Item 1",
-                                "scanText": item_text(world, "Phazon Mines: Processing Center Access"),
-                                "hudmemoText": item_text(world,
-                                                          "Phazon Mines: Processing Center Access") + " Acquired!",
-                                "currIncrease": 83,
-                                "model": item_model(world, "Phazon Mines: Processing Center Access"),
-                                "showIcon": True
-                            }]
-                        },
-                        "Map Station Mines": {},
-                        "Dynamo Access": {},
-                        "Transport to Magmoor Caverns South": {},
-                        "Elite Quarters": {
-                            "pickups": [{
-                                "type": "Unknown Item 1",
-                                "scanText": item_text(world, "Phazon Mines: Elite Quarters"),
-                                "hudmemoText": item_text(world,
-                                                          "Phazon Mines: Elite Quarters") + " Acquired!",
-                                "currIncrease": 84,
-                                "model": item_model(world, "Phazon Mines: Elite Quarters"),
-                                "showIcon": True
-                            }]
-                        },
-                        "Central Dynamo": {
-                            "pickups": [{
-                                "type": "Unknown Item 1",
-                                "scanText": item_text(world, "Phazon Mines: Central Dynamo"),
-                                "hudmemoText": item_text(world,
-                                                          "Phazon Mines: Central Dynamo") + " Acquired!",
-                                "currIncrease": 85,
-                                "model": item_model(world, "Phazon Mines: Central Dynamo"),
-                                "showIcon": True
-                            }]
-                        },
-                        "Elite Quarters Access": {},
-                        "Quarantine Access A": {},
-                        "Save Station Mines B": {},
-                        "Metroid Quarantine B": {
-                            "pickups": [{
-                                "type": "Unknown Item 1",
-                                "scanText": item_text(world, "Phazon Mines: Metroid Quarantine B"),
-                                "hudmemoText": item_text(world,
-                                                          "Phazon Mines: Metroid Quarantine B") + " Acquired!",
-                                "currIncrease": 86,
-                                "model": item_model(world, "Phazon Mines: Metroid Quarantine B"),
-                                "showIcon": True
-                            }]
-                        },
-                        "Metroid Quarantine A": {
-                            "pickups": [{
-                                "type": "Unknown Item 1",
-                                "scanText": item_text(world, "Phazon Mines: Metroid Quarantine A"),
-                                "hudmemoText": item_text(world,
-                                                          "Phazon Mines: Metroid Quarantine A") + " Acquired!",
-                                "currIncrease": 87,
-                                "model": item_model(world, "Phazon Mines: Metroid Quarantine A"),
-                                "showIcon": True
-                            }]
-                        },
-                        "Quarantine Access B": {},
-                        "Save Station Mines C": {},
-                        "Elevator Access B": {},
-                        "Fungal Hall B": {
-                            "pickups": [{
-                                "type": "Unknown Item 1",
-                                "scanText": item_text(world, "Phazon Mines: Fungal Hall B"),
-                                "hudmemoText": item_text(world,
-                                                          "Phazon Mines: Fungal Hall B") + " Acquired!",
-                                "currIncrease": 88,
-                                "model": item_model(world, "Phazon Mines: Fungal Hall B"),
-                                "showIcon": True
-                            }]
-                        },
-                        "Elevator B": {},
-                        "Missile Station Mines": {},
-                        "Phazon Mining Tunnel": {
-                            "pickups": [{
-                                "type": "Unknown Item 1",
-                                "scanText": item_text(world, "Phazon Mines: Phazon Mining Tunnel"),
-                                "hudmemoText": item_text(world,
-                                                          "Phazon Mines: Phazon Mining Tunnel") + " Acquired!",
-                                "currIncrease": 89,
-                                "model": item_model(world, "Phazon Mines: Phazon Mining Tunnel"),
-                                "showIcon": True
-                            }]
-                        },
-                        "Fungal Hall Access": {
-                            "pickups": [{
-                                "type": "Unknown Item 1",
-                                "scanText": item_text(world, "Phazon Mines: Fungal Hall Access"),
-                                "hudmemoText": item_text(world,
-                                                          "Phazon Mines: Fungal Hall Access") + " Acquired!",
-                                "currIncrease": 90,
-                                "model": item_model(world, "Phazon Mines: Fungal Hall Access"),
-                                "showIcon": True
-                            }]
-                        },
-                        "Fungal Hall A": {}
-                    }
-                },
-                "Impact Crater": {
-                        "transports": {
-                            "Crater Entry Point": "Artifact Temple",
-                            "Essence Dead Cutscene": "Credits",
-                        },
-                        "rooms": {
-                            "Crater Entry Point": {},
-                            "Crater Tunnel A": {},
-                            "Phazon Core": {},
-                            "Crater Missile Station": {},
-                            "Crater Tunnel B": {},
-                            "Phazon Infusion Chamber": {},
-                            "Subchamber One": {},
-                            "Subchamber Two": {},
-                            "Subchamber Three": {},
-                            "Subchamber Four": {},
-                            "Subchamber Five": {},
-                            "Metroid Prime Lair": {}
-                        }
-                },
-                "End Cinema": {
-                    "transports": {},
-                    "rooms": {
-                        "End Cinema": {}
-                  }
-                }
-            }
+    transport_data = get_transport_data(world)
+    level_data = {
+        MetroidPrimeArea.Tallon_Overworld.value:  {
+            "transports": transport_data[MetroidPrimeArea.Tallon_Overworld.value],
+            "rooms":  TallonOverworldAreaData().get_config_data(world)
+        },
+        MetroidPrimeArea.Chozo_Ruins.value: {
+            "transports": transport_data[MetroidPrimeArea.Chozo_Ruins.value],
+            "rooms":  ChozoRuinsAreaData().get_config_data(world)
+        },
+        MetroidPrimeArea.Magmoor_Caverns.value: {
+            "transports": transport_data[MetroidPrimeArea.Magmoor_Caverns.value],
+            "rooms":  MagmoorCavernsAreaData().get_config_data(world)
+        },
+        MetroidPrimeArea.Phendrana_Drifts.value: {
+            "transports": transport_data[MetroidPrimeArea.Phendrana_Drifts.value],
+            "rooms":  PhendranaDriftsAreaData().get_config_data(world)
+        },
+        MetroidPrimeArea.Phazon_Mines.value: {
+            "transports": transport_data[MetroidPrimeArea.Phazon_Mines.value],
+            "rooms":  PhazonMinesAreaData().get_config_data(world)
+
+        }
+    }
+
+    return level_data
+
+
+PAUSE_MENU_STRG_KEY = "1343145632"
+PAUSE_STRG = {
+    PAUSE_MENU_STRG_KEY: [
+        "[ Log Book ]",
+        "Pirate Data",
+        "Chozo Lore",
+        "Creatures",
+        "Research",
+        "Artifacts",
+        "LOG BOOK",
+        "OPTIONS",
+        "INVENTORY",
+        "[ Inventory ]",
+        "Arm Cannon",
+        "Morph Ball",
+        "Suits",
+        "Visors",
+        "Secondary Items",
+        "[ Options ]",
+        "Visor",
+        "Display",
+        "Sound",
+        "Controller",
+        "Quit Game",
+        "Visor Opacity",
+        "Helmet Opacity",
+        "HUD Lag",
+        "Hint System",
+        "Screen Brightness",
+        "Screen Offset X",
+        "Screen Offset Y",
+        "Screen Stretch",
+        "SFX Volume",
+        "Music Volume",
+        "Sound Mode",
+        "Reverse Y-Axis",
+        "Rumble",
+        "Swap Beam Controls",
+        "Restore Defaults",
+        "Power Beam",
+        "Ice Beam",
+        "Wave Beam",
+        "Plasma Beam",
+        "Phazon Beam",
+        "Super Missile",
+        "Ice Spreader",
+        "Wavebuster",
+        "Flamethrower",
+        "Phazon Combo",
+        "Morph Ball",
+        "Boost Ball",
+        "Spider Ball",
+        "Morph Ball Bomb",
+        "Power Bomb",
+        "Power Suit",
+        "Varia Suit",
+        "Gravity Suit",
+        "Phazon Suit",
+        "Energy Tank",
+        "Combat Visor",
+        "Scan Visor",
+        "X-Ray Visor",
+        "Thermal Visor",
+        "Space Jump Boots",
+        "Grapple Beam",
+        "Missile Launcher",
+        "Charge Beam",
+        "Beam Combo",
+        "[??????]\n\n",
+        "The &main-color=#89D6FF;Combat Visor&main-color=#FF6705B3; is your default Visor. It provides you with a Heads-Up Display (HUD) containing radar, mini-map, lock-on reticules, threat assessment, energy gauge, and Missile count.\n\nPress &image=SA,3.0,0.6,0.85,F13452F8,C042EC91; to select the Combat Visor.\n\n&main-color=#89D6FF;Samus's Notes:&main-color=#FF6705B3;\nIcons for the Arm Cannons you possess are shown in the lower-right corner of the Combat Visor.\n\nIcons for the Visors you possess are shown in the lower-left corner of the Combat Visor.\n\n",
+        "The &main-color=#89D6FF;Scan Visor&main-color=#FF6705B3; is used to collect data. Some devices will activate when scanned.\n\nPress &image=SA,3.0,0.6,0.85,F13452F8,B306E26F; to select the Scan Visor. Move the Visor over targets with this symbol &image=SI,0.70,0.68,FD41E145;, then press and hold &image=SA,3.0,1.0,1.0,46434ED3,34E79314; to scan. \n\nUse &image=SI,0.6,0.85,F13452F8; to select another available Visor or press &image=SI,0.70,0.68,05AF9CAA; to turn the Visor off.\n\n&main-color=#89D6FF;Samus's Notes:&main-color=#FF6705B3;\nMission-critical scan targets &image=SI,0.70,0.68,BCE843F2; will be red in color. \n\nScanning enemies with this Visor can reveal their vulnerabilities.\n\nYou will be unable to fire any weapons while the Scan Visor is active.\n\nScanned data vital to the success of the mission is downloaded and stored in the &main-color=#89D6FF;Log Book&main-color=#FF6705B3; section of the Pause Screen. \n\nPress &image=A,3.0,08A2E4B9,F2425B21; on this screen to access the Log Book.\n",
+        "The &main-color=#89D6FF;X-Ray Visor&main-color=#FF6705B3; can see through certain types of materials. \n\nPress &image=SA,3.0,0.6,0.85,F13452F8,8ADA8184; to select the X-Ray Visor.\n\n&main-color=#89D6FF;Samus's Notes:&main-color=#FF6705B3;\nThe X-Ray Visor can reveal invisible items, areas, and enemies.\n\nRobotic enemies jam the X-Ray Visor's frequency. Eliminate them to restore function to the Visor.\n",
+        "The &main-color=#89D6FF;Thermal Visor&main-color=#FF6705B3; allows you to see in the infrared spectrum. Hot objects are bright in the Visor, while colder ones are dim.\n\nPress &image=SA,3.0,0.6,0.85,F13452F8,5F556002; to select the Thermal Visor.\n\n&main-color=#89D6FF;Samus's Notes:&main-color=#FF6705B3;\nThe Thermal Visor will show the weak points of certain foes.\n\nUse the Thermal Visor to see in total darkness and poor weather conditions. \n\nBrightly lit areas, explosions, and intense heat can impair the Thermal Visor.\n\nEnemies with temperatures close to their surroundings will be tough to spot with this Visor.\n",
+        "The &main-color=#89D6FF;Power Beam&main-color=#FF6705B3; is the default Arm Cannon. It has the best rate of fire.\n\nPress &image=SA,3.0,0.6,0.85,2A13C23E,A91A7703; to select the Power Beam as your active weapon.\n\n&main-color=#89D6FF;Samus's Notes:&main-color=#FF6705B3;\nThe Power Beam can be used to open Blue Doors.\n\nIf you see your shots ricochet, cease fire. The Power Beam is not working against that target.\n\nYou can use the Power Beam to quickly clear an area of weak foes.\n",
+        "\nThe &main-color=#89D6FF;Super Missile&main-color=#FF6705B3; is the &main-color=#89D6FF;Power&main-color=#FF6705B3; Charge Combo.\n\n&main-color=#89D6FF;Samus's Notes:&main-color=#FF6705B3;\nSuper Missile is a Single Shot Charge Combo. Each shot costs 5 Missiles.\n\nSuper Missiles can destroy objects made of &main-color=#89D6FF;Cordite&main-color=#FF6705B3;.\n",
+        "The &main-color=#89D6FF;Ice Beam&main-color=#FF6705B3; can freeze enemies solid. Hits from the Ice Beam may also slow foes down.  \n\nPress &image=SA,3.0,0.6,0.85,2A13C23E,12A12131; to select the Ice Beam as your active weapon.\n\n&main-color=#89D6FF;Samus's Notes:&main-color=#FF6705B3;\nUse the Ice Beam to open White Doors.\n\nThe Ice Beam is quite effective against fire-based creatures.\n\nCharge the Ice Beam to increase the time an enemy will stay frozen when hit.\n\nSome frozen enemies can be shattered by Missile hits.\n",
+        "\nThe &main-color=#89D6FF;Ice Spreader&main-color=#FF6705B3; is the &main-color=#89D6FF;Ice&main-color=#FF6705B3; Charge Combo. It can freeze targets in a wide area.\n\n&main-color=#89D6FF;Samus's Notes:&main-color=#FF6705B3;\nIce Spreader is a Single Shot Charge Combo. Each shot costs 10 Missiles.\n\nIce Spreader is limited against aerial targets.\n",
+        "The&main-color=#89D6FF; Wave Beam&main-color=#FF6705B3; fires powerful electric bolts. This weapon has a limited homing capability as well.\n\nPress &image=SA,3.0,0.6,0.85,2A13C23E,CD7B1ACA; to select the Wave Beam as your active weapon.\n  \n&main-color=#89D6FF;Samus's Notes:&main-color=#FF6705B3;\nFire the Wave Beam to open Purple Doors.\n\nThe Wave Beam won't home in on targets without a lock-on. Press and hold &image=SA,3.0,1.0,1.0,46434ED3,34E79314; to lock on.\n\nCharge the Wave Beam to fire a fierce electric blast. Enemies struck by this blast will be enveloped in electrical energy for a few moments.\n",
+        "\nThe &main-color=#89D6FF;Wavebuster&main-color=#FF6705B3; is the &main-color=#89D6FF;Wave&main-color=#FF6705B3; Charge Combo. This potent blast auto-seeks targets in the area.\n\n&main-color=#89D6FF;Samus's Notes:&main-color=#FF6705B3;\nThe Wavebuster is a Sustained Fire Charge Combo. It costs 10 Missiles to activate, then 5 Missiles per second afterward.\n\nThe Wavebuster will seek enemies without a lock-on.\n\n\n\n\n\n\n\n\n\n\n",
+        "The&main-color=#89D6FF; Plasma Beam&main-color=#FF6705B3; fires streams of molten energy. This Beam can ignite flammable objects and enemies.\n\nPress &image=SA,3.0,0.6,0.85,A9798329,2A13C23E; to select the Plasma Beam as your active weapon.\n  \n&main-color=#89D6FF;Samus's Notes:&main-color=#FF6705B3;\nFire the Plasma Beam to open Red Doors.\n\nThe Plasma Beam is very effective against cold-based enemies.\n\nCharge the Plasma Beam to fire a sphere of plasma. Enemies struck by this blast will be engulfed in flames for a few moments.\n",
+        "\nThe &main-color=#89D6FF;Flamethrower&main-color=#FF6705B3; is the &main-color=#89D6FF;Plasma&main-color=#FF6705B3; Charge Combo. You can sweep its stream of flame across multiple targets.\n\n&main-color=#89D6FF;Samus's Notes:&main-color=#FF6705B3;\nFlamethrower is a Sustained Fire Charge Combo. It costs 10 Missiles to activate, then 5 Missiles per second afterward.\n\nThe Flamethrower is most effective against multiple targets in an area.\n",
+        "The viral corruption of the Power Suit has altered the Arm Cannon as well. It is now capable of firing the powerful&main-color=#89D6FF; Phazon Beam&main-color=#FF6705B3;.\n \n&main-color=#89D6FF;Samus's Notes:&main-color=#FF6705B3;\nThe Phazon Beam appears to trigger in the presence of high concentrations of Phazon.\n\nRegular Arm Cannon functions return when Phazon is not present.\n\nThe Charge Beam does not function when the Phazon Beam is active.\n",
+        "The &main-color=#89D6FF;Space Jump Boots&main-color=#FF6705B3; increase the leaping capability of the Power Suit through the use of boot-mounted thrusters.  \n\nPress &image=SI,0.70,0.68,833BEE04; to jump, then press &image=SI,0.70,0.68,833BEE04; again during the jump to use the Space Jump Boots.\n\n\n&main-color=#89D6FF;Samus's Notes:&main-color=#FF6705B3;\nTiming is important when using the Space Jump Boots. \n\nExperiment to discover ways to increase the height and length of your jumps.\n",
+        "The &main-color=#89D6FF;Grapple Beam&main-color=#FF6705B3; allows you to swing back and forth from special points in the environment.  \n\nGrapple Points appear in your Visor as a &image=SI,0.70,0.68,2702E5E0; icon. \n\nPress and hold &image=SA,3.0,1.0,1.0,46434ED3,34E79314; to fire the Grapple Beam. \n\nHold &image=SA,3.0,1.0,1.0,46434ED3,34E79314; down to stay connected; let go to release.\n\n&main-color=#89D6FF;Samus's Notes:&main-color=#FF6705B3;\nThe Grapple Beam can be used to cross large gaps.\n\nUse the &image=SA,7.0,0.6,1.0,C6C483AC,4050F102,8B0C22A7,4050F102,3A446C61,BCD01ECF,778CCD6A,BCD01ECF; while grappling to swing in different directions.\n",
+        "The &main-color=#89D6FF;Missile Launcher&main-color=#FF6705B3; adds ballistic weapon capability to the Arm Cannon.\n\nPress &image=SI,1.0,0.68,EA2A1C5C; to fire the Missile Launcher. Press &image=SI,0.70,0.68,05AF9CAA; to return to Beam mode.\n\n&main-color=#89D6FF;Samus's Notes:&main-color=#FF6705B3;\nMissiles fired with a lock-on will seek their targets.\n\nMissiles can destroy objects made from &main-color=#89D6FF;Radion&main-color=#FF6705B3; or &main-color=#89D6FF;Brinstone&main-color=#FF6705B3;.\n\nThere are Charge Combo enhancements scattered throughout the environment. They use the Missile Launcher and the Charge Beam in tandem to fire more effective blasts.\n\nEach Missile Expansion you find will increase the number of Missiles you can carry by 5.\n",
+        "The &main-color=#89D6FF;Power Suit&main-color=#FF6705B3; is an advanced Chozo exoskeleton modified for use by Samus Aran.  \n\n&main-color=#89D6FF;Samus's Notes:&main-color=#FF6705B3;\nThe Power Suit provides life-support functions and is well shielded from attack.  \n  \nThe modular nature of the Power Suit allows for the addition of weapons, Visors, and other gear as needed.\n\nThe Power Suit's shielding loses energy with each hit; collect energy when possible to keep the shielding charged.\n",
+        "The &main-color=#89D6FF;Varia Suit&main-color=#FF6705B3; adds increased heat resistance to the Power Suit.\n\n&main-color=#89D6FF;Samus's Notes:&main-color=#FF6705B3;\nThis modification increases your defensive shielding.\n\nWhile the Varia Suit can handle higher temperatures than normal, extreme heat sources and heat-based attacks will still cause damage.",
+        "The &main-color=#89D6FF;Gravity Suit&main-color=#FF6705B3; eliminates the effects of liquid on movement.\n\n&main-color=#89D6FF;Samus's Notes:&main-color=#FF6705B3;\nThis modification improves your defensive shielding.\n\nThe Gravity Suit allows for improved movement in liquid environments, but does not reduce damage delivered when exposed to hazardous fluids.\n\nVisor modifications in the Gravity Suit make it easier to see underwater.",
+        "The Power Suit has been corrupted by viral exposure, turning it into the &main-color=#89D6FF;Phazon Suit&main-color=#FF6705B3;. \n\n&main-color=#89D6FF;Samus's Notes:&main-color=#FF6705B3;\nThe viral corruption of the Power Suit has some beneficial side effects. \n\nThe suit is now resistant to the effects of Blue Phazon. The suit is not invulnerable to the effects of all Phazon, however.\n\nIn addition to Phazon resistance, the corruption has dramatically increased defensive shielding levels.",
+        "The &main-color=#89D6FF;Energy Tanks&main-color=#FF6705B3; increase the power level available to your Suit's defense screens.\n\n&main-color=#89D6FF;Samus's Notes:&main-color=#FF6705B3;\nEach Energy Tank increases your Suit's energy by 100 units. The more energy your Suit has, the longer you can stay alive.\n\nYou can fully recharge your Energy Tanks at Save Stations. Your gunship has this capability as well.",
+        "The &main-color=#89D6FF;Morph Ball&main-color=#FF6705B3; changes your Suit into a compact, mobile sphere.  \n\nPress &image=SI,0.70,1.0,2176CFF9; to enter Morph Ball mode.\n\nPress &image=SI,0.70,1.0,2176CFF9; again to leave Morph Ball mode.\n\n&main-color=#89D6FF;Samus's Notes:&main-color=#FF6705B3;\nLike the Power Suit, the Morph Ball is modular. There are several modifications that can be added to improve performance.",
+        "The &main-color=#89D6FF;Boost Ball&main-color=#FF6705B3; can be used to increase the Morph Ball's speed for short periods.\n\nPress and hold &image=SI,0.70,0.68,833BEE04; to charge, then release &image=SI,0.70,0.68,833BEE04; to trigger a quick boost of speed.\n \n&main-color=#89D6FF;Samus's Notes:&main-color=#FF6705B3;\nWhen charging, the longer you hold &image=SI,0.70,0.68,833BEE04;, the longer (and faster) the Boost Charge will be.\n\nThroughout the environment you will encounter U-shaped channels known as half-pipes. Using the Boost Ball in these areas will let you reach higher places. \n\nBuild a charge as you descend in the half-pipe, then trigger the Boost as you ascend the other side. This will give you the speed and momentum you need to reach new heights.\n",
+        "The &main-color=#89D6FF;Spider Ball&main-color=#FF6705B3; allows you to move the Morph Ball along magnetic rails.\n\nPress and hold &image=A,3.0,08A2E4B9,F2425B21; to activate the Spider Ball ability.\n \n&main-color=#89D6FF;Samus's Notes:&main-color=#FF6705B3;\nFollow the magnetic rails to explore new areas.\n\nThe Morph Ball Bomb can be used to trigger a Bomb Jump while attached to a rail.\n\n\n",
+        "The &main-color=#89D6FF;Morph Ball Bomb&main-color=#FF6705B3; is the default weapon for the Morph Ball.\n\nPress &image=SI,0.70,0.68,05AF9CAA; when in Morph Ball mode to drop a Morph Ball Bomb. \n\n&main-color=#89D6FF;Samus's Notes:&main-color=#FF6705B3;\nThe Morph Ball Bomb can be used to break cracked walls and activate certain devices.\n\nIf the Morph Ball is near a Morph Ball Bomb when it explodes, it will be popped a short distance into the air. This is called a&main-color=#89D6FF; Bomb Jump&main-color=#FF6705B3;. \n\nWhen a Morph Ball Bomb explodes, it must be close to the enemy to be effective.\n\nThe Morph Ball Bomb can easily break items made of&main-color=#89D6FF; Sandstone&main-color=#FF6705B3; or&main-color=#89D6FF; Talloric Alloy&main-color=#FF6705B3;.\n",
+        "The &main-color=#89D6FF;Power Bomb&main-color=#FF6705B3; is the strongest Morph Ball weapon.\n\nPress &image=SI,1.0,0.68,EA2A1C5C; when in Morph Ball mode to drop a Power Bomb.  \n\n&main-color=#89D6FF;Samus's Notes:&main-color=#FF6705B3;\nPower Bombs do not have unlimited ammo. Use them wisely.\n\nThe Power Bomb can destroy many materials, including &main-color=#89D6FF;Bendezium&main-color=#FF6705B3;.\n\nEach Power Bomb Expansion you find will increase the number of Power Bombs you can carry by 1.\n",
+        "The &main-color=#89D6FF;Charge Beam&main-color=#FF6705B3; allows you to increase the damage and effectiveness of the Arm Cannon.\n\nPress and hold &image=SI,0.70,0.68,05AF9CAA; to charge the Arm Cannon, then release &image=SI,0.70,0.68,05AF9CAA; to fire.\n\n&main-color=#89D6FF;Samus's Notes:&main-color=#FF6705B3;\nThe Charge Beam has a limited 'tractor beam' capacity.  Use it to pull small objects to you.\n\nThere are Charge Combo enhancements scattered through the environment.  They use the Charge Beam and the Missile Launcher in tandem to fire more effective blasts.\n\nThe Charge Beam increases the performance of each Arm Cannon mode.\n",
+        "The &main-color=#89D6FF;Charge Combos&main-color=#FF6705B3; allow you to fire the Missile Launcher and Arm Cannon together. The combined attacks are stronger than normal blasts.\n\nThe Arm Cannon must be charged to use a Charge Combo.\n\nWhen your Arm Cannon is charged, press &image=SI,1.0,0.68,EA2A1C5C; to fire the Charge Combo.\n\n&main-color=#89D6FF;Samus's Notes:&main-color=#FF6705B3;\nThe &main-color=#89D6FF;Single Shot&main-color=#FF6705B3; Charge Combos fire one blast at a time. Each shot uses a number of Missiles.\n\n&main-color=#89D6FF;Sustained Fire&main-color=#FF6705B3; Charge Combos will fire as long as you have Missiles. Hold &image=SI,0.70,0.68,05AF9CAA; down after you fire. It takes ten Missiles to trigger these Charge Combos, then five Missiles per second afterward.\n\nPage down for information on the individual Charge Combos. \n\nThis data will download to the Log Book after each Charge Combo is acquired. \n\n\n\n\n\n\n\n\n\n",
+        "On",
+        "Off",
+        "Mono",
+        "Stereo",
+        "Dolby",
+        "Zoom"
+    ]
+}

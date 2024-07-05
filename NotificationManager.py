@@ -20,7 +20,7 @@ class NotificationManager:
         if len(self.notification_queue) > 0 and self.time_since_last_message >= self.message_duration:
             notification = self.notification_queue[0]
             result = self.send_notification_func(notification)
-            if (result):
+            if result:
                 self.notification_queue.pop(0)
                 self.last_message_time = time.time()
                 self.time_since_last_message = 0

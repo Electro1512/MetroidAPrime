@@ -1,139 +1,147 @@
-from BaseClasses import MultiWorld
-from worlds.AutoWorld import LogicMixin
-from .Items import artifact_table
+from BaseClasses import CollectionState
+from .data.RoomNames import RoomName
+from .Items import SuitUpgrade
+import typing
+if typing.TYPE_CHECKING:
+  from .PrimeOptions import MetroidPrimeOptions
 
 
-class MetroidPrimeLogic(LogicMixin):
+def _get_options(state: CollectionState, player: int) -> 'MetroidPrimeOptions':
+    return state.multiworld.worlds[player].options
 
-    # logic rules related to needing a combination of items
-    def prime_has_missiles(self, world: MultiWorld, player: int) -> bool:
-        if world.worlds[player].options.missile_launcher.value:
-            return self.has('Missile Launcher', player)
-        else:
-            return self.has_any({'Missile Launcher', 'Missile Expansion'}, player)
 
-    def prime_has_missile_count(self, world: MultiWorld, player: int) -> int:
-        count = 0
-        if self.has('Missile Launcher', player):
-            count = 5
-        count += self.count('Missile Expansion', player) * 5
-        return count
+def has_required_artifact_count(state: CollectionState, player: int) -> bool:
+    required_count = _get_options(state, player).required_artifacts.value
+    return state.has_group("Artifacts", player, required_count)
 
-    def prime_artifact_count(self, world: MultiWorld, player: int) -> bool:
-        for i in artifact_table.keys():
-            if not self.has(i, player):
-                return False
+
+def can_boost(state: CollectionState, player: int) -> bool:
+    return state.has_all([SuitUpgrade.Morph_Ball.value, SuitUpgrade.Boost_Ball.value], player)
+
+
+def can_bomb(state: CollectionState, player: int) -> bool:
+    return state.has_all([SuitUpgrade.Morph_Ball.value, SuitUpgrade.Morph_Ball_Bomb.value], player)
+
+
+def can_power_beam(state: CollectionState, player: int) -> bool:
+    return state.has(SuitUpgrade.Power_Beam.value, player)
+
+
+def can_power_bomb(state: CollectionState, player: int) -> bool:
+    if _get_options(state, player).main_power_bomb.value:
+        return state.has_all([SuitUpgrade.Morph_Ball.value, SuitUpgrade.Main_Power_Bomb.value], player)
+
+    return state.has_all([SuitUpgrade.Power_Bomb_Expansion.value, SuitUpgrade.Morph_Ball.value], player)
+
+
+def can_spider(state: CollectionState, player: int) -> bool:
+    return state.has_all([SuitUpgrade.Spider_Ball.value, SuitUpgrade.Morph_Ball.value], player)
+
+
+def can_missile(state: CollectionState, player: int) -> bool:
+    if _get_options(state, player).missile_launcher.value:
+        return state.has(SuitUpgrade.Missile_Launcher.value, player)
+    return state.has(SuitUpgrade.Missile_Expansion.value, player)
+
+
+def can_super_missile(state: CollectionState, player: int) -> bool:
+    return can_power_beam(state, player) and can_missile(state, player) and state.has_all([SuitUpgrade.Charge_Beam.value, SuitUpgrade.Super_Missile.value], player)
+
+
+def can_wave_beam(state: CollectionState, player: int) -> bool:
+    return state.has(SuitUpgrade.Wave_Beam.value, player)
+
+
+def can_ice_beam(state: CollectionState, player: int) -> bool:
+    return state.has(SuitUpgrade.Ice_Beam.value, player)
+
+
+def can_plasma_beam(state: CollectionState, player: int) -> bool:
+    return state.has(SuitUpgrade.Plasma_Beam.value, player)
+
+
+def can_melt_ice(state: CollectionState, player: int) -> bool:
+    return state.has(SuitUpgrade.Plasma_Beam.value, player)
+
+
+def can_grapple(state: CollectionState, player: int) -> bool:
+    return state.has(SuitUpgrade.Grapple_Beam.value, player)
+
+
+def can_space_jump(state: CollectionState, player: int) -> bool:
+    return state.has(SuitUpgrade.Space_Jump_Boots.value, player)
+
+
+def can_morph_ball(state: CollectionState, player: int) -> bool:
+    return state.has(SuitUpgrade.Morph_Ball.value, player)
+
+
+def can_xray(state: CollectionState, player: int, hard_required: bool = False) -> bool:
+    if hard_required:
+        return state.has(SuitUpgrade.X_Ray_Visor.value, player)
+    elif _get_options(state, player).remove_xray_requirements.value:
         return True
+    return state.has(SuitUpgrade.X_Ray_Visor.value, player)
 
-    def prime_etank_count(self, world: MultiWorld, player: int) -> int:
-        count = self.count('Energy Tank', player)
-        return count
 
-    def prime_can_bomb(self, world: MultiWorld, player: int) -> bool:
-        return self.has_all({'Morph Ball', 'Morph Ball Bomb'}, player)
+def can_thermal(state: CollectionState, player: int, hard_required: bool = False) -> bool:
+    if hard_required:
+        return state.has(SuitUpgrade.Thermal_Visor.value, player)
+    elif _get_options(state, player).remove_thermal_requirements.value:
+        return True
+    return state.has(SuitUpgrade.Thermal_Visor.value, player)
 
-    def prime_can_boost(self, world: MultiWorld, player: int) -> bool:
-        return self.has_all({'Morph Ball', 'Boost Ball'}, player)
 
-    def prime_can_spider(self, world: MultiWorld, player: int) -> bool:
-        return self.has_all({'Morph Ball', 'Spider Ball'}, player)
+def can_move_underwater(state: CollectionState, player: int) -> bool:
+    return state.has(SuitUpgrade.Gravity_Suit.value, player)
 
-    def prime_can_pb(self, world: MultiWorld, player: int) -> bool:
-        if world.worlds[player].options.main_power_bomb.value:
-            return self.has_all({'Morph Ball', 'Power Bomb (Main)'}, player)
-        else:
-            return self.has('Morph Ball', player) and self.has_any({'Power Bomb (Main)', 'Power Bomb Expansion'}, player)
 
-    def prime_can_super(self, world: MultiWorld, player: int) -> bool:
-        return self.prime_has_missiles(world, player) and self.has_all({'Charge Beam', 'Super Missile'}, player)
+def can_charge_beam(state: CollectionState, player: int) -> bool:
+    return state.has(SuitUpgrade.Charge_Beam.value, player)
 
-    def prime_can_heat(self, world: MultiWorld, player: int) -> bool:
-        non_varia_heat_damage = world.worlds[player].options.non_varia_heat_damage.value
-        if non_varia_heat_damage:
-            return self.has('Varia Suit', player)
-        else:
-            return self.has_any({'Varia Suit', 'Gravity Suit', 'Phazon Suit'}, player)
 
-    # logic rules related to accessing regions or subregions
+def can_scan(state: CollectionState, player: int) -> bool:
+    return state.has(SuitUpgrade.Scan_Visor.value, player)
 
-    def prime_late_chozo(self, world: MultiWorld, player: int) -> bool:
-        return (self.prime_has_missiles(world, player) and self.prime_can_bomb(world, player) and
-                self.prime_can_spider(world, player) and
-                ((self.has('Wave Beam', player) and self.prime_can_boost(world, player)) or
-                 self.has_all({'Ice Beam', 'Space Jump Boots'}, player)))
 
-    def prime_reflecting_pool(self, world: MultiWorld, player: int) -> bool:
-        return (self.prime_late_chozo(world, player) and self.prime_can_boost(world, player) and
-                self.has_all({'Space Jump Boots', 'Wave Beam'}, player))
+def can_crashed_frigate(state: CollectionState, player: int) -> bool:
+    return can_bomb(state, player) and can_space_jump(state, player) and can_wave_beam(state, player) and can_move_underwater(state, player) and can_thermal(state, player)
 
-    def prime_frigate(self, world: MultiWorld, player: int) -> bool:
-        return (self.prime_has_missiles(world, player) and
-                self.has_all({'Morph Ball', 'Space Jump Boots', 'Ice Beam', 'Wave Beam',
-                              'Gravity Suit', 'Thermal Visor'}, player))
 
-    def prime_magma_pool(self, world: MultiWorld, player: int) -> bool:
-        return self.prime_can_heat(world, player) and self.has('Grapple Beam', player)
+def can_crashed_frigate_backwards(state: CollectionState, player: int) -> bool:
+    return can_space_jump(state, player) and can_move_underwater(state, player) and can_bomb(state, player)
 
-    def prime_tower_of_light(self, world: MultiWorld, player: int) -> bool:
-        return (self.prime_has_missiles(world, player) and self.prime_can_boost(world, player) and
-                self.prime_can_spider(world, player) and self.has_all({'Wave Beam', 'Space Jump Boots'}, player))
 
-    def prime_early_magmoor(self, world: MultiWorld, player: int) -> bool:
-        return (self.prime_can_heat(world, player) and self.prime_has_missiles(world, player)
-                and self.has('Morph Ball', player) and (self.has('Grapple Beam', player) or
-                                                        (self.prime_can_bomb(world, player) or
-                                                         self.prime_can_pb(world, player))))
+def can_heat(state: CollectionState, player: int) -> bool:
+    return state.has(SuitUpgrade.Varia_Suit.value, player)
 
-    def prime_late_magmoor(self, world: MultiWorld, player: int) -> bool:
-        # through early magmoor
-        return ((self.prime_can_heat(world, player) and self.prime_has_missiles(world, player)
-                 and self.prime_can_spider(world, player) and self.has_all({'Wave Beam', 'Space Jump Boots'}, player))
-                # from mines via tallon
-                or (self.prime_frigate(world, player) and self.prime_can_bomb(world, player) and
-                    self.prime_can_pb(world, player) and self.prime_can_spider(world, player)))
 
-    def prime_front_phen(self, world: MultiWorld, player: int) -> bool:
-        # from early magmoor to shorelines elevator
-        return ((self.prime_early_magmoor(world, player) and self.prime_can_bomb(world, player))
-                # backwards from quarantine cave
-                or (self.prime_late_magmoor(world, player) and self.prime_can_bomb(world, player)
-                    and self.prime_can_spider(world, player) and self.has_all({'Thermal Visor', 'Wave Beam'}, player)))
+def can_phazon(state: CollectionState, player: int) -> bool:
+    return state.has(SuitUpgrade.Phazon_Suit.value, player)
 
-    # basically just ruined courtyard
-    def prime_middle_phen(self, world: MultiWorld, player: int) -> bool:
-        return (self.prime_front_phen(world, player) and self.has_all({'Space Jump Boots', 'Wave Beam'}, player) and
-                ((self.prime_can_bomb(world, player) and self.prime_can_boost(world, player)) or
-                 self.prime_can_spider(world, player)))
 
-    def prime_quarantine_cave(self, world: MultiWorld, player: int) -> bool:
-        # from ruined courtyard
-        return ((self.prime_middle_phen(world, player) and self.prime_can_super(world, player) and
-                 self.has('Thermal Visor', player))
-                # from late magmoor
-                or (self.prime_late_magmoor(world, player) and self.prime_can_bomb(world, player)))
+def has_energy_tanks(state: CollectionState, player: int, count: int) -> bool:
+    return state.has(SuitUpgrade.Energy_Tank.value, player, count)
 
-    def prime_far_phen(self, world: MultiWorld, player: int) -> bool:
-        return (self.prime_middle_phen(world, player) and self.has('Ice Beam', player) and
-                # from labs
-                ((self.prime_can_bomb(world, player) and self.has_all({'Boost Ball', 'Space Jump Boots'}, player)) or
-                 # from late magmoor elevator
-                 (self.prime_can_spider(world, player) and self.prime_can_super(world, player) and
-                  self.has('Thermal Visor', player))))
 
-    def prime_labs(self, world: MultiWorld, player: int) -> bool:
-        return (self.prime_middle_phen(world, player) and self.prime_can_bomb(world, player)
-                and self.has_all({'Boost Ball', 'Space Jump Boots'}, player))
-        # or self._prime_far_phen(world, player)     [reverse labs]
+def can_infinite_speed(state: CollectionState, player: int) -> bool:
+    return can_boost(state, player) and can_bomb(state, player)
 
-    def prime_upper_mines(self, world: MultiWorld, player: int) -> bool:
-        # from main quarry via tallon
-        return ((self.prime_frigate(world, player) and self.prime_can_bomb(world, player)) or
-                # from PPC via magmoor
-                (self.prime_late_magmoor(world, player) and self.prime_can_bomb(world, player)
-                 and self.prime_can_pb(world, player) and self.has_all({'Spider Ball', 'Ice Beam'}, player)))
 
-    # should also cover reverse lower mines since upper mines can logically expect magmoor elevator
-    def prime_lower_mines(self, world: MultiWorld, player: int) -> bool:
-        return (self.prime_upper_mines(world, player) and self.prime_can_pb(world, player) and
-                self.has_all({'Morph Ball Bomb', 'Boost Ball', 'Spider Ball', 'Plasma Beam',
-                              'X-Ray Visor', 'Grapple Beam'}, player))
+def can_climb_tower_of_light(state: CollectionState, player: int) -> bool:
+    return can_missile(state, player) and state.has(SuitUpgrade.Missile_Expansion.value, player, 8) and can_space_jump(state, player)
+
+
+def can_defeat_sheegoth(state: CollectionState, player: int) -> bool:
+    return can_bomb(state, player) or can_missile(state, player) or can_power_bomb(state, player) or can_plasma_beam(state, player)
+
+
+def can_backwards_lower_mines(state, player) -> bool:
+    return bool(_get_options(state, player).backwards_lower_mines.value)
+
+
+def has_power_bomb_count(state: CollectionState, player: int, required_count: int) -> bool:
+    count = state.count(SuitUpgrade.Power_Bomb_Expansion.value, player)
+    if state.has(SuitUpgrade.Main_Power_Bomb.value, player):
+        count += 4
+    return count >= required_count
