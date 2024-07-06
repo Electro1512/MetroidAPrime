@@ -113,6 +113,8 @@ function mk_apworld() {
         --exclude-from="${CWD}/apworld.ignore" \
         "${root}/" "${destdir}/metroidprime"
 
+    echo "${tag}" > "${destdir}/metroidprime/version.txt"
+
     # If this already exists then ovewrite it
     rm -rf "${destdir}/metroidprime/lib"
     mv "${destdir}/lib" "${destdir}/metroidprime/lib"
