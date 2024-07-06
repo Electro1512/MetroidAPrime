@@ -172,7 +172,7 @@ def make_config(world: 'MetroidPrimeWorld'):
             "startingItems": {
                 "combatVisor": True,  # starting_inventory(world, "Combat Visor"),
                 "powerBeam": starting_inventory(world, "Power Beam"),
-                "scanVisor": True,  # starting_inventory(world, "Scan Visor"),
+                "scanVisor": starting_inventory(world, "Scan Visor"),
                 # These are handled by the client
                 "missiles": 0,
                 "energyTanks": 0,

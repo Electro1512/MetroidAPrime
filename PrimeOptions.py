@@ -25,6 +25,7 @@ class HudColor(Enum):
 class SpringBall(Toggle):
     """Enables the spring ball when you receive Morph Ball Bombs. This will allow you to jump while in morph ball form by pressing up on the c stick, reducing the complexity of double bomb jumps."""
     display_name = "Add Spring Ball"
+    default = True
 
 
 class RequiredArtifacts(Range):
@@ -70,6 +71,10 @@ class MainPowerBomb(DefaultOnToggle):
     display_name = "Main Power Bomb"
     default = False
 
+class ShuffleScanVisor(Toggle):
+    """If enabled, the scan visor will be shuffled into the item pool and will need to be found in order to scan dash and open certain locks"""
+    display_name = "Shuffle Scan Visor"
+    default = False
 
 class NonVariaHeatDamage(DefaultOnToggle):
     """If enabled, the gravity suit and phazon suit will not protect against heat damage which will change the required logic of the game"""
@@ -292,6 +297,7 @@ class MetroidPrimeOptions(PerGameCommonOptions):
     artifact_hints: ArtifactHints
     missile_launcher: MissileLauncher
     main_power_bomb: MainPowerBomb
+    shuffle_scan_visor: ShuffleScanVisor
     non_varia_heat_damage: NonVariaHeatDamage
     staggered_suit_damage: StaggeredSuitDamage
     elevator_randomization: ElevatorRandomization

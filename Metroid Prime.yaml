@@ -15,8 +15,8 @@ Metroid Prime:
 
   spring_ball:
     # Enables the spring ball when you receive Morph Ball Bombs. This will allow you to jump while in morph ball form by pressing up on the c stick, reducing the complexity of double bomb jumps.
-    false: 50
-    true: 0
+    false: 0
+    true: 50
 
   required_artifacts:
     12
@@ -46,6 +46,11 @@ Metroid Prime:
 
   main_power_bomb:
     # If enabled, the main power bomb will be added to the item pool. This will only allow you to use power bombs once the main power bombs is found (regardless of power bomb expansions received).
+    false: 50
+    true: 0
+
+  shuffle_scan_visor:
+    # If enabled, the scan visor will be shuffled into the item pool and will need to be found in order to scan dash and open certain locks
     false: 50
     true: 0
 

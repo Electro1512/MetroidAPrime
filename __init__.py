@@ -1,24 +1,23 @@
 # Setup local dependencies if running in an apworld
+from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess
+import settings
+from worlds.AutoWorld import World, WebWorld
+from .data.Transports import default_elevator_mappings, get_random_elevator_mapping
+from .config import make_config
+from .Regions import create_regions
+from .Locations import every_location
+from .PrimeOptions import MetroidPrimeOptions, VariaSuitColorOverride
+from .Items import MetroidPrimeItem, SuitUpgrade, suit_upgrade_table, artifact_table, item_table
+from .data.StartRoomData import StartRoomData, init_starting_room_data
+from .data.RoomNames import RoomName
+from .Container import MetroidPrimeContainer
+from BaseClasses import Item, Tutorial, ItemClassification
+import typing
+import os
+from typing import Any, Dict, List, Optional
+from logging import info
 from .PrimeUtils import setup_lib_path
 setup_lib_path()
-
-from logging import info
-from typing import Any, Dict, List, Optional
-import os
-import typing
-from BaseClasses import Item, Tutorial, ItemClassification
-from .Container import MetroidPrimeContainer
-from .data.RoomNames import RoomName
-from .data.StartRoomData import StartRoomData, init_starting_room_data
-from .Items import MetroidPrimeItem, SuitUpgrade, suit_upgrade_table, artifact_table, item_table
-from .PrimeOptions import MetroidPrimeOptions, VariaSuitColorOverride
-from .Locations import every_location
-from .Regions import create_regions
-from .config import make_config
-from .data.Transports import default_elevator_mappings, get_random_elevator_mapping
-from worlds.AutoWorld import World, WebWorld
-import settings
-from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess
 
 
 def run_client(url: Optional[str] = None):
@@ -61,7 +60,7 @@ class MetroidPrimeWeb(WebWorld):
 
 
 # These items will always be given at start
-ALWAYS_START_INVENTORY = [SuitUpgrade.Scan_Visor.value, SuitUpgrade.Power_Suit.value, SuitUpgrade.Combat_Visor.value]
+ALWAYS_START_INVENTORY = [SuitUpgrade.Power_Suit.value, SuitUpgrade.Combat_Visor.value]
 
 
 class MetroidPrimeWorld(World):
@@ -126,6 +125,8 @@ class MetroidPrimeWorld(World):
         start_inventory += ALWAYS_START_INVENTORY
         start_inventory += [item.value for item in self.starting_room_data.selected_loadout.loadout]
         start_inventory += [item.name for item in self.multiworld.precollected_items[self.player]]
+        if not self.options.shuffle_scan_visor.value:
+            start_inventory += [SuitUpgrade.Scan_Visor.value]
 
         if "Beam" not in "".join(start_inventory):
             start_inventory += [SuitUpgrade.Power_Beam.value]

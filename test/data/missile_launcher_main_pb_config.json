@@ -132,7 +132,7 @@
   "gameConfig": {
     "mainMenuMessage": "Archipelago Metroid Prime",
     "startingRoom": "Tallon Overworld:Landing Site",
-    "springBall": false,
+    "springBall": true,
     "warpToStart": true,
     "multiworldDolPatches": false,
     "nonvariaHeatDamage": true,

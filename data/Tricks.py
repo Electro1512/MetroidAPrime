@@ -41,7 +41,7 @@ class TrickInfo:
 class Tricks:
   # Tallon
     alcove_escape: TrickInfo = TrickInfo("Alcove Escape", "Escape the Alcove without space jump", TrickDifficulty.Easy, lambda state, player: True)
-    landing_site_scan_dash: TrickInfo = TrickInfo("Landing Site Scan Dash", "Perform a scan dash to reach the landing site without bombs", TrickDifficulty.Medium, can_scan)
+    landing_site_scan_dash: TrickInfo = TrickInfo("Landing Site Scan Dash", "Perform a scan dash to reach the landing site without bombs", TrickDifficulty.Easy, can_scan)
 
     frigate_no_gravity: TrickInfo = TrickInfo("Frigate No Gravity", "Complete the Frigate without Gravity Suit", TrickDifficulty.Easy,
                                               lambda state, player: can_bomb(state, player) and can_space_jump(state, player) and can_wave_beam(state, player) and can_thermal(state, player))
