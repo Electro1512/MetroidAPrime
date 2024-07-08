@@ -1,4 +1,7 @@
 # Setup local dependencies if running in an apworld
+from .PrimeUtils import setup_lib_path
+setup_lib_path() # NOTE: This MUST be called before importing any other metroidprime modules (other than PrimeUtils)
+
 from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess
 import settings
 from worlds.AutoWorld import World, WebWorld
@@ -16,8 +19,6 @@ import typing
 import os
 from typing import Any, Dict, List, Optional
 from logging import info
-from .PrimeUtils import setup_lib_path
-setup_lib_path()
 
 
 def run_client(url: Optional[str] = None):

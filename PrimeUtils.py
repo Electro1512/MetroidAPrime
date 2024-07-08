@@ -13,6 +13,7 @@ def setup_lib_path():
     lib_path = os.path.join(base_path, "lib")
 
     if ".apworld" in __file__:
+        print("Extracting library files from metroidprime.apworld ")
         zip_file_path = __file__
         while not zip_file_path.lower().endswith('.apworld'):
             zip_file_path = os.path.dirname(zip_file_path)
@@ -52,6 +53,7 @@ def setup_lib_path():
 
         return temp_lib_path
     else:
+        print("Using local lib folder")
         if lib_path not in sys.path:
             sys.path.append(lib_path)
         print(f"lib folder added to path: {lib_path}")
