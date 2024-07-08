@@ -56,8 +56,8 @@ Metroid Prime:
 
   pre_scan_elevators:
     # Pre scans the elevators in the game, allowing for faster transitions between regions. Makes for more interesting gameply if disabled when the scan visor is shuffled.
-    false: 50
-    true: 0
+    false: 0
+    true: 50
 
   non_varia_heat_damage:
     # If enabled, the gravity suit and phazon suit will not protect against heat damage which will change the required logic of the game
