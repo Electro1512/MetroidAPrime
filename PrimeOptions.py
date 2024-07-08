@@ -203,12 +203,12 @@ class ElevatorMapping(OptionDict):
 # COSMETIC OPTIONS
 
 class RandomizeSuitColors(Toggle):
-    """Randomize the colors of the suits. Is overriden if any of the color overrides are greater than 0. """
+    """Randomize the colors of the suits. Is overriden if any of the color overrides are greater than 0. Note: This is not compatible with the Fusion Suit and will have no effect"""
     display_name = "Randomize Suit Colors"
     default = False
 
 class ShowSuitIndexOnPauseMenu(DefaultOnToggle):
-    """If enabled, the selected suit color index will be shown on the pause menu under "Suits". This has unexpected behavior on non US versions """
+    """If enabled, the selected suit color index will be shown on the pause menu under "Suits". Note: This has unexpected behavior on non US versions """
     display_name = "Show Suit Index on Pause Menu (Disable if using non US version)"
     default = True
 
