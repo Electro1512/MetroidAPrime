@@ -250,7 +250,7 @@ class PhazonSuitColorOverride(Range):
 
 
 class HudColorOption(Choice):
-    """Determines the color of the HUD in the game. Will be overriden if any of the color overrides are greater than 0."""
+    """Determines the color of the HUD in the game. Will be overriden if any of the color overrides are greater than 0. Note: Certain colors will change the colors of the beam icons."""
     display_name = "HUD Color"
     default = "Default"
     option_default = "Default"

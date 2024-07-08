@@ -141,7 +141,7 @@ Metroid Prime:
     true: 0
 
   hud_color:
-    # Determines the color of the HUD in the game. Will be overriden if any of the color overrides are greater than 0.
+    # Determines the color of the HUD in the game. Will be overriden if any of the color overrides are greater than 0. Note: Certain colors will change the colors of the beam icons.
     default: 50
     red: 0
     green: 0

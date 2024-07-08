@@ -125,7 +125,7 @@ class MetroidPrimeWorld(World):
         start_inventory = []
         start_inventory += ALWAYS_START_INVENTORY
         start_inventory += [item.value for item in self.starting_room_data.selected_loadout.loadout]
-        start_inventory += [item.name for item in self.multiworld.precollected_items[self.player]]
+        # start_inventory += [item.name for item in self.multiworld.precollected_items[self.player]]
         if not self.options.shuffle_scan_visor.value:
             start_inventory += [SuitUpgrade.Scan_Visor.value]
 
