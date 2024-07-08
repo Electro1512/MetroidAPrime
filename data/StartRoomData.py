@@ -202,6 +202,14 @@ def _get_item_for_options(world: 'MetroidPrimeWorld', item: SuitUpgrade) -> Suit
     return item
 
 
+def _is_elevator_rando_with_vanilla_starting_room(world: 'MetroidPrimeWorld') -> bool:
+    return world.options.elevator_randomization.value and world.options.starting_room.value == StartRoomDifficulty.Normal.value
+
+
+def _is_no_pre_scan_elevators_with_shuffle_scan_and_vanilla_starting_room(world: 'MetroidPrimeWorld') -> bool:
+    return world.options.pre_scan_elevators.value == False and world.options.shuffle_scan_visor.value and world.options.starting_room.value == StartRoomDifficulty.Normal.value
+
+
 def init_starting_room_data(world: 'MetroidPrimeWorld'):
     difficulty = world.options.starting_room.value
     yaml_name = world.options.starting_room_name.value
@@ -215,7 +223,7 @@ def init_starting_room_data(world: 'MetroidPrimeWorld'):
             world.starting_room_data = StartRoomData(name=world.options.starting_room_name.value)
             world.starting_room_data.loadouts = [StartRoomLoadout(loadout=[SuitUpgrade.Power_Beam])]
     else:
-        if world.options.elevator_randomization.value and difficulty == StartRoomDifficulty.Normal.value:
+        if _is_elevator_rando_with_vanilla_starting_room(world) or _is_no_pre_scan_elevators_with_shuffle_scan_and_vanilla_starting_room(world):
             # Can't start at landing site since there are no pickups without tricks
             world.starting_room_data = get_starting_room_by_name(world, RoomName.Save_Station_1.value)
         else:

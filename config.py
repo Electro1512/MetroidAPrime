@@ -165,7 +165,7 @@ def make_config(world: 'MetroidPrimeWorld'):
             "poisonDamagePerSec": 0.11,
             "phazonDamagePerSec": 0.964,
             "phazonDamageModifier": "Default",
-            "autoEnabledElevators": True,
+            "autoEnabledElevators": bool(options.pre_scan_elevators.value),
             "skipRidley": ridley(options.final_bosses.value),
             "removeHiveMecha": bool(options.remove_hive_mecha.value),
             "multiworldDolPatches": False,

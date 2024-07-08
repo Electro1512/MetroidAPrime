@@ -1,3 +1,5 @@
+from ..PrimeOptions import MetroidPrimeOptions
+from ..data.RoomNames import RoomName
 from ..Items import SuitUpgrade
 from ..data.Tricks import TrickDifficulty
 from . import MetroidPrimeTestBase
@@ -35,3 +37,35 @@ class TestScanVisorNotShuffled(MetroidPrimeTestBase):
 
     def test_scan_visor_in_item_pool(self):
         assert SuitUpgrade.Scan_Visor.value not in [item.name for item in self.multiworld.itempool]
+
+
+class TestScanVisorRequiredForNonPreScannedElevators(MetroidPrimeTestBase):
+    options = {
+        "pre_scan_elevators": False,
+        "shuffle_scan_visor": True
+    }
+
+    def test_starting_room_switches_to_save_1(self):
+        options: MetroidPrimeOptions = self.world.options
+        self.assertTrue(options.starting_room_name.value == RoomName.Save_Station_1.value)
+
+    def test_scan_visor_required_for_elevator(self):
+        state = self.multiworld.state
+        self.assertFalse(state.can_reach_region(RoomName.Landing_Site.value, self.player))
+        self.collect_by_name(SuitUpgrade.Scan_Visor.value)
+        self.assertTrue(state.can_reach_region(RoomName.Main_Plaza.value, self.player))
+
+
+class TestScanVisorNotRequiredForPreScannedElevators(MetroidPrimeTestBase):
+    options = {
+        "pre_scan_elevators": True,
+        "shuffle_scan_visor": True
+    }
+
+    def test_starting_room_is_landing_site(self):
+        options: MetroidPrimeOptions = self.world.options
+        self.assertTrue(options.starting_room_name.value == RoomName.Landing_Site.value)
+
+    def test_scan_visor_not_required_for_elevator(self):
+        state = self.multiworld.state
+        self.assertTrue(state.can_reach_region(RoomName.Main_Plaza.value, self.player))

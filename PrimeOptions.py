@@ -199,6 +199,11 @@ class ElevatorMapping(OptionDict):
     visibility = Visibility.spoiler
     default = {}
 
+class PreScanElevators(Toggle):
+    """Pre scans the elevators in the game, allowing for faster transitions between regions. Makes for more interesting gameply if disabled when the scan visor is shuffled."""
+    display_name = "Pre Scan Elevators"
+    default = True
+
 
 # COSMETIC OPTIONS
 
@@ -298,6 +303,7 @@ class MetroidPrimeOptions(PerGameCommonOptions):
     missile_launcher: MissileLauncher
     main_power_bomb: MainPowerBomb
     shuffle_scan_visor: ShuffleScanVisor
+    pre_scan_elevators: PreScanElevators
     non_varia_heat_damage: NonVariaHeatDamage
     staggered_suit_damage: StaggeredSuitDamage
     elevator_randomization: ElevatorRandomization

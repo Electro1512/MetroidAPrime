@@ -54,6 +54,11 @@ Metroid Prime:
     false: 50
     true: 0
 
+  pre_scan_elevators:
+    # Pre scans the elevators in the game, allowing for faster transitions between regions. Makes for more interesting gameply if disabled when the scan visor is shuffled.
+    false: 50
+    true: 0
+
   non_varia_heat_damage:
     # If enabled, the gravity suit and phazon suit will not protect against heat damage which will change the required logic of the game
     false: 0
@@ -190,11 +195,13 @@ Metroid Prime:
     random-high: 0
 
   randomize_suit_colors:
-    # Randomize the colors of the suits. Is overriden if any of the color overrides are greater than 0. The selected suit color index will be shown on the pause menu under "Suits
+    # Randomize the colors of the suits. Is overriden if any of the color overrides are greater than 0. Note: this is not compatible with the fusion suit
     false: 50
     true: 0
 
-  show_suit_index_on_pause_menu: true
+  show_suit_index_on_pause_menu:
+    false: 0
+    true: 50
   # If enabled, the selected suit color index will be shown on the pause menu under "Suits". This has unexpected behavior on non US versions.
 
   power_suit_color:
