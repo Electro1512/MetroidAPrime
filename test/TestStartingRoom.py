@@ -3,9 +3,10 @@ import os
 from Fill import distribute_items_restrictive
 from worlds.metroidprime.Items import SuitUpgrade
 from worlds.metroidprime.data.RoomNames import RoomName
-from ..data.StartRoomData import all_start_rooms
+from ..data.StartRoomData import StartRoomDifficulty, all_start_rooms
 from . import MetroidPrimeTestBase
 from .. import MetroidPrimeWorld
+
 
 class TestStartingRoomsGenerate(MetroidPrimeTestBase):
     auto_construct = False
@@ -100,3 +101,24 @@ class TestStartRoomBKPreventionEnabled(MetroidPrimeTestBase):
         # Normally you'd also have the misssile launcher
         assert world.starting_room_data.selected_loadout.loadout == [SuitUpgrade.Plasma_Beam, SuitUpgrade.Missile_Expansion]
         assert len(world.prefilled_item_map.keys()) == 1
+
+
+class TestBuckleUpStartingRoom(MetroidPrimeTestBase):
+    run_default_tests = False
+    options = {
+        "starting_room": StartRoomDifficulty.Buckle_Up.value
+    }
+
+    def test_buckle_up(self):
+        available_room_names = [name for name, room in all_start_rooms.items() if room.difficulty.value == StartRoomDifficulty.Buckle_Up.value]
+        self.assertTrue(self.world.options.starting_room_name.value in available_room_names)
+
+
+class TestNormalStartingRoom(MetroidPrimeTestBase):
+    run_default_tests = False
+    options = {
+        "starting_room": StartRoomDifficulty.Normal.value
+    }
+
+    def test_buckle_up(self):
+        self.assertTrue(self.world.options.starting_room_name.value == RoomName.Landing_Site.value)

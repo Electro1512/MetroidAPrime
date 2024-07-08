@@ -103,8 +103,10 @@ all_start_rooms: Dict[str, StartRoomData] = {
             "Phendrana Drifts: Phendrana Canyon": [SuitUpgrade.Space_Jump_Boots],
             "Phendrana Drifts: Research Lab Aether - Tank": [SuitUpgrade.Plasma_Beam]
         }
-    ]
-    )], difficulty=StartRoomDifficulty.Buckle_Up),
+    ],
+    )],
+        is_eligible=lambda world: world.options.shuffle_scan_visor.value == False or world.multiworld.players > 1,
+        difficulty=StartRoomDifficulty.Buckle_Up),
 
     RoomName.Save_Station_B.value: StartRoomData(area=MetroidPrimeArea.Phendrana_Drifts, loadouts=[
         StartRoomLoadout([SuitUpgrade.Plasma_Beam, SuitUpgrade.Missile_Launcher],
@@ -113,7 +115,7 @@ all_start_rooms: Dict[str, StartRoomData] = {
         ],
         )
     ], is_eligible=lambda world:
-        world.options.combat_logic_difficulty.value == CombatLogicDifficulty.NO_LOGIC.value or world.options.elevator_randomization.value,
+        world.options.combat_logic_difficulty.value == CombatLogicDifficulty.NO_LOGIC.value or world.options.elevator_randomization.value or world.multiworld.players > 1,
         denied_elevators={
             MetroidPrimeArea.Phendrana_Drifts.value: {
                 RoomName.Transport_to_Magmoor_Caverns_West.value: [RoomName.Transport_to_Phazon_Mines_East.value, RoomName.Transport_to_Tallon_Overworld_East.value, "Chozo Ruins :" + RoomName.Transport_to_Tallon_Overworld_South.value, RoomName.Transport_to_Tallon_Overworld_West.value, RoomName.Transport_to_Phendrana_Drifts_South.value, RoomName.Transport_to_Phazon_Mines_West.value],
@@ -149,7 +151,7 @@ all_start_rooms: Dict[str, StartRoomData] = {
         },
     ]
     )], difficulty=StartRoomDifficulty.Buckle_Up,
-        is_eligible=lambda world: world.options.elevator_mapping[MetroidPrimeArea.Phendrana_Drifts.value]["Phendrana Drifts: " + RoomName.Transport_to_Magmoor_Caverns_South] == RoomName.Transport_to_Phendrana_Drifts_South
+        is_eligible=lambda world: world.options.shuffle_scan_visor.value == False or world.multiworld.players > 1,
     ),
     RoomName.Sunchamber_Lobby.value: StartRoomData(
         area=MetroidPrimeArea.Chozo_Ruins,
