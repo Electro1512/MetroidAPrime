@@ -132,15 +132,19 @@ class MetroidPrimeWorld(World):
             start_inventory += [SuitUpgrade.Power_Beam.value]
 
         for i in start_inventory:
-            self.multiworld.push_precollected(self.create_item(i))
+            # Pre collect the ones that start room loadout adds in
+            item = self.create_item(i)
+            if item not in self.multiworld.precollected_items[self.player]:
+                self.multiworld.push_precollected(item)
 
+        items_with_multiple = [SuitUpgrade.Missile_Expansion.value, SuitUpgrade.Power_Bomb_Expansion.value, SuitUpgrade.Energy_Tank.value]
         for i in {*suit_upgrade_table}:
             # Don't add items that are already placed locally via start room logic or starting loadout to the multiworld pool.
-            # Missile expansions should still be added since there are multiple
-            if i in self.prefilled_item_map.values() and i != SuitUpgrade.Missile_Expansion.value:
+            # Missile expansions, PB expansions, and energy tanks are added still since there are multiple of them.
+            if i in self.prefilled_item_map.values() and i not in items_with_multiple:
                 items_added += 1
                 continue
-            elif i in start_inventory:
+            elif i in start_inventory and i not in items_with_multiple:
                 continue
 
             if i in excluded.keys():
@@ -151,13 +155,15 @@ class MetroidPrimeWorld(World):
                         self.create_item('Missile Expansion', True)]
                 items_added += 8
             elif i == "Energy Tank":
-                for j in range(0, 8):
+                max_tanks = 14
+                progression_tanks = 8
+                for j in range(0, progression_tanks):
                     self.multiworld.itempool += [
                         self.create_item("Energy Tank", True)]
-                for j in range(0, 6):
+                for j in range(0, max_tanks - progression_tanks):
                     self.multiworld.itempool += [
                         self.create_item("Energy Tank")]
-                items_added += 14
+                items_added += max_tanks
                 continue
             elif i == "Power Bomb Expansion":
                 self.multiworld.itempool += [self.create_item('Power Bomb Expansion', True)]

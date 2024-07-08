@@ -8,16 +8,6 @@ requires:
   version: 0.4.6 # Version of Archipelago required for this yaml to work as expected.
 
 Metroid Prime:
-  start_inventory_from_pool:
-    # Start with these items and don't place them in the world.
-    # The game decides what the replacement items will be.
-    {}
-
-  spring_ball:
-    # Enables the spring ball when you receive Morph Ball Bombs. This will allow you to jump while in morph ball form by pressing up on the c stick, reducing the complexity of double bomb jumps.
-    false: 0
-    true: 50
-
   required_artifacts:
     12
     # Determines the amount of Artifacts needed to begin the endgame sequence.
@@ -48,6 +38,11 @@ Metroid Prime:
     # If enabled, the main power bomb will be added to the item pool. This will only allow you to use power bombs once the main power bombs is found (regardless of power bomb expansions received).
     false: 50
     true: 0
+
+  spring_ball:
+    # Enables the spring ball when you receive Morph Ball Bombs. This will allow you to jump while in morph ball form by pressing up on the c stick, reducing the complexity of double bomb jumps.
+    false: 0
+    true: 50
 
   shuffle_scan_visor:
     # If enabled, the scan visor will be shuffled into the item pool and will need to be found in order to scan dash and open certain locks
@@ -282,6 +277,11 @@ Metroid Prime:
   non_local_items:
     # Forces these items to be outside their native world.
     []
+
+  start_inventory_from_pool:
+    # Start with these items and don't place them in the world.
+    # The game decides what the replacement items will be.
+    {}
 
   start_inventory:
     # Start with these items.
