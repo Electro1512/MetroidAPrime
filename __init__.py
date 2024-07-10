@@ -1,6 +1,6 @@
 # Setup local dependencies if running in an apworld
 from .PrimeUtils import setup_lib_path
-setup_lib_path() # NOTE: This MUST be called before importing any other metroidprime modules (other than PrimeUtils)
+setup_lib_path()  # NOTE: This MUST be called before importing any other metroidprime modules (other than PrimeUtils)
 
 from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess
 import settings
@@ -88,7 +88,24 @@ class MetroidPrimeWorld(World):
     def get_filler_item_name(self) -> str:
         return SuitUpgrade.Missile_Expansion.value
 
+    def init_tracker_options(self):
+        # Universal tracker stuff, shouldn't do anything in standard gen
+        if self.game in self.multiworld.re_gen_passthrough:
+            info("Setting options for tracker")
+            passthrough = self.multiworld.re_gen_passthrough[self.game]
+            for key, value in passthrough.items():
+                option = getattr(self.options, key, None)
+                if option is not None:
+                    # These get interpreted as lists but the tracker expects them to be sets
+                    if key in ["non_local_items", "local_items", "local_early_items", "priority_locations", "exclude_locations"]:
+                        option.value = set(value)
+                    else:
+                        option.value = value
+
     def generate_early(self) -> None:
+        if hasattr(self.multiworld, "re_gen_passthrough"):
+            self.init_tracker_options()
+
         init_starting_room_data(self)
         info(f"{self.multiworld.get_player_name(self.player)}'s Metroid Prime starting room data: {self.starting_room_data.name}")
         if self.options.elevator_randomization.value:
@@ -219,18 +236,17 @@ class MetroidPrimeWorld(World):
         apmp1.write()
 
     def fill_slot_data(self) -> Dict[str, Any]:
+        exclude_options = ["fusion_suit", "show_suit_index_on_pause_menu", "as_dict", "artifact_hints", "staggered_suit_damage", "start_hints"]
+        non_cosmetic_options = [o for o in dir(self.options) if "color" not in o and o not in exclude_options and not o.startswith("__")]
+        slot_data: Dict[str, Any] = self.options.as_dict(*non_cosmetic_options)
 
-        slot_data: Dict[str, Any] = {
-            "spring_ball": self.options.spring_ball.value,
-            "death_link": self.options.death_link.value,
-            "required_artifacts": self.options.required_artifacts.value,
-            "missile_launcher": self.options.missile_launcher.value,
-            "main_power_bomb": self.options.main_power_bomb.value,
-            "non_varia_heat_damage": self.options.non_varia_heat_damage.value,
-            "exclude_items": self.options.exclude_items.value,
-            "final_bosses": self.options.final_bosses.value,
-        }
+        return slot_data
 
+        # for the universal tracker, doesn't get called in standard gen
+    @staticmethod
+    def interpret_slot_data(slot_data: Dict[str, Any]) -> Dict[str, Any]:
+        # returning slot_data so it regens, giving it back in multiworld.re_gen_passthrough
+        info("Regenerating world for tracker")
         return slot_data
 
     def post_fill(self) -> None:
