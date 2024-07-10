@@ -75,7 +75,7 @@ Some of the changes include:
     In Research Lab Hydra, the switch to disable the force field can be scanned from behind the force field.  
   - Traversing "backwards" through the Crashed Frigate is now possble:  
     In Main Ventilation Shaft Section B, the door will be powered up and openable when approached from behind.  
-  - Traversing "backwards" through Upper Phazon Mines can now possible (configurable):  
+  - Traversing "backwards" through Upper Phazon Mines can be possible (configurable):  
     In Main Quarry, the barrier is automatically disabled when entering from Mine Security Station.  
   - In Elite Research, Phazon Mines, the fight with Phazon Elite can now be started without needing to collect the item in Central Dynamo.  
 - QOL Changes:  
