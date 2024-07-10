@@ -2,7 +2,7 @@
 from enum import Enum
 
 from BaseClasses import CollectionState
-from .Logic import can_charge_beam, can_power_beam, can_xray, has_energy_tanks
+from .Logic import can_charge_beam, can_plasma_beam, can_power_beam, can_wave_beam, can_xray, has_energy_tanks
 from .data.RoomNames import RoomName
 import typing
 
@@ -41,9 +41,16 @@ def can_combat_labs(state: CollectionState, player: int) -> bool:
 
 
 def can_combat_thardus(state: CollectionState, player: int) -> bool:
+    """Require charge and plasma or power for thardus on normal"""
     if _get_options(state, player).starting_room_name.value in [RoomName.Quarantine_Monitor.value, RoomName.Save_Station_B.value]:
+        return can_plasma_beam(state, player) or can_power_beam(state, player) or can_wave_beam(state, player)
+    difficulty = _get_options(state, player).combat_logic_difficulty.value
+    if difficulty == CombatLogicDifficulty.NO_LOGIC.value:
         return True
-    return _can_combat_generic(state, player, 3, 1, False)
+    elif difficulty == CombatLogicDifficulty.NORMAL.value:
+        return has_energy_tanks(state, player, 3) and (can_charge_beam(state, player) and (can_plasma_beam(state, player) or can_power_beam(state, player)))
+    elif difficulty == CombatLogicDifficulty.MINIMAL.value:
+        return has_energy_tanks(state, player, 1) and can_plasma_beam(state, player) or can_power_beam(state, player) or can_wave_beam(state, player)
 
 
 def can_combat_omega_pirate(state: CollectionState, player: int) -> bool:
