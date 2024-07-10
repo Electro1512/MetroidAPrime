@@ -65,8 +65,8 @@ class PhazonMinesAreaData(AreaData):
             pickups=[PickupData('Phazon Mines: Elite Research - Phazon Elite', rule_func=can_power_bomb),
                      PickupData('Phazon Mines: Elite Research - Laser', rule_func=lambda state, player: can_bomb(state, player) and can_boost(state, player) and can_space_jump(state, player) and can_scan(state, player), tricks=[Tricks.elite_research_spinner_no_boost]), ]),
         RoomName.Fungal_Hall_A: RoomData(doors={
-            0: DoorData(RoomName.Phazon_Mining_Tunnel, rule_func=can_space_jump, defaultLock=DoorLockType.Ice),
-            1: DoorData(RoomName.Fungal_Hall_Access, rule_func=lambda state, player: can_grapple(state, player) and can_space_jump(state, player), defaultLock=DoorLockType.Ice, tricks=[Tricks.fungal_hall_a_no_grapple]),
+            0: DoorData(RoomName.Phazon_Mining_Tunnel, rule_func=lambda state, player: can_grapple(state, player) and can_space_jump(state, player), defaultLock=DoorLockType.Ice, tricks=[Tricks.fungal_hall_a_no_grapple]),
+            1: DoorData(RoomName.Fungal_Hall_Access, rule_func=can_space_jump, defaultLock=DoorLockType.Ice,),
         }),
         RoomName.Fungal_Hall_Access: RoomData(
             doors={
@@ -75,8 +75,8 @@ class PhazonMinesAreaData(AreaData):
             },
             pickups=[PickupData('Phazon Mines: Fungal Hall Access', rule_func=lambda state, player: can_morph_ball(state, player) and can_phazon(state, player), tricks=[Tricks.fungal_hall_access_no_phazon_suit]), ]),
         RoomName.Fungal_Hall_B: RoomData(doors={
-            0: DoorData(RoomName.Missile_Station_Mines, defaultLock=DoorLockType.Plasma, rule_func=lambda state, player: can_space_jump(state, player) and can_grapple(state, player),  tricks=[Tricks.fungal_hall_b_no_grapple]),
-            1: DoorData(RoomName.Quarantine_Access_B, defaultLock=DoorLockType.Plasma, rule_func=lambda state, player: can_space_jump(state, player) and can_grapple(state, player),  tricks=[Tricks.fungal_hall_b_no_grapple]),
+            0: DoorData(RoomName.Missile_Station_Mines, defaultLock=DoorLockType.Plasma, rule_func=lambda state, player: can_space_jump(state, player) and can_grapple(state, player), tricks=[Tricks.fungal_hall_b_no_grapple]),
+            1: DoorData(RoomName.Quarantine_Access_B, defaultLock=DoorLockType.Plasma, rule_func=lambda state, player: can_space_jump(state, player) and can_grapple(state, player), tricks=[Tricks.fungal_hall_b_no_grapple]),
             2: DoorData(RoomName.Phazon_Mining_Tunnel, defaultLock=DoorLockType.Plasma, rule_func=can_space_jump, tricks=[Tricks.fungal_hall_b_no_grapple]),
         }, pickups=[PickupData('Phazon Mines: Fungal Hall B', rule_func=lambda state, player: can_bomb(state, player) or can_power_bomb(state, player)), ]),
         RoomName.Main_Quarry: RoomData(
@@ -127,7 +127,7 @@ class PhazonMinesAreaData(AreaData):
             0: DoorData(RoomName.Research_Access, defaultLock=DoorLockType.Ice, rule_func=lambda state, player: True),
             1: DoorData(RoomName.Storage_Depot_B, defaultLock=DoorLockType.Ice, rule_func=lambda state, player: can_spider(state, player) and can_bomb(state, player) and can_power_bomb(state, player), tricks=[Tricks.ore_processing_to_storage_depot_b_no_spider]),
             2: DoorData(RoomName.Waste_Disposal, defaultLock=DoorLockType.Ice, rule_func=lambda state, player: can_spider(state, player) and can_grapple(state, player) and can_bomb(state, player) and can_power_bomb(state, player) and can_space_jump(state, player), tricks=[Tricks.ore_processing_climb_no_grapple_spider]),
-            3: DoorData(RoomName.Elevator_Access_A, defaultLock=DoorLockType.Ice,  rule_func=lambda state, player: can_spider(state, player) and can_grapple(state, player) and can_bomb(state, player) and can_power_bomb(state, player) and can_space_jump(state, player), tricks=[Tricks.ore_processing_climb_no_grapple_spider]),
+            3: DoorData(RoomName.Elevator_Access_A, defaultLock=DoorLockType.Ice, rule_func=lambda state, player: can_spider(state, player) and can_grapple(state, player) and can_bomb(state, player) and can_power_bomb(state, player) and can_space_jump(state, player), tricks=[Tricks.ore_processing_climb_no_grapple_spider]),
         }),
         RoomName.Phazon_Mining_Tunnel: RoomData(doors={
             0: DoorData(RoomName.Fungal_Hall_B, rule_func=lambda state, player: can_bomb(state, player) and can_power_bomb(state, player), defaultLock=DoorLockType.Plasma),
