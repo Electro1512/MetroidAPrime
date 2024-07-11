@@ -78,4 +78,4 @@ def can_combat_ghosts(state: CollectionState, player: int) -> bool:
     elif difficulty == CombatLogicDifficulty.NORMAL.value:
         return can_charge_beam(state, player) and can_power_beam(state, player) and can_xray(state, player, True)
     elif difficulty == CombatLogicDifficulty.MINIMAL.value:
-        return (can_charge_beam(state, player) and can_power_beam(state, player) or can_xray(state, player, True))
+        return can_charge_beam(state, player) and (can_power_beam(state, player) or can_xray(state, player, True))
