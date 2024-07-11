@@ -1,5 +1,6 @@
 import os
 import pkgutil
+import platform
 import sys
 import shutil
 import tempfile
@@ -19,13 +20,18 @@ def setup_lib_path():
             zip_file_path = os.path.dirname(zip_file_path)
 
         # Get version from ./version.txt
-        path = os.path.join(os.path.dirname(__file__), "version.txt")
+        # detect if on windows since pathing is handled differently from linux
+        if platform.system() == "Windows":
+            path = os.path.join(os.path.dirname(__file__), "version.txt")
+            lib_folder_path = "metroidprime/lib"
+        else:
+            path = "version.txt"
+            lib_folder_path = os.path.join("metroidprime", "lib")
         version = pkgutil.get_data(__name__, path).decode().strip()
         temp_dir_name = "ap_metroidprime_temp_lib"
         target_dir_name = f"{temp_dir_name}_{version}"
         temp_base_dir = tempfile.gettempdir()
         target_dir_path = os.path.join(temp_base_dir, target_dir_name)
-        lib_folder_path = "metroidprime/lib/"
 
         # Check if the exact version directory exists
         if os.path.exists(target_dir_path):
