@@ -60,7 +60,7 @@ def can_combat_omega_pirate(state: CollectionState, player: int) -> bool:
 def can_combat_flaaghra(state: CollectionState, player: int) -> bool:
     if _get_options(state, player).starting_room_name == RoomName.Sunchamber_Lobby.value:
         return True
-    return _can_combat_generic(state, player, 3, 2, requires_charge_beam=False)
+    return _can_combat_generic(state, player, 2, 1, requires_charge_beam=False)
 
 
 def can_combat_ridley(state: CollectionState, player: int) -> bool:

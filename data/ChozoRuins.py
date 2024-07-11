@@ -193,7 +193,7 @@ class ChozoRuinsAreaData(AreaData):
                 1: DoorData(RoomName.Ruined_Fountain_Access),
                 2: DoorData(RoomName.Meditation_Fountain),
             },
-            pickups=[PickupData('Chozo Ruins: Ruined Fountain', rule_func=lambda state, player: can_flaahgra(state, player) and can_spider(state, player) and can_bomb(state, player))], ),  # This location can accidentally be locked out if flaaghra is skipped
+            pickups=[PickupData('Chozo Ruins: Ruined Fountain', rule_func=lambda state, player: state.can_reach(state.multiworld.worlds[player].get_location('Chozo Ruins: Sunchamber - Flaaghra'), None, player) and can_spider(state, player))], ),  # This location can accidentally be locked out if flaaghra is skipped
         RoomName.Ruined_Gallery: RoomData(
             doors={
                 0: DoorData(RoomName.North_Atrium),
