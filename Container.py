@@ -4,8 +4,9 @@ from typing import List
 import zipfile
 from worlds.Files import APContainer
 import py_randomprime
+from .Items import SuitUpgrade, suit_upgrade_table
 
-from .MetroidPrimeInterface import GAMES, HUD_MESSAGE_DURATION
+from .MetroidPrimeInterface import GAMES, HUD_MESSAGE_DURATION, calculate_item_offset
 
 
 class MetroidPrimeContainer(APContainer):
@@ -23,7 +24,7 @@ class MetroidPrimeContainer(APContainer):
         super().write_contents(opened_zipfile)
 
 
-def construct_hud_message_patch(game_version: str) -> List[int]:
+def construct_hook_patch(game_version: str, progressive_beams: bool) -> List[int]:
     from ppc_asm.assembler.ppc import addi, bl, li, lwz, r1, r3, r4, r5, r6, r31, stw, cmpwi, bne, mtspr, blr, lmw, r0, LR, stwu, mfspr, or_, lbz, stmw, stb, lis, r7, r9, nop, ori, GeneralRegister
     from ppc_asm import assembler
     symbols = py_randomprime.symbols_for_version(game_version)
@@ -47,7 +48,7 @@ def construct_hud_message_patch(game_version: str) -> List[int]:
         lbz(r5, 0, r6),
 
         cmpwi(r5, 1),
-        bne('early_return'),
+        bne('early_return_hud'),
 
         # If trigger is set then reset it to 0
         li(r5, 0),
@@ -72,8 +73,13 @@ def construct_hud_message_patch(game_version: str) -> List[int]:
 
         # Call function
         bl(symbols["DisplayHudMemo__9CSamusHudFRC7wstringRC12SHudMemoInfo"]),
+        nop().with_label('early_return_hud'),
 
-        lmw(GeneralRegister(block_size - num_preserved_registers), patch_stack_length - instruction_size - num_preserved_registers * instruction_size, r1).with_label('early_return'),
+        # Progressive Beam Patch
+        *construct_progressive_beam_patch(game_version, progressive_beams),
+
+        # Early return
+        lmw(GeneralRegister(block_size - num_preserved_registers), patch_stack_length - instruction_size - num_preserved_registers * instruction_size, r1).with_label('early_return_beam'),
         lwz(r0, patch_stack_length, r1),
         mtspr(LR, r0),
         addi(r1, r1, patch_stack_length - instruction_size),
@@ -90,3 +96,62 @@ def construct_hud_message_patch(game_version: str) -> List[int]:
             symbols=symbols
         )
     )
+
+
+def construct_progressive_beam_patch(game_version: str, progressive_beams: bool) -> List[int]:
+    from ppc_asm.assembler.ppc import addi, bl, b, li, lwz, r1, r3, r4, r5, r6, r8, r10, r31, stw, cmpwi, bne, mtspr, blr, lmw, r0, LR, stwu, mfspr, or_, lbz, stmw, stb, lis, r7, r9, nop, ori, GeneralRegister, Instruction
+
+    def add(output_register: GeneralRegister, input_register1: GeneralRegister, input_register2: GeneralRegister):
+        """
+        output_register = input_register1 + input_register2
+        """
+        return Instruction.compose(((31, 6, False),  # Opcode for add
+                                    (output_register.number, 5, False),
+                                    (input_register1.number, 5, False),
+                                    (input_register2.number, 5, False),
+                                    (266, 10, False),  # Function code for add
+                                    (0, 1, False)  # Rc bit
+                                    ))
+
+    if not progressive_beams:
+        return []
+    cstate_manager_global = GAMES[game_version]["cstate_manager_global"]
+    charge_beam_offset = 0x7F
+    instructions: List = [
+        # Step 0: Get the player state address
+        lis(r6, cstate_manager_global >> 16),  # Load upper 16 bits of cstate_manager_global
+        ori(r6, r6, cstate_manager_global & 0xFFFF),  # Load lower 16 bits of cstate_manager_global
+        lwz(r6, 0x8B8, r6),  # Load the player state address from cstate_manager_global + 0x8B8
+
+        # Step 0.5: Dereference the player state address pointer to get the actual player state address
+        lwz(r6, 0, r6),  # Load the player state address from the pointer stored in r6
+
+        # Step 1: Get the current beam from the player state
+        lbz(r5, 0xB, r6),  # Load the current beam value
+
+        # Step 2: Read the value at the progressive beam address
+        lis(r7, GAMES[game_version]["PROGRESSIVE_BEAM_ADDRESS"] >> 16),  # Load upper 16 bits of progressive beam address
+        ori(r7, r7, GAMES[game_version]["PROGRESSIVE_BEAM_ADDRESS"] & 0xFFFF),  # Load lower 16 bits of progressive beam address
+        add(r7, r7, r5),  # Add 0 to the address (no offset
+        lbz(r8, 0, r7),  # Load the value at the progressive beam address
+
+        # Step 3: Check the value and set the appropriate address
+        cmpwi(r8, 0),
+        bne('activate_charge_beam'),
+
+        # If value is 0, set the byte at player state address + charge_beam_offset to 0
+        li(r9, 0),
+
+        # CHARGE BEAM OFFSET IS INCORRECT
+
+        addi(r10, r6, charge_beam_offset),  # Calculate player state address + charge_beam_offset
+        stb(r9, 0, r10),  # Store 0 at the calculated address
+        b('early_return_beam'),
+
+        # If value is 1, set the byte at player state address + charge_beam_offset to 1
+        li(r9, 1).with_label('activate_charge_beam'),
+        addi(r10, r6, charge_beam_offset),  # Calculate player state address + charge_beam_offset
+        stb(r9, 0, r10),  # Store 1 at the calculated address
+        b('early_return_beam'),
+    ]
+    return instructions

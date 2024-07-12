@@ -13,7 +13,7 @@ from NetUtils import ClientStatus, NetworkItem
 import Utils
 from .ClientReceiveItems import handle_receive_items
 from .NotificationManager import NotificationManager
-from .Container import construct_hud_message_patch
+from .Container import construct_hook_patch
 from .DolphinClient import DolphinException, assert_no_running_dolphin, get_num_dolphin_instances
 from .Locations import METROID_PRIME_LOCATION_BASE, every_location
 from .MetroidPrimeInterface import HUD_MESSAGE_DURATION, ConnectionState, InventoryItemData, MetroidPrimeInterface, MetroidPrimeLevel
@@ -256,7 +256,15 @@ async def patch_and_run_game(apmp1_file: str):
                 config_json = file.read().decode("utf-8")
                 config_json = json.loads(config_json)
 
-        config_json["gameConfig"]["updateHintStateReplacement"] = construct_hud_message_patch(game_version)
+        # TODO: remove the hardcoded true here
+        # !!
+        # !!!!!!
+        # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        config_json["gameConfig"]["updateHintStateReplacement"] = construct_hook_patch(game_version, True)
+        # TODO: remove the hardcoded true here
+        # !!
+        # !!!!!!
+        # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         notifier = py_randomprime.ProgressNotifier(
             lambda progress, message: print("Generating ISO: ", progress, message))
         py_randomprime.patch_iso(input_iso_path, output_path, config_json, notifier)
