@@ -27,7 +27,7 @@ Multiworld items appear as a Metroid model with a glitched texture.
 
 ## What versions of the Metroid Prime are supported?
 Only the GameCube versions of the game are supported. 
-  * US `DOL-GM8E-0-00 USA` version recommended  
+* `DOL-GM8E-0-00 USA` version recommended  
     Other GameCube regions/versions will also work!  
 The Wii and Switch version of the game are *not* supported.  
 
@@ -56,7 +56,7 @@ It is recommended to use a vanilla ISO with the latest release of [Dolphin](http
   * [Widescreen HUD Mod](https://wiki.dolphin-emu.org/index.php?title=Metroid_Prime_(GC)#16:9_HUD_Mod) (0-00 USA only)
   * [MPItemTracker](https://github.com/UltiNaruto/MPItemTracker)
 * Not compatible
-  * Practice Mod (none of the legacy and current versions of this mod are not recognized by the client)
+  * Practice Mod (The AP client is unable to connect to the game with this mod present.)
 
 
 ### Can I use tricks like Infinite Speed to collect items?
