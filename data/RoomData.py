@@ -4,7 +4,7 @@ from typing import Callable, List, Optional
 import typing
 
 from BaseClasses import CollectionState, LocationProgressType, Region
-from ..Items import SuitUpgrade
+from ..Items import ProgressiveUpgrade, SuitUpgrade
 from ..Logic import can_bomb, can_ice_beam, can_missile, can_plasma_beam, can_wave_beam
 from ..PrimeOptions import MetroidPrimeOptions
 from ..data.AreaNames import MetroidPrimeArea
@@ -26,12 +26,20 @@ def get_config_item_model(world: 'MetroidPrimeWorld', location) -> str:
     loc = world.multiworld.get_location(location, world.player)
     if loc.native_item:
         name = loc.item.name
-        if name == "Missile Expansion":
+        if name == SuitUpgrade.Missile_Expansion.value:
             return "Missile"
-        elif name == "Missile Launcher":
+        elif name == SuitUpgrade.Missile_Launcher.value:
             return "Shiny Missile"
-        elif name == "Power Bomb (Main)":
+        elif name == SuitUpgrade.Main_Power_Bomb.value:
             return "Power Bomb"
+        elif name == ProgressiveUpgrade.Progressive_Power_Beam.value:
+            return "Super Missile"
+        elif name == ProgressiveUpgrade.Progressive_Wave_Beam.value:
+            return "Wavebuster"
+        elif name == ProgressiveUpgrade.Progressive_Ice_Beam.value:
+            return "Ice Spreader"
+        elif name == ProgressiveUpgrade.Progressive_Plasma_Beam.value:
+            return "Flamethrower"
         else:
             return name
     else:
@@ -201,7 +209,7 @@ def _can_access_door(state: CollectionState, player: int, door_data: DoorData) -
 
     for trick in door_data.tricks:
         if trick.name in allow_list:
-          pass
+            pass
         if trick.name not in allow_list and (trick.difficulty.value > max_difficulty or trick.name in deny_list):
             continue
         elif trick.rule_func is not None and trick.rule_func(state, player):

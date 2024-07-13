@@ -1,5 +1,8 @@
 from enum import Enum
+from typing import Dict, List, TYPE_CHECKING
 from BaseClasses import Item, ItemClassification
+if TYPE_CHECKING:
+    from . import MetroidPrimeWorld
 
 AP_METROID_PRIME_ITEM_ID_BASE = 5031000
 
@@ -53,6 +56,89 @@ class SuitUpgrade(Enum):
     Missile_Launcher = "Missile Launcher"
     Main_Power_Bomb = "Power Bomb (Main)"
 
+    def __str__(self):
+        return self.value
+
+    @staticmethod
+    def get_by_value(value: str) -> 'SuitUpgrade':
+        for suit in SuitUpgrade:
+            if suit.value == value:
+                return suit
+        return None
+
+
+class ProgressiveUpgrade(Enum):
+    Progressive_Power_Beam = "Progressive Power Beam"
+    Progressive_Ice_Beam = "Progressive Ice Beam"
+    Progressive_Wave_Beam = "Progressive Wave Beam"
+    Progressive_Plasma_Beam = "Progressive Plasma Beam"
+
+    def __str__(self):
+        return self.value
+
+
+PROGRESSIVE_ITEM_MAPPING: Dict[ProgressiveUpgrade, List[SuitUpgrade]] = {
+    ProgressiveUpgrade.Progressive_Power_Beam: [SuitUpgrade.Power_Beam, SuitUpgrade.Charge_Beam, SuitUpgrade.Super_Missile],
+    ProgressiveUpgrade.Progressive_Ice_Beam: [SuitUpgrade.Ice_Beam, SuitUpgrade.Charge_Beam, SuitUpgrade.Ice_Spreader],
+    ProgressiveUpgrade.Progressive_Wave_Beam: [SuitUpgrade.Wave_Beam, SuitUpgrade.Charge_Beam, SuitUpgrade.Wavebuster],
+    ProgressiveUpgrade.Progressive_Plasma_Beam: [SuitUpgrade.Plasma_Beam, SuitUpgrade.Charge_Beam, SuitUpgrade.Flamethrower],
+}
+
+PROGRESSIVE_ITEM_EXCLUSION_LIST: List[SuitUpgrade] = [
+    SuitUpgrade.Power_Beam,
+    SuitUpgrade.Ice_Beam,
+    SuitUpgrade.Wave_Beam,
+    SuitUpgrade.Plasma_Beam,
+    SuitUpgrade.Super_Missile,
+    SuitUpgrade.Ice_Spreader,
+    SuitUpgrade.Wavebuster,
+    SuitUpgrade.Flamethrower,
+    SuitUpgrade.Charge_Beam,
+]
+
+
+def get_vanilla_item_for_progressive_upgrade(upgrade: ProgressiveUpgrade, count: int) -> SuitUpgrade:
+    max_count = 3
+    if count > max_count:
+        count = max_count
+
+    index = count - 1  # 0-indexed
+    if upgrade in PROGRESSIVE_ITEM_MAPPING:
+        return PROGRESSIVE_ITEM_MAPPING[upgrade][index]
+
+
+def get_progressive_upgrade_for_item(item: SuitUpgrade) -> ProgressiveUpgrade:
+    if item == SuitUpgrade.Charge_Beam:
+        return ProgressiveUpgrade.Progressive_Power_Beam  # Using this just so consumers know there is a progressive upgrade associated with this
+    for upgrade, items in PROGRESSIVE_ITEM_MAPPING.items():
+        if item in items:
+            return upgrade
+    return None
+
+
+def __get_missile_item(world: 'MetroidPrimeWorld') -> SuitUpgrade:
+    if world.options.missile_launcher.value:
+        return SuitUpgrade.Missile_Launcher
+    return SuitUpgrade.Missile_Expansion
+
+
+def __get_power_bomb_item(world: 'MetroidPrimeWorld') -> SuitUpgrade:
+    if world.options.main_power_bomb.value:
+        return SuitUpgrade.Main_Power_Bomb
+    return SuitUpgrade.Power_Bomb_Expansion
+
+
+def get_item_for_options(world: 'MetroidPrimeWorld', item: SuitUpgrade) -> SuitUpgrade:
+    if item == SuitUpgrade.Missile_Launcher:
+        return __get_missile_item(world)
+    if item == SuitUpgrade.Main_Power_Bomb:
+        return __get_power_bomb_item(world)
+    if world.options.progressive_beam_upgrades.value:
+        progressive_upgrade = get_progressive_upgrade_for_item(item)
+        if progressive_upgrade is not None:
+            return progressive_upgrade
+    return item
+
 
 suit_upgrade_table: dict[str, ItemData] = {
     SuitUpgrade.Power_Beam.value: ItemData(SuitUpgrade.Power_Beam.value, 0, ItemClassification.progression),
@@ -93,6 +179,10 @@ custom_suit_upgrade_table: dict[str, ItemData] = {
     SuitUpgrade.Missile_Launcher.value: ItemData(SuitUpgrade.Missile_Launcher.value, 41, ItemClassification.progression),
     SuitUpgrade.Main_Power_Bomb.value: ItemData(SuitUpgrade.Main_Power_Bomb.value, 42, ItemClassification.progression),
 
+    ProgressiveUpgrade.Progressive_Power_Beam.value: ItemData(ProgressiveUpgrade.Progressive_Power_Beam.value, 43, ItemClassification.progression),
+    ProgressiveUpgrade.Progressive_Ice_Beam.value: ItemData(ProgressiveUpgrade.Progressive_Ice_Beam.value, 44, ItemClassification.progression),
+    ProgressiveUpgrade.Progressive_Wave_Beam.value: ItemData(ProgressiveUpgrade.Progressive_Wave_Beam.value, 45, ItemClassification.progression),
+    ProgressiveUpgrade.Progressive_Plasma_Beam.value: ItemData(ProgressiveUpgrade.Progressive_Plasma_Beam.value, 46, ItemClassification.progression),
 }
 
 artifact_table: dict[str, ItemData] = {

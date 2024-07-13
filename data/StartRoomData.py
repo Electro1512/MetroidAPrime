@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING, Callable, Dict, List, Optional
 
 from ..LogicCombat import CombatLogicDifficulty
 
-from ..Items import SuitUpgrade
+from ..Items import SuitUpgrade, get_item_for_options, get_progressive_upgrade_for_item
 from ..data.AreaNames import MetroidPrimeArea
 from ..data.RoomNames import RoomName
 
@@ -184,26 +184,6 @@ def get_starting_room_by_name(world: 'MetroidPrimeWorld', room_name: str) -> Sta
     return room
 
 
-def _get_missile_item(world: 'MetroidPrimeWorld') -> SuitUpgrade:
-    if world.options.missile_launcher.value:
-        return SuitUpgrade.Missile_Launcher
-    return SuitUpgrade.Missile_Expansion
-
-
-def _get_power_bomb_item(world: 'MetroidPrimeWorld') -> SuitUpgrade:
-    if world.options.main_power_bomb.value:
-        return SuitUpgrade.Main_Power_Bomb
-    return SuitUpgrade.Power_Bomb_Expansion
-
-
-def _get_item_for_options(world: 'MetroidPrimeWorld', item: SuitUpgrade) -> SuitUpgrade:
-    if item == SuitUpgrade.Missile_Launcher:
-        return _get_missile_item(world)
-    if item == SuitUpgrade.Main_Power_Bomb:
-        return _get_power_bomb_item(world)
-    return item
-
-
 def _is_elevator_rando_with_vanilla_starting_room(world: 'MetroidPrimeWorld') -> bool:
     return world.options.elevator_randomization.value and world.options.starting_room.value == StartRoomDifficulty.Normal.value
 
@@ -236,19 +216,15 @@ def init_starting_room_data(world: 'MetroidPrimeWorld'):
     if disable_bk_prevention:
         world.starting_room_data.selected_loadout.loadout = [item for item in world.starting_room_data.selected_loadout.loadout if item in [SuitUpgrade.Power_Beam, SuitUpgrade.Ice_Beam, SuitUpgrade.Wave_Beam, SuitUpgrade.Plasma_Beam]]
 
-    if SuitUpgrade.Missile_Launcher in world.starting_room_data.selected_loadout.loadout:
-        # Change starting loadout missile launcher to be missile expansion
-        world.starting_room_data.selected_loadout.loadout.remove(SuitUpgrade.Missile_Launcher)
-        world.starting_room_data.selected_loadout.loadout.append(_get_missile_item(world))
-
-    if SuitUpgrade.Main_Power_Bomb in world.starting_room_data.selected_loadout.loadout:
-        # Update main power bomb
-        world.starting_room_data.selected_loadout.loadout.remove(SuitUpgrade.Main_Power_Bomb)
-        world.starting_room_data.selected_loadout.loadout.append(_get_power_bomb_item(world))
+    # Update the loadout with the correct items based on options (progressive upgrades, missile launcher, etc.)
+    updated_loadout = []
+    for item in world.starting_room_data.selected_loadout.loadout:
+        updated_loadout.append(get_item_for_options(world, item))
+    world.starting_room_data.selected_loadout.loadout = updated_loadout
 
     # If we aren't preventing bk then set a few items for prefill if available
     if not disable_bk_prevention:
         for mapping in world.starting_room_data.selected_loadout.item_rules:
             for location_name, potential_items in mapping.items():
-                required_item = _get_item_for_options(world, world.random.choice(potential_items))
+                required_item = get_item_for_options(world, world.random.choice(potential_items))
                 world.prefilled_item_map[location_name] = required_item.value

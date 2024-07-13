@@ -2,6 +2,7 @@
 from enum import Enum
 
 from BaseClasses import CollectionState
+from .Items import SuitUpgrade
 from .Logic import can_charge_beam, can_plasma_beam, can_power_beam, can_wave_beam, can_xray, has_energy_tanks
 from .data.RoomNames import RoomName
 import typing
@@ -76,6 +77,6 @@ def can_combat_ghosts(state: CollectionState, player: int) -> bool:
     if difficulty == CombatLogicDifficulty.NO_LOGIC.value:
         return True
     elif difficulty == CombatLogicDifficulty.NORMAL.value:
-        return can_charge_beam(state, player) and can_power_beam(state, player) and can_xray(state, player, True)
+        return can_charge_beam(state, player, SuitUpgrade.Power_Beam) and can_power_beam(state, player) and can_xray(state, player, True)
     elif difficulty == CombatLogicDifficulty.MINIMAL.value:
-        return can_charge_beam(state, player) and (can_power_beam(state, player) or can_xray(state, player, True))
+        return can_charge_beam(state, player, SuitUpgrade.Power_Beam) and (can_power_beam(state, player) or can_xray(state, player, True))

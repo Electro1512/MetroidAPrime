@@ -1,9 +1,9 @@
 from BaseClasses import CollectionState
 from .data.RoomNames import RoomName
-from .Items import SuitUpgrade
+from .Items import ProgressiveUpgrade, SuitUpgrade, get_progressive_upgrade_for_item
 import typing
 if typing.TYPE_CHECKING:
-  from .PrimeOptions import MetroidPrimeOptions
+    from .PrimeOptions import MetroidPrimeOptions
 
 
 def _get_options(state: CollectionState, player: int) -> 'MetroidPrimeOptions':
@@ -24,7 +24,7 @@ def can_bomb(state: CollectionState, player: int) -> bool:
 
 
 def can_power_beam(state: CollectionState, player: int) -> bool:
-    return state.has(SuitUpgrade.Power_Beam.value, player)
+    return state.has_any([SuitUpgrade.Power_Beam.value, ProgressiveUpgrade.Progressive_Power_Beam.value], player)
 
 
 def can_power_bomb(state: CollectionState, player: int) -> bool:
@@ -45,23 +45,26 @@ def can_missile(state: CollectionState, player: int) -> bool:
 
 
 def can_super_missile(state: CollectionState, player: int) -> bool:
-    return can_power_beam(state, player) and can_missile(state, player) and state.has_all([SuitUpgrade.Charge_Beam.value, SuitUpgrade.Super_Missile.value], player)
+    return can_power_beam(state, player) \
+        and can_missile(state, player) \
+        and (state.has_all([SuitUpgrade.Charge_Beam.value, SuitUpgrade.Super_Missile.value], player)
+             or state.has(ProgressiveUpgrade.Progressive_Power_Beam.value, player, 3))
 
 
 def can_wave_beam(state: CollectionState, player: int) -> bool:
-    return state.has(SuitUpgrade.Wave_Beam.value, player)
+    return state.has_any([SuitUpgrade.Wave_Beam.value, ProgressiveUpgrade.Progressive_Wave_Beam.value], player)
 
 
 def can_ice_beam(state: CollectionState, player: int) -> bool:
-    return state.has(SuitUpgrade.Ice_Beam.value, player)
+    return state.has_any([SuitUpgrade.Ice_Beam.value, ProgressiveUpgrade.Progressive_Ice_Beam.value], player)
 
 
 def can_plasma_beam(state: CollectionState, player: int) -> bool:
-    return state.has(SuitUpgrade.Plasma_Beam.value, player)
+    return state.has_any([SuitUpgrade.Plasma_Beam.value, ProgressiveUpgrade.Progressive_Plasma_Beam.value], player)
 
 
 def can_melt_ice(state: CollectionState, player: int) -> bool:
-    return state.has(SuitUpgrade.Plasma_Beam.value, player)
+    return can_plasma_beam(state, player)
 
 
 def can_grapple(state: CollectionState, player: int) -> bool:
@@ -96,8 +99,13 @@ def can_move_underwater(state: CollectionState, player: int) -> bool:
     return state.has(SuitUpgrade.Gravity_Suit.value, player)
 
 
-def can_charge_beam(state: CollectionState, player: int) -> bool:
-    return state.has(SuitUpgrade.Charge_Beam.value, player)
+def can_charge_beam(state: CollectionState, player: int, required_beam: typing.Optional[SuitUpgrade] = None) -> bool:
+    if required_beam is not None:
+        progressive_item = get_progressive_upgrade_for_item(required_beam)
+        return state.has_all([SuitUpgrade.Charge_Beam.value, required_beam.value], player) or state.has(progressive_item.value, player, 2)
+
+    # If no beam is required, just check for Charge Beam or 2 of any progressive beam upgrade
+    return state.has(SuitUpgrade.Charge_Beam.value, player) or state.has_any_count({upgrade.value: 2 for upgrade in ProgressiveUpgrade}, player)
 
 
 def can_scan(state: CollectionState, player: int) -> bool:
