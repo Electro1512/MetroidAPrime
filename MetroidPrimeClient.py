@@ -23,7 +23,7 @@ class MetroidPrimeCommandProcessor(ClientCommandProcessor):
     def __init__(self, ctx: CommonContext):
         super().__init__(ctx)
 
-    def _cmd_test_message(self, *args):
+    def _cmd_test_hud(self, *args):
         """Send a message to the game interface."""
         self.ctx.notification_manager.queue_notification(' '.join(map(str, args)))
 
@@ -37,8 +37,9 @@ class MetroidPrimeCommandProcessor(ClientCommandProcessor):
             self.ctx.death_link_enabled = not self.ctx.death_link_enabled
             Utils.async_start(self.ctx.update_death_link(
                 self.ctx.death_link_enabled), name="Update Deathlink")
-            logger.info(
-                f"Deathlink is now {'enabled' if self.ctx.death_link_enabled else 'disabled'}")
+            message = f"Deathlink {'enabled' if self.ctx.death_link_enabled else 'disabled'}"
+            logger.info(message)
+            self.ctx.notification_manager.queue_notification(message)
 
 
 status_messages = {
@@ -244,27 +245,32 @@ async def patch_and_run_game(apmp1_file: str):
     if not os.path.exists(output_path):
 
         config_json_file = None
+        options_json_file = None
         if zipfile.is_zipfile(apmp1_file):
             for name in zipfile.ZipFile(apmp1_file).namelist():
                 if name == 'config.json':
                     config_json_file = name
-                    break
+                elif name == 'options.json':
+                    options_json_file = name
 
         config_json = None
+        options_json = None
+
         with zipfile.ZipFile(apmp1_file) as zip_file:
             with zip_file.open(config_json_file) as file:
                 config_json = file.read().decode("utf-8")
                 config_json = json.loads(config_json)
 
-        # TODO: remove the hardcoded true here
-        # !!
-        # !!!!!!
-        # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        config_json["gameConfig"]["updateHintStateReplacement"] = construct_hook_patch(game_version, True)
-        # TODO: remove the hardcoded true here
-        # !!
-        # !!!!!!
-        # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            if options_json_file:
+                with zip_file.open(options_json_file) as file:
+                    options_json = file.read().decode("utf-8")
+                    options_json = json.loads(options_json)
+
+        build_progressive_beam_patch = False
+        if options_json:
+            build_progressive_beam_patch = options_json["progressive_beam_upgrades"]
+
+        config_json["gameConfig"]["updateHintStateReplacement"] = construct_hook_patch(game_version, build_progressive_beam_patch)
         notifier = py_randomprime.ProgressNotifier(
             lambda progress, message: print("Generating ISO: ", progress, message))
         py_randomprime.patch_iso(input_iso_path, output_path, config_json, notifier)

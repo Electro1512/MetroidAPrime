@@ -39,6 +39,11 @@ Metroid Prime:
     false: 50
     true: 0
 
+  progressive_beam_upgrades:
+    # If enabled, 3 progressive beam items will be added into the item pool per beam. The first unlocks the beam, the second unlocks the ability to charge the beam, and the third unlocks the missile combo for it.
+    false: 50
+    true: 0
+
   spring_ball:
     # Enables the spring ball when you receive Morph Ball Bombs. This will allow you to jump while in morph ball form by pressing up on the c stick, reducing the complexity of double bomb jumps.
     false: 0

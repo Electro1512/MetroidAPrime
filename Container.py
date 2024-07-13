@@ -12,15 +12,18 @@ from .MetroidPrimeInterface import GAMES, HUD_MESSAGE_DURATION, calculate_item_o
 class MetroidPrimeContainer(APContainer):
     game: str = 'Metroid Prime'
 
-    def __init__(self, config_json: str, outfile_name: str, output_directory: str,
+    def __init__(self, config_json: str, options_json: str, outfile_name: str, output_directory: str,
                  player=None, player_name: str = "", server: str = ""):
         self.config_json = config_json
         self.config_path = "config.json"
+        self.options_path = "options.json"
+        self.options_json = options_json
         container_path = os.path.join(output_directory, outfile_name + ".apmp1")
         super().__init__(container_path, player, player_name, server)
 
     def write_contents(self, opened_zipfile: zipfile.ZipFile) -> None:
         opened_zipfile.writestr(self.config_path, self.config_json)
+        opened_zipfile.writestr(self.options_path, self.options_json)
         super().write_contents(opened_zipfile)
 
 

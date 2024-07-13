@@ -229,10 +229,15 @@ class MetroidPrimeWorld(World):
             with open("test_config.json", "w") as f:
                 f.write(configjsons)
 
-        # convert configjson to json
+        options_dict = {
+            "progressive_beam_upgrades": self.options.progressive_beam_upgrades.value,
+            "player_name": self.multiworld.get_player_name(self.player),
+        }
+
+        options_json = json.dumps(options_dict, indent=4)
 
         outfile_name = self.multiworld.get_out_file_name_base(self.player)
-        apmp1 = MetroidPrimeContainer(configjsons, outfile_name, output_directory, player=self.player, player_name=self.multiworld.get_player_name(self.player))
+        apmp1 = MetroidPrimeContainer(configjsons, options_json, outfile_name, output_directory, player=self.player, player_name=self.multiworld.get_player_name(self.player))
         apmp1.write()
 
     def fill_slot_data(self) -> Dict[str, Any]:
