@@ -55,6 +55,10 @@ class SuitUpgrade(Enum):
     Wavebuster = "Wavebuster"
     Missile_Launcher = "Missile Launcher"
     Main_Power_Bomb = "Power Bomb (Main)"
+    Power_Charge_Beam = "Charge Beam (Power)"
+    Wave_Charge_Beam = "Charge Beam (Wave)"
+    Ice_Charge_Beam = "Charge Beam (Ice)"
+    Plasma_Charge_Beam = "Charge Beam (Plasma)"
 
     def __str__(self):
         return self.value
@@ -73,15 +77,22 @@ class ProgressiveUpgrade(Enum):
     Progressive_Wave_Beam = "Progressive Wave Beam"
     Progressive_Plasma_Beam = "Progressive Plasma Beam"
 
+    @staticmethod
+    def get_by_value(value: str) -> 'SuitUpgrade':
+        for upgrade in ProgressiveUpgrade:
+            if upgrade.value == value:
+                return upgrade
+        return None
+
     def __str__(self):
         return self.value
 
 
 PROGRESSIVE_ITEM_MAPPING: Dict[ProgressiveUpgrade, List[SuitUpgrade]] = {
-    ProgressiveUpgrade.Progressive_Power_Beam: [SuitUpgrade.Power_Beam, SuitUpgrade.Charge_Beam, SuitUpgrade.Super_Missile],
-    ProgressiveUpgrade.Progressive_Ice_Beam: [SuitUpgrade.Ice_Beam, SuitUpgrade.Charge_Beam, SuitUpgrade.Ice_Spreader],
-    ProgressiveUpgrade.Progressive_Wave_Beam: [SuitUpgrade.Wave_Beam, SuitUpgrade.Charge_Beam, SuitUpgrade.Wavebuster],
-    ProgressiveUpgrade.Progressive_Plasma_Beam: [SuitUpgrade.Plasma_Beam, SuitUpgrade.Charge_Beam, SuitUpgrade.Flamethrower],
+    ProgressiveUpgrade.Progressive_Power_Beam: [SuitUpgrade.Power_Beam, SuitUpgrade.Power_Charge_Beam, SuitUpgrade.Super_Missile],
+    ProgressiveUpgrade.Progressive_Ice_Beam: [SuitUpgrade.Ice_Beam, SuitUpgrade.Ice_Charge_Beam, SuitUpgrade.Ice_Spreader],
+    ProgressiveUpgrade.Progressive_Wave_Beam: [SuitUpgrade.Wave_Beam, SuitUpgrade.Wave_Charge_Beam, SuitUpgrade.Wavebuster],
+    ProgressiveUpgrade.Progressive_Plasma_Beam: [SuitUpgrade.Plasma_Beam, SuitUpgrade.Plasma_Charge_Beam, SuitUpgrade.Flamethrower],
 }
 
 PROGRESSIVE_ITEM_EXCLUSION_LIST: List[SuitUpgrade] = [
@@ -179,10 +190,17 @@ custom_suit_upgrade_table: dict[str, ItemData] = {
     SuitUpgrade.Missile_Launcher.value: ItemData(SuitUpgrade.Missile_Launcher.value, 41, ItemClassification.progression),
     SuitUpgrade.Main_Power_Bomb.value: ItemData(SuitUpgrade.Main_Power_Bomb.value, 42, ItemClassification.progression),
 
-    ProgressiveUpgrade.Progressive_Power_Beam.value: ItemData(ProgressiveUpgrade.Progressive_Power_Beam.value, 43, ItemClassification.progression),
-    ProgressiveUpgrade.Progressive_Ice_Beam.value: ItemData(ProgressiveUpgrade.Progressive_Ice_Beam.value, 44, ItemClassification.progression),
-    ProgressiveUpgrade.Progressive_Wave_Beam.value: ItemData(ProgressiveUpgrade.Progressive_Wave_Beam.value, 45, ItemClassification.progression),
-    ProgressiveUpgrade.Progressive_Plasma_Beam.value: ItemData(ProgressiveUpgrade.Progressive_Plasma_Beam.value, 46, ItemClassification.progression),
+    ProgressiveUpgrade.Progressive_Power_Beam.value: ItemData(ProgressiveUpgrade.Progressive_Power_Beam.value, 43, ItemClassification.progression, 3),
+    ProgressiveUpgrade.Progressive_Ice_Beam.value: ItemData(ProgressiveUpgrade.Progressive_Ice_Beam.value, 44, ItemClassification.progression, 3),
+    ProgressiveUpgrade.Progressive_Wave_Beam.value: ItemData(ProgressiveUpgrade.Progressive_Wave_Beam.value, 45, ItemClassification.progression, 3),
+    ProgressiveUpgrade.Progressive_Plasma_Beam.value: ItemData(ProgressiveUpgrade.Progressive_Plasma_Beam.value, 46, ItemClassification.progression, 3),
+
+    # These aren't used in item generation but are referenced in the client
+    SuitUpgrade.Power_Charge_Beam.value: ItemData(SuitUpgrade.Power_Charge_Beam.value, 47, ItemClassification.progression, 1),
+    SuitUpgrade.Wave_Charge_Beam.value: ItemData(SuitUpgrade.Wave_Charge_Beam.value, 48, ItemClassification.progression, 1),
+    SuitUpgrade.Ice_Charge_Beam.value: ItemData(SuitUpgrade.Ice_Charge_Beam.value, 49, ItemClassification.progression, 1),
+    SuitUpgrade.Plasma_Charge_Beam.value: ItemData(SuitUpgrade.Plasma_Charge_Beam.value, 50, ItemClassification.progression, 1),
+
 }
 
 artifact_table: dict[str, ItemData] = {

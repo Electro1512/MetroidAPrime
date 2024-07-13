@@ -37,7 +37,7 @@ class TestProgressiveBeamUpgradesNormalStart(MetroidPrimeTestBase):
         self.assertTrue(has_power_beam)
 
     def test_non_progressive_items_are_removed_from_pool(self):
-        excluded_items = []
+        excluded_items = [SuitUpgrade.Charge_Beam.value]
         for items in PROGRESSIVE_ITEM_MAPPING.values():
             excluded_items += items
 

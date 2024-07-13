@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 from CommonClient import logger
 from NetUtils import NetworkItem
 
-from .Items import custom_suit_upgrade_table
+from .Items import PROGRESSIVE_ITEM_MAPPING, ProgressiveUpgrade, SuitUpgrade, custom_suit_upgrade_table, suit_upgrade_table
 from .MetroidPrimeInterface import InventoryItemData
 
 if TYPE_CHECKING:
@@ -21,22 +21,31 @@ async def handle_receive_items(ctx: 'MetroidPrimeContext', current_items: dict[s
             continue
         elif item_data.name == "Power Bomb (Main)":
             continue
+        elif item_data.name in PROGRESSIVE_ITEM_MAPPING:
+            continue
 
         # Handle Single Item Upgrades
-        if item_data.max_capacity == 1 and item_data.current_amount == 0:
-            ctx.game_interface.give_item_to_player(item_data.id, 1, 1)
-            if network_item.player != ctx.slot:
-                receipt_message = "online" if not item_data.name.startswith("Artifact") else "received"
-                ctx.notification_manager.queue_notification(f"{item_data.name} {receipt_message} ({ctx.player_names[network_item.player]})")
+        if item_data.max_capacity == 1:
+            give_item_if_not_owned(ctx, item_data, network_item)
         elif item_data.max_capacity > 1:
             continue
 
     await handle_receive_missiles(ctx, current_items)
     await handle_receive_power_bombs(ctx, current_items)
     await handle_receive_energy_tanks(ctx, current_items)
+    await handle_receive_progressive_items(ctx, current_items)
 
     # Handle Artifacts
     ctx.game_interface.sync_artifact_layers()
+
+
+def give_item_if_not_owned(ctx: 'MetroidPrimeContext', item_data: InventoryItemData, network_item: NetworkItem):
+    """Gives the item and notifies"""
+    if item_data.current_amount == 0:
+        ctx.game_interface.give_item_to_player(item_data.id, 1, 1)
+        if network_item.player != ctx.slot:
+            receipt_message = "online" if not item_data.name.startswith("Artifact") else "received"
+            ctx.notification_manager.queue_notification(f"{item_data.name} {receipt_message} ({ctx.player_names[network_item.player]})")
 
 
 async def handle_receive_missiles(ctx: 'MetroidPrimeContext', current_items: dict[str, InventoryItemData]):
@@ -163,8 +172,31 @@ async def handle_receive_energy_tanks(ctx: 'MetroidPrimeContext', current_items:
         ctx.game_interface.set_current_health(new_capacity * 100.0 + 99)
 
 
-def inventory_item_by_network_id(network_id: int, current_inventory: dict[str, InventoryItemData]) -> InventoryItemData:
+async def handle_receive_progressive_items(ctx: 'MetroidPrimeContext', current_items: dict[str, InventoryItemData]):
+    counts = {upgrade.value: 0 for upgrade in PROGRESSIVE_ITEM_MAPPING}
+    network_items = {upgrade.value: [] for upgrade in PROGRESSIVE_ITEM_MAPPING}
+    for network_item in ctx.items_received:
+        item_data = inventory_item_by_network_id(
+            network_item.item, current_items)
+        if item_data is None:
+            continue
+        if item_data.name in counts:
+            counts[item_data.name] += 1
+            network_items[item_data.name].append(network_item)
 
+    for progressive_upgrade, count in counts.items():
+        if count > 0:
+            for i in range(count):
+                mapping = PROGRESSIVE_ITEM_MAPPING[ProgressiveUpgrade.get_by_value(progressive_upgrade)]
+                if i >= len(mapping):
+                    continue
+                item = PROGRESSIVE_ITEM_MAPPING[ProgressiveUpgrade.get_by_value(progressive_upgrade)][i]
+                inventory_item = current_items[item.value]
+                network_item = network_items[progressive_upgrade][i]
+                give_item_if_not_owned(ctx, inventory_item, network_item)
+
+
+def inventory_item_by_network_id(network_id: int, current_inventory: dict[str, InventoryItemData]) -> InventoryItemData:
     for item in current_inventory.values():
         if item.code == network_id:
             return item

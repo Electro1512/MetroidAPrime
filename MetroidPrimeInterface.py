@@ -4,7 +4,7 @@ from .DolphinClient import GC_GAME_ID_ADDRESS, DolphinClient, DolphinException, 
 from enum import Enum
 from enum import Enum
 import py_randomprime
-from .Items import ItemData, SuitUpgrade, item_table
+from .Items import ItemData, SuitUpgrade, item_table, custom_suit_upgrade_table
 
 _SUPPORTED_VERSIONS = ["0-00", "0-01", "0-02", "jpn", "kor", "pal"]
 _SYMBOLS = {version: py_randomprime.symbols_for_version(version) for version in _SUPPORTED_VERSIONS}
@@ -71,8 +71,10 @@ GAMES = {
     },
 }
 
+
 def calculate_item_offset(item_id):
     return (0x24 + RTSL_VECTOR_OFFSET) + (item_id * ITEM_SIZE)
+
 
 AREA_SIZE = 16
 ITEM_SIZE = 0x8
@@ -135,6 +137,14 @@ class Area:
         return f"LayerCount: {self.layerCount}, LayerStartIndex: {self.startNameIdx}, LayerBitsHi: {self.layerBitsHi}, LayerBitsLo: {self.layerBitsLo}"
 
 
+custom_charge_id_to_beam = {
+    custom_suit_upgrade_table[SuitUpgrade.Power_Charge_Beam.value].id: SuitUpgrade.Power_Charge_Beam,
+    custom_suit_upgrade_table[SuitUpgrade.Wave_Charge_Beam.value].id: SuitUpgrade.Wave_Charge_Beam,
+    custom_suit_upgrade_table[SuitUpgrade.Ice_Charge_Beam.value].id: SuitUpgrade.Ice_Charge_Beam,
+    custom_suit_upgrade_table[SuitUpgrade.Plasma_Charge_Beam.value].id: SuitUpgrade.Plasma_Charge_Beam
+}
+
+
 class InventoryItemData(ItemData):
     """Class used to track the player'scurrent items and their quantities"""
     current_amount: int
@@ -163,6 +173,10 @@ class MetroidPrimeInterface:
 
     def give_item_to_player(self, item_id: int, new_amount: int, new_capacity: int):
         """Gives the player an item with the specified amount and capacity"""
+        if item_id in custom_charge_id_to_beam:
+            charge_beam = custom_charge_id_to_beam[item_id]
+            self.set_progressive_beam_charge_state(charge_beam, True)
+            return
         self.dolphin_client.write_pointer(self.__get_player_state_pointer(),
                                           calculate_item_offset(item_id), struct.pack(">II", new_amount, new_capacity))
         if item_id > 20 and item_id <= 23:
@@ -186,8 +200,9 @@ class MetroidPrimeInterface:
         return None
 
     def get_item(self, item: ItemData) -> InventoryItemData:
-        player_state_pointer = int.from_bytes(
-            self.dolphin_client.read_address(GAMES[self.current_game]["cstate_manager_global"] + 0x8B8, 4), "big")
+        if item.id in custom_charge_id_to_beam:
+            return InventoryItemData(item, int(self.get_progressive_beam_charge_state(custom_charge_id_to_beam[item.id])), 1)
+
         result = self.dolphin_client.read_pointer(
             self.__get_player_state_pointer(), calculate_item_offset(item.id), 8)
         if result is None:
@@ -200,6 +215,8 @@ class MetroidPrimeInterface:
         inventory: dict[str, InventoryItemData] = {}
         for item in item_table.values():
             if item.id <= MAX_VANILLA_ITEM_ID:
+                inventory[item.name] = self.get_item(item)
+            elif item.id in custom_charge_id_to_beam:
                 inventory[item.name] = self.get_item(item)
         return inventory
 
@@ -327,19 +344,27 @@ class MetroidPrimeInterface:
 
         self.dolphin_client.write_address(GAMES[self.current_game]["HUD_MESSAGE_ADDRESS"], encoded_message)
 
-    def set_progressive_beam_charge_state(self, beam: SuitUpgrade, state: bool):
+    def __get_progressive_beam_charge_offset(self, charge_beam: SuitUpgrade) -> int:
         offset = 0
-        if beam == SuitUpgrade.Power_Beam:
+        if charge_beam == SuitUpgrade.Power_Charge_Beam:
             offset = 0
-        elif beam == SuitUpgrade.Wave_Beam:
+        elif charge_beam == SuitUpgrade.Wave_Charge_Beam:
             offset = 2
-        elif beam == SuitUpgrade.Ice_Beam:
+        elif charge_beam == SuitUpgrade.Ice_Charge_Beam:
             offset = 1
-        elif beam == SuitUpgrade.Plasma_Beam:
+        elif charge_beam == SuitUpgrade.Plasma_Charge_Beam:
             offset = 3
+        return offset
 
+    def set_progressive_beam_charge_state(self, beam: SuitUpgrade, state: bool):
+        offset = self.__get_progressive_beam_charge_offset(beam)
         state = b"\x01" if state else b"\x00"
         self.dolphin_client.write_address(GAMES[self.current_game]["PROGRESSIVE_BEAM_ADDRESS"] + offset, state)
+
+    def get_progressive_beam_charge_state(self, beam: SuitUpgrade) -> bool:
+        offset = self.__get_progressive_beam_charge_offset(beam)
+        state = self.dolphin_client.read_address(GAMES[self.current_game]["PROGRESSIVE_BEAM_ADDRESS"] + offset, 1)
+        return state == b"\x01"
 
     def __is_player_table_ready(self) -> bool:
         """Check if the player table is ready to be read from memory, indicating the game is in a playable state"""
@@ -355,7 +380,6 @@ class MetroidPrimeInterface:
 
     def __get_player_state_pointer(self):
         return int.from_bytes(self.dolphin_client.read_address(GAMES[self.current_game]["cstate_manager_global"] + 0x8B8, 4), "big")
-
 
     def __get_world_layer_state_pointer(self):
         return int.from_bytes(self.dolphin_client.read_address(GAMES[self.current_game]["cstate_manager_global"] + 0x8c8, 4), "big")
