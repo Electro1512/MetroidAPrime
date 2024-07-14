@@ -256,7 +256,7 @@ class ChozoRuinsAreaData(AreaData):
         }, ),
         RoomName.Sunchamber_Lobby: RoomData(doors={
             0: DoorData(RoomName.Sunchamber_Access),
-            1: DoorData(RoomName.Arboretum, defaultLock=DoorLockType.Missile,),
+            1: DoorData(RoomName.Arboretum, rule_func=lambda state, player: False),
         }),
         RoomName.Sunchamber: RoomData(doors={
             0: DoorData(RoomName.Sun_Tower_Access, rule_func=can_flaahgra, exclude_from_rando=True)
