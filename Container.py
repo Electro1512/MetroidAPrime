@@ -145,8 +145,6 @@ def construct_progressive_beam_patch(game_version: str, progressive_beams: bool)
         # If value is 0, set the byte at player state address + charge_beam_offset to 0
         li(r9, 0),
 
-        # CHARGE BEAM OFFSET IS INCORRECT
-
         addi(r10, r6, charge_beam_offset),  # Calculate player state address + charge_beam_offset
         stb(r9, 0, r10),  # Store 0 at the calculated address
         b('early_return_beam'),

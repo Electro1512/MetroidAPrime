@@ -139,14 +139,14 @@ class TallonOverworldAreaData(AreaData):
         RoomName.Hydro_Access_Tunnel: RoomData(
             doors={
                 0: DoorData(RoomName.Great_Tree_Hall, rule_func=lambda state, player: can_crashed_frigate(state, player) and can_boost(state, player), tricks=[Tricks.hydro_access_tunnel_no_gravity]),  # Boost is needed to open way in great tree hall
-                1: DoorData(RoomName.Biohazard_Containment, rule_func=lambda state, player: can_bomb(state, player) and can_crashed_frigate_backwards(state, player),
+                1: DoorData(RoomName.Biohazard_Containment, rule_func=lambda state, player: can_bomb(state, player) and can_move_underwater(state, player) and can_space_jump(state, player),
                             tricks=[Tricks.hydro_access_tunnel_no_gravity]),
 
                 # This one isn't an actual door but is instead accounting for not being able to access the great tree hall lower from upper
                 2: DoorData(RoomName.Transport_Tunnel_E, destinationArea=MetroidPrimeArea.Tallon_Overworld, defaultLock=DoorLockType.Ice, rule_func=can_crashed_frigate, tricks=[Tricks.hydro_access_tunnel_no_gravity], exclude_from_rando=True),
             },
             pickups=[
-                PickupData('Tallon Overworld: Hydro Access Tunnel', rule_func=lambda state, player: can_bomb(state, player) and can_move_underwater(state, player), tricks=[Tricks.hydro_access_tunnel_no_gravity, Tricks.frigate_backwards_no_gravity]),
+                PickupData('Tallon Overworld: Hydro Access Tunnel', rule_func=lambda state, player: can_bomb(state, player) and can_move_underwater(state, player), tricks=[Tricks.hydro_access_tunnel_no_gravity]),
             ]),
 
         RoomName.Landing_Site: RoomData(
