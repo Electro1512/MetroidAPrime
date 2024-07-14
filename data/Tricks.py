@@ -91,7 +91,7 @@ class Tricks:
 
     arboretum_scan_gate_skip: TrickInfo = TrickInfo("Arboretum Scan Gate Skip", "Skip the gate in the Arboretum by double bomb jumping", TrickDifficulty.Easy, can_bomb)
 
-    gathering_hall_without_space_jump: TrickInfo = TrickInfo("Gathering Hall Without Space Jump", "Double bomb jump from the side platform to the grate where the item is", TrickDifficulty.Easy, lambda state, player: can_bomb(state, player) and can_power_bomb(state, player))
+    gathering_hall_without_space_jump: TrickInfo = TrickInfo("Gathering Hall Without Space Jump", "Double bomb jump from the side platform to the grate where the item is", TrickDifficulty.Easy, lambda state, player: can_bomb(state, player) and can_bomb(state, player))
 
     watery_hall_no_gravity: TrickInfo = TrickInfo("Watery Hall No Gravity", "Reach the Watery Hall Underwater Item without Gravity Suit by using a slope jump", TrickDifficulty.Easy, can_space_jump)
     watery_hall_no_gravity_no_space_jump: TrickInfo = TrickInfo("Watery Hall No Gravity No Space Jump", "Reach the Watery Hall Underwater Item without Gravity Suit by using a slope jump", TrickDifficulty.Medium, lambda state, player: can_move_underwater(state, player) == False or can_bomb(state, player))
