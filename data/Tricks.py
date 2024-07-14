@@ -154,7 +154,7 @@ class Tricks:
     quarantine_to_north_courtyard_slope_jump = TrickInfo("Quarantine to North Courtyard Slope Jump", "You can exit Quarantine Cave to Ruined Courtyard by slope jumping next to the Spider Ball track.", TrickDifficulty.Medium, lambda state, player: can_space_jump(state, player))
 
     observatory_puzzle_skip = TrickInfo("Observatory Puzzle Skip", "This trick expects you to dash to climb Observatory without Boost Ball and Bombs, and then slope jump to the pipes to reach the item.", TrickDifficulty.Medium, lambda state, player: can_space_jump(state, player) and can_scan(state, player))
-    frozen_pike_no_bombs = TrickInfo("Frozen Pike No Bombs", "To skip the morph ball bomb tunnel, you can R jump or dash to the upper platform on the opposite end of the tunnel.", TrickDifficulty.Easy, lambda state, player: can_space_jump(state, player))
+    frozen_pike_no_bombs = TrickInfo("Frozen Pike No Bombs", "To skip the morph ball bomb tunnel, you can R jump or dash to the upper platform on the opposite end of the tunnel.", TrickDifficulty.Medium, lambda state, player: can_space_jump(state, player))
     frozen_pike_no_gravity_suit = TrickInfo("Frozen Pike No Gravity Suit", "Reach hunter cave without gravity suit by doing a slope jump", TrickDifficulty.Medium, lambda state, player: can_space_jump(state, player))
 
     frost_cave_no_grapple = TrickInfo("Frost Cave No Grapple", "Reach the Frost Cave item without the Grapple Beam", TrickDifficulty.Easy, lambda state, player: can_missile(state, player) and can_space_jump(state, player) and can_move_underwater(state, player))  # Requires gravity
