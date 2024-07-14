@@ -80,6 +80,8 @@ class PickupData:
     rule_func: Optional[Callable[[CollectionState, int], bool]] = None
     tricks: List[TrickInfo] = field(default_factory=list)
     priority: LocationProgressType = LocationProgressType.DEFAULT
+    exclude_from_config: bool = False  # Used when items need to be treated differently for logic with odd room connections
+    exclude_from_logic: bool = False  # Used when items need to be treated differently for logic with odd room connections
 
     def get_config_data(self, world: 'MetroidPrimeWorld'):
         return {
@@ -102,7 +104,7 @@ class RoomData:
         if len(self.pickups) == 0:
             return {}
         return {
-            "pickups": [pickup.get_config_data(world) for pickup in self.pickups],
+            "pickups": [pickup.get_config_data(world) for pickup in self.pickups if not pickup.exclude_from_config],
         }
 
     def get_region_name(self, name: str):
@@ -129,6 +131,9 @@ class AreaData:
 
             # Add each room's pickups as locations
             for pickup in room_data.pickups:
+                if pickup.exclude_from_logic:
+                    continue
+
                 def generate_access_rule(pickup) -> Callable[[CollectionState], bool]:
                     def access_rule(state: CollectionState):
                         return _can_reach_pickup(state, world.player, pickup)
