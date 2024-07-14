@@ -71,6 +71,7 @@ class Tricks:
     vault_via_plaza: TrickInfo = TrickInfo("Vault Via Plaza", "Reach the Vault via the Main Plaza using an L Jump", TrickDifficulty.Easy, can_space_jump)
     plaza_half_pipe_no_boost: TrickInfo = TrickInfo("Plaza Half Pipe No Boost", "Reach the Half Pipe in the Main Plaza using a slope jump", TrickDifficulty.Easy, can_space_jump)
     plaza_grapple_ledge_r_jump: TrickInfo = TrickInfo("Plaza Grapple Ledge R Jump", "Reach the Grapple Ledge in the Main Plaza using an R Jump", TrickDifficulty.Easy, can_space_jump)
+    plaza_grapple_ledge_tree_grapple: TrickInfo = TrickInfo("Plaza Grapple Ledge Tree Grapple", "Reach the Grapple Ledge in the Main Plaza by L jumping to the tree and then grappling to the ledge", TrickDifficulty.Easy, can_grapple)
 
     ruined_shrine_upper_door_no_spider_ball: TrickInfo = TrickInfo("Ruined Shrine Upper Door L Jump", "Reach the upper door in the Ruined Shrine by L Jumping off the root", TrickDifficulty.Easy, can_space_jump)
     ruined_shrine_upper_door_scan_dash: TrickInfo = TrickInfo("Ruined Shrine Upper Door Scan Dash", "Reach the upper door in the Ruined Shrine by scan dashing without space jump", TrickDifficulty.Hard, can_scan)
