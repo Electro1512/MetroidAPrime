@@ -114,7 +114,7 @@ class ChozoRuinsAreaData(AreaData):
             1: DoorData(RoomName.Gathering_Hall_Access, defaultLock=DoorLockType.Missile),
             2: DoorData(RoomName.Save_Station_2, defaultLock=DoorLockType.Missile),
             3: DoorData(RoomName.East_Atrium, rule_func=lambda state, player: can_morph_ball(state, player) or can_space_jump(state, player)),
-        }, pickups=[PickupData('Chozo Ruins: Gathering Hall', rule_func=lambda state, player: can_space_jump(state, player) and can_bomb(state, player), tricks=[Tricks.gathering_hall_without_space_jump]), ]),
+        }, pickups=[PickupData('Chozo Ruins: Gathering Hall', rule_func=lambda state, player: can_space_jump(state, player) and (can_bomb(state, player) or can_power_bomb(state, player)), tricks=[Tricks.gathering_hall_without_space_jump])]),
         RoomName.Hall_of_the_Elders: RoomData(
             doors={
                 0: DoorData(RoomName.Reflecting_Pool_Access, rule_func=lambda state, player: can_combat_ghosts(state, player) and can_bomb(state, player) and can_spider(state, player) and can_wave_beam(state, player) and can_space_jump(state, player), tricks=[Tricks.hall_of_elders_reflecting_pool_no_spider, Tricks.hall_of_elders_reflecting_pool_no_wave_beam]),
