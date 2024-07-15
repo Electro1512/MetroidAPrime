@@ -4,7 +4,7 @@ import multiprocessing
 import os
 import subprocess
 import traceback
-from typing import List
+from typing import List, Optional
 import zipfile
 import py_randomprime
 
@@ -16,7 +16,7 @@ from .NotificationManager import NotificationManager
 from .Container import construct_hook_patch
 from .DolphinClient import DolphinException, assert_no_running_dolphin, get_num_dolphin_instances
 from .Locations import METROID_PRIME_LOCATION_BASE, every_location
-from .MetroidPrimeInterface import HUD_MESSAGE_DURATION, ConnectionState, InventoryItemData, MetroidPrimeInterface, MetroidPrimeLevel
+from .MetroidPrimeInterface import HUD_MESSAGE_DURATION, ConnectionState, InventoryItemData, MetroidPrimeInterface, MetroidPrimeLevel, MetroidPrimeSuit
 
 
 class MetroidPrimeCommandProcessor(ClientCommandProcessor):
@@ -47,6 +47,17 @@ class MetroidPrimeCommandProcessor(ClientCommandProcessor):
             self.ctx.gravity_suit_enabled = not self.ctx.gravity_suit_enabled
             self.ctx.notification_manager.queue_notification(f"{'Enabling' if self.ctx.gravity_suit_enabled else 'Disabling'} Gravity Suit...")
 
+    def _cmd_set_cosmetic_suit(self, input):
+        """Set the cosmetic suit of the player. This will not affect the player's current suit but will change the appearance of the suit in the game."""
+        if isinstance(self.ctx, MetroidPrimeContext):
+            suit = MetroidPrimeSuit.get_by_key(input)
+            if suit is None:
+                options = ", ".join([suit.name for suit in MetroidPrimeSuit if "Fusion" not in suit.name])
+                logger.warning(f"Invalid cosmetic suit: {suit}. Valid options are: {options}")
+                return
+            logger.info(f"Setting cosmetic suit to: {suit.name} Suit")
+            self.ctx.cosmetic_suit = suit
+
 
 status_messages = {
     ConnectionState.IN_GAME: "Connected to Metroid Prime",
@@ -70,6 +81,7 @@ class MetroidPrimeContext(CommonContext):
     slot_data: dict[str, Utils.Any] = None
     death_link_enabled = False
     gravity_suit_enabled: bool = True
+    cosmetic_suit: Optional[MetroidPrimeSuit] = None
 
     def __init__(self, server_address, password):
         super().__init__(server_address, password)

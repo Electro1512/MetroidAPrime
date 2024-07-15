@@ -5,7 +5,7 @@ from CommonClient import logger
 from NetUtils import NetworkItem
 
 from .Items import PROGRESSIVE_ITEM_MAPPING, ProgressiveUpgrade, SuitUpgrade, custom_suit_upgrade_table, suit_upgrade_table
-from .MetroidPrimeInterface import InventoryItemData
+from .MetroidPrimeInterface import InventoryItemData, MetroidPrimeSuit
 
 if TYPE_CHECKING:
     from .MetroidPrimeClient import MetroidPrimeContext
@@ -38,6 +38,7 @@ async def handle_receive_items(ctx: 'MetroidPrimeContext', current_items: dict[s
     await handle_receive_progressive_items(ctx, current_items)
 
     await handle_disable_gravity_suit(ctx, current_items)
+    await handle_cosmetic_suit(ctx, current_items)
 
     # Handle Artifacts
     ctx.game_interface.sync_artifact_layers()
@@ -57,6 +58,12 @@ def disable_item_if_owned(ctx: 'MetroidPrimeContext', item_data: InventoryItemDa
     if item_data.current_amount > 0:
         ctx.game_interface.give_item_to_player(item_data.id, 0, 0)
         ctx.notification_manager.queue_notification(f"{item_data.name} offline")
+
+
+async def handle_cosmetic_suit(ctx: 'MetroidPrimeContext', current_items: dict[str, InventoryItemData]):
+    if ctx.cosmetic_suit == None:
+        return
+    ctx.game_interface.set_current_suit(ctx.cosmetic_suit)
 
 
 async def handle_disable_gravity_suit(ctx: 'MetroidPrimeContext', current_items: dict[str, InventoryItemData]):

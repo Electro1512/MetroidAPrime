@@ -101,6 +101,13 @@ class MetroidPrimeSuit(Enum):
     FusionVaria = 6
     FusionPhazon = 7
 
+    @staticmethod
+    def get_by_key(key):
+        for suit in MetroidPrimeSuit:
+            if suit.name == key:
+                return suit
+        return None
+
 
 class MetroidPrimeLevel(Enum):
     """Game worlds with their corresponding IDs in memory"""
@@ -179,6 +186,8 @@ class MetroidPrimeInterface:
             return
         self.dolphin_client.write_pointer(self.__get_player_state_pointer(),
                                           calculate_item_offset(item_id), struct.pack(">II", new_amount, new_capacity))
+
+        # This will be overriden by handle_cosmetic_suit
         if item_id > 20 and item_id <= 23:
             current_suit = self.get_current_suit()
             if current_suit == MetroidPrimeSuit.Phazon:
