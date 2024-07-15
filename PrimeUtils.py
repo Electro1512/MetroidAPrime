@@ -38,10 +38,13 @@ def setup_lib_path():
             print(f"Using existing directory for version {version}: {target_dir_path}")
         else:
             # Remove other version directories
-            for dir in glob.glob(os.path.join(temp_base_dir, f"{temp_dir_name}_*")):
-                if dir != target_dir_path:
-                    shutil.rmtree(dir)
-                    print(f"Removed old version directory: {dir}")
+            try:
+                for dir in glob.glob(os.path.join(temp_base_dir, f"{temp_dir_name}_*")):
+                    if dir != target_dir_path:
+                        shutil.rmtree(dir)
+                        print(f"Removed old version directory: {dir}")
+            except Exception as e:
+                print(f"Failed to remove old version directories, make sure you don't have any archipelago clients/generators already running if you want these removed: {e}")
 
             # Extract files to the new version directory
             os.makedirs(target_dir_path, exist_ok=True)

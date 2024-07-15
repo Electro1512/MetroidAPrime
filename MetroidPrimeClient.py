@@ -41,6 +41,12 @@ class MetroidPrimeCommandProcessor(ClientCommandProcessor):
             logger.info(message)
             self.ctx.notification_manager.queue_notification(message)
 
+    def _cmd_toggle_gravity_suit(self):
+        """Toggles the gravity suit functionality on/off if the player has received it. Note that this will not change the player's current suit they are wearing but disables the functionality of the gravity suit."""
+        if isinstance(self.ctx, MetroidPrimeContext):
+            self.ctx.gravity_suit_enabled = not self.ctx.gravity_suit_enabled
+            self.ctx.notification_manager.queue_notification(f"{'Enabling' if self.ctx.gravity_suit_enabled else 'Disabling'} Gravity Suit...")
+
 
 status_messages = {
     ConnectionState.IN_GAME: "Connected to Metroid Prime",
@@ -63,6 +69,7 @@ class MetroidPrimeContext(CommonContext):
     connection_state = ConnectionState.DISCONNECTED
     slot_data: dict[str, Utils.Any] = None
     death_link_enabled = False
+    gravity_suit_enabled: bool = True
 
     def __init__(self, server_address, password):
         super().__init__(server_address, password)

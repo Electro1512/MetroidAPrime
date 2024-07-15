@@ -17,14 +17,16 @@ async def handle_receive_items(ctx: 'MetroidPrimeContext', current_items: dict[s
             network_item.item, current_items)
         if item_data is None:
             continue
-        if item_data.name == "Missile Launcher":
+        if item_data.name == SuitUpgrade.Missile_Launcher.value:
             continue
-        elif item_data.name == "Power Bomb (Main)":
+        elif item_data.name == SuitUpgrade.Main_Power_Bomb.value:
             continue
         elif item_data.name in PROGRESSIVE_ITEM_MAPPING:
             continue
+        elif item_data.name == SuitUpgrade.Gravity_Suit.value and not ctx.gravity_suit_enabled:
+            continue
 
-        # Handle Single Item Upgrades
+            # Handle Single Item Upgrades
         if item_data.max_capacity == 1:
             give_item_if_not_owned(ctx, item_data, network_item)
         elif item_data.max_capacity > 1:
@@ -34,6 +36,8 @@ async def handle_receive_items(ctx: 'MetroidPrimeContext', current_items: dict[s
     await handle_receive_power_bombs(ctx, current_items)
     await handle_receive_energy_tanks(ctx, current_items)
     await handle_receive_progressive_items(ctx, current_items)
+
+    await handle_disable_gravity_suit(ctx, current_items)
 
     # Handle Artifacts
     ctx.game_interface.sync_artifact_layers()
@@ -46,6 +50,20 @@ def give_item_if_not_owned(ctx: 'MetroidPrimeContext', item_data: InventoryItemD
         if network_item.player != ctx.slot:
             receipt_message = "online" if not item_data.name.startswith("Artifact") else "received"
             ctx.notification_manager.queue_notification(f"{item_data.name} {receipt_message} ({ctx.player_names[network_item.player]})")
+
+
+def disable_item_if_owned(ctx: 'MetroidPrimeContext', item_data: InventoryItemData):
+    """Disables the item and notifies"""
+    if item_data.current_amount > 0:
+        ctx.game_interface.give_item_to_player(item_data.id, 0, 0)
+        ctx.notification_manager.queue_notification(f"{item_data.name} offline")
+
+
+async def handle_disable_gravity_suit(ctx: 'MetroidPrimeContext', current_items: dict[str, InventoryItemData]):
+    if ctx.gravity_suit_enabled:
+        return
+    item = current_items[SuitUpgrade.Gravity_Suit.value]
+    disable_item_if_owned(ctx, item)
 
 
 async def handle_receive_missiles(ctx: 'MetroidPrimeContext', current_items: dict[str, InventoryItemData]):
