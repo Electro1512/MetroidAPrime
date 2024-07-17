@@ -279,6 +279,17 @@ class MetroidPrimeInterface:
             self.__get_player_state_pointer(), 0xC, struct.pack(">f", new_health_amount))
         return self.get_current_health()
 
+    def get_last_received_index(self) -> int:
+        """Gets the index of the last item received. This is stored as the current amount for the power suit"""
+        inventory_item = self.get_item(item_table[SuitUpgrade.Power_Suit.value])
+        return inventory_item.current_amount
+
+    def set_last_received_index(self, index: int):
+        """Sets the received index to the index of the last item received. This is stored as the max amount for the power suit"""
+        inventory_item = self.get_item(item_table[SuitUpgrade.Power_Suit.value])
+        inventory_item.current_amount = index
+        self.give_item_to_player(inventory_item.id, inventory_item.current_amount, inventory_item.current_capacity)
+
     def connect_to_game(self):
         """Initializes the connection to dolphin and verifies it is connected to Metroid Prime"""
         try:

@@ -182,7 +182,8 @@ suit_upgrade_table: dict[str, ItemData] = {
 
 misc_item_table: dict[str, ItemData] = {
     "UnknownItem1": ItemData("UnknownItem1", 25, ItemClassification.useful),
-    "Ice Trap": ItemData("Ice Trap", 27, ItemClassification.trap),
+    "UNUSED": ItemData("Ice Trap", 26, ItemClassification.trap),  # health refill address
+    "Ice Trap": ItemData("Ice Trap", 27, ItemClassification.trap),  # unk 2
 }
 
 # These item ids are invalid in the player state, we'll need to exclude it from logic relying on that

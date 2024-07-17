@@ -12,6 +12,8 @@ if TYPE_CHECKING:
 
 
 async def handle_receive_items(ctx: 'MetroidPrimeContext', current_items: dict[str, InventoryItemData]):
+    # Will be used when consumables are implemented
+    # current_index = ctx.game_interface.get_last_received_index()
     for network_item in ctx.items_received:
         item_data = inventory_item_by_network_id(
             network_item.item, current_items)
@@ -31,6 +33,9 @@ async def handle_receive_items(ctx: 'MetroidPrimeContext', current_items: dict[s
             give_item_if_not_owned(ctx, item_data, network_item)
         elif item_data.max_capacity > 1:
             continue
+    # Not used until consumables are implemented but keeping it here to see if it breaks anything and gets reported
+    new_index = len(ctx.items_received) - 1
+    ctx.game_interface.set_last_received_index(new_index)
 
     await handle_receive_missiles(ctx, current_items)
     await handle_receive_power_bombs(ctx, current_items)
