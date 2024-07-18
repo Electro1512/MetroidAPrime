@@ -14,6 +14,7 @@ from .data.PhendranaDrifts import PhendranaDriftsAreaData
 from .data.TallonOverworld import TallonOverworldAreaData
 from .data.ChozoRuins import ChozoRuinsAreaData
 
+MAX_32_BIT_INT = 4294967295
 
 if TYPE_CHECKING:
     from . import MetroidPrimeWorld
@@ -55,7 +56,7 @@ def color_options_to_value(world: 'MetroidPrimeWorld') -> List[float]:
     options = world.options
     # If any overrides are set, use that instead
     if options.hud_color_red.value or options.hud_color_green.value or options.hud_color_blue.value:
-        return [options.hud_color_red.value/255, options.hud_color_green.value/255, options.hud_color_blue.value/255]
+        return [options.hud_color_red.value / 255, options.hud_color_green.value / 255, options.hud_color_blue.value / 255]
 
     # get the key in hudcolor enum that matches all caps color
     color: str = world.options.hud_color.value
@@ -225,14 +226,14 @@ def make_config(world: 'MetroidPrimeWorld'):
                 "Combat Visor": 1,
                 "Boost Ball": 1,
                 "Spider Ball": 1,
-                "Power Suit": 1,
+                "Power Suit": MAX_32_BIT_INT,
                 "Gravity Suit": 1,
                 "Varia Suit": 1,
                 "Phazon Suit": 1,
                 "Energy Tank": 99,
-                "Unknown Item 1": 6000,
+                "Unknown Item 1": MAX_32_BIT_INT,
                 "Health Refill": 999,
-                "Unknown Item 2": 1,
+                "Unknown Item 2": MAX_32_BIT_INT,
                 "Wavebuster": 1,
                 "Artifact Of Truth": 1,
                 "Artifact Of Strength": 1,
@@ -268,25 +269,25 @@ def make_config(world: 'MetroidPrimeWorld'):
 def make_level_data(world):
     transport_data = get_transport_data(world)
     level_data = {
-        MetroidPrimeArea.Tallon_Overworld.value:  {
+        MetroidPrimeArea.Tallon_Overworld.value: {
             "transports": transport_data[MetroidPrimeArea.Tallon_Overworld.value],
-            "rooms":  TallonOverworldAreaData().get_config_data(world)
+            "rooms": TallonOverworldAreaData().get_config_data(world)
         },
         MetroidPrimeArea.Chozo_Ruins.value: {
             "transports": transport_data[MetroidPrimeArea.Chozo_Ruins.value],
-            "rooms":  ChozoRuinsAreaData().get_config_data(world)
+            "rooms": ChozoRuinsAreaData().get_config_data(world)
         },
         MetroidPrimeArea.Magmoor_Caverns.value: {
             "transports": transport_data[MetroidPrimeArea.Magmoor_Caverns.value],
-            "rooms":  MagmoorCavernsAreaData().get_config_data(world)
+            "rooms": MagmoorCavernsAreaData().get_config_data(world)
         },
         MetroidPrimeArea.Phendrana_Drifts.value: {
             "transports": transport_data[MetroidPrimeArea.Phendrana_Drifts.value],
-            "rooms":  PhendranaDriftsAreaData().get_config_data(world)
+            "rooms": PhendranaDriftsAreaData().get_config_data(world)
         },
         MetroidPrimeArea.Phazon_Mines.value: {
             "transports": transport_data[MetroidPrimeArea.Phazon_Mines.value],
-            "rooms":  PhazonMinesAreaData().get_config_data(world)
+            "rooms": PhazonMinesAreaData().get_config_data(world)
 
         }
     }

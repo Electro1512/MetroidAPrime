@@ -1,12 +1,14 @@
 import os
 import struct
-from typing import List
+from typing import TYPE_CHECKING, List
 import zipfile
 from worlds.Files import APContainer
 import py_randomprime
-from .Items import SuitUpgrade, suit_upgrade_table
+from .Items import misc_item_table, suit_upgrade_table
 
 from .MetroidPrimeInterface import GAMES, HUD_MESSAGE_DURATION, calculate_item_offset
+if TYPE_CHECKING:
+    from ppc_asm.assembler.ppc import GeneralRegister
 
 
 class MetroidPrimeContainer(APContainer):
@@ -25,6 +27,34 @@ class MetroidPrimeContainer(APContainer):
         opened_zipfile.writestr(self.config_path, self.config_json)
         opened_zipfile.writestr(self.options_path, self.options_json)
         super().write_contents(opened_zipfile)
+
+
+def add(output_register: 'GeneralRegister', input_register1: 'GeneralRegister', input_register2: 'GeneralRegister'):
+    """
+        output_register = input_register1 + input_register2
+        """
+    from ppc_asm.assembler.ppc import Instruction
+    return Instruction.compose(((31, 6, False),  # Opcode for add
+                                (output_register.number, 5, False),
+                                (input_register1.number, 5, False),
+                                (input_register2.number, 5, False),
+                                (266, 10, False),  # Function code for add
+                                (0, 1, False)  # Rc bit
+                                ))
+
+
+def slw(output_register: 'GeneralRegister', input_register: 'GeneralRegister', shift_amount_register: 'GeneralRegister'):
+    """
+    output_register = input_register << shift_amount_register
+    """
+    from ppc_asm.assembler.ppc import Instruction
+    return Instruction.compose(((31, 6, False),  # Opcode for slw
+                                (input_register.number, 5, False),
+                                (output_register.number, 5, False),
+                                (shift_amount_register.number, 5, False),
+                                (24, 10, False),  # Function code for slw
+                                (0, 1, False)  # Rc bit
+                                ))
 
 
 def construct_hook_patch(game_version: str, progressive_beams: bool) -> List[int]:
@@ -80,9 +110,9 @@ def construct_hook_patch(game_version: str, progressive_beams: bool) -> List[int
 
         # Progressive Beam Patch
         *construct_progressive_beam_patch(game_version, progressive_beams),
-
+        *construct_location_tracking_patch(game_version, [0x0, 0x4, 0x8, 0xC]),
         # Early return
-        lmw(GeneralRegister(block_size - num_preserved_registers), patch_stack_length - instruction_size - num_preserved_registers * instruction_size, r1).with_label('early_return_beam'),
+        lmw(GeneralRegister(block_size - num_preserved_registers), patch_stack_length - instruction_size - num_preserved_registers * instruction_size, r1).with_label('early_return_locations'),
         lwz(r0, patch_stack_length, r1),
         mtspr(LR, r0),
         addi(r1, r1, patch_stack_length - instruction_size),
@@ -93,6 +123,9 @@ def construct_hook_patch(game_version: str, progressive_beams: bool) -> List[int
     while len(instructions) < num_required_instructions:
         instructions.append(nop())
 
+    if len(instructions) > num_required_instructions:
+        raise Exception(f"Patch function is too long: {len(instructions)}/{num_required_instructions}")
+
     return list(
         assembler.assemble_instructions(
             symbols["UpdateHintState__13CStateManagerFf"], instructions,
@@ -102,19 +135,7 @@ def construct_hook_patch(game_version: str, progressive_beams: bool) -> List[int
 
 
 def construct_progressive_beam_patch(game_version: str, progressive_beams: bool) -> List[int]:
-    from ppc_asm.assembler.ppc import addi, bl, b, li, lwz, r1, r3, r4, r5, r6, r8, r10, r31, stw, cmpwi, bne, mtspr, blr, lmw, r0, LR, stwu, mfspr, or_, lbz, stmw, stb, lis, r7, r9, nop, ori, GeneralRegister, Instruction
-
-    def add(output_register: GeneralRegister, input_register1: GeneralRegister, input_register2: GeneralRegister):
-        """
-        output_register = input_register1 + input_register2
-        """
-        return Instruction.compose(((31, 6, False),  # Opcode for add
-                                    (output_register.number, 5, False),
-                                    (input_register1.number, 5, False),
-                                    (input_register2.number, 5, False),
-                                    (266, 10, False),  # Function code for add
-                                    (0, 1, False)  # Rc bit
-                                    ))
+    from ppc_asm.assembler.ppc import addi, bl, b, li, lwz, r1, r3, r4, r5, r6, r8, r10, r11, r31, stw, cmpwi, bne, mtspr, blr, lmw, r0, LR, stwu, mfspr, or_, lbz, stmw, stb, lis, r7, r9, nop, ori, GeneralRegister, Instruction
 
     if not progressive_beams:
         return []
@@ -154,5 +175,78 @@ def construct_progressive_beam_patch(game_version: str, progressive_beams: bool)
         addi(r10, r6, charge_beam_offset),  # Calculate player state address + charge_beam_offset
         stb(r9, 0, r10),  # Store 1 at the calculated address
         b('early_return_beam'),
+    ]
+    return instructions
+
+
+def construct_location_tracking_patch(game_version: str, player_state_offsets: List[int]) -> List[int]:
+    from ppc_asm.assembler.ppc import cmpwi, lwz, r5, r6, r7, r8, r9, r10, r11, r12, nop, ble, b, addi, li, rlwinm, or_, stw
+    # r5 = current amount of unknown item 1
+    # r6 = player_state (loaded from previous)
+    # r7 - r10 = potential target offsets
+    # r11 = target bit position
+    # r12 = selected target register with correct group
+
+    # Load current amount of unknown item 1 into r5
+    # Load each potential target into r7 through r10
+    # Determine target offset and set that into r12
+    # Determine bit position and set that into r11
+
+    UNKNOWN_ITEM_1_ID = misc_item_table["UnknownItem1"].id
+    UNKNOWN_ITEM_2_ID = misc_item_table["UnknownItem2"].id
+    POWER_SUIT_ID = suit_upgrade_table["Power Suit"].id
+
+    def get_current_amount_offset(item_id: int):
+        return calculate_item_offset(item_id) + 0x4
+
+    def get_current_capacity_offset(item_id: int):
+        return calculate_item_offset(item_id) + 0x8
+
+    instructions = [
+        # Get current value of unk item 1 current amount
+        lwz(r5, get_current_amount_offset(UNKNOWN_ITEM_1_ID), r6).with_label('early_return_beam'),
+
+        # Check which of the stolen address to write to
+        cmpwi(r5, 32),
+        ble('group1'),
+        cmpwi(r5, 64),
+        ble('group2'),
+        cmpwi(r5, 96),
+        ble('group3'),
+        cmpwi(r5, 128),
+        ble('group4'),
+
+        # Group 1 uses unknown item 1 capacity
+        addi(r11, r5, -1).with_label('group1'),
+        addi(r12, r6, get_current_capacity_offset(UNKNOWN_ITEM_1_ID)),
+        b('set_bit'),
+
+        # Group 2 uses unknown item 2 current amount
+        addi(r11, r5, -33).with_label('group2'),
+        addi(r12, r6, get_current_amount_offset(UNKNOWN_ITEM_2_ID)),
+        b('set_bit'),
+
+        # Group 3 uses unknown item 2 capacity
+        addi(r11, r5, -65).with_label('group3'),
+        addi(r12, r6, get_current_capacity_offset(UNKNOWN_ITEM_2_ID)),
+        b('set_bit'),
+
+        # Group 4 uses power suit capacity
+        addi(r11, r5, -97).with_label('group4'),
+        addi(r12, r6, get_current_capacity_offset(POWER_SUIT_ID)),
+
+        li(r7, 1).with_label('set_bit'),
+        # Load the current value from the address in r12
+        lwz(r8, 0, r12),
+
+        # Create a bitmask with a single bit set at the position specified by r11
+        slw(r9, r7, r11),  # r9 = 1 << r11
+
+        # Set the bit
+        or_(r8, r8, r9),  # Set the bit
+
+        # Store the modified value back to the address in r12
+        stw(r8, 0, r12),
+
     ]
     return instructions
