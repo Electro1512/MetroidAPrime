@@ -82,6 +82,7 @@ class MetroidPrimeContext(CommonContext):
     slot_data: dict[str, Utils.Any] = None
     death_link_enabled = False
     gravity_suit_enabled: bool = True
+    previous_location_str: str = ""
     cosmetic_suit: Optional[MetroidPrimeSuit] = None
 
     def __init__(self, server_address, password):
@@ -169,18 +170,18 @@ async def handle_checked_location(ctx: MetroidPrimeContext, current_inventory: d
     unknown_item1 = current_inventory["UnknownItem1"]
     unknown_item2 = current_inventory["UnknownItem2"]
     health_refill = current_inventory["HealthRefill"]
-    if (unknown_item1.current_capacity == 0):
-        return
 
     flag_ints = [unknown_item1.current_amount, unknown_item2.current_amount, unknown_item2.current_capacity, health_refill.current_capacity]
     flags_str = "".join([__int_to_reversed_bits(flag_int, 32) for flag_int in flag_ints])
+    if (flags_str == ctx.previous_location_str):
+        return
     checked_locations = []
     for index, char in enumerate(flags_str):
         if char == "1":
             checked_locations.append(index + METROID_PRIME_LOCATION_BASE)
 
     await ctx.send_msgs([{"cmd": "LocationChecks", "locations": checked_locations}])
-    ctx.game_interface.give_item_to_player(unknown_item1.id, unknown_item1.current_amount, 0) # Reset capacity so we don't send every frame
+    ctx.previous_location_str = flags_str
 
 
 async def handle_check_goal_complete(ctx: MetroidPrimeContext):

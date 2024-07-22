@@ -247,6 +247,9 @@ def construct_location_tracking_patch(game_version: str, player_state_offsets: L
 
         # Store the modified value back to the address in r12
         stw(r8, 0, r12),
+        li(r12, 0),
+        # Reset the unknown item 1 current capacity to 0
+        stw(r12, get_current_capacity_offset(UNKNOWN_ITEM_1_ID), r6)
 
     ]
     return instructions
