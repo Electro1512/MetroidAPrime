@@ -14,7 +14,7 @@ from .data.PhendranaDrifts import PhendranaDriftsAreaData
 from .data.TallonOverworld import TallonOverworldAreaData
 from .data.ChozoRuins import ChozoRuinsAreaData
 
-MAX_32_BIT_INT = 4294967295
+MAX_32_BIT_INT = 0x7fffffff
 
 if TYPE_CHECKING:
     from . import MetroidPrimeWorld
@@ -214,7 +214,7 @@ def make_config(world: 'MetroidPrimeWorld'):
                 "Scan Visor": 1,
                 "Morph Ball Bomb": 1,
                 "Power Bomb": 99,
-                "Flamethrower": 1,
+                "Flamethrower":1,
                 "Thermal Visor": 1,
                 "Charge Beam": 1,
                 "Super Missile": 1,
@@ -226,13 +226,13 @@ def make_config(world: 'MetroidPrimeWorld'):
                 "Combat Visor": 1,
                 "Boost Ball": 1,
                 "Spider Ball": 1,
-                "Power Suit": MAX_32_BIT_INT,
+                "Power Suit": 0,
                 "Gravity Suit": 1,
                 "Varia Suit": 1,
                 "Phazon Suit": 1,
                 "Energy Tank": 99,
                 "Unknown Item 1": MAX_32_BIT_INT,
-                "Health Refill": 999,
+                "Health Refill": MAX_32_BIT_INT,
                 "Unknown Item 2": MAX_32_BIT_INT,
                 "Wavebuster": 1,
                 "Artifact Of Truth": 1,

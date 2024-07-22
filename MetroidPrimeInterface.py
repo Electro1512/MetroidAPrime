@@ -151,6 +151,8 @@ custom_charge_id_to_beam = {
     custom_suit_upgrade_table[SuitUpgrade.Plasma_Charge_Beam.value].id: SuitUpgrade.Plasma_Charge_Beam
 }
 
+ITEMS_USED_FOR_LOCATION_TRACKING = ["HealthRefill", "UnknownItem1", "UnknownItem2"]  # These will not have their max capacities modified by the client for tracking checked locations
+
 
 class InventoryItemData(ItemData):
     """Class used to track the player'scurrent items and their quantities"""
@@ -178,14 +180,18 @@ class MetroidPrimeInterface:
         self.logger = logger
         self.dolphin_client = DolphinClient(logger)
 
-    def give_item_to_player(self, item_id: int, new_amount: int, new_capacity: int):
+    def give_item_to_player(self, item_id: int, new_amount: int, new_capacity: int, ignore_capacity: bool = False):
         """Gives the player an item with the specified amount and capacity"""
         if item_id in custom_charge_id_to_beam:
             charge_beam = custom_charge_id_to_beam[item_id]
             self.set_progressive_beam_charge_state(charge_beam, True)
             return
-        self.dolphin_client.write_pointer(self.__get_player_state_pointer(),
-                                          calculate_item_offset(item_id), struct.pack(">II", new_amount, new_capacity))
+        if ignore_capacity:
+            self.dolphin_client.write_pointer(self.__get_player_state_pointer(),
+                                              calculate_item_offset(item_id), struct.pack(">I", new_amount))
+        else:
+            self.dolphin_client.write_pointer(self.__get_player_state_pointer(),
+                                              calculate_item_offset(item_id), struct.pack(">II", new_amount, new_capacity))
 
         # This will be overriden by handle_cosmetic_suit
         if item_id > 20 and item_id <= 23:

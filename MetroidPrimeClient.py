@@ -11,6 +11,7 @@ import py_randomprime
 from CommonClient import ClientCommandProcessor, CommonContext, get_base_parser, logger, server_loop, gui_enabled
 from NetUtils import ClientStatus, NetworkItem
 import Utils
+from .Items import SuitUpgrade
 from .ClientReceiveItems import handle_receive_items
 from .NotificationManager import NotificationManager
 from .Container import construct_hook_patch
@@ -151,15 +152,35 @@ async def dolphin_sync_task(ctx: MetroidPrimeContext):
             continue
 
 
+def __int_to_reversed_bits(value: int, bit_length: int) -> str:
+    """
+    Converts an integer to a binary string of a specified length and reverses it.
+
+    :param value: The integer to convert.
+    :param bit_length: The length of the resulting binary string.
+    :return: A reversed binary string representation of the integer.
+    """
+    binary_string = format(value, f'0{bit_length}b')
+    return binary_string[::-1]
+
+
 async def handle_checked_location(ctx: MetroidPrimeContext, current_inventory: dict[str, InventoryItemData]):
     """Uses the current amount of UnknownItem1 in inventory as an indicator of which location was checked. This will break if the player collects more than one pickup without having the AP client hooked to the game and server"""
     unknown_item1 = current_inventory["UnknownItem1"]
+    unknown_item2 = current_inventory["UnknownItem2"]
+    health_refill = current_inventory["HealthRefill"]
     if (unknown_item1.current_capacity == 0):
         return
-    checked_location_id = METROID_PRIME_LOCATION_BASE + \
-        unknown_item1.current_capacity - 1
-    await ctx.send_msgs([{"cmd": "LocationChecks", "locations": [checked_location_id]}])
-    ctx.game_interface.give_item_to_player(unknown_item1.id, 0, 0)
+
+    flag_ints = [unknown_item1.current_amount, unknown_item2.current_amount, unknown_item2.current_capacity, health_refill.current_capacity]
+    flags_str = "".join([__int_to_reversed_bits(flag_int, 32) for flag_int in flag_ints])
+    checked_locations = []
+    for index, char in enumerate(flags_str):
+        if char == "1":
+            checked_locations.append(index + METROID_PRIME_LOCATION_BASE)
+
+    await ctx.send_msgs([{"cmd": "LocationChecks", "locations": checked_locations}])
+    ctx.game_interface.give_item_to_player(unknown_item1.id, unknown_item1.current_amount, 0) # Reset capacity so we don't send every frame
 
 
 async def handle_check_goal_complete(ctx: MetroidPrimeContext):

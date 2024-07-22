@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING, List
 import zipfile
 from worlds.Files import APContainer
 import py_randomprime
-from .Items import misc_item_table, suit_upgrade_table
+from .Items import SuitUpgrade, misc_item_table, suit_upgrade_table
 
 from .MetroidPrimeInterface import GAMES, HUD_MESSAGE_DURATION, calculate_item_offset
 if TYPE_CHECKING:
@@ -194,17 +194,17 @@ def construct_location_tracking_patch(game_version: str, player_state_offsets: L
 
     UNKNOWN_ITEM_1_ID = misc_item_table["UnknownItem1"].id
     UNKNOWN_ITEM_2_ID = misc_item_table["UnknownItem2"].id
-    POWER_SUIT_ID = suit_upgrade_table["Power Suit"].id
+    HEALTH_REFILL_ID = misc_item_table["HealthRefill"].id
 
     def get_current_amount_offset(item_id: int):
-        return calculate_item_offset(item_id) + 0x4
+        return calculate_item_offset(item_id) + 0x0
 
     def get_current_capacity_offset(item_id: int):
-        return calculate_item_offset(item_id) + 0x8
+        return calculate_item_offset(item_id) + 0x4
 
     instructions = [
         # Get current value of unk item 1 current amount
-        lwz(r5, get_current_amount_offset(UNKNOWN_ITEM_1_ID), r6).with_label('early_return_beam'),
+        lwz(r5, get_current_capacity_offset(UNKNOWN_ITEM_1_ID), r6).with_label('early_return_beam'),
 
         # Check which of the stolen address to write to
         cmpwi(r5, 32),
@@ -218,7 +218,7 @@ def construct_location_tracking_patch(game_version: str, player_state_offsets: L
 
         # Group 1 uses unknown item 1 capacity
         addi(r11, r5, -1).with_label('group1'),
-        addi(r12, r6, get_current_capacity_offset(UNKNOWN_ITEM_1_ID)),
+        addi(r12, r6, get_current_amount_offset(UNKNOWN_ITEM_1_ID)),
         b('set_bit'),
 
         # Group 2 uses unknown item 2 current amount
@@ -233,7 +233,7 @@ def construct_location_tracking_patch(game_version: str, player_state_offsets: L
 
         # Group 4 uses power suit capacity
         addi(r11, r5, -97).with_label('group4'),
-        addi(r12, r6, get_current_capacity_offset(POWER_SUIT_ID)),
+        addi(r12, r6, get_current_capacity_offset(HEALTH_REFILL_ID)),
 
         li(r7, 1).with_label('set_bit'),
         # Load the current value from the address in r12

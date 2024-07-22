@@ -182,7 +182,7 @@ suit_upgrade_table: dict[str, ItemData] = {
 
 misc_item_table: dict[str, ItemData] = {
     "UnknownItem1": ItemData("UnknownItem1", 25, ItemClassification.useful),
-    "UNUSED": ItemData("Ice Trap", 26, ItemClassification.trap),  # health refill address
+    "HealthRefill": ItemData("HealthRefill", 26, ItemClassification.trap),  # health refill address
     "UnknownItem2": ItemData("UnknownItem2", 27, ItemClassification.trap),
 }
 
