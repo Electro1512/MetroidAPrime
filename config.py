@@ -229,7 +229,7 @@ def make_config(world: 'MetroidPrimeWorld'):
                 "Combat Visor": 1,
                 "Boost Ball": 1,
                 "Spider Ball": 1,
-                "Power Suit": 0,
+                "Power Suit": 1,
                 "Gravity Suit": 1,
                 "Varia Suit": 1,
                 "Phazon Suit": 1,
