@@ -22,24 +22,15 @@ if TYPE_CHECKING:
 
 def starting_inventory(world: 'MetroidPrimeWorld', item: str) -> bool:
     items = [item.name for item in world.multiworld.precollected_items[world.player]]
-    if item in items:
-        return True
-    else:
-        return False
+    return item in items
 
 
 def spring_check(spring) -> bool:
-    if spring == 1:
-        return True
-    else:
-        return False
+    return spring == 1
 
 
-def ridley(boss) -> bool:
-    if boss == 0 or boss == 1:
-        return False
-    else:
-        return True
+def skip_ridley(boss: int) -> bool:
+    return boss not in [0, 1]
 
 
 def get_starting_beam(world: 'MetroidPrimeWorld') -> str:
@@ -170,7 +161,7 @@ def make_config(world: 'MetroidPrimeWorld'):
             "phazonDamagePerSec": 0.964,
             "phazonDamageModifier": "Default",
             "autoEnabledElevators": bool(options.pre_scan_elevators.value),
-            "skipRidley": ridley(options.final_bosses.value),
+            "skipRidley": skip_ridley(options.final_bosses.value),
             "removeHiveMecha": bool(options.remove_hive_mecha.value),
             "multiworldDolPatches": False,
             "startingItems": {
