@@ -49,7 +49,7 @@ class MetroidPrimeCommandProcessor(ClientCommandProcessor):
             self.ctx.notification_manager.queue_notification(f"{'Enabling' if self.ctx.gravity_suit_enabled else 'Disabling'} Gravity Suit...")
 
     def _cmd_set_cosmetic_suit(self, input):
-        """Set the cosmetic suit of the player. This will not affect the player's current suit but will change the appearance of the suit in the game."""
+        """Set the cosmetic suit of the player. This will not affect the player's current suit but will change the appearance of the suit in the game. Note that if you start a new seed without closing the client, the option will persist. If you close the client and get a new suit, you may need to re set this."""
         if isinstance(self.ctx, MetroidPrimeContext):
             suit = MetroidPrimeSuit.get_by_key(input)
             if suit is None:
