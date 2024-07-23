@@ -2,7 +2,7 @@ from enum import Enum
 import os
 from typing import TYPE_CHECKING, Dict, Any, List, Optional
 
-from .Items import SuitUpgrade
+from .Items import ProgressiveUpgrade, SuitUpgrade
 
 
 from .PrimeOptions import HudColor, MetroidPrimeOptions
@@ -48,6 +48,9 @@ def get_starting_beam(world: 'MetroidPrimeWorld') -> str:
     for item in starting_items:
         if item in [SuitUpgrade.Wave_Beam.value, SuitUpgrade.Ice_Beam.value, SuitUpgrade.Plasma_Beam.value]:
             starting_beam = item.split(" ")[0]
+            break
+        if item in [ProgressiveUpgrade.Progressive_Wave_Beam, ProgressiveUpgrade.Progressive_Ice_Beam.value, ProgressiveUpgrade.Progressive_Plasma_Beam.value, ProgressiveUpgrade.Progressive_Power_Beam.value]:
+            starting_beam = item.split(" ")[1]
             break
     return starting_beam
 
@@ -172,31 +175,31 @@ def make_config(world: 'MetroidPrimeWorld'):
             "multiworldDolPatches": False,
             "startingItems": {
                 "combatVisor": True,  # starting_inventory(world, "Combat Visor"),
-                "powerBeam": starting_inventory(world, "Power Beam"),
-                "scanVisor": starting_inventory(world, "Scan Visor"),
+                "powerBeam": starting_inventory(world, SuitUpgrade.Power_Beam.value) or starting_inventory(world, ProgressiveUpgrade.Progressive_Power_Beam.value),
+                "scanVisor": starting_inventory(world, SuitUpgrade.Scan_Visor.value),
                 # These are handled by the client
-                "missiles": 0,
+                "missiles": 5 if starting_inventory(world, SuitUpgrade.Missile_Launcher.value) or starting_inventory(world, SuitUpgrade.Missile_Expansion.value) else 0,
                 "energyTanks": 0,
                 "powerBombs": 0,
-                "wave": starting_inventory(world, "Wave Beam"),
-                "ice": starting_inventory(world, "Ice Beam"),
-                "plasma": starting_inventory(world, "Plasma Beam"),
-                "charge": starting_inventory(world, "Charge Beam"),
-                "morphBall": starting_inventory(world, "Morph Ball"),
-                "bombs": starting_inventory(world, "Morph Ball Bomb"),
-                "spiderBall": starting_inventory(world, "Spider Ball"),
-                "boostBall": starting_inventory(world, "Boost Ball"),
-                "variaSuit": starting_inventory(world, "Varia Suit"),
-                "gravitySuit": starting_inventory(world, "Gravity Suit"),
-                "phazonSuit": starting_inventory(world, "Phazon Suit"),
-                "thermalVisor": starting_inventory(world, "Thermal Visor"),
-                "xray": starting_inventory(world, "X-Ray Visor"),
-                "spaceJump": starting_inventory(world, "Space Jump Boots"),
-                "grapple": starting_inventory(world, "Grapple Beam"),
-                "superMissile": starting_inventory(world, "Super Missile"),
-                "wavebuster": starting_inventory(world, "Wavebuster"),
-                "iceSpreader": starting_inventory(world, "Ice Spreader"),
-                "flamethrower": starting_inventory(world, "Flamethrower")
+                "wave": starting_inventory(world, SuitUpgrade.Wave_Beam.value) or starting_inventory(world, ProgressiveUpgrade.Progressive_Wave_Beam.value),
+                "ice": starting_inventory(world, SuitUpgrade.Ice_Beam.value) or starting_inventory(world, ProgressiveUpgrade.Progressive_Ice_Beam.value),
+                "plasma": starting_inventory(world, SuitUpgrade.Plasma_Beam.value) or starting_inventory(world, ProgressiveUpgrade.Progressive_Plasma_Beam.value),
+                "charge": starting_inventory(world, SuitUpgrade.Charge_Beam.value),
+                "morphBall": starting_inventory(world, SuitUpgrade.Morph_Ball.value),
+                "bombs": starting_inventory(world, SuitUpgrade.Morph_Ball_Bomb.value),
+                "spiderBall": starting_inventory(world, SuitUpgrade.Spider_Ball.value),
+                "boostBall": starting_inventory(world, SuitUpgrade.Boost_Ball.value),
+                "variaSuit": starting_inventory(world, SuitUpgrade.Varia_Suit.value),
+                "gravitySuit": starting_inventory(world, SuitUpgrade.Gravity_Suit.value),
+                "phazonSuit": starting_inventory(world, SuitUpgrade.Phazon_Suit.value),
+                "thermalVisor": starting_inventory(world, SuitUpgrade.Thermal_Visor.value),
+                "xray": starting_inventory(world, SuitUpgrade.X_Ray_Visor.value),
+                "spaceJump": starting_inventory(world, SuitUpgrade.Space_Jump_Boots.value),
+                "grapple": starting_inventory(world, SuitUpgrade.Grapple_Beam.value),
+                "superMissile": starting_inventory(world, SuitUpgrade.Super_Missile.value),
+                "wavebuster": starting_inventory(world, SuitUpgrade.Wavebuster.value),
+                "iceSpreader": starting_inventory(world, SuitUpgrade.Ice_Spreader.value),
+                "flamethrower": starting_inventory(world, SuitUpgrade.Flamethrower.value)
             },
             "disableItemLoss": True,
             "startingVisor": "Combat",
@@ -214,7 +217,7 @@ def make_config(world: 'MetroidPrimeWorld'):
                 "Scan Visor": 1,
                 "Morph Ball Bomb": 1,
                 "Power Bomb": 99,
-                "Flamethrower":1,
+                "Flamethrower": 1,
                 "Thermal Visor": 1,
                 "Charge Beam": 1,
                 "Super Missile": 1,
