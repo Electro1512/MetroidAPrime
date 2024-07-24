@@ -91,10 +91,12 @@ class MetroidPrimeContext(CommonContext):
     gravity_suit_enabled: bool = True
     previous_location_str: str = ""
     cosmetic_suit: Optional[MetroidPrimeSuit] = None
+    slot_name: Optional[str] = None
 
-    def __init__(self, server_address, password):
+    def __init__(self, server_address, password, slot_name=None):
         super().__init__(server_address, password)
         self.game_interface = MetroidPrimeInterface(logger)
+        self.auth = slot_name
         self.notification_manager = NotificationManager(HUD_MESSAGE_DURATION, self.game_interface.send_hud_message)
 
     def on_deathlink(self, data: Utils.Dict[str, Utils.Any]) -> None:
@@ -283,6 +285,22 @@ def get_version_from_iso(path: str) -> str:
                 raise Exception(f"Unknown version of Metroid Prime GC (game_id : {game_id} | game_rev : {game_rev})")
 
 
+def get_options_from_apmp1(apmp1_file: str) -> dict:
+    with zipfile.ZipFile(apmp1_file) as zip_file:
+        with zip_file.open("options.json") as file:
+            options_json = file.read().decode("utf-8")
+            options_json = json.loads(options_json)
+    return options_json
+
+
+def get_randomprime_config_from_apmp1(apmp1_file: str) -> dict:
+    with zipfile.ZipFile(apmp1_file) as zip_file:
+        with zip_file.open("config.json") as file:
+            config_json = file.read().decode("utf-8")
+            config_json = json.loads(config_json)
+    return config_json
+
+
 async def patch_and_run_game(apmp1_file: str):
     apmp1_file = os.path.abspath(apmp1_file)
     input_iso_path = Utils.get_options()["metroidprime_options"]["rom_file"]
@@ -291,28 +309,11 @@ async def patch_and_run_game(apmp1_file: str):
     output_path = base_name + '.iso'
 
     if not os.path.exists(output_path):
+        if not zipfile.is_zipfile(apmp1_file):
+            raise Exception(f"Invalid APMP1 file: {apmp1_file}")
 
-        config_json_file = None
-        options_json_file = None
-        if zipfile.is_zipfile(apmp1_file):
-            for name in zipfile.ZipFile(apmp1_file).namelist():
-                if name == 'config.json':
-                    config_json_file = name
-                elif name == 'options.json':
-                    options_json_file = name
-
-        config_json = None
-        options_json = None
-
-        with zipfile.ZipFile(apmp1_file) as zip_file:
-            with zip_file.open(config_json_file) as file:
-                config_json = file.read().decode("utf-8")
-                config_json = json.loads(config_json)
-
-            if options_json_file:
-                with zip_file.open(options_json_file) as file:
-                    options_json = file.read().decode("utf-8")
-                    options_json = json.loads(options_json)
+        config_json = get_randomprime_config_from_apmp1(apmp1_file)
+        options_json = get_options_from_apmp1(apmp1_file)
 
         build_progressive_beam_patch = False
         if options_json:
@@ -336,12 +337,13 @@ def launch():
         parser.add_argument('apmp1_file', default="", type=str, nargs="?",
                             help='Path to an apmp1 file')
         args = parser.parse_args()
-
+        slot = None
         if args.apmp1_file:
             logger.info("APMP1 file supplied, beginning patching process...")
             Utils.async_start(patch_and_run_game(args.apmp1_file))
+            slot = get_options_from_apmp1(args.apmp1_file)["player_name"]
 
-        ctx = MetroidPrimeContext(args.connect, args.password)
+        ctx = MetroidPrimeContext(args.connect, args.password, slot)
         logger.info("Connecting to server...")
         ctx.server_task = asyncio.create_task(server_loop(ctx), name="Server Loop")
         if gui_enabled:
