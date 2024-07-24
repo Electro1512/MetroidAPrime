@@ -92,6 +92,7 @@ class MetroidPrimeContext(CommonContext):
     previous_location_str: str = ""
     cosmetic_suit: Optional[MetroidPrimeSuit] = None
     slot_name: Optional[str] = None
+    last_error_message: Optional[str] = None
 
     def __init__(self, server_address, password, slot_name=None):
         super().__init__(server_address, password)
@@ -211,6 +212,7 @@ async def handle_check_deathlink(ctx: MetroidPrimeContext):
 
 async def _handle_game_ready(ctx: MetroidPrimeContext):
     if ctx.server:
+        ctx.last_error_message = None
         if not ctx.slot:
             await asyncio.sleep(1)
             return
@@ -224,7 +226,10 @@ async def _handle_game_ready(ctx: MetroidPrimeContext):
             await handle_check_deathlink(ctx)
         await asyncio.sleep(0.5)
     else:
-        logger.info("Waiting for player to connect to server")
+        message = "Waiting for player to connect to server"
+        if ctx.last_error_message is not message:
+            logger.info("Waiting for player to connect to server")
+            ctx.last_error_message = message
         await asyncio.sleep(1)
 
 
