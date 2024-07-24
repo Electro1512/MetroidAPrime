@@ -4,7 +4,7 @@ from .DolphinClient import GC_GAME_ID_ADDRESS, DolphinClient, DolphinException, 
 from enum import Enum
 from enum import Enum
 import py_randomprime
-from .Items import ItemData, SuitUpgrade, item_table, custom_suit_upgrade_table
+from .Items import ItemData, SuitUpgrade, item_table, custom_suit_upgrade_table, suit_upgrade_table
 
 _SUPPORTED_VERSIONS = ["0-00", "0-01", "0-02", "jpn", "kor", "pal"]
 _SYMBOLS = {version: py_randomprime.symbols_for_version(version) for version in _SUPPORTED_VERSIONS}
@@ -195,15 +195,21 @@ class MetroidPrimeInterface:
 
         # This will be overriden by handle_cosmetic_suit
         if item_id > 20 and item_id <= 23:
-            current_suit = self.get_current_suit()
+            current_suit = self.get_current_cosmetic_suit()
             if current_suit == MetroidPrimeSuit.Phazon:
                 return
-            elif item_id == 23:
-                self.set_current_suit(MetroidPrimeSuit.Phazon)
-            elif item_id == 21:
-                self.set_current_suit(MetroidPrimeSuit.Gravity)
-            elif item_id == 22 and current_suit != MetroidPrimeSuit.Gravity:
-                self.set_current_suit(MetroidPrimeSuit.Varia)
+            self.set_cosmetic_suit_by_id(item_id)
+
+    def set_cosmetic_suit_by_id(self, item_id: int):
+        current_suit = self.get_current_cosmetic_suit()
+        if item_id == 23:
+            self.set_current_suit(MetroidPrimeSuit.Phazon)
+        elif item_id == 21:
+            self.set_current_suit(MetroidPrimeSuit.Gravity)
+        elif item_id == 22 and current_suit != MetroidPrimeSuit.Gravity:
+            self.set_current_suit(MetroidPrimeSuit.Varia)
+        else:
+            self.set_current_suit(MetroidPrimeSuit.Power)
 
     def check_for_new_locations(self):
         pass
@@ -235,12 +241,18 @@ class MetroidPrimeInterface:
                 inventory[item.name] = self.get_item(item)
         return inventory
 
-    def get_current_suit(self) -> MetroidPrimeSuit:
+    def get_current_cosmetic_suit(self) -> MetroidPrimeSuit:
         player_state_pointer = self.__get_player_state_pointer()
         result = self.dolphin_client.read_pointer(
             player_state_pointer, 0x20, 4)
         suit_id = struct.unpack(">I", result)[0]
         return MetroidPrimeSuit(suit_id)
+
+    def get_highest_owned_suit(self) -> SuitUpgrade:
+        for suit in [SuitUpgrade.Phazon_Suit, SuitUpgrade.Gravity_Suit, SuitUpgrade.Varia_Suit]:
+            if self.get_item(suit_upgrade_table[suit.value]).current_amount > 0:
+                return suit
+        return SuitUpgrade.Power_Suit
 
     def set_current_suit(self, suit: MetroidPrimeSuit):
         player_state_pointer = self.__get_player_state_pointer()

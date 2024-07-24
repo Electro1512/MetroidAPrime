@@ -11,7 +11,7 @@ import py_randomprime
 from CommonClient import ClientCommandProcessor, CommonContext, get_base_parser, logger, server_loop, gui_enabled
 from NetUtils import ClientStatus, NetworkItem
 import Utils
-from .Items import SuitUpgrade
+from .Items import suit_upgrade_table
 from .ClientReceiveItems import handle_receive_items
 from .NotificationManager import NotificationManager
 from .Container import construct_hook_patch
@@ -51,9 +51,16 @@ class MetroidPrimeCommandProcessor(ClientCommandProcessor):
     def _cmd_set_cosmetic_suit(self, input):
         """Set the cosmetic suit of the player. This will not affect the player's current suit but will change the appearance of the suit in the game. Note that if you start a new seed without closing the client, the option will persist. If you close the client and get a new suit, you may need to re set this."""
         if isinstance(self.ctx, MetroidPrimeContext):
+            if input == "None":
+                logger.info("Removing cosmetic suit")
+                self.ctx.cosmetic_suit = None
+                suit = self.ctx.game_interface.get_highest_owned_suit()
+                self.ctx.game_interface.set_cosmetic_suit_by_id(suit_upgrade_table[suit.value].id)
+                self.ctx.game_interface.set_current_suit(self.ctx.game_interface.get_current_cosmetic_suit())
+                return
             suit = MetroidPrimeSuit.get_by_key(input)
             if suit is None:
-                options = ", ".join([suit.name for suit in MetroidPrimeSuit if "Fusion" not in suit.name])
+                options = ", ".join([suit.name for suit in MetroidPrimeSuit if "Fusion" not in suit.name] + ["None"])
                 logger.warning(f"Invalid cosmetic suit: {suit}. Valid options are: {options}")
                 return
             logger.info(f"Setting cosmetic suit to: {suit.name} Suit")
