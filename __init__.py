@@ -147,7 +147,7 @@ class MetroidPrimeWorld(World):
             start_inventory += [SuitUpgrade.Scan_Visor.value]
 
         if "Beam" not in "".join(start_inventory):
-            start_inventory += [get_item_for_options(self, SuitUpgrade.Power_Beam.value)]
+            start_inventory += [get_item_for_options(self, SuitUpgrade.Power_Beam).value]
 
         for start_item in start_inventory:
             # Pre collect the ones that start room loadout adds in
