@@ -218,22 +218,22 @@ def construct_location_tracking_patch(game_version: str, player_state_offsets: L
 
         # Group 1 uses unknown item 1 capacity
         addi(r11, r5, -1).with_label('group1'),
-        addi(r12, r6, get_current_amount_offset(UNKNOWN_ITEM_1_ID)),
+        addi(r12, r6, get_current_amount_offset(UNKNOWN_ITEM_2_ID)),
         b('set_bit'),
 
         # Group 2 uses unknown item 2 current amount
         addi(r11, r5, -33).with_label('group2'),
-        addi(r12, r6, get_current_amount_offset(UNKNOWN_ITEM_2_ID)),
+        addi(r12, r6, get_current_capacity_offset(UNKNOWN_ITEM_2_ID)),
         b('set_bit'),
 
         # Group 3 uses unknown item 2 capacity
         addi(r11, r5, -65).with_label('group3'),
-        addi(r12, r6, get_current_capacity_offset(UNKNOWN_ITEM_2_ID)),
+        addi(r12, r6, get_current_capacity_offset(HEALTH_REFILL_ID)),
         b('set_bit'),
 
         # Group 4 uses power suit capacity
         addi(r11, r5, -97).with_label('group4'),
-        addi(r12, r6, get_current_capacity_offset(HEALTH_REFILL_ID)),
+        addi(r12, r6, get_current_amount_offset(UNKNOWN_ITEM_1_ID)),
 
         li(r7, 1).with_label('set_bit'),
         # Load the current value from the address in r12

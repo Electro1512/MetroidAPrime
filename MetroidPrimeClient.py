@@ -181,7 +181,7 @@ async def handle_checked_location(ctx: MetroidPrimeContext, current_inventory: d
     unknown_item2 = current_inventory["UnknownItem2"]
     health_refill = current_inventory["HealthRefill"]
 
-    flag_ints = [unknown_item1.current_amount, unknown_item2.current_amount, unknown_item2.current_capacity, health_refill.current_capacity]
+    flag_ints = [unknown_item2.current_amount, unknown_item2.current_capacity, health_refill.current_capacity, unknown_item1.current_amount]
     flags_str = "".join([__int_to_reversed_bits(flag_int, 32) for flag_int in flag_ints])
     if (flags_str == ctx.previous_location_str):
         return
