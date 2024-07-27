@@ -107,7 +107,7 @@ class MetroidPrimeWorld(World):
             self.init_tracker_options()
 
         init_starting_room_data(self)
-        info(f"{self.multiworld.get_player_name(self.player)}'s Metroid Prime starting room data: {self.starting_room_data.name}")
+        info(f"{self.player_name}'s Metroid Prime starting room data: {self.starting_room_data.name}")
         if self.options.elevator_randomization.value:
             self.elevator_mapping = get_random_elevator_mapping(self)
             info(f"{self.multiworld.get_player_name(self.player)}'s Metroid Prime elevator_mapping data: {self.elevator_mapping.__str__()}")
@@ -131,9 +131,10 @@ class MetroidPrimeWorld(World):
 
     def create_items(self) -> None:
         # add artifacts
+        local_itempool = []
         items_added = 0
-        for start_item in artifact_table.keys():
-            self.multiworld.itempool += [self.create_item(start_item)]
+        for start_item in artifact_table:
+            local_itempool += [self.create_item(start_item)]
             items_added += 1
 
         excluded = self.options.exclude_items
@@ -167,54 +168,48 @@ class MetroidPrimeWorld(World):
             if start_item in self.prefilled_item_map.values() and start_item not in items_with_multiple:
                 items_added += 1
                 continue
-            elif start_item in start_inventory and start_item not in items_with_multiple:
+            if start_item in start_inventory and start_item not in items_with_multiple:
                 continue
-
-            if start_item in excluded.keys():
+            if start_item in excluded:
                 continue
-            elif start_item == "Missile Expansion":
+            if start_item == "Missile Expansion":
                 for new_item in range(0, 8):
-                    self.multiworld.itempool += [
-                        self.create_item('Missile Expansion', ItemClassification.progression)]
+                    local_itempool += [self.create_item('Missile Expansion', ItemClassification.progression)]
                 items_added += 8
             elif start_item == "Energy Tank":
                 max_tanks = 14
                 progression_tanks = 8
                 for new_item in range(0, progression_tanks):
-                    self.multiworld.itempool += [
-                        self.create_item("Energy Tank", ItemClassification.progression)]
+                    local_itempool += [self.create_item("Energy Tank", ItemClassification.progression)]
                 for new_item in range(0, max_tanks - progression_tanks):
-                    self.multiworld.itempool += [
-                        self.create_item("Energy Tank")]
+                    local_itempool += [self.create_item("Energy Tank")]
                 items_added += max_tanks
-                continue
             elif start_item == "Power Bomb Expansion":
-                self.multiworld.itempool += [self.create_item('Power Bomb Expansion', ItemClassification.progression)]
+                local_itempool += [self.create_item('Power Bomb Expansion', ItemClassification.progression)]
                 for new_item in range(0, 4):
-                    self.multiworld.itempool += [
-                        self.create_item("Power Bomb Expansion")]
+                    local_itempool += [self.create_item("Power Bomb Expansion")]
                 items_added += 5
             else:
-                self.multiworld.itempool += [self.create_item(start_item)]
+                local_itempool += [self.create_item(start_item)]
                 items_added += 1
 
         if self.options.missile_launcher.value:
             if SuitUpgrade.Missile_Launcher.value not in start_inventory:
                 items_added += 1
                 if SuitUpgrade.Missile_Launcher.value not in self.prefilled_item_map.values():
-                    self.multiworld.itempool += [self.create_item(SuitUpgrade.Missile_Launcher.value)]
+                    local_itempool += [self.create_item(SuitUpgrade.Missile_Launcher.value)]
 
         if self.options.main_power_bomb.value:
             if SuitUpgrade.Main_Power_Bomb.value not in start_inventory:
                 items_added += 1
                 if SuitUpgrade.Main_Power_Bomb.value not in self.prefilled_item_map.values():
-                    self.multiworld.itempool += [self.create_item(SuitUpgrade.Main_Power_Bomb.value)]
+                    local_itempool += [self.create_item(SuitUpgrade.Main_Power_Bomb.value)]
 
         # Add progressive items if enabled
         if self.options.progressive_beam_upgrades.value:
             def quantity_in_start_inventory(item: ProgressiveUpgrade) -> int:
                 return start_inventory.count(item.value)
-            for progressive_item in PROGRESSIVE_ITEM_MAPPING.keys():
+            for progressive_item in PROGRESSIVE_ITEM_MAPPING:
                 progression_per_item = 3
                 to_make = progression_per_item - quantity_in_start_inventory(progressive_item)
                 for i in range(to_make):
@@ -222,17 +217,25 @@ class MetroidPrimeWorld(World):
                     classification = ItemClassification.progression if i < to_make - 1 else ItemClassification.useful
                     if progressive_item == ProgressiveUpgrade.Progressive_Power_Beam:
                         classification = ItemClassification.progression  # Super missile is always progression
-                    self.multiworld.itempool += [self.create_item(progressive_item.value, classification)]
+                    local_itempool += [self.create_item(progressive_item.value, classification)]
                     items_added += 1
 
         # add missiles in whatever slots we have left
         remain = 100 - items_added
         for start_item in range(0, remain):
-            self.multiworld.itempool += [self.create_item("Missile Expansion")]
+            local_itempool += [self.create_item("Missile Expansion")]
+
+        self.multiworld.itempool += local_itempool
 
     def set_rules(self) -> None:
         self.multiworld.completion_condition[self.player] = lambda state: (
             state.can_reach("Mission Complete", "Region", self.player))
+
+    def post_fill(self) -> None:
+        if self.options.artifact_hints.value:
+            start_hints: typing.Set[str] = self.options.start_hints.value
+            for i in artifact_table:
+                start_hints.add(i)
 
     def generate_output(self, output_directory: str) -> None:
         if self.options.randomize_suit_colors:
@@ -251,7 +254,7 @@ class MetroidPrimeWorld(World):
 
         options_dict = {
             "progressive_beam_upgrades": self.options.progressive_beam_upgrades.value,
-            "player_name": self.multiworld.get_player_name(self.player),
+            "player_name": self.player_name,
         }
 
         options_json = json.dumps(options_dict, indent=4)
@@ -273,9 +276,3 @@ class MetroidPrimeWorld(World):
         # returning slot_data so it regens, giving it back in multiworld.re_gen_passthrough
         info("Regenerating world for tracker")
         return slot_data
-
-    def post_fill(self) -> None:
-        if self.options.artifact_hints.value:
-            start_hints: typing.Set[str] = self.options.start_hints.value
-            for i in artifact_table.keys():
-                start_hints.add(i)
