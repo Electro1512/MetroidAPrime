@@ -36,8 +36,8 @@ def can_combat_mines(state: CollectionState, player: int) -> bool:
 
 
 def can_combat_labs(state: CollectionState, player: int) -> bool:
-    return _get_options(state, player).starting_room_name.value in [RoomName.East_Tower.value, RoomName.Save_Station_B.value]
-           or _can_combat_generic(state, player, 1, 0, False)
+    return (_get_options(state, player).starting_room_name.value in [RoomName.East_Tower.value, RoomName.Save_Station_B.value]
+           or _can_combat_generic(state, player, 1, 0, False))
 
 
 def can_combat_thardus(state: CollectionState, player: int) -> bool:
@@ -58,8 +58,8 @@ def can_combat_omega_pirate(state: CollectionState, player: int) -> bool:
 
 
 def can_combat_flaaghra(state: CollectionState, player: int) -> bool:
-    return _get_options(state, player).starting_room_name == RoomName.Sunchamber_Lobby.value
-           or _can_combat_generic(state, player, 2, 1, False)
+    return (_get_options(state, player).starting_room_name == RoomName.Sunchamber_Lobby.value
+           or _can_combat_generic(state, player, 2, 1, False))
 
 
 def can_combat_ridley(state: CollectionState, player: int) -> bool:
