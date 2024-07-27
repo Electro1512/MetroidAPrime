@@ -26,9 +26,9 @@ def _can_combat_generic(state: CollectionState, player: int, normal_tanks: int, 
     if difficulty == CombatLogicDifficulty.NO_LOGIC.value:
         return True
     elif difficulty == CombatLogicDifficulty.NORMAL.value:
-        return has_energy_tanks(state, player, normal_tanks) and (can_charge_beam(state, player) if requires_charge_beam else True)
+        return has_energy_tanks(state, player, normal_tanks) and (can_charge_beam(state, player) or not requires_charge_beam)
     elif difficulty == CombatLogicDifficulty.MINIMAL.value:
-        return has_energy_tanks(state, player, minimal_tanks) and (can_charge_beam(state, player) if requires_charge_beam else True)
+        return has_energy_tanks(state, player, minimal_tanks) and (can_charge_beam(state, player) or not requires_charge_beam)
 
 
 def can_combat_mines(state: CollectionState, player: int) -> bool:
@@ -36,9 +36,8 @@ def can_combat_mines(state: CollectionState, player: int) -> bool:
 
 
 def can_combat_labs(state: CollectionState, player: int) -> bool:
-    if _get_options(state, player).starting_room_name.value in [RoomName.East_Tower.value, RoomName.Save_Station_B.value]:
-        return True
-    return _can_combat_generic(state, player, 1, 0, False)
+    return _get_options(state, player).starting_room_name.value in [RoomName.East_Tower.value, RoomName.Save_Station_B.value]
+           or _can_combat_generic(state, player, 1, 0, False)
 
 
 def can_combat_thardus(state: CollectionState, player: int) -> bool:
@@ -59,9 +58,8 @@ def can_combat_omega_pirate(state: CollectionState, player: int) -> bool:
 
 
 def can_combat_flaaghra(state: CollectionState, player: int) -> bool:
-    if _get_options(state, player).starting_room_name == RoomName.Sunchamber_Lobby.value:
-        return True
-    return _can_combat_generic(state, player, 2, 1, requires_charge_beam=False)
+    return _get_options(state, player).starting_room_name == RoomName.Sunchamber_Lobby.value
+           or _can_combat_generic(state, player, 2, 1, False)
 
 
 def can_combat_ridley(state: CollectionState, player: int) -> bool:
