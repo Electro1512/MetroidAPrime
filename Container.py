@@ -4,7 +4,8 @@ from typing import TYPE_CHECKING, List
 import zipfile
 from worlds.Files import APContainer
 import py_randomprime
-from .Items import SuitUpgrade, misc_item_table, suit_upgrade_table
+
+from .Items import misc_item_table
 
 from .MetroidPrimeInterface import GAMES, HUD_MESSAGE_DURATION, calculate_item_offset
 if TYPE_CHECKING:
@@ -108,11 +109,11 @@ def construct_hook_patch(game_version: str, progressive_beams: bool) -> List[int
         bl(symbols["DisplayHudMemo__9CSamusHudFRC7wstringRC12SHudMemoInfo"]),
         nop().with_label('early_return_hud'),
 
-        # Progressive Beam Patch
-        *construct_progressive_beam_patch(game_version, progressive_beams),
         *construct_location_tracking_patch(game_version, [0x0, 0x4, 0x8, 0xC]),
+        # Progressive beam patch assumes r6 is the player state address
+        *construct_progressive_beam_patch(game_version, progressive_beams),
         # Early return
-        lmw(GeneralRegister(block_size - num_preserved_registers), patch_stack_length - instruction_size - num_preserved_registers * instruction_size, r1).with_label('early_return_locations'),
+        lmw(GeneralRegister(block_size - num_preserved_registers), patch_stack_length - instruction_size - num_preserved_registers * instruction_size, r1).with_label('early_return_beam'),
         lwz(r0, patch_stack_length, r1),
         mtspr(LR, r0),
         addi(r1, r1, patch_stack_length - instruction_size),
@@ -134,29 +135,33 @@ def construct_hook_patch(game_version: str, progressive_beams: bool) -> List[int
     )
 
 
+def _load_player_state_to_r6(game_version: str) -> List[int]:
+    from ppc_asm.assembler.ppc import lis, ori, lwz, r6, r5
+    cstate_manager_global = GAMES[game_version]["cstate_manager_global"]
+    return [
+        # Get the player state address
+        lis(r6, cstate_manager_global >> 16),  # Load upper 16 bits of cstate_manager_global
+        ori(r6, r6, cstate_manager_global & 0xFFFF),  # Load lower 16 bits of cstate_manager_global
+        lwz(r6, 0x8B8, r6),  # Load the player state address from cstate_manager_global + 0x8B8
+
+        # : Dereference the player state address pointer to get the actual player state address
+        lwz(r6, 0, r6),  # Load the player state address from the pointer stored in r6
+    ]
+
+
 def construct_progressive_beam_patch(game_version: str, progressive_beams: bool) -> List[int]:
     from ppc_asm.assembler.ppc import addi, bl, b, li, lwz, r1, r3, r4, r5, r6, r8, r10, r11, r31, stw, cmpwi, bne, mtspr, blr, lmw, r0, LR, stwu, mfspr, or_, lbz, stmw, stb, lis, r7, r9, nop, ori, GeneralRegister, Instruction
 
     if not progressive_beams:
         return []
-    cstate_manager_global = GAMES[game_version]["cstate_manager_global"]
     charge_beam_offset = 0x7F
     instructions: List = [
-        # Step 0: Get the player state address
-        lis(r6, cstate_manager_global >> 16),  # Load upper 16 bits of cstate_manager_global
-        ori(r6, r6, cstate_manager_global & 0xFFFF),  # Load lower 16 bits of cstate_manager_global
-        lwz(r6, 0x8B8, r6),  # Load the player state address from cstate_manager_global + 0x8B8
-
-        # Step 0.5: Dereference the player state address pointer to get the actual player state address
-        lwz(r6, 0, r6),  # Load the player state address from the pointer stored in r6
-
         # Step 1: Get the current beam from the player state
         lbz(r5, 0xB, r6),  # Load the current beam value
-
         # Step 2: Read the value at the progressive beam address
         lis(r7, GAMES[game_version]["PROGRESSIVE_BEAM_ADDRESS"] >> 16),  # Load upper 16 bits of progressive beam address
         ori(r7, r7, GAMES[game_version]["PROGRESSIVE_BEAM_ADDRESS"] & 0xFFFF),  # Load lower 16 bits of progressive beam address
-        add(r7, r7, r5),  # Add 0 to the address (no offset
+        add(r7, r7, r5),  # Add 0 to the address (no offset)
         lbz(r8, 0, r7),  # Load the value at the progressive beam address
 
         # Step 3: Check the value and set the appropriate address
@@ -203,8 +208,9 @@ def construct_location_tracking_patch(game_version: str, player_state_offsets: L
         return calculate_item_offset(item_id) + 0x4
 
     instructions = [
+        *_load_player_state_to_r6(game_version),
         # Get current value of unk item 1 current amount
-        lwz(r5, get_current_capacity_offset(UNKNOWN_ITEM_1_ID), r6).with_label('early_return_beam'),
+        lwz(r5, get_current_capacity_offset(UNKNOWN_ITEM_1_ID), r6),
 
         # Check which of the stolen address to write to
         cmpwi(r5, 32),
