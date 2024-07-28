@@ -40,7 +40,7 @@ def get_starting_beam(world: 'MetroidPrimeWorld') -> str:
         if item in [SuitUpgrade.Wave_Beam.value, SuitUpgrade.Ice_Beam.value, SuitUpgrade.Plasma_Beam.value]:
             starting_beam = item.split(" ")[0]
             break
-        if item in [ProgressiveUpgrade.Progressive_Wave_Beam, ProgressiveUpgrade.Progressive_Ice_Beam.value, ProgressiveUpgrade.Progressive_Plasma_Beam.value, ProgressiveUpgrade.Progressive_Power_Beam.value]:
+        if item in [ProgressiveUpgrade.Progressive_Wave_Beam.value, ProgressiveUpgrade.Progressive_Ice_Beam.value, ProgressiveUpgrade.Progressive_Plasma_Beam.value, ProgressiveUpgrade.Progressive_Power_Beam.value]:
             starting_beam = item.split(" ")[1]
             break
     return starting_beam
