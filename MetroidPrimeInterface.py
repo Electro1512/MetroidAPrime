@@ -312,7 +312,6 @@ class MetroidPrimeInterface:
         """Initializes the connection to dolphin and verifies it is connected to Metroid Prime"""
         try:
             self.dolphin_client.connect()
-            self.logger.info("Connected to Dolphin Emulator")
             game_id = self.dolphin_client.read_address(GC_GAME_ID_ADDRESS, 6)
             try:
                 game_rev = self.dolphin_client.read_address(GC_GAME_ID_ADDRESS + 7, 1)[0]
@@ -329,6 +328,8 @@ class MetroidPrimeInterface:
                     f"Connected to the wrong game ({game_id}, rev {game_rev}), please connect to Metroid Prime GC (Game ID starts with a GM8)")
                 self.game_id_error = game_id
                 self.game_rev_error = game_rev
+            if self.current_game:
+                self.logger.info("Metroid Prime Disc Version: " + self.current_game)
         except DolphinException as e:
             pass
 

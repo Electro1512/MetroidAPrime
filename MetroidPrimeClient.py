@@ -9,8 +9,9 @@ import zipfile
 import py_randomprime
 
 from CommonClient import ClientCommandProcessor, CommonContext, get_base_parser, logger, server_loop, gui_enabled
-from NetUtils import ClientStatus, NetworkItem
+from NetUtils import ClientStatus
 import Utils
+from .PrimeUtils import get_apworld_version
 from .Items import suit_upgrade_table
 from .ClientReceiveItems import handle_receive_items
 from .NotificationManager import NotificationManager
@@ -142,6 +143,12 @@ def update_connection_status(ctx: MetroidPrimeContext, status):
 
 
 async def dolphin_sync_task(ctx: MetroidPrimeContext):
+    try:
+        # This will not work if the client is running from source
+        version = get_apworld_version()
+        logger.info(f"Using metroidprime.apworld version: {version}")
+    except:
+        pass
     logger.info("Starting Dolphin Connector, attempting to connect to emulator...")
     while not ctx.exit_event.is_set():
         try:

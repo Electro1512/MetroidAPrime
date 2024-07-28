@@ -18,16 +18,9 @@ def setup_lib_path():
         zip_file_path = __file__
         while not zip_file_path.lower().endswith('.apworld'):
             zip_file_path = os.path.dirname(zip_file_path)
-
-        # Get version from ./version.txt
-        # detect if on windows since pathing is handled differently from linux
-        if platform.system() == "Windows":
-            path = os.path.join(os.path.dirname(__file__), "version.txt")
-            lib_folder_path = "metroidprime/lib"
-        else:
-            path = "version.txt"
-            lib_folder_path = os.path.join("metroidprime", "lib")
-        version = pkgutil.get_data(__name__, path).decode().strip()
+        lib_folder_path = get_lib_folder_path()
+        version = get_apworld_version()
+        print("Using metroidprime.apworld version: ", version)
         temp_dir_name = "ap_metroidprime_temp_lib"
         target_dir_name = f"{temp_dir_name}_{version}"
         temp_base_dir = tempfile.gettempdir()
@@ -67,3 +60,24 @@ def setup_lib_path():
             sys.path.append(lib_path)
         print(f"lib folder added to path: {lib_path}")
         return lib_path
+
+
+def get_apworld_version():
+    # Get version from ./version.txt
+    # detect if on windows since pathing is handled differently from linux
+    if platform.system() == "Windows":
+        path = os.path.join(os.path.dirname(__file__), "version.txt")
+    else:
+        path = "version.txt"
+    version = pkgutil.get_data(__name__, path).decode().strip()
+    return version
+
+
+def get_lib_folder_path():
+    # Get version from ./version.txt
+    # detect if on windows since pathing is handled differently from linux
+    if platform.system() == "Windows":
+        lib_folder_path = "metroidprime/lib"
+    else:
+        lib_folder_path = os.path.join("metroidprime", "lib")
+    return lib_folder_path
