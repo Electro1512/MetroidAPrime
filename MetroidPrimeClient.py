@@ -94,12 +94,13 @@ class MetroidPrimeContext(CommonContext):
     cosmetic_suit: Optional[MetroidPrimeSuit] = None
     slot_name: Optional[str] = None
     last_error_message: Optional[str] = None
+    apmp1_file: Optional[str] = None
 
-    def __init__(self, server_address, password, slot_name=None):
+    def __init__(self, server_address, password, apmp1_file=None):
         super().__init__(server_address, password)
         self.game_interface = MetroidPrimeInterface(logger)
-        self.auth = slot_name
         self.notification_manager = NotificationManager(HUD_MESSAGE_DURATION, self.game_interface.send_hud_message)
+        self.apmp1_file = apmp1_file
 
     def on_deathlink(self, data: Utils.Dict[str, Utils.Any]) -> None:
         super().on_deathlink(data)
@@ -149,7 +150,12 @@ async def dolphin_sync_task(ctx: MetroidPrimeContext):
         logger.info(f"Using metroidprime.apworld version: {version}")
     except:
         pass
+
+    if ctx.apmp1_file:
+        Utils.async_start(patch_and_run_game(ctx.apmp1_file))
+
     logger.info("Starting Dolphin Connector, attempting to connect to emulator...")
+
     while not ctx.exit_event.is_set():
         try:
             connection_state = ctx.game_interface.get_connection_state()
@@ -331,10 +337,22 @@ async def patch_and_run_game(apmp1_file: str):
         if options_json:
             build_progressive_beam_patch = options_json["progressive_beam_upgrades"]
 
-        config_json["gameConfig"]["updateHintStateReplacement"] = construct_hook_patch(game_version, build_progressive_beam_patch)
-        notifier = py_randomprime.ProgressNotifier(
-            lambda progress, message: print("Generating ISO: ", progress, message))
-        py_randomprime.patch_iso(input_iso_path, output_path, config_json, notifier)
+        try:
+            config_json["gameConfig"]["updateHintStateReplacement"] = construct_hook_patch(game_version, build_progressive_beam_patch)
+            notifier = py_randomprime.ProgressNotifier(
+                lambda progress, message: print("Generating ISO: ", progress, message))
+            logger.info("--------------")
+            logger.info(f"Input ISO Path: {input_iso_path}")
+            logger.info(f"Output ISO Path: {output_path}")
+            disc_version = py_randomprime.rust.get_iso_mp1_version(os.fspath(input_iso_path))
+            logger.info(f"Disc Version: {disc_version}")
+            logger.info("Patching ISO...")
+            py_randomprime.patch_iso(input_iso_path, output_path, config_json, notifier)
+            logger.info("Patching Complete")
+        except Exception as e:
+            logger.error(f"Error patching ISO: {e}")
+            return
+        logger.info("--------------")
 
     Utils.async_start(run_game(output_path))
 
@@ -349,13 +367,14 @@ def launch():
         parser.add_argument('apmp1_file', default="", type=str, nargs="?",
                             help='Path to an apmp1 file')
         args = parser.parse_args()
-        slot = None
-        if args.apmp1_file:
-            logger.info("APMP1 file supplied, beginning patching process...")
-            Utils.async_start(patch_and_run_game(args.apmp1_file))
-            slot = get_options_from_apmp1(args.apmp1_file)["player_name"]
 
-        ctx = MetroidPrimeContext(args.connect, args.password, slot)
+        ctx = MetroidPrimeContext(args.connect, args.password, args.apmp1_file)
+
+        if args.apmp1_file:
+            slot = get_options_from_apmp1(args.apmp1_file)["player_name"]
+            if slot:
+                ctx.auth = slot
+
         logger.info("Connecting to server...")
         ctx.server_task = asyncio.create_task(server_loop(ctx), name="Server Loop")
         if gui_enabled:
