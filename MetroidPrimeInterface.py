@@ -2,7 +2,6 @@ from logging import Logger
 import struct
 from .DolphinClient import GC_GAME_ID_ADDRESS, DolphinClient, DolphinException, get_num_dolphin_instances
 from enum import Enum
-from enum import Enum
 import py_randomprime
 from .Items import ItemData, SuitUpgrade, item_table, custom_suit_upgrade_table, suit_upgrade_table
 
