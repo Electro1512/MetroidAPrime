@@ -1,5 +1,7 @@
 from logging import Logger
 import struct
+from typing import Any
+
 from .DolphinClient import GC_GAME_ID_ADDRESS, DolphinClient, DolphinException, get_num_dolphin_instances
 from enum import Enum
 from enum import Enum
@@ -82,6 +84,7 @@ RTSL_VECTOR_OFFSET = 0x4
 ARTIFACT_TEMPLE_ROOM_INDEX = 16
 HUD_MESSAGE_DURATION = 7.0
 HUD_MAX_MESSAGE_SIZE = 194
+WORLD_STATE_SIZE = 0x18
 
 
 class ConnectionState(Enum):
@@ -175,6 +178,7 @@ class MetroidPrimeInterface:
     game_id_error: str = None
     game_rev_error: int = None
     current_game: str = None
+    relay_trackers: dict[int, dict[str, Any]] = None
 
     def __init__(self, logger) -> None:
         self.logger = logger
@@ -484,3 +488,41 @@ class MetroidPrimeInterface:
                         self.set_layer_active(
                             ARTIFACT_TEMPLE_ROOM_INDEX, layer_id, item.current_amount > 0)
                         changed = True
+
+    def reset_relay_tracker_cache(self):
+        self.relay_trackers = None
+
+    def update_relay_tracker_cache(self):
+        if self.relay_trackers is None:
+            self.relay_trackers = {}
+            # getting vector<g_GameState.x88_worldStates>
+            world_state_array = struct.unpack(">I", self.dolphin_client.read_pointer(GAMES[self.current_game]["game_state_pointer"], 0x94, struct.calcsize(">I")))[0]
+            world_states = [world_state_array + i * WORLD_STATE_SIZE for i in range(7)]
+            for world_state in world_states:
+                # getting WorldState.x0_mlvlId
+                mlvl = struct.unpack(">I", self.dolphin_client.read_address(world_state, struct.calcsize(">I")))[0]
+                self.relay_trackers[f'{mlvl:X}'] = {
+                    # getting WorldState.x8_mailbox.x0_relays
+                    # which is an array of memory relays active in the selected world
+                    "address": struct.unpack(">I", self.dolphin_client.read_pointer(world_state + 8, 0, struct.calcsize(">I")))[0],
+                    "count": 0,
+                    "memory_relays": [],
+                }
+        for _, relay_tracker in self.relay_trackers.items():
+            # getting WorldState.x8_mailbox.x0_relays.size()
+            relay_tracker["count"] = struct.unpack(">I", self.dolphin_client.read_address(relay_tracker["address"], struct.calcsize(">I")))[0]
+            # getting WorldState.x8_mailbox.x0_relays content
+            relay_tracker["memory_relays"] = struct.unpack(">"+("I" * relay_tracker["count"]), self.dolphin_client.read_address(relay_tracker["address"] + 4, relay_tracker["count"] * struct.calcsize(">I")))
+            # remove layer specific stuff from object id
+            relay_tracker["memory_relays"] = [mr & 0x00FFFFFF for mr in relay_tracker["memory_relays"]]
+
+    def is_memory_relay_active(self, mlvl: str, idx: int) -> bool:
+        if self.relay_trackers is None:
+            return False
+
+        relay_tracker = self.relay_trackers[mlvl]
+        for i in range(relay_tracker['count']):
+            if relay_tracker['memory_relays'][i] == idx:
+                return True
+
+        return False

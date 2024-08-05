@@ -109,9 +109,9 @@ def construct_hook_patch(game_version: str, progressive_beams: bool) -> List[int
         bl(symbols["DisplayHudMemo__9CSamusHudFRC7wstringRC12SHudMemoInfo"]),
         nop().with_label('early_return_hud'),
 
-        *construct_location_tracking_patch(game_version, [0x0, 0x4, 0x8, 0xC]),
-        # Progressive beam patch assumes r6 is the player state address
+        # Progressive Beam Patch
         *construct_progressive_beam_patch(game_version, progressive_beams),
+
         # Early return
         lmw(GeneralRegister(block_size - num_preserved_registers), patch_stack_length - instruction_size - num_preserved_registers * instruction_size, r1).with_label('early_return_beam'),
         lwz(r0, patch_stack_length, r1),
@@ -150,18 +150,35 @@ def _load_player_state_to_r6(game_version: str) -> List[int]:
 
 
 def construct_progressive_beam_patch(game_version: str, progressive_beams: bool) -> List[int]:
-    from ppc_asm.assembler.ppc import addi, bl, b, li, lwz, r1, r3, r4, r5, r6, r8, r10, r11, r31, stw, cmpwi, bne, mtspr, blr, lmw, r0, LR, stwu, mfspr, or_, lbz, stmw, stb, lis, r7, r9, nop, ori, GeneralRegister, Instruction
+    from ppc_asm.assembler.ppc import addi, bl, b, li, lwz, r1, r3, r4, r5, r6, r8, r10, r31, stw, cmpwi, bne, mtspr, blr, lmw, r0, LR, stwu, mfspr, or_, lbz, stmw, stb, lis, r7, r9, nop, ori, GeneralRegister, Instruction
+
+    def add(output_register: GeneralRegister, input_register1: GeneralRegister, input_register2: GeneralRegister):
+        """
+        output_register = input_register1 + input_register2
+        """
+        return Instruction.compose(((31, 6, False),  # Opcode for add
+                                    (output_register.number, 5, False),
+                                    (input_register1.number, 5, False),
+                                    (input_register2.number, 5, False),
+                                    (266, 10, False),  # Function code for add
+                                    (0, 1, False)  # Rc bit
+                                    ))
 
     if not progressive_beams:
         return []
+    cstate_manager_global = GAMES[game_version]["cstate_manager_global"]
     charge_beam_offset = 0x7F
     instructions: List = [
+        # Step 0: Get the player state address
+        *_load_player_state_to_r6(game_version),
+
         # Step 1: Get the current beam from the player state
         lbz(r5, 0xB, r6),  # Load the current beam value
+
         # Step 2: Read the value at the progressive beam address
         lis(r7, GAMES[game_version]["PROGRESSIVE_BEAM_ADDRESS"] >> 16),  # Load upper 16 bits of progressive beam address
         ori(r7, r7, GAMES[game_version]["PROGRESSIVE_BEAM_ADDRESS"] & 0xFFFF),  # Load lower 16 bits of progressive beam address
-        add(r7, r7, r5),  # Add 0 to the address (no offset)
+        add(r7, r7, r5),  # Add 0 to the address (no offset
         lbz(r8, 0, r7),  # Load the value at the progressive beam address
 
         # Step 3: Check the value and set the appropriate address
@@ -180,82 +197,5 @@ def construct_progressive_beam_patch(game_version: str, progressive_beams: bool)
         addi(r10, r6, charge_beam_offset),  # Calculate player state address + charge_beam_offset
         stb(r9, 0, r10),  # Store 1 at the calculated address
         b('early_return_beam'),
-    ]
-    return instructions
-
-
-def construct_location_tracking_patch(game_version: str, player_state_offsets: List[int]) -> List[int]:
-    from ppc_asm.assembler.ppc import cmpwi, lwz, r5, r6, r7, r8, r9, r10, r11, r12, nop, ble, b, addi, li, rlwinm, or_, stw
-    # r5 = current amount of unknown item 1
-    # r6 = player_state (loaded from previous)
-    # r7 - r10 = potential target offsets
-    # r11 = target bit position
-    # r12 = selected target register with correct group
-
-    # Load current amount of unknown item 1 into r5
-    # Load each potential target into r7 through r10
-    # Determine target offset and set that into r12
-    # Determine bit position and set that into r11
-
-    UNKNOWN_ITEM_1_ID = misc_item_table["UnknownItem1"].id
-    UNKNOWN_ITEM_2_ID = misc_item_table["UnknownItem2"].id
-    HEALTH_REFILL_ID = misc_item_table["HealthRefill"].id
-
-    def get_current_amount_offset(item_id: int):
-        return calculate_item_offset(item_id) + 0x0
-
-    def get_current_capacity_offset(item_id: int):
-        return calculate_item_offset(item_id) + 0x4
-
-    instructions = [
-        *_load_player_state_to_r6(game_version),
-        # Get current value of unk item 1 current amount
-        lwz(r5, get_current_capacity_offset(UNKNOWN_ITEM_1_ID), r6),
-
-        # Check which of the stolen address to write to
-        cmpwi(r5, 32),
-        ble('group1'),
-        cmpwi(r5, 64),
-        ble('group2'),
-        cmpwi(r5, 96),
-        ble('group3'),
-        cmpwi(r5, 128),
-        ble('group4'),
-
-        # Group 1 uses unknown item 1 capacity
-        addi(r11, r5, -1).with_label('group1'),
-        addi(r12, r6, get_current_amount_offset(UNKNOWN_ITEM_2_ID)),
-        b('set_bit'),
-
-        # Group 2 uses unknown item 2 current amount
-        addi(r11, r5, -33).with_label('group2'),
-        addi(r12, r6, get_current_capacity_offset(UNKNOWN_ITEM_2_ID)),
-        b('set_bit'),
-
-        # Group 3 uses unknown item 2 capacity
-        addi(r11, r5, -65).with_label('group3'),
-        addi(r12, r6, get_current_capacity_offset(HEALTH_REFILL_ID)),
-        b('set_bit'),
-
-        # Group 4 uses power suit capacity
-        addi(r11, r5, -97).with_label('group4'),
-        addi(r12, r6, get_current_amount_offset(UNKNOWN_ITEM_1_ID)),
-
-        li(r7, 1).with_label('set_bit'),
-        # Load the current value from the address in r12
-        lwz(r8, 0, r12),
-
-        # Create a bitmask with a single bit set at the position specified by r11
-        slw(r9, r7, r11),  # r9 = 1 << r11
-
-        # Set the bit
-        or_(r8, r8, r9),  # Set the bit
-
-        # Store the modified value back to the address in r12
-        stw(r8, 0, r12),
-        li(r12, 0),
-        # Reset the unknown item 1 current capacity to 0
-        stw(r12, get_current_capacity_offset(UNKNOWN_ITEM_1_ID), r6)
-
     ]
     return instructions
