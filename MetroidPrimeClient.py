@@ -17,7 +17,7 @@ from .ClientReceiveItems import handle_receive_items
 from .NotificationManager import NotificationManager
 from .Container import construct_hook_patch
 from .DolphinClient import DolphinException, assert_no_running_dolphin, get_num_dolphin_instances
-from .Locations import METROID_PRIME_LOCATION_BASE, every_location
+from .Locations import METROID_PRIME_LOCATION_BASE, every_location, PICKUP_LOCATIONS
 from .MetroidPrimeInterface import HUD_MESSAGE_DURATION, ConnectionState, InventoryItemData, MetroidPrimeInterface, MetroidPrimeLevel, MetroidPrimeSuit
 
 
@@ -189,22 +189,14 @@ def __int_to_reversed_bits(value: int, bit_length: int) -> str:
 
 
 async def handle_checked_location(ctx: MetroidPrimeContext, current_inventory: dict[str, InventoryItemData]):
-    """Uses the current amount of UnknownItem1 in inventory as an indicator of which location was checked. This will break if the player collects more than one pickup without having the AP client hooked to the game and server"""
-    unknown_item1 = current_inventory["UnknownItem1"]
-    unknown_item2 = current_inventory["UnknownItem2"]
-    health_refill = current_inventory["HealthRefill"]
-
-    flag_ints = [unknown_item2.current_amount, unknown_item2.current_capacity, health_refill.current_capacity, unknown_item1.current_amount]
-    flags_str = "".join([__int_to_reversed_bits(flag_int, 32) for flag_int in flag_ints])
-    if (flags_str == ctx.previous_location_str):
-        return
+    """Checks for active memory relays in each worlds"""
     checked_locations = []
-    for index, char in enumerate(flags_str):
-        if char == "1":
-            checked_locations.append(index + METROID_PRIME_LOCATION_BASE)
-
+    i = 0
+    for mlvl, memory_relay in PICKUP_LOCATIONS:
+        if ctx.game_interface.is_memory_relay_active(f'{mlvl.value:X}', memory_relay):
+            checked_locations.append(METROID_PRIME_LOCATION_BASE + i)
+        i += 1
     await ctx.send_msgs([{"cmd": "LocationChecks", "locations": checked_locations}])
-    ctx.previous_location_str = flags_str
 
 
 async def handle_check_goal_complete(ctx: MetroidPrimeContext):
@@ -229,6 +221,7 @@ async def _handle_game_ready(ctx: MetroidPrimeContext):
         if not ctx.slot:
             await asyncio.sleep(1)
             return
+        ctx.game_interface.update_relay_tracker_cache()
         current_inventory = ctx.game_interface.get_current_inventory()
         await handle_receive_items(ctx, current_inventory)
         ctx.notification_manager.handle_notifications()
@@ -239,6 +232,7 @@ async def _handle_game_ready(ctx: MetroidPrimeContext):
             await handle_check_deathlink(ctx)
         await asyncio.sleep(0.5)
     else:
+        ctx.game_interface.reset_relay_tracker_cache()
         message = "Waiting for player to connect to server"
         if ctx.last_error_message is not message:
             logger.info("Waiting for player to connect to server")
