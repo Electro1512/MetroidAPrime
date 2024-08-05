@@ -57,6 +57,8 @@ def create_regions(world: 'MetroidPrimeWorld', final_boss_selection):
             can_phazon(state, world.player) and
             can_plasma_beam(state, world.player) and can_wave_beam(state, world.player) and can_ice_beam(state, world.player) and can_power_beam(state, world.player) and
             can_xray(state, world.player, True) and can_thermal(state, world.player, True)))
+        impact_crater.connect(mission_complete, "Mission Complete")
+
     elif final_boss_selection == 1:
         artifact_temple.connect(mission_complete, "Mission Complete", lambda state:
                                 can_missile(state, world.player) and
@@ -67,10 +69,6 @@ def create_regions(world: 'MetroidPrimeWorld', final_boss_selection):
         artifact_temple.connect(mission_complete, "Mission Complete", lambda state: (
             can_missile(state, world.player) and
             has_required_artifact_count(state, world.player)))
-
-    if (final_boss_selection == 0 or
-            final_boss_selection == 2):
-        impact_crater.connect(mission_complete, "Mission Complete")
 
     # from Utils import visualize_regions
     # visualize_regions(world.multiworld.get_region("Menu", world.player), "my_world.puml")
