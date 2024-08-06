@@ -229,7 +229,7 @@ PICKUP_LOCATIONS: list[(int, int)] = [
     (MetroidPrimeLevel.Magmoor_Caverns, 0x000a0044),
     (MetroidPrimeLevel.Magmoor_Caverns, 0x000b0038),
     (MetroidPrimeLevel.Magmoor_Caverns, 0x000c0029),
-    (MetroidPrimeLevel.Magmoor_Caverns, 0x000e01d8),
+    (MetroidPrimeLevel.Magmoor_Caverns, 0x000e01db),
     (MetroidPrimeLevel.Magmoor_Caverns, 0x000e0240),
     (MetroidPrimeLevel.Magmoor_Caverns, 0x00150020),
     (MetroidPrimeLevel.Magmoor_Caverns, 0x0017028f),
