@@ -232,7 +232,6 @@ async def _handle_game_ready(ctx: MetroidPrimeContext):
             await handle_check_deathlink(ctx)
         await asyncio.sleep(0.5)
     else:
-        ctx.game_interface.reset_relay_tracker_cache()
         message = "Waiting for player to connect to server"
         if ctx.last_error_message is not message:
             logger.info("Waiting for player to connect to server")
@@ -242,6 +241,7 @@ async def _handle_game_ready(ctx: MetroidPrimeContext):
 
 async def _handle_game_not_ready(ctx: MetroidPrimeContext):
     """If the game is not connected or not in a playable state, this will attempt to retry connecting to the game."""
+    ctx.game_interface.reset_relay_tracker_cache()
     if ctx.connection_state == ConnectionState.DISCONNECTED:
         ctx.game_interface.connect_to_game()
     elif ctx.connection_state == ConnectionState.IN_MENU:
