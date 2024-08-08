@@ -101,20 +101,30 @@ def get_tweaks(world: 'MetroidPrimeWorld') -> Dict[str, List[int]]:
 
 
 def get_strg(world: 'MetroidPrimeWorld') -> Dict[str, List[str]]:
-    if not world.options.show_suit_index_on_pause_menu.value:
-        return {}
-    strg = {**PAUSE_STRG}
-    pause_menu_overrides = {
-        "Power Suit": world.options.power_suit_color.value,
-        "Varia Suit": world.options.varia_suit_color.value,
-        "Gravity Suit": world.options.gravity_suit_color.value,
-        "Phazon Suit": world.options.phazon_suit_color.value
-    }
-    # Update the name to include the color index if it is set
-    for item in strg[PAUSE_MENU_STRG_KEY]:
-        if item in pause_menu_overrides and pause_menu_overrides[item] != 0:
-            index = strg[PAUSE_MENU_STRG_KEY].index(item)
-            strg[PAUSE_MENU_STRG_KEY][index] = f"{item} (Color: {pause_menu_overrides[item]})"
+    strg = {**OBJECTIVE_STRG}
+    # Set objective text in temple security station
+    objective_text = f"Current Mission: Retrieve {world.options.required_artifacts} Chozo Artifact{'s' if world.options.required_artifacts != 1 else ''}"
+    if world.options.final_bosses == 0:
+        objective_text += "\nDefeat Meta Ridley\nDefeat Metroid Prime"
+    elif world.options.final_bosses == 1:
+        objective_text += "\nDefeat Meta Ridley"
+    elif world.options.final_bosses == 2:
+        objective_text += "\nDefeat Metroid Prime"
+
+    strg[OBJECTIVE_STRG_KEY][2] = objective_text
+    if world.options.show_suit_index_on_pause_menu.value:
+        strg = {**strg, **PAUSE_STRG}
+        pause_menu_overrides = {
+            "Power Suit": world.options.power_suit_color.value,
+            "Varia Suit": world.options.varia_suit_color.value,
+            "Gravity Suit": world.options.gravity_suit_color.value,
+            "Phazon Suit": world.options.phazon_suit_color.value
+        }
+        # Update the name to include the color index if it is set
+        for item in strg[PAUSE_MENU_STRG_KEY]:
+            if item in pause_menu_overrides and pause_menu_overrides[item] != 0:
+                index = strg[PAUSE_MENU_STRG_KEY].index(item)
+                strg[PAUSE_MENU_STRG_KEY][index] = f"{item} (Color: {pause_menu_overrides[item]})"
     return strg
 
 
@@ -289,6 +299,14 @@ def make_level_data(world):
     return level_data
 
 
+OBJECTIVE_STRG_KEY = "3012146902"
+OBJECTIVE_STRG = {
+    OBJECTIVE_STRG_KEY: [
+        "Objective data decoded\n",
+        "Mission Objectives",
+        ""
+    ]
+}
 PAUSE_MENU_STRG_KEY = "1343145632"
 PAUSE_STRG = {
     PAUSE_MENU_STRG_KEY: [
