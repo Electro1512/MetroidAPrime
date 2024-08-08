@@ -88,7 +88,7 @@ class PickupData:
             "type": "Unknown Item 1",
             "scanText": get_config_item_text(world, self.name),
             "hudmemoText": get_config_item_text(world, self.name) + " Acquired!",
-            "currIncrease": every_location[self.name] - METROID_PRIME_LOCATION_BASE + 1,
+            "currIncrease": 0,
             "model": get_config_item_model(world, self.name),
             "showIcon": True
         }
