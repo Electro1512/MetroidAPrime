@@ -2,7 +2,7 @@
 from .Tricks import Tricks
 from .AreaNames import MetroidPrimeArea
 from .RoomData import AreaData, DoorData, DoorLockType, PickupData, RoomData
-from ..Logic import can_bomb, can_boost, can_grapple, can_heat, can_missile, can_morph_ball, can_move_underwater, can_plasma_beam, can_power_bomb, can_scan, can_space_jump, can_spider, can_thermal, can_wave_beam, can_xray, has_energy_tanks
+from ..Logic import can_bomb, can_boost, can_grapple, can_heat, can_missile, can_morph_ball, can_move_underwater, can_plasma_beam, can_power_bomb, can_scan, can_space_jump, can_spider, can_thermal, can_wave_beam, can_xray, has_energy_tanks, can_warp_to_start
 from .RoomNames import RoomName
 
 
@@ -19,7 +19,7 @@ class MagmoorCavernsAreaData(AreaData):
             # 2: DoorData(RoomName.Warrior_Shrine, rule_func=lambda state, player: False), Can't access, one way trip
         }, pickups=[
             PickupData('Magmoor Caverns: Fiery Shores - Morph Track', tricks=[Tricks.fiery_shores_morphball_track_sj], rule_func=can_bomb),
-            PickupData('Magmoor Caverns: Fiery Shores - Warrior Shrine Tunnel', rule_func=lambda state, player:  can_power_bomb(state, player) and can_bomb(state, player) and state.can_reach(RoomName.Warrior_Shrine.value, None, player))  # Not an item in this room but can only be accessed from here
+            PickupData('Magmoor Caverns: Fiery Shores - Warrior Shrine Tunnel', rule_func=lambda state, player: can_power_bomb(state, player) and can_bomb(state, player) and (can_warp_to_start(state, player) if state.multiworld.worlds[player].options.starting_room_name == RoomName.Warrior_Shrine.value else state.can_reach(RoomName.Warrior_Shrine.value, None, player)))  # Not an item in this room but can only be accessed from here, if starting in warrior shrine need to be able to warp back
         ]),
         RoomName.Geothermal_Core: RoomData(doors={
             0: DoorData(RoomName.North_Core_Tunnel, rule_func=can_space_jump),
@@ -40,7 +40,7 @@ class MagmoorCavernsAreaData(AreaData):
                 0: DoorData(RoomName.Lake_Tunnel, destinationArea=MetroidPrimeArea.Magmoor_Caverns, rule_func=lambda state, player: can_heat(state, player) and (can_bomb(state, player) or can_power_bomb(state, player)), tricks=[Tricks.lava_lake_item_suitless]),
                 1: DoorData(RoomName.Pit_Tunnel, rule_func=lambda state, player: can_heat(state, player) and (can_bomb(state, player) or can_power_bomb(state, player)), tricks=[Tricks.lava_lake_item_suitless]),
             },
-            pickups=[PickupData('Magmoor Caverns: Lava Lake', rule_func=lambda state, player: can_missile(state, player) and can_space_jump(state, player) and state.can_reach("Magmoor Caverns: " + RoomName.Lake_Tunnel.value, None, player),  tricks=[Tricks.lava_lake_item_missiles_only, Tricks.lava_lake_item_suitless]), ]),
+            pickups=[PickupData('Magmoor Caverns: Lava Lake', rule_func=lambda state, player: can_missile(state, player) and can_space_jump(state, player) and state.can_reach("Magmoor Caverns: " + RoomName.Lake_Tunnel.value, None, player), tricks=[Tricks.lava_lake_item_missiles_only, Tricks.lava_lake_item_suitless]), ]),
         RoomName.Magmoor_Workstation: RoomData(
             doors={
                 0: DoorData(RoomName.South_Core_Tunnel),
@@ -65,7 +65,7 @@ class MagmoorCavernsAreaData(AreaData):
         }),
         RoomName.Pit_Tunnel: RoomData(doors={
             0: DoorData(RoomName.Triclops_Pit, rule_func=lambda state, player: can_heat(state, player) and (can_morph_ball(state, player) or can_space_jump(state, player))),
-            1: DoorData(RoomName.Lava_Lake,  rule_func=lambda state, player: can_heat(state, player) and (can_morph_ball(state, player) or can_space_jump(state, player))),
+            1: DoorData(RoomName.Lava_Lake, rule_func=lambda state, player: can_heat(state, player) and (can_morph_ball(state, player) or can_space_jump(state, player))),
         }),
         RoomName.Plasma_Processing: RoomData(doors={
             0: DoorData(RoomName.Geothermal_Core, defaultLock=DoorLockType.Plasma),

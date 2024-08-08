@@ -153,3 +153,26 @@ def has_power_bomb_count(state: CollectionState, player: int, required_count: in
     if state.has(SuitUpgrade.Main_Power_Bomb.value, player):
         count += 4
     return count >= required_count
+
+
+def can_warp_to_start(state: CollectionState, player: int) -> bool:
+    SAVE_ROOMS = [
+        RoomName.Landing_Site.value,
+        RoomName.Save_Station_1.value,
+        RoomName.Save_Station_2.value,
+        RoomName.Save_Station_3.value,
+        RoomName.Save_Station_Magmoor_A.value,
+        RoomName.Save_Station_Magmoor_B.value,
+        RoomName.Save_Station_A.value,
+        RoomName.Save_Station_B.value,
+        RoomName.Save_Station_C.value,
+        RoomName.Save_Station_D.value,
+        RoomName.Cargo_Freight_Lift_to_Deck_Gamma.value,
+        RoomName.Save_Station_Mines_A.value,
+        RoomName.Save_Station_Mines_B.value,
+        RoomName.Save_Station_Mines_C.value,
+    ]
+    for room in SAVE_ROOMS:
+        if state.can_reach_region(room, player):
+            return True
+    return False
