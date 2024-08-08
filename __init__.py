@@ -12,7 +12,6 @@ from .Locations import every_location
 from .PrimeOptions import MetroidPrimeOptions, VariaSuitColorOverride
 from .Items import PROGRESSIVE_ITEM_MAPPING, MetroidPrimeItem, ProgressiveUpgrade, SuitUpgrade, get_item_for_options, get_progressive_upgrade_for_item, suit_upgrade_table, artifact_table, item_table
 from .data.StartRoomData import StartRoomData, init_starting_room_data
-from .data.RoomNames import RoomName
 from .Container import MetroidPrimeContainer
 from BaseClasses import Item, Tutorial, ItemClassification
 import typing
@@ -72,6 +71,7 @@ class MetroidPrimeWorld(World):
     """
     game = "Metroid Prime"
     web = MetroidPrimeWeb()
+    required_client_version = (0, 5, 0)
     options_dataclass = MetroidPrimeOptions
     options: MetroidPrimeOptions
     topology_present = True
