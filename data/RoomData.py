@@ -32,14 +32,14 @@ def get_config_item_model(world: 'MetroidPrimeWorld', location) -> str:
             return "Shiny Missile"
         elif name == SuitUpgrade.Main_Power_Bomb.value:
             return "Power Bomb"
-        elif name == ProgressiveUpgrade.Progressive_Power_Beam.value:
+        elif name == ProgressiveUpgrade.Progressive_Power_Beam.value or name == SuitUpgrade.Power_Beam.value:
             return "Super Missile"
         elif name == ProgressiveUpgrade.Progressive_Wave_Beam.value:
-            return "Wavebuster"
+            return "Wave Beam"
         elif name == ProgressiveUpgrade.Progressive_Ice_Beam.value:
-            return "Ice Spreader"
+            return "Ice Beam"
         elif name == ProgressiveUpgrade.Progressive_Plasma_Beam.value:
-            return "Flamethrower"
+            return "Plasma Beam"
         else:
             return name
     else:
