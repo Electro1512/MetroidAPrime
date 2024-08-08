@@ -4,6 +4,11 @@
   "outputIso": "prime_out.iso",
   "forceVanillaLayout": false,
   "strg": {
+    "3012146902": [
+      "Objective data decoded\n",
+      "Mission Objectives",
+      "Current Mission: Retrieve 12 Chozo Artifacts\nDefeat Meta Ridley\nDefeat Metroid Prime"
+    ],
     "1343145632": [
       "[ Log Book ]",
       "Pirate Data",
@@ -263,7 +268,7 @@
               "type": "Unknown Item 1",
               "scanText": "Energy Tank",
               "hudmemoText": "Energy Tank Acquired!",
-              "currIncrease": 60,
+              "currIncrease": 0,
               "model": "Energy Tank",
               "showIcon": true
             }
@@ -275,7 +280,7 @@
               "type": "Unknown Item 1",
               "scanText": "Artifact of Spirit",
               "hudmemoText": "Artifact of Spirit Acquired!",
-              "currIncrease": 66,
+              "currIncrease": 0,
               "model": "Artifact of Spirit",
               "showIcon": true
             }
@@ -287,7 +292,7 @@
               "type": "Unknown Item 1",
               "scanText": "Missile Expansion",
               "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 64,
+              "currIncrease": 0,
               "model": "Missile",
               "showIcon": true
             }
@@ -299,7 +304,7 @@
               "type": "Unknown Item 1",
               "scanText": "Missile Expansion",
               "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 68,
+              "currIncrease": 0,
               "model": "Missile",
               "showIcon": true
             }
@@ -312,7 +317,7 @@
               "type": "Unknown Item 1",
               "scanText": "Super Missile",
               "hudmemoText": "Super Missile Acquired!",
-              "currIncrease": 67,
+              "currIncrease": 0,
               "model": "Super Missile",
               "showIcon": true
             }
@@ -324,7 +329,7 @@
               "type": "Unknown Item 1",
               "scanText": "Energy Tank",
               "hudmemoText": "Energy Tank Acquired!",
-              "currIncrease": 61,
+              "currIncrease": 0,
               "model": "Energy Tank",
               "showIcon": true
             }
@@ -336,7 +341,7 @@
               "type": "Unknown Item 1",
               "scanText": "Missile Expansion",
               "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 70,
+              "currIncrease": 0,
               "model": "Missile",
               "showIcon": true
             }
@@ -350,7 +355,7 @@
               "type": "Unknown Item 1",
               "scanText": "Energy Tank",
               "hudmemoText": "Energy Tank Acquired!",
-              "currIncrease": 69,
+              "currIncrease": 0,
               "model": "Energy Tank",
               "showIcon": true
             }
@@ -362,7 +367,7 @@
               "type": "Unknown Item 1",
               "scanText": "Charge Beam",
               "hudmemoText": "Charge Beam Acquired!",
-              "currIncrease": 59,
+              "currIncrease": 0,
               "model": "Charge Beam",
               "showIcon": true
             }
@@ -374,7 +379,7 @@
               "type": "Unknown Item 1",
               "scanText": "Artifact of Truth",
               "hudmemoText": "Artifact of Truth Acquired!",
-              "currIncrease": 71,
+              "currIncrease": 0,
               "model": "Artifact of Truth",
               "showIcon": true
             }
@@ -386,7 +391,7 @@
               "type": "Unknown Item 1",
               "scanText": "Missile Expansion",
               "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 72,
+              "currIncrease": 0,
               "model": "Missile",
               "showIcon": true
             },
@@ -394,7 +399,7 @@
               "type": "Unknown Item 1",
               "scanText": "Missile Expansion",
               "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 73,
+              "currIncrease": 0,
               "model": "Missile",
               "showIcon": true
             }
@@ -406,7 +411,7 @@
               "type": "Unknown Item 1",
               "scanText": "Energy Tank",
               "hudmemoText": "Energy Tank Acquired!",
-              "currIncrease": 62,
+              "currIncrease": 0,
               "model": "Energy Tank",
               "showIcon": true
             }
@@ -418,7 +423,7 @@
               "type": "Unknown Item 1",
               "scanText": "Missile Expansion",
               "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 63,
+              "currIncrease": 0,
               "model": "Missile",
               "showIcon": true
             }
@@ -441,7 +446,7 @@
               "type": "Unknown Item 1",
               "scanText": "Morph Ball",
               "hudmemoText": "Morph Ball Acquired!",
-              "currIncrease": 65,
+              "currIncrease": 0,
               "model": "Morph Ball",
               "showIcon": true
             }
@@ -467,7 +472,7 @@
               "type": "Unknown Item 1",
               "scanText": "Missile Expansion",
               "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 35,
+              "currIncrease": 0,
               "model": "Missile",
               "showIcon": true
             }
@@ -482,7 +487,7 @@
               "type": "Unknown Item 1",
               "scanText": "Missile Expansion",
               "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 28,
+              "currIncrease": 0,
               "model": "Missile",
               "showIcon": true
             },
@@ -490,7 +495,7 @@
               "type": "Unknown Item 1",
               "scanText": "Missile Expansion",
               "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 29,
+              "currIncrease": 0,
               "model": "Missile",
               "showIcon": true
             }
@@ -504,7 +509,7 @@
               "type": "Unknown Item 1",
               "scanText": "Missile Expansion",
               "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 33,
+              "currIncrease": 0,
               "model": "Missile",
               "showIcon": true
             }
@@ -517,7 +522,7 @@
               "type": "Unknown Item 1",
               "scanText": "Wave Beam",
               "hudmemoText": "Wave Beam Acquired!",
-              "currIncrease": 26,
+              "currIncrease": 0,
               "model": "Wave Beam",
               "showIcon": true
             },
@@ -525,7 +530,7 @@
               "type": "Unknown Item 1",
               "scanText": "Artifact of Lifegiver",
               "hudmemoText": "Artifact of Lifegiver Acquired!",
-              "currIncrease": 27,
+              "currIncrease": 0,
               "model": "Artifact of Lifegiver",
               "showIcon": true
             }
@@ -539,7 +544,7 @@
               "type": "Unknown Item 1",
               "scanText": "Power Bomb Expansion",
               "hudmemoText": "Power Bomb Expansion Acquired!",
-              "currIncrease": 34,
+              "currIncrease": 0,
               "model": "Power Bomb Expansion",
               "showIcon": true
             }
@@ -555,7 +560,7 @@
               "type": "Unknown Item 1",
               "scanText": "Missile Expansion",
               "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 30,
+              "currIncrease": 0,
               "model": "Missile",
               "showIcon": true
             },
@@ -563,7 +568,7 @@
               "type": "Unknown Item 1",
               "scanText": "Energy Tank",
               "hudmemoText": "Energy Tank Acquired!",
-              "currIncrease": 31,
+              "currIncrease": 0,
               "model": "Energy Tank",
               "showIcon": true
             }
@@ -576,7 +581,7 @@
               "type": "Unknown Item 1",
               "scanText": "Energy Tank",
               "hudmemoText": "Energy Tank Acquired!",
-              "currIncrease": 19,
+              "currIncrease": 0,
               "model": "Energy Tank",
               "showIcon": true
             }
@@ -588,7 +593,7 @@
               "type": "Unknown Item 1",
               "scanText": "Artifact of Sun",
               "hudmemoText": "Artifact of Sun Acquired!",
-              "currIncrease": 32,
+              "currIncrease": 0,
               "model": "Artifact of Sun",
               "showIcon": true
             }
@@ -600,7 +605,7 @@
               "type": "Unknown Item 1",
               "scanText": "Missile Launcher",
               "hudmemoText": "Missile Launcher Acquired!",
-              "currIncrease": 20,
+              "currIncrease": 0,
               "model": "Shiny Missile",
               "showIcon": true
             }
@@ -612,7 +617,7 @@
               "type": "Unknown Item 1",
               "scanText": "Wavebuster",
               "hudmemoText": "Wavebuster Acquired!",
-              "currIncrease": 13,
+              "currIncrease": 0,
               "model": "Wavebuster",
               "showIcon": true
             }
@@ -624,7 +629,7 @@
               "type": "Unknown Item 1",
               "scanText": "Missile Expansion",
               "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 1,
+              "currIncrease": 0,
               "model": "Missile",
               "showIcon": true
             },
@@ -632,7 +637,7 @@
               "type": "Unknown Item 1",
               "scanText": "Missile Expansion",
               "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 2,
+              "currIncrease": 0,
               "model": "Missile",
               "showIcon": true
             },
@@ -640,7 +645,7 @@
               "type": "Unknown Item 1",
               "scanText": "Missile Expansion",
               "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 3,
+              "currIncrease": 0,
               "model": "Missile",
               "showIcon": true
             },
@@ -648,7 +653,7 @@
               "type": "Unknown Item 1",
               "scanText": "Missile Expansion",
               "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 4,
+              "currIncrease": 0,
               "model": "Missile",
               "showIcon": true
             }
@@ -669,7 +674,7 @@
               "type": "Unknown Item 1",
               "scanText": "Space Jump Boots",
               "hudmemoText": "Space Jump Boots Acquired!",
-              "currIncrease": 5,
+              "currIncrease": 0,
               "model": "Space Jump Boots",
               "showIcon": true
             }
@@ -681,7 +686,7 @@
               "type": "Unknown Item 1",
               "scanText": "Missile Expansion",
               "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 16,
+              "currIncrease": 0,
               "model": "Missile",
               "showIcon": true
             },
@@ -689,7 +694,7 @@
               "type": "Unknown Item 1",
               "scanText": "Energy Tank",
               "hudmemoText": "Energy Tank Acquired!",
-              "currIncrease": 17,
+              "currIncrease": 0,
               "model": "Energy Tank",
               "showIcon": true
             }
@@ -701,7 +706,7 @@
               "type": "Unknown Item 1",
               "scanText": "Boost Ball",
               "hudmemoText": "Boost Ball Acquired!",
-              "currIncrease": 11,
+              "currIncrease": 0,
               "model": "Boost Ball",
               "showIcon": true
             }
@@ -714,7 +719,7 @@
               "type": "Unknown Item 1",
               "scanText": "Missile Expansion",
               "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 6,
+              "currIncrease": 0,
               "model": "Missile",
               "showIcon": true
             },
@@ -722,7 +727,7 @@
               "type": "Unknown Item 1",
               "scanText": "Spider Ball",
               "hudmemoText": "Spider Ball Acquired!",
-              "currIncrease": 7,
+              "currIncrease": 0,
               "model": "Spider Ball",
               "showIcon": true
             },
@@ -730,7 +735,7 @@
               "type": "Unknown Item 1",
               "scanText": "Ice Beam",
               "hudmemoText": "Ice Beam Acquired!",
-              "currIncrease": 8,
+              "currIncrease": 0,
               "model": "Ice Beam",
               "showIcon": true
             }
@@ -750,7 +755,7 @@
               "type": "Unknown Item 1",
               "scanText": "Artifact of Warrior",
               "hudmemoText": "Artifact of Warrior Acquired!",
-              "currIncrease": 21,
+              "currIncrease": 0,
               "model": "Artifact of Warrior",
               "showIcon": true
             },
@@ -758,7 +763,7 @@
               "type": "Unknown Item 1",
               "scanText": "Missile Expansion",
               "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 22,
+              "currIncrease": 0,
               "model": "Missile",
               "showIcon": true
             }
@@ -771,7 +776,7 @@
               "type": "Unknown Item 1",
               "scanText": "Artifact of Wild",
               "hudmemoText": "Artifact of Wild Acquired!",
-              "currIncrease": 15,
+              "currIncrease": 0,
               "model": "Artifact of Wild",
               "showIcon": true
             }
@@ -784,7 +789,7 @@
               "type": "Unknown Item 1",
               "scanText": "Missile Expansion",
               "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 14,
+              "currIncrease": 0,
               "model": "Missile",
               "showIcon": true
             }
@@ -796,7 +801,7 @@
               "type": "Unknown Item 1",
               "scanText": "Missile Expansion",
               "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 12,
+              "currIncrease": 0,
               "model": "Missile",
               "showIcon": true
             }
@@ -808,7 +813,7 @@
               "type": "Unknown Item 1",
               "scanText": "Missile Expansion",
               "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 10,
+              "currIncrease": 0,
               "model": "Missile",
               "showIcon": true
             }
@@ -820,7 +825,7 @@
               "type": "Unknown Item 1",
               "scanText": "Missile Expansion",
               "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 18,
+              "currIncrease": 0,
               "model": "Missile",
               "showIcon": true
             }
@@ -838,7 +843,7 @@
               "type": "Unknown Item 1",
               "scanText": "Power Bomb (Main)",
               "hudmemoText": "Power Bomb (Main) Acquired!",
-              "currIncrease": 9,
+              "currIncrease": 0,
               "model": "Power Bomb",
               "showIcon": true
             }
@@ -850,7 +855,7 @@
               "type": "Unknown Item 1",
               "scanText": "Varia Suit",
               "hudmemoText": "Varia Suit Acquired!",
-              "currIncrease": 23,
+              "currIncrease": 0,
               "model": "Varia Suit",
               "showIcon": true
             }
@@ -862,7 +867,7 @@
               "type": "Unknown Item 1",
               "scanText": "Morph Ball Bomb",
               "hudmemoText": "Morph Ball Bomb Acquired!",
-              "currIncrease": 24,
+              "currIncrease": 0,
               "model": "Morph Ball Bomb",
               "showIcon": true
             },
@@ -870,7 +875,7 @@
               "type": "Unknown Item 1",
               "scanText": "Missile Expansion",
               "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 25,
+              "currIncrease": 0,
               "model": "Missile",
               "showIcon": true
             }
@@ -897,7 +902,7 @@
               "type": "Unknown Item 1",
               "scanText": "Missile Expansion",
               "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 97,
+              "currIncrease": 0,
               "model": "Missile",
               "showIcon": true
             },
@@ -905,7 +910,7 @@
               "type": "Unknown Item 1",
               "scanText": "Flamethrower",
               "hudmemoText": "Flamethrower Acquired!",
-              "currIncrease": 98,
+              "currIncrease": 0,
               "model": "Flamethrower",
               "showIcon": true
             }
@@ -919,7 +924,7 @@
               "type": "Unknown Item 1",
               "scanText": "Power Bomb Expansion",
               "hudmemoText": "Power Bomb Expansion Acquired!",
-              "currIncrease": 91,
+              "currIncrease": 0,
               "model": "Power Bomb Expansion",
               "showIcon": true
             }
@@ -931,7 +936,7 @@
               "type": "Unknown Item 1",
               "scanText": "Artifact of Nature",
               "hudmemoText": "Artifact of Nature Acquired!",
-              "currIncrease": 100,
+              "currIncrease": 0,
               "model": "Artifact of Nature",
               "showIcon": true
             }
@@ -947,7 +952,7 @@
               "type": "Unknown Item 1",
               "scanText": "Artifact of Elder",
               "hudmemoText": "Artifact of Elder Acquired!",
-              "currIncrease": 99,
+              "currIncrease": 0,
               "model": "Artifact of Elder",
               "showIcon": true
             }
@@ -961,7 +966,7 @@
               "type": "Unknown Item 1",
               "scanText": "Artifact of Chozo",
               "hudmemoText": "Artifact of Chozo Acquired!",
-              "currIncrease": 96,
+              "currIncrease": 0,
               "model": "Artifact of Chozo",
               "showIcon": true
             }
@@ -974,7 +979,7 @@
               "type": "Unknown Item 1",
               "scanText": "Missile Expansion",
               "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 93,
+              "currIncrease": 0,
               "model": "Missile",
               "showIcon": true
             }
@@ -991,7 +996,7 @@
               "type": "Unknown Item 1",
               "scanText": "Power Bomb Expansion",
               "hudmemoText": "Power Bomb Expansion Acquired!",
-              "currIncrease": 94,
+              "currIncrease": 0,
               "model": "Power Bomb Expansion",
               "showIcon": true
             }
@@ -1005,7 +1010,7 @@
               "type": "Unknown Item 1",
               "scanText": "Plasma Beam",
               "hudmemoText": "Plasma Beam Acquired!",
-              "currIncrease": 92,
+              "currIncrease": 0,
               "model": "Plasma Beam",
               "showIcon": true
             }
@@ -1019,7 +1024,7 @@
               "type": "Unknown Item 1",
               "scanText": "Missile Expansion",
               "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 95,
+              "currIncrease": 0,
               "model": "Missile",
               "showIcon": true
             }
@@ -1043,7 +1048,7 @@
               "type": "Unknown Item 1",
               "scanText": "Missile Expansion",
               "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 42,
+              "currIncrease": 0,
               "model": "Missile",
               "showIcon": true
             }
@@ -1056,7 +1061,7 @@
               "type": "Unknown Item 1",
               "scanText": "Missile Expansion",
               "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 38,
+              "currIncrease": 0,
               "model": "Missile",
               "showIcon": true
             }
@@ -1068,7 +1073,7 @@
               "type": "Unknown Item 1",
               "scanText": "Missile Expansion",
               "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 50,
+              "currIncrease": 0,
               "model": "Missile",
               "showIcon": true
             }
@@ -1083,7 +1088,7 @@
               "type": "Unknown Item 1",
               "scanText": "Ice Spreader",
               "hudmemoText": "Ice Spreader Acquired!",
-              "currIncrease": 52,
+              "currIncrease": 0,
               "model": "Ice Spreader",
               "showIcon": true
             }
@@ -1096,7 +1101,7 @@
               "type": "Unknown Item 1",
               "scanText": "Grapple Beam",
               "hudmemoText": "Grapple Beam Acquired!",
-              "currIncrease": 55,
+              "currIncrease": 0,
               "model": "Grapple Beam",
               "showIcon": true
             },
@@ -1104,7 +1109,7 @@
               "type": "Unknown Item 1",
               "scanText": "Energy Tank",
               "hudmemoText": "Energy Tank Acquired!",
-              "currIncrease": 56,
+              "currIncrease": 0,
               "model": "Energy Tank",
               "showIcon": true
             }
@@ -1120,7 +1125,7 @@
               "type": "Unknown Item 1",
               "scanText": "Missile Expansion",
               "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 40,
+              "currIncrease": 0,
               "model": "Missile",
               "showIcon": true
             },
@@ -1128,7 +1133,7 @@
               "type": "Unknown Item 1",
               "scanText": "Artifact of World",
               "hudmemoText": "Artifact of World Acquired!",
-              "currIncrease": 41,
+              "currIncrease": 0,
               "model": "Artifact of World",
               "showIcon": true
             }
@@ -1140,7 +1145,7 @@
               "type": "Unknown Item 1",
               "scanText": "Missile Expansion",
               "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 39,
+              "currIncrease": 0,
               "model": "Missile",
               "showIcon": true
             }
@@ -1157,7 +1162,7 @@
               "type": "Unknown Item 1",
               "scanText": "Energy Tank",
               "hudmemoText": "Energy Tank Acquired!",
-              "currIncrease": 48,
+              "currIncrease": 0,
               "model": "Energy Tank",
               "showIcon": true
             }
@@ -1169,7 +1174,7 @@
               "type": "Unknown Item 1",
               "scanText": "Energy Tank",
               "hudmemoText": "Energy Tank Acquired!",
-              "currIncrease": 44,
+              "currIncrease": 0,
               "model": "Energy Tank",
               "showIcon": true
             }
@@ -1181,7 +1186,7 @@
               "type": "Unknown Item 1",
               "scanText": "Missile Expansion",
               "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 36,
+              "currIncrease": 0,
               "model": "Missile",
               "showIcon": true
             },
@@ -1189,7 +1194,7 @@
               "type": "Unknown Item 1",
               "scanText": "Missile Expansion",
               "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 37,
+              "currIncrease": 0,
               "model": "Missile",
               "showIcon": true
             }
@@ -1205,7 +1210,7 @@
               "type": "Unknown Item 1",
               "scanText": "Energy Tank",
               "hudmemoText": "Energy Tank Acquired!",
-              "currIncrease": 45,
+              "currIncrease": 0,
               "model": "Energy Tank",
               "showIcon": true
             }
@@ -1217,7 +1222,7 @@
               "type": "Unknown Item 1",
               "scanText": "Missile Expansion",
               "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 47,
+              "currIncrease": 0,
               "model": "Missile",
               "showIcon": true
             }
@@ -1230,7 +1235,7 @@
               "type": "Unknown Item 1",
               "scanText": "Energy Tank",
               "hudmemoText": "Energy Tank Acquired!",
-              "currIncrease": 51,
+              "currIncrease": 0,
               "model": "Energy Tank",
               "showIcon": true
             }
@@ -1243,7 +1248,7 @@
               "type": "Unknown Item 1",
               "scanText": "Missile Expansion",
               "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 53,
+              "currIncrease": 0,
               "model": "Missile",
               "showIcon": true
             },
@@ -1251,7 +1256,7 @@
               "type": "Unknown Item 1",
               "scanText": "Missile Expansion",
               "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 54,
+              "currIncrease": 0,
               "model": "Missile",
               "showIcon": true
             }
@@ -1263,7 +1268,7 @@
               "type": "Unknown Item 1",
               "scanText": "Missile Expansion",
               "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 46,
+              "currIncrease": 0,
               "model": "Missile",
               "showIcon": true
             }
@@ -1275,7 +1280,7 @@
               "type": "Unknown Item 1",
               "scanText": "Missile Expansion",
               "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 43,
+              "currIncrease": 0,
               "model": "Missile",
               "showIcon": true
             }
@@ -1292,7 +1297,7 @@
               "type": "Unknown Item 1",
               "scanText": "X-Ray Visor",
               "hudmemoText": "X-Ray Visor Acquired!",
-              "currIncrease": 58,
+              "currIncrease": 0,
               "model": "X-Ray Visor",
               "showIcon": true
             }
@@ -1307,7 +1312,7 @@
               "type": "Unknown Item 1",
               "scanText": "Phazon Suit",
               "hudmemoText": "Phazon Suit Acquired!",
-              "currIncrease": 57,
+              "currIncrease": 0,
               "model": "Phazon Suit",
               "showIcon": true
             }
@@ -1320,7 +1325,7 @@
               "type": "Unknown Item 1",
               "scanText": "Missile Expansion",
               "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 49,
+              "currIncrease": 0,
               "model": "Missile",
               "showIcon": true
             }
@@ -1345,7 +1350,7 @@
               "type": "Unknown Item 1",
               "scanText": "Artifact of Newborn",
               "hudmemoText": "Artifact of Newborn Acquired!",
-              "currIncrease": 85,
+              "currIncrease": 0,
               "model": "Artifact of Newborn",
               "showIcon": true
             }
@@ -1362,7 +1367,7 @@
               "type": "Unknown Item 1",
               "scanText": "Thermal Visor",
               "hudmemoText": "Thermal Visor Acquired!",
-              "currIncrease": 80,
+              "currIncrease": 0,
               "model": "Thermal Visor",
               "showIcon": true
             }
@@ -1376,7 +1381,7 @@
               "type": "Unknown Item 1",
               "scanText": "Power Bomb Expansion",
               "hudmemoText": "Power Bomb Expansion Acquired!",
-              "currIncrease": 84,
+              "currIncrease": 0,
               "model": "Power Bomb Expansion",
               "showIcon": true
             }
@@ -1388,7 +1393,7 @@
               "type": "Unknown Item 1",
               "scanText": "Missile Expansion",
               "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 78,
+              "currIncrease": 0,
               "model": "Missile",
               "showIcon": true
             },
@@ -1396,7 +1401,7 @@
               "type": "Unknown Item 1",
               "scanText": "Artifact of Strength",
               "hudmemoText": "Artifact of Strength Acquired!",
-              "currIncrease": 79,
+              "currIncrease": 0,
               "model": "Artifact of Strength",
               "showIcon": true
             }
@@ -1409,7 +1414,7 @@
               "type": "Unknown Item 1",
               "scanText": "Missile Expansion",
               "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 90,
+              "currIncrease": 0,
               "model": "Missile",
               "showIcon": true
             }
@@ -1421,7 +1426,7 @@
               "type": "Unknown Item 1",
               "scanText": "Missile Expansion",
               "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 88,
+              "currIncrease": 0,
               "model": "Missile",
               "showIcon": true
             }
@@ -1433,7 +1438,7 @@
               "type": "Unknown Item 1",
               "scanText": "Gravity Suit",
               "hudmemoText": "Gravity Suit Acquired!",
-              "currIncrease": 74,
+              "currIncrease": 0,
               "model": "Gravity Suit",
               "showIcon": true
             }
@@ -1447,7 +1452,7 @@
               "type": "Unknown Item 1",
               "scanText": "Missile Expansion",
               "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 87,
+              "currIncrease": 0,
               "model": "Missile",
               "showIcon": true
             }
@@ -1459,7 +1464,7 @@
               "type": "Unknown Item 1",
               "scanText": "Power Bomb Expansion",
               "hudmemoText": "Power Bomb Expansion Acquired!",
-              "currIncrease": 86,
+              "currIncrease": 0,
               "model": "Power Bomb Expansion",
               "showIcon": true
             }
@@ -1475,7 +1480,7 @@
               "type": "Unknown Item 1",
               "scanText": "Missile Expansion",
               "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 89,
+              "currIncrease": 0,
               "model": "Missile",
               "showIcon": true
             }
@@ -1487,7 +1492,7 @@
               "type": "Unknown Item 1",
               "scanText": "Missile Expansion",
               "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 82,
+              "currIncrease": 0,
               "model": "Missile",
               "showIcon": true
             }
@@ -1499,7 +1504,7 @@
               "type": "Unknown Item 1",
               "scanText": "Missile Expansion",
               "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 83,
+              "currIncrease": 0,
               "model": "Missile",
               "showIcon": true
             }
@@ -1518,7 +1523,7 @@
               "type": "Unknown Item 1",
               "scanText": "Missile Expansion",
               "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 75,
+              "currIncrease": 0,
               "model": "Missile",
               "showIcon": true
             }
@@ -1531,7 +1536,7 @@
               "type": "Unknown Item 1",
               "scanText": "Energy Tank",
               "hudmemoText": "Energy Tank Acquired!",
-              "currIncrease": 77,
+              "currIncrease": 0,
               "model": "Energy Tank",
               "showIcon": true
             }
@@ -1543,7 +1548,7 @@
               "type": "Unknown Item 1",
               "scanText": "Energy Tank",
               "hudmemoText": "Energy Tank Acquired!",
-              "currIncrease": 76,
+              "currIncrease": 0,
               "model": "Energy Tank",
               "showIcon": true
             }
@@ -1558,7 +1563,7 @@
               "type": "Unknown Item 1",
               "scanText": "Missile Expansion",
               "hudmemoText": "Missile Expansion Acquired!",
-              "currIncrease": 81,
+              "currIncrease": 0,
               "model": "Missile",
               "showIcon": true
             }
