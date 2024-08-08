@@ -6,6 +6,9 @@ from .RoomData import AreaData, DoorData, DoorLockType, PickupData, RoomData
 from ..Logic import can_bomb, can_boost, can_climb_tower_of_light, can_grapple, can_heat, can_ice_beam, can_missile, can_morph_ball, can_move_underwater, can_plasma_beam, can_power_beam, can_power_bomb, can_scan, can_space_jump, can_spider, can_super_missile, can_wave_beam, has_energy_tanks, has_power_bomb_count
 from ..data.Tricks import Tricks
 from .RoomNames import RoomName
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from .. import MetroidPrimeWorld
 
 
 def can_exit_ruined_shrine(state: CollectionState, player: int) -> bool:
@@ -17,7 +20,14 @@ def can_climb_sun_tower(state: CollectionState, player: int) -> bool:
 
 
 def can_flaahgra(state: CollectionState, player: int) -> bool:
-    return state.can_reach_region(RoomName.Sunchamber.value, player) and can_combat_flaaghra(state, player) and can_missile(state, player) and can_scan(state, player) and (can_bomb(state, player) or (can_power_bomb(state, player) and has_power_bomb_count(state, player, 4)))
+    world: 'MetroidPrimeWorld' = state.multiworld.worlds[player]
+    if world.starting_room_data.name == RoomName.Sunchamber_Lobby.value:
+        return True
+    return state.can_reach_region(RoomName.Sunchamber.value, player) \
+        and can_combat_flaaghra(state, player) \
+        and can_missile(state, player) and can_scan(state, player) \
+        and (can_bomb(state, player) or (can_power_bomb(state, player) and has_power_bomb_count(state, player, 4))) \
+
 
 
 class ChozoRuinsAreaData(AreaData):
