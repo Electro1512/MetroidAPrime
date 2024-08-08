@@ -3,7 +3,7 @@ from enum import Enum
 from typing import Callable, List, Optional
 import typing
 
-from BaseClasses import CollectionState, LocationProgressType, Region
+from BaseClasses import CollectionState, ItemClassification, LocationProgressType, Region
 from ..Items import ProgressiveUpgrade, SuitUpgrade
 from ..Logic import can_bomb, can_ice_beam, can_missile, can_plasma_beam, can_wave_beam
 from ..PrimeOptions import MetroidPrimeOptions
@@ -43,7 +43,12 @@ def get_config_item_model(world: 'MetroidPrimeWorld', location) -> str:
         else:
             return name
     else:
-        return "Nothing"
+        if loc.item.classification == ItemClassification.filler:
+            return "Zoomer"
+        elif loc.item.classification == ItemClassification.useful:
+            return "Nothing"
+        else:
+            return "Cog"
 
 
 class DoorLockType(Enum):

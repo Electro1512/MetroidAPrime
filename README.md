@@ -7,7 +7,7 @@ To get started or for troubleshooting, see [the Setup Guide](./docs/setup_en.md)
 
 
 ## What does randomization do to this game?
-In Metroid Prime, all suit upgrade and expansion items are shuffled into the multiworld, giving the game a greater variety in routing to complete the end goal. If randomized, the end goal can be scanned in the Temple Security station.
+In Metroid Prime, all suit upgrade and expansion items are shuffled into the multiworld, giving the game a greater variety in routing to complete the end goal.
 
 
 ## What is the goal of Metroid Prime when randomized?
@@ -16,13 +16,17 @@ The end goal of the randomizer game can consist of:
 - Defeating Ridley (configurable)
 - Defeating Metroid Prime (configurable)
 
+If randomized, the end goal can be scanned in the Temple Security station.
 
 ## Which items can be in another player's world?
 All suit upgrades and expansion items can be shuffled in other players' worlds, excluding Power Suit and Combat Visor.
 
 
 ## What does another world's item look like in Metroid Prime?
-Multiworld items appear as a Metroid model with a glitched texture.
+Multiworld items appear as one of the following:
+- Progression Item: Cog
+- Useful Item: Metroid Model with a random texture
+- Filler Item: Zoomer Model with a random texture
 
 
 ## What versions of the Metroid Prime are supported?
