@@ -14,7 +14,7 @@ class PhazonMinesAreaData(AreaData):
             doors={
                 0: DoorData(RoomName.Dynamo_Access, rule_func=lambda state, player: can_combat_mines(state, player) and can_space_jump(state, player) and can_power_bomb(state, player), defaultLock=DoorLockType.Ice, destinationArea=MetroidPrimeArea.Phazon_Mines),
                 1: DoorData(RoomName.Quarantine_Access_A, rule_func=lambda state, player: can_space_jump(state, player) and can_power_bomb(state, player), defaultLock=DoorLockType.Ice),
-                2: DoorData(RoomName.Save_Station_Mines_B, defaultLock=DoorLockType.Ice),
+                2: DoorData(RoomName.Save_Station_Mines_B, defaultLock=DoorLockType.Ice, rule_func=can_bomb),  # Door only unlocks after defeating drone and then completing the maze
             }, pickups=[PickupData('Phazon Mines: Central Dynamo', rule_func=can_bomb), ]),
         RoomName.Dynamo_Access: RoomData(
             area=MetroidPrimeArea.Phazon_Mines,
@@ -125,7 +125,7 @@ class PhazonMinesAreaData(AreaData):
         }),
         RoomName.Ore_Processing: RoomData(doors={
             0: DoorData(RoomName.Research_Access, defaultLock=DoorLockType.Ice, rule_func=lambda state, player: True),
-            1: DoorData(RoomName.Storage_Depot_B, defaultLock=DoorLockType.Ice, rule_func=lambda state, player: (can_spider(state, player) and can_bomb(state, player) and can_power_bomb(state, player)) or (state.can_reach(RoomName.Waste_Disposal.value, None, player) and can_grapple(state, player)), tricks = [Tricks.ore_processing_to_storage_depot_b_no_spider]),
+            1: DoorData(RoomName.Storage_Depot_B, defaultLock=DoorLockType.Ice, rule_func=lambda state, player: (can_spider(state, player) and can_bomb(state, player) and can_power_bomb(state, player)) or (state.can_reach(RoomName.Waste_Disposal.value, None, player) and can_grapple(state, player)), tricks=[Tricks.ore_processing_to_storage_depot_b_no_spider]),
             2: DoorData(RoomName.Waste_Disposal, defaultLock=DoorLockType.Ice, rule_func=lambda state, player: can_spider(state, player) and can_grapple(state, player) and can_bomb(state, player) and can_power_bomb(state, player) and can_space_jump(state, player), tricks=[Tricks.ore_processing_climb_no_grapple_spider]),
             3: DoorData(RoomName.Elevator_Access_A, defaultLock=DoorLockType.Ice, rule_func=lambda state, player: can_spider(state, player) and can_grapple(state, player) and can_bomb(state, player) and can_power_bomb(state, player) and can_space_jump(state, player), tricks=[Tricks.ore_processing_climb_no_grapple_spider]),
         }),
