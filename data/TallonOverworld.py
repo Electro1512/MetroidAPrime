@@ -1,5 +1,5 @@
 from BaseClasses import CollectionState
-from ..Logic import can_bomb, can_boost, can_charge_beam, can_grapple, can_missile, can_morph_ball, can_move_underwater, can_power_beam, can_power_bomb, can_space_jump, can_spider, can_super_missile, can_xray
+from ..Logic import can_bomb, can_boost, can_charge_beam, can_grapple, can_missile, can_morph_ball, can_move_underwater, can_power_beam, can_power_bomb, can_space_jump, can_spider, can_super_missile, can_xray, can_wave_beam, can_thermal
 from ..LogicCombat import can_combat_ghosts
 from .Tricks import Tricks
 from .AreaNames import MetroidPrimeArea
