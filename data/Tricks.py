@@ -6,6 +6,7 @@ from BaseClasses import CollectionState
 from ..LogicCombat import can_combat_ghosts
 from ..Logic import can_bomb, can_boost, can_charge_beam, can_defeat_sheegoth, can_grapple, can_heat, can_ice_beam, can_infinite_speed, can_melt_ice, can_missile, can_morph_ball, can_move_underwater, can_plasma_beam, can_power_beam, can_power_bomb, can_scan, can_space_jump, can_spider, can_super_missile, can_thermal, can_wave_beam, can_xray, has_energy_tanks
 from ..data.RoomNames import RoomName
+from ..Items import SuitUpgrade
 
 
 class TrickDifficulty(Enum):
@@ -63,6 +64,7 @@ class Tricks:
     great_tree_hall_skip_bars: TrickInfo = TrickInfo("Great Tree Hall Skip Bars", "Skip the bars in Great Tree Hall using Morph Ball Bombs", TrickDifficulty.Hard, can_bomb)
 
     great_tree_chamber_no_xray: TrickInfo = TrickInfo("Great Tree Chamber No XRay", "Reach the Great Tree Chamber without XRay Visor", TrickDifficulty.Easy, can_space_jump)
+    great_tree_chamber_nsj_no_xray: TrickInfo = TrickInfo("Great Tree Chamber no Space Jump no XRay", "Reach the Great Tree Chamber without Space Jump or XRay Visor", TrickDifficulty.Medium, can_bomb)
 
     great_tree_hall_no_spider_ball: TrickInfo = TrickInfo("Great Tree Hall No Spider Ball", "Reach the door to the Life Grove Tunnel without Spider Ball", TrickDifficulty.Easy, can_space_jump)
 
@@ -70,6 +72,7 @@ class Tricks:
   # Chozo
     vault_via_plaza: TrickInfo = TrickInfo("Vault Via Plaza", "Reach the Vault via the Main Plaza using an L Jump", TrickDifficulty.Easy, can_space_jump)
     plaza_half_pipe_no_boost: TrickInfo = TrickInfo("Plaza Half Pipe No Boost", "Reach the Half Pipe in the Main Plaza using a slope jump", TrickDifficulty.Easy, can_space_jump)
+    plaza_half_pipe_morph_only: TrickInfo = TrickInfo("Plaza Half Pipe with only Morph Ball", "Roll down the half pipe from the opposite side to gain enough speed to reach the ledge", TrickDifficulty.Hard, can_morph_ball)
     plaza_grapple_ledge_r_jump: TrickInfo = TrickInfo("Plaza Grapple Ledge R Jump", "Reach the Grapple Ledge in the Main Plaza using an R Jump", TrickDifficulty.Easy, can_space_jump)
     plaza_grapple_ledge_tree_grapple: TrickInfo = TrickInfo("Plaza Grapple Ledge Tree Grapple", "Reach the Grapple Ledge in the Main Plaza by L jumping to the tree and then grappling to the ledge", TrickDifficulty.Easy, can_grapple)
 
@@ -78,6 +81,7 @@ class Tricks:
     ruined_shrine_scan_dash_escape: TrickInfo = TrickInfo("Ruined Shrine Scan Dash Escape", "Escape the Ruined Shrine by scan dashing  off the branches", TrickDifficulty.Easy, can_scan)
 
     tower_of_light_climb_without_missiles: TrickInfo = TrickInfo("Tower of Light Climb Without Missiles", "Tower of Light can be climbed by dashing to the outside edges, skipping the 40 missile requirement.", TrickDifficulty.Easy, rule_func=lambda state, player: can_space_jump(state, player) and can_scan(state, player))
+    tower_of_light_climb_nsj: TrickInfo = TrickInfo("Tower of Light Climb No Space Jump", "Climb Tower of Light through a series of double bomb jumps", TrickDifficulty.Hard, rule_func=lambda state, player: (can_missile and state.has(SuitUpgrade.Missile_Expansion.value, player, 8)) and can_bomb)
     tower_chamber_no_gravity: TrickInfo = TrickInfo("Tower Chamber No Gravity", "Reach the Tower Chamber without Gravity Suit by using a slope jump", TrickDifficulty.Easy, can_space_jump)
     tower_chamber_no_space_jump: TrickInfo = TrickInfo("Tower Chamber No Gravity", "Reach the Tower Chamber without Space Jump by using a double bomb jump", TrickDifficulty.Easy, rule_func=lambda state, player: can_bomb(state, player) and can_move_underwater(state, player))
 
@@ -87,11 +91,12 @@ class Tricks:
     magma_pool_debris_jump: TrickInfo = TrickInfo("Cross Magma Pool With SJB and Gravity", "Use the space jump boots to jump off debris to cross the pool", TrickDifficulty.Easy, lambda state, player: can_space_jump(state, player) and can_move_underwater(state, player) and has_energy_tanks(state, player, 2))
     magma_pool_item_debris_jump: TrickInfo = TrickInfo("Magma Pool Debris Jump", "Use the space jump boots to jump off debris to cross the pool", TrickDifficulty.Easy, lambda state, player: can_space_jump(state, player) and can_move_underwater(state, player) and has_energy_tanks(state, player, 2) and can_power_bomb(state, player))
     magma_pool_item_scan_dash: TrickInfo = TrickInfo("Magma Pool Item No Grapple", "Use the scan dash and a power bomb to get the item in the magma pool", TrickDifficulty.Medium, lambda state, player: can_space_jump(state, player) and can_scan(state, player) and can_power_bomb(state, player))
-    magma_pool_item_infinite_speed: TrickInfo = TrickInfo("Magma Pool Item Infinite Speed", "Use infinite speed to get the item in the magma pool", TrickDifficulty.Medium, can_infinite_speed)
+    magma_pool_item_infinite_speed: TrickInfo = TrickInfo("Magma Pool Item Infinite Speed", "Use infinite speed to get the item in the magma pool. Stay in morph ball and navigate to a save station or elevator afterward", TrickDifficulty.Medium, rule_func=lambda state, player: can_infinite_speed(state, player) and can_bomb(state, player))
 
     arboretum_scan_gate_skip: TrickInfo = TrickInfo("Arboretum Scan Gate Skip", "Skip the gate in the Arboretum by double bomb jumping", TrickDifficulty.Easy, can_bomb)
 
     gathering_hall_without_space_jump: TrickInfo = TrickInfo("Gathering Hall Without Space Jump", "Double bomb jump from the side platform to the grate where the item is", TrickDifficulty.Easy, can_bomb)
+    gathering_hall_without_bombs: TrickInfo = TrickInfo("Gathering Hall Without Bombs", "Reach the platform using Space Jump, then break the grate using Power Bombs", TrickDifficulty.Easy, rule_func=lambda state, player: can_space_jump(state, player) and can_power_bomb(state, player))
 
     watery_hall_no_gravity: TrickInfo = TrickInfo("Watery Hall No Gravity", "Reach the Watery Hall Underwater Item without Gravity Suit by using a slope jump", TrickDifficulty.Easy, can_space_jump)
     watery_hall_no_gravity_no_space_jump: TrickInfo = TrickInfo("Watery Hall No Gravity No Space Jump", "Reach the Watery Hall Underwater Item without Gravity Suit by using a slope jump", TrickDifficulty.Medium, lambda state, player: can_move_underwater(state, player) == False or can_bomb(state, player))
@@ -100,8 +105,8 @@ class Tricks:
     furnace_spider_track_hbj = TrickInfo("Furnace Spider Track HBJ", "Reach the first track in furnace with a hyper bomb jump", TrickDifficulty.Medium, lambda state, player: can_bomb(state, player) and can_spider(state, player))
     furnace_spider_track_sj_bombs = TrickInfo("Furnace Spider Track SJ Bombs", "You can climb the Furnace and its spider tracks using Space Jump, reach the top of the room, then bomb jump across to the item.", TrickDifficulty.Medium, lambda state, player: can_bomb(state, player) and can_space_jump(state, player))
 
-    crossway_item_fewer_reqs = TrickInfo("Crossway Item Fewer Reqs", "Reach the crossway item using only SJB and Morph Ball", TrickDifficulty.Easy, lambda state, player: can_bomb(state, player) and can_space_jump(state, player))
-    crossway_hpbj = TrickInfo("Crossway Half pip bomb jump", "Reach the hall of the elders using a half pipe bomb jump", TrickDifficulty.Hard, lambda state, player: can_bomb(state, player))
+    crossway_item_fewer_reqs = TrickInfo("Crossway Item Fewer Reqs", "Reach the crossway item using only SJB and Morph Ball by jumping along the pegs on the wall.", TrickDifficulty.Easy, lambda state, player: can_morph_ball(state, player) and can_space_jump(state, player))
+    crossway_hpbj = TrickInfo("Crossway Half pipe bomb jump", "Reach Hall of the Elders using a half pipe bomb jump", TrickDifficulty.Hard, lambda state, player: can_bomb(state, player))
 
     hall_of_elders_bomb_slots_no_spider = TrickInfo("Hall of Elders No Spider Ball", "Reach the bomb slots without the spider ball by jumping on a peg to activate the top bomb slot", TrickDifficulty.Easy, lambda state, player: can_space_jump(state, player) and can_bomb(state, player) and can_power_beam(state, player) and can_combat_ghosts(state, player))
     hall_of_elders_reflecting_pool_no_spider = TrickInfo("Hall of Elders Reflecting Pool No Spider Ball", "Reach the reflecting pool without the spider ball", TrickDifficulty.Easy, lambda state, player: can_space_jump(state, player) and can_wave_beam(state, player) and can_bomb(state, player) and can_power_beam(state, player) and can_combat_ghosts(state, player))
@@ -111,6 +116,7 @@ class Tricks:
     hall_of_elders_item_no_spider = TrickInfo("Hall of Elders Item No Spider Ball", "Reach the bomb slots without the spider ball by jumping on a peg to activate the top bomb slot", TrickDifficulty.Easy, lambda state, player: can_bomb(state, player) and can_ice_beam(state, player) and can_space_jump(state, player) and can_power_beam(state, player) and can_combat_ghosts(state, player))
 
     reflecting_pool_space_jump_climb = TrickInfo("Reflecting Pool Space Jump Climb", "Climb the reflecting pool by space jumping off a stone toad", TrickDifficulty.Easy, can_space_jump)
+    reflecting_pool_nsj_climb: TrickInfo = TrickInfo("Reflecting Pool No Space Jump Climb", "Perform an HBJ, UBJ, or BSJ off a stone toad", TrickDifficulty.Hard, can_bomb)
 
   # Magmoor
 
@@ -122,10 +128,10 @@ class Tricks:
     triclops_pit_item_no_sj_no_xray = TrickInfo("Triclops Pit Item No SJ No XRay", "Reach the Triclops Pit item without Space Jump or XRay Visor, assumes has charge or missiles", TrickDifficulty.Medium, lambda state, player: can_missile(state, player) or can_charge_beam(state, player))
     triclops_pit_item_no_missiles = TrickInfo("Triclops Pit Item No Missiles", "Reach the Triclops Pit item without Missiles, and instead use Charge Beam", TrickDifficulty.Easy, lambda state, player: can_space_jump(state, player) and can_xray(state, player) and can_charge_beam(state, player))
 
-    warrior_shrine_no_boost = TrickInfo("Warrior Shrine No Boost", "Reach the Warrior by using an R Jump or Scan Dash", TrickDifficulty.Easy, can_space_jump)
+    warrior_shrine_no_boost = TrickInfo("Warrior Shrine No Boost", "Reach the Warrior Shrine by using an R Jump or Scan Dash", TrickDifficulty.Easy, can_space_jump)
     warrior_shrine_minimal_reqs = TrickInfo("Warrior Shrine Minimal Reqs", "Reach the Warrior Shrine without the Boost Ball or space jump", TrickDifficulty.Medium, can_scan)
 
-    shore_tunnel_escape_no_sj = TrickInfo("Shore Tunnel Escape No SJ", "Escape the Shore Tunnel without Space Jump by using a slope jump or double bomb jump", TrickDifficulty.Medium, lambda state, player: can_power_bomb(state, player))
+    shore_tunnel_escape_no_sj = TrickInfo("Shore Tunnel Escape No SJ", "Escape the Shore Tunnel without Space Jump by using a double bomb jump", TrickDifficulty.Medium, can_bomb)
 
     fiery_shores_morphball_track_sj = TrickInfo("Fiery Shores Morphball Track SJ", "Reach the Morph Ball Track in Fiery Shores using the space jump boots", TrickDifficulty.Easy, can_space_jump)
 
@@ -140,7 +146,7 @@ class Tricks:
   # Phendrana
 
     ice_temple_no_sj = TrickInfo("Ice Temple No SJ", "You can reach these locations by doing a hyper bomb jump in Phendrana Shorelines to reach the temple, and double bomb jumping to climb the temple itself", TrickDifficulty.Medium, rule_func=can_bomb)
-    ice_temple_to_chapel_no_sj = TrickInfo("Ice Temple to chapel No SJ", "You can reach these locations by doing a hyper bomb jump in Phendrana Shorelines to reach the temple, and double bomb jumping to climb the temple itself", TrickDifficulty.Medium, rule_func=lambda state, player: can_bomb(state, player) and can_missile(pp))
+    ice_temple_to_chapel_no_sj = TrickInfo("Ice Temple to chapel No SJ", "You can reach these locations by doing a hyper bomb jump in Phendrana Shorelines to reach the temple, and double bomb jumping to climb the temple itself", TrickDifficulty.Medium, rule_func=lambda state, player: can_bomb(state, player) and can_missile(state, player))
     shorelines_spider_track_no_sj = TrickInfo("Shorelines Spider Track No SJ", "You can reach the item in the Phendrana Shorelines Spider Track without Space Jump by using a hyper bomb jump", TrickDifficulty.Medium, lambda state, player: can_bomb(state, player) and can_spider(state, player) and can_super_missile(state, player) and can_scan(state, player))
 
     ice_temple_item_no_sj = TrickInfo("Ice Temple Item No SJ", "Reach the Ice Temple item without Space Jump by double bomb jumps", TrickDifficulty.Medium, lambda state, player: can_bomb(state, player) and can_melt_ice(state, player))
@@ -175,8 +181,11 @@ class Tricks:
     ore_processing_to_storage_depot_b_no_spider = TrickInfo("Ore Processing Climb to Storage No Grapple Spider", "You can stand on various collision in the room, such as on the rotating column, to climb to the top of Ore Processing.", TrickDifficulty.Easy, lambda state, player: can_bomb(state, player) and can_power_bomb(state, player) and can_space_jump(state, player))
     ore_processing_climb_no_grapple_spider = TrickInfo("Ore Processing Climb No Grapple Spider", "You can stand on various collision in the room, such as on the rotating column, to climb to the top of Ore Processing.", TrickDifficulty.Easy, lambda state, player: can_bomb(state, player) and can_power_bomb(state, player) and can_space_jump(state, player))
 
-    mines_climb_shafts_no_spider = TrickInfo("Mines Climb Shafts No Spider Ball", "Elevator Access A and Research Access can be climbed without Spider Ball.", TrickDifficulty.Hard, lambda state, player: can_space_jump(state, player))
+    mines_climb_shafts_no_spider = TrickInfo("Mines Climb Shafts No Spider Ball", "Elevator Access A and Research Access can be climbed without Spider Ball.", TrickDifficulty.Hard, lambda state, player: can_space_jump(state, player) and can_wave_beam(state, player)) # Wave Beam is needed to kill the Bombu
+
     elite_research_spinner_no_boost = TrickInfo("Elite Research laser No Boost", "You can get the laser turret to spin by wedging the morph ball in the spinner, bombing out, and then spinning the morph ball while in the laser before it locks you in.", TrickDifficulty.Easy, lambda state, player: can_bomb(state, player) and can_scan(state, player) and can_space_jump(state, player))
+    elite_research_backwards_wall_boost: TrickInfo = TrickInfo("Elite Research Infinite Boost", "Enter Elite Research from the top door and use Boost Ball to get through the backwards wall", TrickDifficulty.Easy, can_boost)
+
     ventilation_shaft_hpbj = TrickInfo("Ventilation Shaft HPBJ", "It's possible to return to Elite Control by performing a half pipe bomb jump to reach the Elite Control door.", TrickDifficulty.Hard, lambda state, player: can_bomb(state, player) and can_space_jump(state, player))
 
     metroid_quarantine_a_no_spider = TrickInfo("Metroid Quarantine A No Spider Ball", "Using R jumps, slope jumps, and dashes, you can traverse the entirety of lower Phazon Mines without Spider Ball and Grapple Beam.", TrickDifficulty.Medium, lambda state, player: can_scan(state, player) and can_xray(state, player) and can_space_jump(state, player))

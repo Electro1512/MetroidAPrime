@@ -126,7 +126,7 @@ class TallonOverworldAreaData(AreaData):
         RoomName.Great_Tree_Hall: RoomData(
             doors={
                 0: DoorData(RoomName.Hydro_Access_Tunnel, rule_func=lambda state, player: False, tricks=[Tricks.great_tree_hall_skip_bars], exclude_from_rando=True),  # Can't reach from other doors unless you use a trick until after you go through frigate
-                1: DoorData(RoomName.Great_Tree_Chamber, rule_func=lambda state, player: can_xray(state, player) and can_space_jump(state, player), tricks=[Tricks.great_tree_chamber_no_xray]),
+                1: DoorData(RoomName.Great_Tree_Chamber, rule_func=lambda state, player: can_xray(state, player) and can_space_jump(state, player), tricks=[Tricks.great_tree_chamber_no_xray, Tricks.great_tree_chamber_nsj_no_xray]),
                 2: DoorData(RoomName.Transport_Tunnel_D, defaultLock=DoorLockType.Ice, destinationArea=MetroidPrimeArea.Tallon_Overworld),  # Can't reach from other doors unless you use a trick until after you go through frigate
                 3: DoorData(RoomName.Life_Grove_Tunnel, defaultLock=DoorLockType.Ice,
                             rule_func=can_spider,
