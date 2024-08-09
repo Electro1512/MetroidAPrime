@@ -140,6 +140,7 @@ class Tricks:
   # Phendrana
 
     ice_temple_no_sj = TrickInfo("Ice Temple No SJ", "You can reach these locations by doing a hyper bomb jump in Phendrana Shorelines to reach the temple, and double bomb jumping to climb the temple itself", TrickDifficulty.Medium, rule_func=can_bomb)
+    ice_temple_to_chapel_no_sj = TrickInfo("Ice Temple to chapel No SJ", "You can reach these locations by doing a hyper bomb jump in Phendrana Shorelines to reach the temple, and double bomb jumping to climb the temple itself", TrickDifficulty.Medium, rule_func=lambda state, player: can_bomb(state, player) and can_missile(state, player))
     shorelines_spider_track_no_sj = TrickInfo("Shorelines Spider Track No SJ", "You can reach the item in the Phendrana Shorelines Spider Track without Space Jump by using a hyper bomb jump", TrickDifficulty.Medium, lambda state, player: can_bomb(state, player) and can_spider(state, player) and can_super_missile(state, player) and can_scan(state, player))
 
     ice_temple_item_no_sj = TrickInfo("Ice Temple Item No SJ", "Reach the Ice Temple item without Space Jump by double bomb jumps", TrickDifficulty.Medium, lambda state, player: can_bomb(state, player) and can_melt_ice(state, player))
