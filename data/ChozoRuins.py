@@ -3,7 +3,7 @@ from ..LogicCombat import can_combat_flaaghra, can_combat_ghosts
 from ..Items import SuitUpgrade
 from ..data.AreaNames import MetroidPrimeArea
 from .RoomData import AreaData, DoorData, DoorLockType, PickupData, RoomData
-from ..Logic import can_bomb, can_boost, can_climb_tower_of_light, can_grapple, can_heat, can_ice_beam, can_missile, can_morph_ball, can_move_underwater, can_plasma_beam, can_power_beam, can_power_bomb, can_scan, can_space_jump, can_spider, can_super_missile, can_wave_beam, has_energy_tanks, has_power_bomb_count
+from ..Logic import can_bomb, can_boost, can_grapple, can_heat, can_ice_beam, can_missile, can_morph_ball, can_move_underwater, can_plasma_beam, can_power_beam, can_power_bomb, can_scan, can_space_jump, can_spider, can_super_missile, can_wave_beam, has_energy_tanks, has_power_bomb_count
 from ..data.Tricks import Tricks
 from .RoomNames import RoomName
 from typing import TYPE_CHECKING
@@ -28,6 +28,9 @@ def can_flaahgra(state: CollectionState, player: int) -> bool:
         and can_missile(state, player) and can_scan(state, player) \
         and (can_bomb(state, player) or (can_power_bomb(state, player) and has_power_bomb_count(state, player, 4))) \
 
+
+def can_climb_tower_of_light(state: CollectionState, player: int) -> bool:
+    return can_missile(state, player) and state.has(SuitUpgrade.Missile_Expansion.value, player, 8) and can_space_jump(state, player)
 
 
 class ChozoRuinsAreaData(AreaData):
