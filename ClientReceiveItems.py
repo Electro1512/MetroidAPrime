@@ -134,7 +134,7 @@ async def handle_receive_power_bombs(ctx: 'MetroidPrimeContext', current_items: 
         current_capacity = pb_item.current_capacity
         current_amount = pb_item.current_amount
         new_capacity = 0
-        main_pb_capacity = 4
+        first_pb_capacity = 4
 
         pb_sender = None
         has_main_pb = False
@@ -147,7 +147,7 @@ async def handle_receive_power_bombs(ctx: 'MetroidPrimeContext', current_items: 
 
             if item_data.name == "Power Bomb (Main)":
                 has_main_pb = True
-                new_capacity += main_pb_capacity
+                new_capacity += first_pb_capacity
 
                 # If they just got the main pb, and they have no power bombs, then notify
                 if current_capacity == 0:
@@ -158,9 +158,13 @@ async def handle_receive_power_bombs(ctx: 'MetroidPrimeContext', current_items: 
                 pb_sender = network_item.player
                 new_capacity += amount_per_expansion
 
-        # If playing with main_power_bomb and they haven't collected yet, then don't give any missiles
+        # If playing with main_power_bomb and they haven't collected yet, then don't give any power bombs
         if ctx.slot_data["main_power_bomb"] and not has_main_pb:
             return
+
+        # First PB expansion is worth 4 power bombs
+        if not ctx.slot_data["main_power_bomb"] and new_capacity > 0:
+            new_capacity += first_pb_capacity - 1
 
         diff = new_capacity - current_capacity
         new_amount = min(current_amount + diff, new_capacity)
