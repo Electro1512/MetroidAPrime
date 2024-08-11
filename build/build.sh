@@ -178,16 +178,32 @@ function main() {
         local project="$(realpath ${CWD}/..)"
         local bundle="${bundle_base}-${tag}"
         local destdir="${target_path}/${bundle}"
+        local local_install=false
 
-        for platform in "${SUPPORTED_PLATFORMS[@]}"; do
-            local requirements_file="${project}/requirements.txt"
-            if [ "${platform}" = "manylinux_2_28_x86_64" ]; then
-                requirements_file="${project}/requirements-linux.txt"
-            fi
-            get_deps "${platform}" ${requirements_file} "${destdir}/lib"
-            # copy deps to project folder as well for local dev
-            cp -r "${destdir}/lib" "${project}"
+        # Loop through all the arguments
+        for arg in "$@"; do
+          if [ "$arg" == "--local" ]; then
+            local_install=true
+            break
+          fi
         done
+
+      if [ "$local_install" == true ]; then
+        # Copy project/lib to destdir
+        mkdir -p "${destdir}"
+        cp -r "${project}/lib" "${destdir}"
+        echo "=> Local install, copying ${project}/lib to ${destdir}"
+      else
+          for platform in "${SUPPORTED_PLATFORMS[@]}"; do
+              local requirements_file="${project}/requirements.txt"
+              if [ "${platform}" = "manylinux_2_28_x86_64" ]; then
+                  requirements_file="${project}/requirements-linux.txt"
+              fi
+              get_deps "${platform}" ${requirements_file} "${destdir}/lib"
+              # copy deps to project folder as well for local dev
+              cp -r "${destdir}/lib" "${project}"
+          done
+      fi
 
         mk_apworld "${project}" "${destdir}"
         cp_data "${project}" "${destdir}"

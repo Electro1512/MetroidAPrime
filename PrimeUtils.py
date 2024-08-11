@@ -25,27 +25,18 @@ def setup_lib_path():
         target_dir_name = f"{temp_dir_name}_{version}"
         temp_base_dir = tempfile.gettempdir()
         target_dir_path = os.path.join(temp_base_dir, target_dir_name)
+        create_new_temp_dir = True
 
-        # Check if the exact version directory exists
+        # Validate existing directory
         if os.path.exists(target_dir_path):
-            print(f"Using existing directory for version {version}: {target_dir_path}")
-        else:
-            # Remove other version directories
-            try:
-                for dir in glob.glob(os.path.join(temp_base_dir, f"{temp_dir_name}_*")):
-                    if dir != target_dir_path:
-                        shutil.rmtree(dir)
-                        print(f"Removed old version directory: {dir}")
-            except Exception as e:
-                print(f"Failed to remove old version directories, make sure you don't have any archipelago clients/generators already running if you want these removed: {e}")
+            print(f"Validating existing directory for version {version}: {target_dir_path}")
+            valid = _validate_temp_dir(target_dir_path)
+            create_new_temp_dir = not valid
 
-            # Extract files to the new version directory
-            os.makedirs(target_dir_path, exist_ok=True)
-            with zipfile.ZipFile(zip_file_path, 'r') as zip_ref:
-                for member in zip_ref.namelist():
-                    if member.startswith(lib_folder_path):
-                        zip_ref.extract(member, target_dir_path)
-                print(f"Library files extracted to: {target_dir_path}")
+        # Create a new temp directory if the existing one is invalid or doesn't exist
+        if create_new_temp_dir:
+            print(f"Creating new temp directory for version {version}: {target_dir_path}")
+            _create_temp_dir(temp_base_dir, temp_dir_name, target_dir_path, zip_file_path, lib_folder_path)
 
         # Add the library path to sys.path
         temp_lib_path = os.path.join(target_dir_path, lib_folder_path)
@@ -60,6 +51,44 @@ def setup_lib_path():
             sys.path.append(lib_path)
         print(f"lib folder added to path: {lib_path}")
         return lib_path
+
+
+def _validate_temp_dir(target_dir_path) -> bool:
+    # Validate the directory by checking if it has the required files
+    try:
+        required_files = [
+            os.path.join("metroidprime", "lib", "py_randomprime", "version.py"),
+            os.path.join("metroidprime", "lib", "ppc_asm", "version.py"),
+            os.path.join("metroidprime", "lib", "dolphin_memory_engine", "version.py")
+        ]
+        for file in required_files:
+            file_path = os.path.join(target_dir_path, file)
+            if not os.path.exists(file_path):
+                print(f"Required file missing: {file_path}")
+                return False
+        return True
+    except Exception as e:
+        print(f"Failed to validate temp directory: {e}")
+        return False
+
+
+def _create_temp_dir(temp_base_dir, temp_dir_name, target_dir_path, zip_file_path, lib_folder_path):
+    # Remove other version directories
+    try:
+        for dir in glob.glob(os.path.join(temp_base_dir, f"{temp_dir_name}_*")):
+            if dir != target_dir_path:
+                shutil.rmtree(dir)
+                print(f"Removed old version directory: {dir}")
+    except Exception as e:
+        print(f"Failed to remove old version directories, make sure you don't have any archipelago clients/generators already running if you want these removed: {e}")
+
+    # Extract files to the new version directory
+    os.makedirs(target_dir_path, exist_ok=True)
+    with zipfile.ZipFile(zip_file_path, 'r') as zip_ref:
+        for member in zip_ref.namelist():
+            if member.startswith(lib_folder_path):
+                zip_ref.extract(member, target_dir_path)
+        print(f"Library files extracted to: {target_dir_path}")
 
 
 def get_apworld_version():
