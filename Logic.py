@@ -112,14 +112,6 @@ def can_scan(state: CollectionState, player: int) -> bool:
     return state.has(SuitUpgrade.Scan_Visor.value, player)
 
 
-def can_crashed_frigate(state: CollectionState, player: int) -> bool:
-    return can_bomb(state, player) and can_space_jump(state, player) and can_wave_beam(state, player) and can_move_underwater(state, player) and can_thermal(state, player)
-
-
-def can_crashed_frigate_backwards(state: CollectionState, player: int) -> bool:
-    return can_space_jump(state, player) and can_move_underwater(state, player) and can_bomb(state, player)
-
-
 def can_heat(state: CollectionState, player: int) -> bool:
     return state.has(SuitUpgrade.Varia_Suit.value, player)
 
@@ -134,10 +126,6 @@ def has_energy_tanks(state: CollectionState, player: int, count: int) -> bool:
 
 def can_infinite_speed(state: CollectionState, player: int) -> bool:
     return can_boost(state, player) and can_bomb(state, player)
-
-
-def can_climb_tower_of_light(state: CollectionState, player: int) -> bool:
-    return can_missile(state, player) and state.has(SuitUpgrade.Missile_Expansion.value, player, 8) and can_space_jump(state, player)
 
 
 def can_defeat_sheegoth(state: CollectionState, player: int) -> bool:

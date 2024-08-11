@@ -3,7 +3,7 @@ from ..LogicCombat import can_combat_flaaghra, can_combat_ghosts
 from ..Items import SuitUpgrade
 from ..data.AreaNames import MetroidPrimeArea
 from .RoomData import AreaData, DoorData, DoorLockType, PickupData, RoomData
-from ..Logic import can_bomb, can_boost, can_climb_tower_of_light, can_grapple, can_heat, can_ice_beam, can_missile, can_morph_ball, can_move_underwater, can_plasma_beam, can_power_beam, can_power_bomb, can_scan, can_space_jump, can_spider, can_super_missile, can_wave_beam, has_energy_tanks, has_power_bomb_count
+from ..Logic import can_bomb, can_boost, can_grapple, can_heat, can_ice_beam, can_missile, can_morph_ball, can_move_underwater, can_plasma_beam, can_power_beam, can_power_bomb, can_scan, can_space_jump, can_spider, can_super_missile, can_wave_beam, has_energy_tanks, has_power_bomb_count
 from ..data.Tricks import Tricks
 from .RoomNames import RoomName
 from typing import TYPE_CHECKING
@@ -28,6 +28,9 @@ def can_flaahgra(state: CollectionState, player: int) -> bool:
         and can_missile(state, player) and can_scan(state, player) \
         and (can_bomb(state, player) or (can_power_bomb(state, player) and has_power_bomb_count(state, player, 4))) \
 
+
+def can_climb_tower_of_light(state: CollectionState, player: int) -> bool:
+    return can_missile(state, player) and state.has(SuitUpgrade.Missile_Expansion.value, player, 8) and can_space_jump(state, player)
 
 
 class ChozoRuinsAreaData(AreaData):
@@ -124,7 +127,7 @@ class ChozoRuinsAreaData(AreaData):
             1: DoorData(RoomName.Gathering_Hall_Access, defaultLock=DoorLockType.Missile),
             2: DoorData(RoomName.Save_Station_2, defaultLock=DoorLockType.Missile),
             3: DoorData(RoomName.East_Atrium, rule_func=lambda state, player: can_morph_ball(state, player) or can_space_jump(state, player)),
-        }, pickups=[PickupData('Chozo Ruins: Gathering Hall', rule_func=lambda state, player: can_space_jump(state, player) and (can_bomb(state, player) or can_power_bomb(state, player)), tricks=[Tricks.gathering_hall_without_space_jump])]),
+        }, pickups=[PickupData('Chozo Ruins: Gathering Hall', rule_func=lambda state, player: can_space_jump(state, player) and (can_bomb(state, player) or can_power_bomb(state, player)), tricks=[Tricks.gathering_hall_without_space_jump, Tricks.gathering_hall_without_bombs])]),
         RoomName.Hall_of_the_Elders: RoomData(
             doors={
                 0: DoorData(RoomName.Reflecting_Pool_Access, rule_func=lambda state, player: can_combat_ghosts(state, player) and can_bomb(state, player) and can_spider(state, player) and can_wave_beam(state, player) and can_space_jump(state, player), tricks=[Tricks.hall_of_elders_reflecting_pool_no_spider, Tricks.hall_of_elders_reflecting_pool_no_wave_beam]),
@@ -154,7 +157,7 @@ class ChozoRuinsAreaData(AreaData):
             4: DoorData(RoomName.Plaza_Access, rule_func=lambda state, player: False, tricks=[Tricks.vault_via_plaza]),
             5: DoorData(RoomName.Piston_Tunnel, rule_func=lambda state, player: False),  # Piston tunnel to training chamber is blocked by a chozo head that needs to be destroyed from the other side
         },
-            pickups=[PickupData('Chozo Ruins: Main Plaza - Half-Pipe', rule_func=can_boost, tricks=[Tricks.plaza_half_pipe_no_boost]),
+            pickups=[PickupData('Chozo Ruins: Main Plaza - Half-Pipe', rule_func=can_boost, tricks=[Tricks.plaza_half_pipe_no_boost, Tricks.plaza_half_pipe_morph_only]),
                      PickupData('Chozo Ruins: Main Plaza - Grapple Ledge', rule_func=lambda state, player: state.can_reach_region(RoomName.Piston_Tunnel.value, player) and can_grapple(state, player), tricks=[Tricks.plaza_grapple_ledge_r_jump]),
                      PickupData('Chozo Ruins: Main Plaza - Tree', rule_func=can_super_missile, tricks=[]),
                      PickupData('Chozo Ruins: Main Plaza - Locked Door', rule_func=lambda state, player: state.can_reach_region(RoomName.Plaza_Access.value, player) and can_morph_ball(state, player), tricks=[Tricks.vault_via_plaza]), ]),  # If we do room rando, the logic for this will need to be adjusted
@@ -188,10 +191,10 @@ class ChozoRuinsAreaData(AreaData):
             1: DoorData(RoomName.Hall_of_the_Elders),
         }),
         RoomName.Reflecting_Pool: RoomData(doors={
-            0: DoorData(RoomName.Save_Station_3, defaultLock=DoorLockType.Missile, rule_func=lambda state, player: can_boost(state, player) and can_bomb(state, player), tricks=[Tricks.reflecting_pool_space_jump_climb]),
-            1: DoorData(RoomName.Transport_Access_South, defaultLock=DoorLockType.Ice, rule_func=lambda state, player: can_boost(state, player) and can_bomb(state, player), tricks=[Tricks.reflecting_pool_space_jump_climb]),
+            0: DoorData(RoomName.Save_Station_3, defaultLock=DoorLockType.Missile, rule_func=lambda state, player: can_boost(state, player) and can_bomb(state, player), tricks=[Tricks.reflecting_pool_space_jump_climb, Tricks.reflecting_pool_nsj_climb]),
+            1: DoorData(RoomName.Transport_Access_South, defaultLock=DoorLockType.Ice, rule_func=lambda state, player: can_boost(state, player) and can_bomb(state, player), tricks=[Tricks.reflecting_pool_space_jump_climb, Tricks.reflecting_pool_nsj_climb]),
             2: DoorData(RoomName.Reflecting_Pool_Access),
-            3: DoorData(RoomName.Antechamber, defaultLock=DoorLockType.Missile, rule_func=lambda state, player: can_boost(state, player) and can_bomb(state, player), tricks=[Tricks.reflecting_pool_space_jump_climb]),
+            3: DoorData(RoomName.Antechamber, defaultLock=DoorLockType.Missile, rule_func=lambda state, player: can_boost(state, player) and can_bomb(state, player), tricks=[Tricks.reflecting_pool_space_jump_climb, Tricks.reflecting_pool_nsj_climb]),
         }),
         RoomName.Ruined_Fountain_Access: RoomData(doors={
             0: DoorData(RoomName.Main_Plaza, rule_func=can_morph_ball),
@@ -293,7 +296,7 @@ class ChozoRuinsAreaData(AreaData):
             pickups=[
                 PickupData('Chozo Ruins: Tower of Light',
                            rule_func=can_climb_tower_of_light,
-                           tricks=[Tricks.tower_of_light_climb_without_missiles])]),
+                           tricks=[Tricks.tower_of_light_climb_without_missiles, Tricks.tower_of_light_climb_nsj])]),
         RoomName.Training_Chamber_Access: RoomData(
             doors={
                 0: DoorData(RoomName.Magma_Pool, defaultLock=DoorLockType.Wave),

@@ -1,10 +1,18 @@
-
-from ..Logic import can_bomb, can_boost, can_charge_beam, can_crashed_frigate, can_crashed_frigate_backwards, can_grapple, can_missile, can_morph_ball, can_move_underwater, can_power_beam, can_power_bomb, can_space_jump, can_spider, can_super_missile, can_xray
+from BaseClasses import CollectionState
+from ..Logic import can_bomb, can_boost, can_charge_beam, can_grapple, can_missile, can_morph_ball, can_move_underwater, can_power_beam, can_power_bomb, can_space_jump, can_spider, can_super_missile, can_xray, can_wave_beam, can_thermal
 from ..LogicCombat import can_combat_ghosts
 from .Tricks import Tricks
 from .AreaNames import MetroidPrimeArea
 from .RoomData import AreaData, DoorData, DoorLockType, PickupData, RoomData
 from .RoomNames import RoomName
+
+
+def can_crashed_frigate(state: CollectionState, player: int) -> bool:
+    return can_bomb(state, player) and can_space_jump(state, player) and can_wave_beam(state, player) and can_move_underwater(state, player) and can_thermal(state, player)
+
+
+def can_crashed_frigate_backwards(state: CollectionState, player: int) -> bool:
+    return can_space_jump(state, player) and can_move_underwater(state, player) and can_bomb(state, player)
 
 
 class TallonOverworldAreaData(AreaData):
@@ -118,7 +126,7 @@ class TallonOverworldAreaData(AreaData):
         RoomName.Great_Tree_Hall: RoomData(
             doors={
                 0: DoorData(RoomName.Hydro_Access_Tunnel, rule_func=lambda state, player: False, tricks=[Tricks.great_tree_hall_skip_bars], exclude_from_rando=True),  # Can't reach from other doors unless you use a trick until after you go through frigate
-                1: DoorData(RoomName.Great_Tree_Chamber, rule_func=lambda state, player: can_xray(state, player) and can_space_jump(state, player), tricks=[Tricks.great_tree_chamber_no_xray]),
+                1: DoorData(RoomName.Great_Tree_Chamber, rule_func=lambda state, player: can_xray(state, player) and can_space_jump(state, player), tricks=[Tricks.great_tree_chamber_no_xray, Tricks.great_tree_chamber_nsj_no_xray]),
                 2: DoorData(RoomName.Transport_Tunnel_D, defaultLock=DoorLockType.Ice, destinationArea=MetroidPrimeArea.Tallon_Overworld),  # Can't reach from other doors unless you use a trick until after you go through frigate
                 3: DoorData(RoomName.Life_Grove_Tunnel, defaultLock=DoorLockType.Ice,
                             rule_func=can_spider,

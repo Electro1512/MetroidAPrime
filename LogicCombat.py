@@ -50,7 +50,7 @@ def can_combat_thardus(state: CollectionState, player: int) -> bool:
     elif difficulty == CombatLogicDifficulty.NORMAL.value:
         return has_energy_tanks(state, player, 3) and (can_charge_beam(state, player) and (can_plasma_beam(state, player) or can_power_beam(state, player)))
     elif difficulty == CombatLogicDifficulty.MINIMAL.value:
-        return has_energy_tanks(state, player, 1) and can_plasma_beam(state, player) or can_power_beam(state, player) or can_wave_beam(state, player)
+        return can_plasma_beam(state, player) or can_power_beam(state, player) or can_wave_beam(state, player)
 
 
 def can_combat_omega_pirate(state: CollectionState, player: int) -> bool:
@@ -77,4 +77,4 @@ def can_combat_ghosts(state: CollectionState, player: int) -> bool:
     elif difficulty == CombatLogicDifficulty.NORMAL.value:
         return can_charge_beam(state, player, SuitUpgrade.Power_Beam) and can_power_beam(state, player) and can_xray(state, player, True)
     elif difficulty == CombatLogicDifficulty.MINIMAL.value:
-        return can_charge_beam(state, player, SuitUpgrade.Power_Beam) and (can_power_beam(state, player) or can_xray(state, player, True))
+        return can_power_beam(state, player)
