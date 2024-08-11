@@ -161,7 +161,9 @@ class PhazonMinesAreaData(AreaData):
         }),
         RoomName.Research_Access: RoomData(doors={
             0: DoorData(RoomName.Ore_Processing, defaultLock=DoorLockType.Ice),
-            1: DoorData(RoomName.Elite_Research, defaultLock=DoorLockType.Ice, rule_func=can_spider, tricks=[Tricks.mines_climb_shafts_no_spider]),
+            1: DoorData(RoomName.Elite_Research, defaultLock=DoorLockType.Ice,
+                        # Can't go backwards through the wall without tricks, checks if player can reach the room from the other side
+                        rule_func=lambda state, player: can_spider(state, player) and state.can_reach(RoomName.Research_Access.value, None, player), tricks=[Tricks.elite_research_backwards_wall_boost_no_spider, Tricks.elite_research_backwards_wall_boost]),
         }),
         RoomName.Save_Station_Mines_A: RoomData(doors={
             0: DoorData(RoomName.Main_Quarry, defaultLock=DoorLockType.Wave),
