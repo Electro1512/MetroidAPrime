@@ -1,18 +1,39 @@
 from dataclasses import dataclass
+from enum import Enum
 
-from .data.RoomData import DoorLockType
+from .Items import SuitUpgrade
+
 from .data.AreaNames import MetroidPrimeArea
-from typing import TYPE_CHECKING, Dict, Optional
+from typing import TYPE_CHECKING, Dict
 
 if TYPE_CHECKING:
     from . import MetroidPrimeWorld
 
+
+class DoorLockType(Enum):
+    Blue = "Blue"
+    Wave = "Wave Beam"
+    Ice = "Ice Beam"
+    Plasma = "Plasma Beam"
+    Missile = "Missile"
+    Power_Beam = "Power Beam"
+    Bomb = "Bomb"
+    None_ = "None"
+
+
 COLOR_LOCK_TYPES = [
-    # DoorLockType.Blue,
+    # DoorLockType.Blue, # this requires some extra logic
     DoorLockType.Wave,
     DoorLockType.Ice,
     DoorLockType.Plasma,
 ]
+
+BEAM_TO_LOCK_MAPPING = {
+    SuitUpgrade.Power_Beam: DoorLockType.Power_Beam,
+    SuitUpgrade.Wave_Beam: DoorLockType.Wave,
+    SuitUpgrade.Ice_Beam: DoorLockType.Ice,
+    SuitUpgrade.Plasma_Beam: DoorLockType.Plasma,
+}
 
 
 @dataclass

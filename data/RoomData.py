@@ -4,11 +4,12 @@ from typing import Callable, Dict, List, Optional
 import typing
 
 from BaseClasses import CollectionState, ItemClassification, LocationProgressType, Region
+from ..DoorRando import DoorLockType
 from ..Items import ProgressiveUpgrade, SuitUpgrade
 from ..Logic import can_bomb, can_ice_beam, can_missile, can_plasma_beam, can_wave_beam
 from ..PrimeOptions import MetroidPrimeOptions
 from ..data.AreaNames import MetroidPrimeArea
-from ..Locations import METROID_PRIME_LOCATION_BASE, MetroidPrimeLocation, every_location
+from ..Locations import MetroidPrimeLocation, every_location
 from .RoomNames import RoomName
 from .Tricks import TrickInfo
 
@@ -49,16 +50,6 @@ def get_config_item_model(world: 'MetroidPrimeWorld', location) -> str:
             return "Nothing"
         else:
             return "Cog"
-
-
-class DoorLockType(Enum):
-    Blue = "Blue"
-    Wave = "Wave Beam"
-    Ice = "Ice Beam"
-    Plasma = "Plasma Beam"
-    Missile = "Missile"
-    Bomb = "Bomb"
-    None_ = "None"
 
 
 @dataclass

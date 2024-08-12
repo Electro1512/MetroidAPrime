@@ -1,7 +1,7 @@
 import typing
 
 from Fill import distribute_items_restrictive
-from ..data.RoomData import DoorLockType
+from ..DoorRando import DoorLockType
 
 from ..config import make_config
 from worlds.metroidprime.data.AreaNames import MetroidPrimeArea
@@ -89,3 +89,33 @@ class TestRegionalDoorRando(MetroidPrimeTestBase):
         distribute_items_restrictive(world.multiworld)
         config = make_config(world)
         self.assertNotEqual(config["levelData"]["Chozo Ruins"]["rooms"]["Ruined Shrine"]["doors"]["0"]["shieldType"], DoorLockType.Wave.value)
+
+
+class TestDoorRandoWithDifferentStartRoomNonRequiredBeam(MetroidPrimeTestBase):
+    options = {
+        "door_color_randomization": "global",
+        "starting_room_name": RoomName.Tower_Chamber.value,
+    }
+
+    def test_starting_beam_is_not_wave(self):
+        self.world.generate_early()
+        world: 'MetroidPrimeWorld' = self.world
+        distribute_items_restrictive(world.multiworld)
+        config = make_config(world)
+        self.assertTrue(config["gameConfig"]["startingItems"]["wave"] == 0)
+        self.assertTrue(config["gameConfig"]["startingItems"]["ice"] == 1)
+        self.assertEqual(config["gameConfig"]["startingBeam"], "Ice", "Starting beam should be Ice")
+
+class TestDoorRandoWithDifferentStartRoomWithRequiredBeam(MetroidPrimeTestBase):
+    options = {
+        "door_color_randomization": "global",
+        "starting_room_name": RoomName.Save_Station_B.value,
+    }
+
+    def test_starting_beam_is_not_wave(self):
+        self.world.generate_early()
+        world: 'MetroidPrimeWorld' = self.world
+        distribute_items_restrictive(world.multiworld)
+        config = make_config(world)
+        self.assertTrue(config["gameConfig"]["startingItems"]["plasma"] == 1)
+        self.assertEqual(config["gameConfig"]["startingBeam"], "Plasma", "Starting beam should be Plasm")

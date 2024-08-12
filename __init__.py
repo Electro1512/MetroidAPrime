@@ -111,14 +111,13 @@ class MetroidPrimeWorld(World):
             self.init_tracker_options()
             skip_randomization_mapping = True
 
-        init_starting_room_data(self)
-        info(f"{self.player_name}'s Metroid Prime starting room data: {self.starting_room_data.name}")
-        if self.options.elevator_randomization.value and not skip_randomization_mapping:
-            self.elevator_mapping = get_random_elevator_mapping(self)
-            info(f"{self.multiworld.get_player_name(self.player)}'s Metroid Prime elevator_mapping data: {self.elevator_mapping.__str__()}")
-
         if self.options.door_color_randomization != "none" and not skip_randomization_mapping:
             self.options.door_color_mapping.value = get_world_door_mapping(self)
+
+        init_starting_room_data(self)
+        if self.options.elevator_randomization.value and not skip_randomization_mapping:
+            self.elevator_mapping = get_random_elevator_mapping(self)
+
         self.options.elevator_mapping.value = self.elevator_mapping
 
     def create_regions(self) -> None:
