@@ -8,7 +8,7 @@ if TYPE_CHECKING:
     from . import MetroidPrimeWorld
 
 COLOR_LOCK_TYPES = [
-    DoorLockType.Blue,
+    # DoorLockType.Blue,
     DoorLockType.Wave,
     DoorLockType.Ice,
     DoorLockType.Plasma,

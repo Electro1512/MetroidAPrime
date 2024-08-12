@@ -16,6 +16,7 @@ def _can_climb_observatory_via_puzzle(state, player):
 
 
 class PhendranaDriftsAreaData(AreaData):
+    area_name = MetroidPrimeArea.Phendrana_Drifts.value
     rooms = {
         RoomName.Aether_Lab_Entryway: RoomData(doors={
             0: DoorData(RoomName.East_Tower, defaultLock=DoorLockType.Wave),

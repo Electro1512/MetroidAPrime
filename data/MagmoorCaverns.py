@@ -7,6 +7,7 @@ from .RoomNames import RoomName
 
 
 class MagmoorCavernsAreaData(AreaData):
+    area_name = MetroidPrimeArea.Magmoor_Caverns.value
     rooms = {
         RoomName.Burning_Trail: RoomData(doors={
             0: DoorData(RoomName.Lake_Tunnel, destinationArea=MetroidPrimeArea.Magmoor_Caverns),

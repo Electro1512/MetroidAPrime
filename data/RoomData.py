@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Callable, List, Optional
+from typing import Callable, Dict, List, Optional
 import typing
 
 from BaseClasses import CollectionState, ItemClassification, LocationProgressType, Region
@@ -105,12 +105,26 @@ class RoomData:
     pickups: list[PickupData] = field(default_factory=list)
     area: Optional[MetroidPrimeArea] = None  # Used for rooms that have duplicate names in different areas
 
-    def get_config_data(self, world: 'MetroidPrimeWorld'):
-        if len(self.pickups) == 0:
-            return {}
-        return {
+    def get_config_data(self, world: 'MetroidPrimeWorld', parent_area: str):
+        config = {
             "pickups": [pickup.get_config_data(world) for pickup in self.pickups if not pickup.exclude_from_config],
         }
+
+        if world.options.door_color_randomization != "none":
+            config["doors"] = self.get_door_config_data(world, parent_area)
+
+        return config
+
+    def get_door_config_data(self, world: 'MetroidPrimeWorld', parent_area: str):
+        door_data = {}
+        color_mapping: Dict[str, str] = world.options.door_color_mapping[parent_area].type_mapping
+        for door_id, door in self.doors.items():
+            if door.exclude_from_rando or door.defaultLock.value not in color_mapping:
+                continue
+            door_data[f"{door_id}"] = {
+                "shieldType": door.lock.value if door.lock is not None else door.defaultLock.value,
+            }
+        return door_data
 
     def get_region_name(self, name: str):
         """Returns the name of the region, used primarily for rooms with duplicate names"""
@@ -121,10 +135,11 @@ class RoomData:
 
 class AreaData:
     rooms: dict[RoomName, RoomData]
+    area_name: str
 
     def get_config_data(self, world: 'MetroidPrimeWorld'):
         return {
-            name.value: data.get_config_data(world) for name, data in self.rooms.items()
+            name.value: data.get_config_data(world, self.area_name) for name, data in self.rooms.items()
         }
 
     def create_world_region(self, world: 'MetroidPrimeWorld'):
@@ -148,12 +163,15 @@ class AreaData:
                 location = world.multiworld.get_location(pickup.name, world.player)
                 location.access_rule = generate_access_rule(pickup)
 
-        # Once each region is created, connect the doors
+        # Once each region is created, connect the doors and assign their locks
+        color_mapping: Dict[str, str] = world.options.door_color_mapping[self.area_name].type_mapping if world.options.door_color_randomization != "none" else {}
         for room_name, room_data in self.rooms.items():
             name = room_data.get_region_name(room_name.value)
             region = world.multiworld.get_region(name, world.player)
             for door_id, door_data in room_data.doors.items():
                 destination = door_data.destination or door_data.defaultDestination
+                if world.options.door_color_randomization != "none" and door_data.exclude_from_rando is False and door_data.defaultLock.value in color_mapping:
+                    door_data.lock = DoorLockType(color_mapping[door_data.defaultLock.value])
                 if destination is None:
                     continue
 

@@ -203,7 +203,7 @@ class ElevatorMapping(OptionDict):
 
 
 class DoorColorRandomization(Choice):
-    """Door colors will be randomized.
+    """Determine if/how door colors are randomized.
        None: No door colors will be randomized
        Global: All door colors of a given color will be randomized to another color
        Regional: Each Region will have its door colors randomized to another color

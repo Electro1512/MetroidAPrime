@@ -29,11 +29,13 @@ def can_flaahgra(state: CollectionState, player: int) -> bool:
         and (can_bomb(state, player) or (can_power_bomb(state, player) and has_power_bomb_count(state, player, 4))) \
 
 
+
 def can_climb_tower_of_light(state: CollectionState, player: int) -> bool:
     return can_missile(state, player) and state.has(SuitUpgrade.Missile_Expansion.value, player, 8) and can_space_jump(state, player)
 
 
 class ChozoRuinsAreaData(AreaData):
+    area_name = MetroidPrimeArea.Chozo_Ruins.value
     rooms = {
         RoomName.Antechamber: RoomData(doors={0: DoorData(RoomName.Reflecting_Pool, defaultLock=DoorLockType.Ice, rule_func=can_missile)}, pickups=[PickupData('Chozo Ruins: Antechamber', rule_func=can_ice_beam), ]),  # Requires Ice beam to exit
         RoomName.Arboretum_Access: RoomData(doors={

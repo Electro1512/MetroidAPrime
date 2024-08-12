@@ -86,7 +86,7 @@ class MetroidPrimeWorld(World):
     starting_room_data: Optional[StartRoomData] = None
     prefilled_item_map: Dict[str, str] = {}  # Dict of location name to item name
     elevator_mapping: Dict[str, Dict[str, str]] = default_elevator_mappings
-    door_color_mapping: Optional[Dict[MetroidPrimeArea, AreaDoorTypeMapping]]
+    door_color_mapping: Optional[Dict[MetroidPrimeArea, AreaDoorTypeMapping]] = None
 
     def get_filler_item_name(self) -> str:
         return SuitUpgrade.Missile_Expansion.value
@@ -117,8 +117,8 @@ class MetroidPrimeWorld(World):
             self.elevator_mapping = get_random_elevator_mapping(self)
             info(f"{self.multiworld.get_player_name(self.player)}'s Metroid Prime elevator_mapping data: {self.elevator_mapping.__str__()}")
 
-        if self.options.door_color_randomization != "none":
-            self.options.door_color_mapping = get_world_door_mapping(self)
+        if self.options.door_color_randomization != "none" and not skip_randomization_mapping:
+            self.options.door_color_mapping.value = get_world_door_mapping(self)
         self.options.elevator_mapping.value = self.elevator_mapping
 
     def create_regions(self) -> None:

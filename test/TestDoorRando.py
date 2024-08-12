@@ -1,6 +1,7 @@
 import typing
 
-from ....Fill import distribute_items_restrictive
+from Fill import distribute_items_restrictive
+from ..data.RoomData import DoorLockType
 
 from ..config import make_config
 from worlds.metroidprime.data.AreaNames import MetroidPrimeArea
@@ -14,20 +15,77 @@ if typing.TYPE_CHECKING:
 
 
 class TestNoDoorRando(MetroidPrimeTestBase):
-    run_default_tests = False
     options = {
         "door_color_randomization": "none",
-        "starting_room": 'normal'
     }
 
-    def test_all_door_types_are_not_randomized_and_start_beam_is_power(self):
+    def test_all_door_types_are_not_randomized(self):
         self.world.generate_early()
         world: 'MetroidPrimeWorld' = self.world
-        world.options.door_color_mapping = None
+        self.assertEqual(world.options.door_color_mapping.value, {})
 
     def test_starting_beam_is_power(self):
         self.world.generate_early()
         world: 'MetroidPrimeWorld' = self.world
         distribute_items_restrictive(world.multiworld)
         config = make_config(world)
-        assert config["gameConfig"]["startingItems"]["powerBeam"] == 1
+        self.assertTrue(config["gameConfig"]["startingItems"]["powerBeam"] == 1)
+        self.assertEqual(config["gameConfig"]["startingBeam"], "Power", "Starting beam should be Power")
+
+
+class TestGlobalDoorRando(MetroidPrimeTestBase):
+    options = {
+        "door_color_randomization": "global",
+    }
+
+    def test_all_door_types_are_randomized_globally(self):
+        self.world.generate_early()
+        world: 'MetroidPrimeWorld' = self.world
+        first_mapping = None
+        self.assertTrue(len(world.options.door_color_mapping) > 0, "Door color mapping should not be empty")
+        for area in MetroidPrimeArea:
+            if world.options.door_color_mapping[area.value].type_mapping is None:
+                continue
+            if first_mapping is None:
+                first_mapping = world.options.door_color_mapping[area.value].type_mapping
+                for original, new in first_mapping.items():
+                    self.assertNotEqual(original, new, "Door color should be randomized")
+            else:
+                self.assertEqual(first_mapping, world.options.door_color_mapping[area.value].type_mapping, "Door color should be the same for all areas")
+
+    def test_door_colors_are_updated_in_config(self):
+        self.world.generate_early()
+        world: 'MetroidPrimeWorld' = self.world
+        distribute_items_restrictive(world.multiworld)
+        config = make_config(world)
+        self.assertNotEqual(config["levelData"]["Chozo Ruins"]["rooms"]["Ruined Shrine"]["doors"]["0"]["shieldType"], DoorLockType.Wave.value)
+
+
+class TestRegionalDoorRando(MetroidPrimeTestBase):
+    options = {
+        "door_color_randomization": "regional",
+    }
+
+    def test_all_door_types_are_randomized_across_a_region(self):
+        self.world.generate_early()
+        world: 'MetroidPrimeWorld' = self.world
+        first_mapping = None
+        self.assertTrue(len(world.options.door_color_mapping) > 0, "Door color mapping should not be empty")
+        same_areas = []
+        for area in MetroidPrimeArea:
+            if world.options.door_color_mapping[area.value].type_mapping is None or area == MetroidPrimeArea.Impact_Crater:
+                continue
+            if first_mapping is None:
+                first_mapping = world.options.door_color_mapping[area.value].type_mapping
+                for original, new in first_mapping.items():
+                    self.assertNotEqual(original, new, "Door color should be randomized")
+            elif first_mapping == world.options.door_color_mapping[area.value].type_mapping:
+                same_areas.append(area)
+        self.assertTrue(len(same_areas) < 2, "Door color should be different for each area generally")
+
+    def test_door_colors_are_updated_in_config(self):
+        self.world.generate_early()
+        world: 'MetroidPrimeWorld' = self.world
+        distribute_items_restrictive(world.multiworld)
+        config = make_config(world)
+        self.assertNotEqual(config["levelData"]["Chozo Ruins"]["rooms"]["Ruined Shrine"]["doors"]["0"]["shieldType"], DoorLockType.Wave.value)

@@ -8,6 +8,7 @@ from ..Logic import can_backwards_lower_mines, can_bomb, can_boost, can_grapple,
 
 
 class PhazonMinesAreaData(AreaData):
+    area_name = MetroidPrimeArea.Phazon_Mines.value
     rooms = {
         RoomName.Central_Dynamo: RoomData(
             area=MetroidPrimeArea.Phazon_Mines,

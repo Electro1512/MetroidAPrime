@@ -16,6 +16,7 @@ def can_crashed_frigate_backwards(state: CollectionState, player: int) -> bool:
 
 
 class TallonOverworldAreaData(AreaData):
+    area_name = MetroidPrimeArea.Tallon_Overworld.value
     rooms = {
 
         RoomName.Alcove: RoomData(
