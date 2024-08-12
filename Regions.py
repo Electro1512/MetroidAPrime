@@ -30,7 +30,7 @@ def create_regions(world: 'MetroidPrimeWorld', final_boss_selection):
     mission_complete = Region("Mission Complete", world.player, world.multiworld)
     world.multiworld.regions.append(mission_complete)
 
-    starting_room = world.multiworld.get_region(world.starting_room_data.name, world.player)
+    starting_room = world.multiworld.get_region(world.options.starting_room_name.value, world.player)
     menu.connect(starting_room, "Starting Room")
 
     def get_region_lambda():

@@ -160,6 +160,7 @@ class StartingRoom(Choice):
        safe: Start in rooms that will not require a significant combat challenge to progress from
        buckle_up: Start in rooms that will pose a significant challenge to players with no energy tanks or suit upgrades. Fun for the aspiring masochist (less fun for their friends in BK).
     """
+    display_name = "Starting Room Randomization"
     option_normal = StartRoomDifficulty.Normal.value
     option_safe = StartRoomDifficulty.Safe.value
     option_buckle_up = StartRoomDifficulty.Buckle_Up.value
