@@ -1,4 +1,6 @@
 # Setup local dependencies if running in an apworld
+from .data.AreaNames import MetroidPrimeArea
+from .DoorRando import AreaDoorTypeMapping, get_world_door_mapping
 from .PrimeUtils import setup_lib_path
 setup_lib_path()  # NOTE: This MUST be called before importing any other metroidprime modules (other than PrimeUtils)
 
@@ -84,6 +86,7 @@ class MetroidPrimeWorld(World):
     starting_room_data: Optional[StartRoomData] = None
     prefilled_item_map: Dict[str, str] = {}  # Dict of location name to item name
     elevator_mapping: Dict[str, Dict[str, str]] = default_elevator_mappings
+    door_color_mapping: Optional[Dict[MetroidPrimeArea, AreaDoorTypeMapping]]
 
     def get_filler_item_name(self) -> str:
         return SuitUpgrade.Missile_Expansion.value
@@ -103,16 +106,19 @@ class MetroidPrimeWorld(World):
                         option.value = value
 
     def generate_early(self) -> None:
-        skip_elevator_mapping = False
+        skip_randomization_mapping = False
         if hasattr(self.multiworld, "re_gen_passthrough"):
             self.init_tracker_options()
-            skip_elevator_mapping = True
+            skip_randomization_mapping = True
 
         init_starting_room_data(self)
         info(f"{self.player_name}'s Metroid Prime starting room data: {self.starting_room_data.name}")
-        if self.options.elevator_randomization.value and not skip_elevator_mapping:
+        if self.options.elevator_randomization.value and not skip_randomization_mapping:
             self.elevator_mapping = get_random_elevator_mapping(self)
             info(f"{self.multiworld.get_player_name(self.player)}'s Metroid Prime elevator_mapping data: {self.elevator_mapping.__str__()}")
+
+        if self.options.door_color_randomization != "none":
+            self.options.door_color_mapping = get_world_door_mapping(self)
         self.options.elevator_mapping.value = self.elevator_mapping
 
     def create_regions(self) -> None:

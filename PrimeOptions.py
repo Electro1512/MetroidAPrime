@@ -202,6 +202,24 @@ class ElevatorMapping(OptionDict):
     default = {}
 
 
+class DoorColorRandomization(Choice):
+    """Door colors will be randomized.
+       None: No door colors will be randomized
+       Global: All door colors of a given color will be randomized to another color
+       Regional: Each Region will have its door colors randomized to another color
+"""
+    display_name = "Door Color Randomization"
+    option_none = "None"
+    option_global = "Global"
+    option_regional = "Regional"
+    default = option_none
+
+class DoorColorMapping(OptionDict):
+    """Which door colors go to which colors, only visible for spoiler"""
+    visibility = Visibility.spoiler
+    default = {}
+
+
 class PreScanElevators(Toggle):
     """Pre scans the elevators in the game, allowing for faster transitions between regions. Makes for more interesting gameply if disabled when the scan visor is shuffled."""
     display_name = "Pre Scan Elevators"
@@ -316,6 +334,8 @@ class MetroidPrimeOptions(PerGameCommonOptions):
     pre_scan_elevators: PreScanElevators
     elevator_randomization: ElevatorRandomization
     elevator_mapping: ElevatorMapping
+    door_color_randomization: DoorColorRandomization
+    door_color_mapping: DoorColorMapping
     starting_room: StartingRoom
     starting_room_name: StartingRoomName
     disable_starting_room_bk_prevention: DisableStartingRoomBKPrevention
