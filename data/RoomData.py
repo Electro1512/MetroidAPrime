@@ -125,8 +125,9 @@ class RoomData:
 
 
 class AreaData:
-    rooms: dict[RoomName, RoomData]
-    area_name: str
+    def __init__(self, area_name: str):
+        self.rooms: dict[RoomName, RoomData] = {}
+        self.area_name: str = area_name
 
     def get_config_data(self, world: 'MetroidPrimeWorld'):
         return {
