@@ -8,10 +8,8 @@ from .RoomNames import RoomName
 
 
 class MagmoorCavernsAreaData(AreaData):
-    area_name = MetroidPrimeArea.Magmoor_Caverns.value
-
-    def __init__(self, area_name: str):
-        super().__init__(area_name)
+    def __init__(self ):
+        super().__init__(MetroidPrimeArea.Magmoor_Caverns.value)
         self.rooms = {
             RoomName.Burning_Trail: RoomData(doors={
                 0: DoorData(RoomName.Lake_Tunnel, destinationArea=MetroidPrimeArea.Magmoor_Caverns),

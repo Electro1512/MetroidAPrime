@@ -36,10 +36,8 @@ def can_climb_tower_of_light(state: CollectionState, player: int) -> bool:
 
 
 class ChozoRuinsAreaData(AreaData):
-    area_name = MetroidPrimeArea.Chozo_Ruins.value
-
-    def __init__(self, area_name: str):
-        super().__init__(area_name)
+    def __init__(self):
+        super().__init__(MetroidPrimeArea.Chozo_Ruins.value)
         self.rooms = {
             RoomName.Antechamber: RoomData(doors={0: DoorData(RoomName.Reflecting_Pool, defaultLock=DoorLockType.Ice, rule_func=can_missile)}, pickups=[PickupData('Chozo Ruins: Antechamber', rule_func=can_ice_beam), ]),  # Requires Ice beam to exit
             RoomName.Arboretum_Access: RoomData(doors={

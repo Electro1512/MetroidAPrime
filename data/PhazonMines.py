@@ -9,10 +9,8 @@ from ..Logic import can_backwards_lower_mines, can_bomb, can_boost, can_grapple,
 
 
 class PhazonMinesAreaData(AreaData):
-    area_name = MetroidPrimeArea.Phazon_Mines.value
-
-    def __init__(self, area_name: str):
-        super().__init__(area_name)
+    def __init__(self):
+        super().__init__(MetroidPrimeArea.Phazon_Mines.value)
         self.rooms = {
             RoomName.Central_Dynamo: RoomData(
                 area=MetroidPrimeArea.Phazon_Mines,

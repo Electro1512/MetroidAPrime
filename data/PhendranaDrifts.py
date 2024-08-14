@@ -17,9 +17,8 @@ def _can_climb_observatory_via_puzzle(state, player):
 
 
 class PhendranaDriftsAreaData(AreaData):
-    area_name = MetroidPrimeArea.Phendrana_Drifts.value
-    def __init__(self, area_name: str):
-        super().__init__(area_name)
+    def __init__(self):
+        super().__init__(MetroidPrimeArea.Phendrana_Drifts.value)
         self.rooms = {
             RoomName.Aether_Lab_Entryway: RoomData(doors={
                 0: DoorData(RoomName.East_Tower, defaultLock=DoorLockType.Wave),
@@ -49,8 +48,8 @@ class PhendranaDriftsAreaData(AreaData):
                 0: DoorData(RoomName.East_Tower, defaultLock=DoorLockType.Wave, rule_func=can_combat_labs),
                 1: DoorData(RoomName.West_Tower, defaultLock=DoorLockType.Wave, rule_func=can_combat_labs),
             }, pickups=[PickupData('Phendrana Drifts: Control Tower',
-                                  rule_func=lambda state, player: can_combat_labs(state, player) and can_space_jump(state, player) and can_missile(state, player) and can_melt_ice(state, player) and can_bomb(state, player),
-                                  tricks=[Tricks.control_tower_item_no_plasma]), ]),
+                                   rule_func=lambda state, player: can_combat_labs(state, player) and can_space_jump(state, player) and can_missile(state, player) and can_melt_ice(state, player) and can_bomb(state, player),
+                                   tricks=[Tricks.control_tower_item_no_plasma]), ]),
             RoomName.Courtyard_Entryway: RoomData(doors={
                 0: DoorData(RoomName.Ruined_Courtyard),
                 1: DoorData(RoomName.Ice_Ruins_West),

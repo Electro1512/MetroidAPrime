@@ -270,28 +270,28 @@ def make_config(world: 'MetroidPrimeWorld'):
     return config
 
 
-def make_level_data(world):
+def make_level_data(world: 'MetroidPrimeWorld') -> Dict[str, Any]:
     transport_data = get_transport_data(world)
     level_data = {
         MetroidPrimeArea.Tallon_Overworld.value: {
             "transports": transport_data[MetroidPrimeArea.Tallon_Overworld.value],
-            "rooms": TallonOverworldAreaData().get_config_data(world)
+            "rooms": world.game_region_data[MetroidPrimeArea.Tallon_Overworld].get_config_data(world)
         },
         MetroidPrimeArea.Chozo_Ruins.value: {
             "transports": transport_data[MetroidPrimeArea.Chozo_Ruins.value],
-            "rooms": ChozoRuinsAreaData().get_config_data(world)
+            "rooms": world.game_region_data[MetroidPrimeArea.Chozo_Ruins].get_config_data(world)
         },
         MetroidPrimeArea.Magmoor_Caverns.value: {
             "transports": transport_data[MetroidPrimeArea.Magmoor_Caverns.value],
-            "rooms": MagmoorCavernsAreaData().get_config_data(world)
+            "rooms": world.game_region_data[MetroidPrimeArea.Magmoor_Caverns].get_config_data(world)
         },
         MetroidPrimeArea.Phendrana_Drifts.value: {
             "transports": transport_data[MetroidPrimeArea.Phendrana_Drifts.value],
-            "rooms": PhendranaDriftsAreaData().get_config_data(world)
+            "rooms": world.game_region_data[MetroidPrimeArea.Phendrana_Drifts].get_config_data(world)
         },
         MetroidPrimeArea.Phazon_Mines.value: {
             "transports": transport_data[MetroidPrimeArea.Phazon_Mines.value],
-            "rooms": PhazonMinesAreaData().get_config_data(world)
+            "rooms": world.game_region_data[MetroidPrimeArea.Phazon_Mines].get_config_data(world)
 
         }
     }

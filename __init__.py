@@ -1,4 +1,10 @@
 # Setup local dependencies if running in an apworld
+from .data.PhazonMines import PhazonMinesAreaData
+from .data.PhendranaDrifts import PhendranaDriftsAreaData
+from .data.MagmoorCaverns import MagmoorCavernsAreaData
+from .data.ChozoRuins import ChozoRuinsAreaData
+from .data.TallonOverworld import TallonOverworldAreaData
+from .data.RoomData import AreaData
 from .data.AreaNames import MetroidPrimeArea
 from .DoorRando import AreaDoorTypeMapping, get_world_door_mapping
 from .PrimeUtils import setup_lib_path
@@ -87,6 +93,13 @@ class MetroidPrimeWorld(World):
     prefilled_item_map: Dict[str, str] = {}  # Dict of location name to item name
     elevator_mapping: Dict[str, Dict[str, str]] = default_elevator_mappings
     door_color_mapping: Optional[Dict[MetroidPrimeArea, AreaDoorTypeMapping]] = None
+    game_region_data: Dict[MetroidPrimeArea, AreaData] = {
+        MetroidPrimeArea.Tallon_Overworld: TallonOverworldAreaData(),
+        MetroidPrimeArea.Chozo_Ruins: ChozoRuinsAreaData(),
+        MetroidPrimeArea.Magmoor_Caverns: MagmoorCavernsAreaData(),
+        MetroidPrimeArea.Phendrana_Drifts: PhendranaDriftsAreaData(),
+        MetroidPrimeArea.Phazon_Mines: PhazonMinesAreaData()
+    }
 
     def get_filler_item_name(self) -> str:
         return SuitUpgrade.Missile_Expansion.value

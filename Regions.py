@@ -18,11 +18,8 @@ def create_regions(world: 'MetroidPrimeWorld', final_boss_selection):
     menu = Region("Menu", world.player, world.multiworld)
     world.multiworld.regions.append(menu)
 
-    TallonOverworldAreaData().create_world_region(world)
-    ChozoRuinsAreaData().create_world_region(world)
-    MagmoorCavernsAreaData().create_world_region(world)
-    PhendranaDriftsAreaData().create_world_region(world)
-    PhazonMinesAreaData().create_world_region(world)
+    for area_data in world.game_region_data.values():
+      area_data.create_world_region(world)
 
     impact_crater = Region("Impact Crater", world.player, world.multiworld)
     world.multiworld.regions.append(impact_crater)
