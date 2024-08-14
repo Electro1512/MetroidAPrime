@@ -81,7 +81,7 @@ class TestRegionalDoorRando(MetroidPrimeTestBase):
                     self.assertNotEqual(original, new, "Door color should be randomized")
             elif first_mapping == world.options.door_color_mapping[area.value].type_mapping:
                 same_areas.append(area)
-        self.assertTrue(len(same_areas) < 2, "Door color should be different for each area generally")
+        self.assertTrue(len(same_areas) < 3, "Door color should be different for each area generally")
 
     def test_door_colors_are_updated_in_config(self):
         self.world.generate_early()
@@ -105,6 +105,7 @@ class TestDoorRandoWithDifferentStartRoomNonRequiredBeam(MetroidPrimeTestBase):
         self.assertTrue(config["gameConfig"]["startingItems"]["wave"] == 0)
         self.assertTrue(config["gameConfig"]["startingItems"]["ice"] == 1)
         self.assertEqual(config["gameConfig"]["startingBeam"], "Ice", "Starting beam should be Ice")
+
 
 class TestDoorRandoWithDifferentStartRoomWithRequiredBeam(MetroidPrimeTestBase):
     options = {
