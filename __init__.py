@@ -21,7 +21,7 @@ from .PrimeOptions import MetroidPrimeOptions, VariaSuitColorOverride
 from .Items import PROGRESSIVE_ITEM_MAPPING, MetroidPrimeItem, ProgressiveUpgrade, SuitUpgrade, get_item_for_options, get_progressive_upgrade_for_item, suit_upgrade_table, artifact_table, item_table
 from .data.StartRoomData import StartRoomData, init_starting_room_data
 from .Container import MetroidPrimeContainer
-from BaseClasses import Item, Tutorial, ItemClassification
+from BaseClasses import Item, MultiWorld, Tutorial, ItemClassification
 import typing
 import os
 from typing import Any, Dict, List, Optional
@@ -93,13 +93,17 @@ class MetroidPrimeWorld(World):
     prefilled_item_map: Dict[str, str] = {}  # Dict of location name to item name
     elevator_mapping: Dict[str, Dict[str, str]] = default_elevator_mappings
     door_color_mapping: Optional[Dict[MetroidPrimeArea, AreaDoorTypeMapping]] = None
-    game_region_data: Dict[MetroidPrimeArea, AreaData] = {
-        MetroidPrimeArea.Tallon_Overworld: TallonOverworldAreaData(),
-        MetroidPrimeArea.Chozo_Ruins: ChozoRuinsAreaData(),
-        MetroidPrimeArea.Magmoor_Caverns: MagmoorCavernsAreaData(),
-        MetroidPrimeArea.Phendrana_Drifts: PhendranaDriftsAreaData(),
-        MetroidPrimeArea.Phazon_Mines: PhazonMinesAreaData()
-    }
+    game_region_data: Dict[MetroidPrimeArea, AreaData]
+
+    def __init__(self, multiworld: MultiWorld, player: int):
+        super().__init__(multiworld, player)
+        self.game_region_data = {
+            MetroidPrimeArea.Tallon_Overworld: TallonOverworldAreaData(),
+            MetroidPrimeArea.Chozo_Ruins: ChozoRuinsAreaData(),
+            MetroidPrimeArea.Magmoor_Caverns: MagmoorCavernsAreaData(),
+            MetroidPrimeArea.Phendrana_Drifts: PhendranaDriftsAreaData(),
+            MetroidPrimeArea.Phazon_Mines: PhazonMinesAreaData()
+        }
 
     def get_filler_item_name(self) -> str:
         return SuitUpgrade.Missile_Expansion.value
