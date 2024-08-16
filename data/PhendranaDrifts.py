@@ -113,7 +113,7 @@ class PhendranaDriftsAreaData(AreaData):
             RoomName.Ice_Ruins_West: RoomData(
                 doors={
                     0: DoorData(RoomName.Ruins_Entryway),
-                    1: DoorData(RoomName.Courtyard_Entryway, defaultLock=DoorLockType.Wave, rule_func=lambda state, player: can_wave_beam(state, player) and can_space_jump(state, player)),
+                    1: DoorData(RoomName.Courtyard_Entryway, defaultLock=DoorLockType.Wave, rule_func=lambda state, player: can_space_jump(state, player)),
                     2: DoorData(RoomName.Canyon_Entryway, defaultLock=DoorLockType.Missile),
                 },
                 pickups=[PickupData('Phendrana Drifts: Ice Ruins West', rule_func=lambda state, player: can_melt_ice(state, player) and can_space_jump(state, player) and can_missile(state, player)), ]),
@@ -229,7 +229,7 @@ class PhendranaDriftsAreaData(AreaData):
                     2: DoorData(RoomName.Specimen_Storage, defaultLock=DoorLockType.Wave, rule_func=lambda state, player: _can_reach_top_of_ruined_courtyard(state, player), tricks=[Tricks.phendrana_courtyard_no_boost_spider]),
                     3: DoorData(RoomName.Quarantine_Access, rule_func=lambda state, player: _can_reach_top_of_ruined_courtyard(state, player) and can_wave_beam(state, player) and can_thermal(state, player) and can_super_missile(state, player), tricks=[Tricks.phendrana_courtyard_no_boost_spider]),
                 },
-                pickups=[PickupData('Phendrana Drifts: Ruined Courtyard', rule_func=lambda state, player: _can_reach_top_of_ruined_courtyard(state, player), tricks=[Tricks.phendrana_courtyard_no_boost_spider]), ]),
+                pickups=[PickupData('Phendrana Drifts: Ruined Courtyard', rule_func=lambda state, player: _can_reach_top_of_ruined_courtyard(state, player), tricks=[Tricks.phendrana_courtyard_item_no_boost_spider]), ]),
             RoomName.Ruins_Entryway: RoomData(doors={
                 0: DoorData(RoomName.Ice_Ruins_West),
                 1: DoorData(RoomName.Phendrana_Shorelines),
