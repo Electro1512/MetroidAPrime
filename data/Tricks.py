@@ -128,7 +128,8 @@ class Tricks:
     triclops_pit_item_no_missiles = TrickInfo("Triclops Pit Item No Missiles", "Reach the Triclops Pit item without Missiles, and instead use Charge Beam", TrickDifficulty.Easy, lambda state, player: can_space_jump(state, player) and can_xray(state, player) and can_charge_beam(state, player))
 
     warrior_shrine_no_boost = TrickInfo("Warrior Shrine No Boost", "Reach the Warrior Shrine by using an R Jump or Scan Dash", TrickDifficulty.Easy, can_space_jump)
-    warrior_shrine_minimal_reqs = TrickInfo("Warrior Shrine Minimal Reqs", "Reach the Warrior Shrine without the Boost Ball or space jump", TrickDifficulty.Medium, can_scan)
+    warrior_shrine_scan_only = TrickInfo("Warrior Shrine Scan Only", "Reach the Warrior Shrine with only Scan Visor", TrickDifficulty.Medium, can_scan)
+    warrior_shrine_no_items = TrickInfo("Warrior Shrine No Items", "Reach the Warrior Shrine without any items by abusing standable collision and a Combat Dash", TrickDifficulty.Medium, lambda state, player: true)
 
     shore_tunnel_escape_no_sj = TrickInfo("Shore Tunnel Escape No SJ", "Escape the Shore Tunnel without Space Jump by using a double bomb jump", TrickDifficulty.Medium, can_bomb)
 
