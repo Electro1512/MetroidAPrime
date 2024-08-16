@@ -41,6 +41,19 @@ class AreaDoorTypeMapping:
     area: str
     type_mapping: Dict[str, str]
 
+    def to_dict(self) -> Dict[str, Dict[str, str]]:
+        return {
+            "area": self.area,
+            "type_mapping": self.type_mapping
+        }
+
+    @classmethod
+    def from_dict(cls, data: Dict[str, Dict[str, str]]) -> 'AreaDoorTypeMapping':
+        return cls(
+            area=data['area'],
+            type_mapping=data['type_mapping']
+        )
+
 
 def generate_random_door_color_mapping(world: 'MetroidPrimeWorld') -> Dict[str, str]:
     shuffled_lock_types = COLOR_LOCK_TYPES[:]

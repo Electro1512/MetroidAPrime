@@ -1,3 +1,5 @@
+from .PrimeUtils import setup_lib_path
+setup_lib_path()  # NOTE: This MUST be called before importing any other metroidprime modules (other than PrimeUtils)
 # Setup local dependencies if running in an apworld
 from .data.PhazonMines import PhazonMinesAreaData
 from .data.PhendranaDrifts import PhendranaDriftsAreaData
@@ -7,8 +9,6 @@ from .data.TallonOverworld import TallonOverworldAreaData
 from .data.RoomData import AreaData
 from .data.AreaNames import MetroidPrimeArea
 from .DoorRando import AreaDoorTypeMapping, get_world_door_mapping
-from .PrimeUtils import setup_lib_path
-setup_lib_path()  # NOTE: This MUST be called before importing any other metroidprime modules (other than PrimeUtils)
 
 from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess
 import settings
@@ -108,11 +108,20 @@ class MetroidPrimeWorld(World):
     def get_filler_item_name(self) -> str:
         return SuitUpgrade.Missile_Expansion.value
 
-    def init_tracker_options(self):
+    def init_tracker_data(self):
         # Universal tracker stuff, shouldn't do anything in standard gen
         if self.game in self.multiworld.re_gen_passthrough:
-            info("Setting options for tracker")
+            info("Setting data for tracker")
             passthrough = self.multiworld.re_gen_passthrough[self.game]
+            # Need to re initialize the game region data
+            self.game_region_data = {
+                MetroidPrimeArea.Tallon_Overworld: TallonOverworldAreaData(),
+                MetroidPrimeArea.Chozo_Ruins: ChozoRuinsAreaData(),
+                MetroidPrimeArea.Magmoor_Caverns: MagmoorCavernsAreaData(),
+                MetroidPrimeArea.Phendrana_Drifts: PhendranaDriftsAreaData(),
+                MetroidPrimeArea.Phazon_Mines: PhazonMinesAreaData()
+            }
+
             for key, value in passthrough.items():
                 option = getattr(self.options, key, None)
                 if option is not None:
@@ -125,11 +134,14 @@ class MetroidPrimeWorld(World):
     def generate_early(self) -> None:
         skip_randomization_mapping = False
         if hasattr(self.multiworld, "re_gen_passthrough"):
-            self.init_tracker_options()
+            self.init_tracker_data()
             skip_randomization_mapping = True
 
-        if self.options.door_color_randomization != "none" and not skip_randomization_mapping:
-            self.options.door_color_mapping.value = get_world_door_mapping(self)
+        if self.options.door_color_mapping:
+            self.door_color_mapping = {area: AreaDoorTypeMapping.from_dict(mapping) for area, mapping in self.options.door_color_mapping.value.items()}
+        elif self.options.door_color_randomization != "none" and not skip_randomization_mapping:
+            self.door_color_mapping = get_world_door_mapping(self)
+            self.options.door_color_mapping.value = {area: mapping.to_dict() for area, mapping in self.door_color_mapping.items()}
 
         init_starting_room_data(self)
         if self.options.elevator_randomization.value and not skip_randomization_mapping:
@@ -289,7 +301,7 @@ class MetroidPrimeWorld(World):
 
     def fill_slot_data(self) -> Dict[str, Any]:
         exclude_options = ["fusion_suit", "show_suit_index_on_pause_menu", "as_dict", "artifact_hints", "staggered_suit_damage", "start_hints"]
-        non_cosmetic_options = [o for o in dir(self.options) if "color" not in o and o not in exclude_options and not o.startswith("__")]
+        non_cosmetic_options = [o for o in dir(self.options) if "suit_color" not in o and o not in exclude_options and not o.startswith("__")]
         slot_data: Dict[str, Any] = self.options.as_dict(*non_cosmetic_options)
 
         return slot_data

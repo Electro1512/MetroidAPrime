@@ -108,7 +108,7 @@ class RoomData:
 
     def get_door_config_data(self, world: 'MetroidPrimeWorld', parent_area: str):
         door_data = {}
-        color_mapping: Dict[str, str] = world.options.door_color_mapping[parent_area].type_mapping
+        color_mapping: Dict[str, str] = world.door_color_mapping[parent_area].type_mapping
         for door_id, door in self.doors.items():
             if door.exclude_from_rando or door.defaultLock.value not in color_mapping:
                 continue
@@ -156,7 +156,7 @@ class AreaData:
                 location.access_rule = generate_access_rule(pickup)
 
         # Once each region is created, connect the doors and assign their locks
-        color_mapping: Dict[str, str] = world.options.door_color_mapping[self.area_name].type_mapping if world.options.door_color_randomization != "none" else {}
+        color_mapping: Dict[str, str] = world.door_color_mapping[self.area_name].type_mapping if world.options.door_color_randomization != "none" else {}
         for room_name, room_data in self.rooms.items():
             name = room_data.get_region_name(room_name.value)
             region = world.multiworld.get_region(name, world.player)

@@ -233,7 +233,7 @@ def init_starting_room_data(world: 'MetroidPrimeWorld'):
         original_door_color = BEAM_TO_LOCK_MAPPING[loadout_beam].value
         # Select new beam based off of what the original color is now mapped to
         new_beam = None
-        for original, new in world.options.door_color_mapping[world.starting_room_data.area.value].type_mapping.items():
+        for original, new in world.door_color_mapping[world.starting_room_data.area.value].type_mapping.items():
             if original == original_door_color:
                 # Find the beam that corresponds to the new color
                 for beam in BEAM_ITEMS:
