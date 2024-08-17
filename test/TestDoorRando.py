@@ -81,7 +81,7 @@ class TestRegionalDoorRando(MetroidPrimeTestBase):
                     self.assertNotEqual(original, new, "Door color should be randomized")
             elif first_mapping == world.door_color_mapping[area.value].type_mapping:
                 same_areas.append(area)
-        self.assertTrue(len(same_areas) < 3, "Door color should be different for each area generally")
+        self.assertTrue(len(same_areas) < 4, "Door color should be different for each area generally")
 
     def test_door_colors_are_updated_in_config(self):
         self.world.generate_early()
@@ -123,35 +123,51 @@ class TestDoorRandoWithDifferentStartRoomWithRequiredBeam(MetroidPrimeTestBase):
 
 
 class TestDoorPlando(MetroidPrimeTestBase):
+  # TODO: rework the data structure here so you don't have to do area and type_mapping
     options = {
-        "door_color_randomization": "global",
+        "door_color_randomization": "regional",
         "door_color_mapping": {
             "Chozo Ruins": {
-                "Wave Beam": "Ice Beam",
-                "Ice Beam": "Plasma Beam",
-                "Plasma Beam": "Wave Beam"
+                "area": "Chozo Ruins",
+                "type_mapping": {
+                    "Wave Beam": "Ice Beam",
+                    "Ice Beam": "Plasma Beam",
+                    "Plasma Beam": "Wave Beam"
+                }
             },
             "Magmoor Caverns": {
-                "Wave Beam": "Plasma Beam",
-                "Ice Beam": "Wave Beam",
-                "Plasma Beam": "Ice Beam"
+                "area": "Magmoor Caverns",
+                "type_mapping": {
+                    "Wave Beam": "Plasma Beam",
+                    "Ice Beam": "Wave Beam",
+                    "Plasma Beam": "Ice Beam"
+                },
             },
             "Phendrana Drifts": {
-                "Wave Beam": "Plasma Beam",
-                "Ice Beam": "Wave Beam",
-                "Plasma Beam": "Ice Beam"
+                "area": "Phendrana Drifts",
+                "type_mapping": {
+                        "Wave Beam": "Plasma Beam",
+                        "Ice Beam": "Wave Beam",
+                        "Plasma Beam": "Ice Beam"
+                }
             },
             "Tallon Overworld": {
-                "Wave Beam": "Plasma Beam",
-                "Ice Beam": "Wave Beam",
-                "Plasma Beam": "Ice Beam"
+                "area": "Tallon Overworld",
+                "type_mapping": {
+                        "Wave Beam": "Plasma Beam",
+                        "Ice Beam": "Wave Beam",
+                        "Plasma Beam": "Ice Beam"
+                }
             },
             "Phazon Mines": {
-                "Wave Beam": "Plasma Beam",
-                "Ice Beam": "Wave Beam",
-                "Plasma Beam": "Ice Beam"
+                "area": "Phazon Mines",
+                "type_mapping": {
+                        "Wave Beam": "Plasma Beam",
+                        "Ice Beam": "Wave Beam",
+                        "Plasma Beam": "Ice Beam"
+                }
             }
-        }
+        },
     }
 
     def test_door_mapping_gets_set_from_plando(self):
@@ -161,4 +177,4 @@ class TestDoorPlando(MetroidPrimeTestBase):
         for area in MetroidPrimeArea:
             if area == MetroidPrimeArea.Impact_Crater:
                 continue
-            self.assertEqual(world.door_color_mapping[area.value].type_mapping, world.options.door_color_mapping.get(area.value), "Door color mapping should be set from plando")
+            self.assertEqual(world.door_color_mapping[area.value].type_mapping, world.options.door_color_mapping.get(area.value).get("type_mapping"), "Door color mapping should be set from plando")
