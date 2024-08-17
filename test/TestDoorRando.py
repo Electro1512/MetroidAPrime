@@ -248,6 +248,7 @@ class TestBeamRandoWithDoorRando(MetroidPrimeTestBase):
 
     def test_when_power_beam_is_not_starting_beam_and_power_beam_doors_are_included_the_new_starting_beam_doors_are_not_included(self):
         world: 'MetroidPrimeWorld' = self.world
+        world.options.door_color_mapping.value = None
         world.generate_early()
 
         # Check if the starting beam is not the power beam

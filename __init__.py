@@ -8,7 +8,7 @@ from .data.ChozoRuins import ChozoRuinsAreaData
 from .data.TallonOverworld import TallonOverworldAreaData
 from .data.RoomData import AreaData
 from .data.AreaNames import MetroidPrimeArea
-from .DoorRando import AreaDoorTypeMapping, get_world_door_mapping
+from .DoorRando import AreaDoorTypeMapping, get_world_door_mapping, remap_doors_to_power_beam_if_necessary
 
 from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess
 import settings
@@ -146,10 +146,15 @@ class MetroidPrimeWorld(World):
             self.door_color_mapping = {area: AreaDoorTypeMapping.from_dict(mapping) for area, mapping in self.options.door_color_mapping.value.items()}
         elif self.options.door_color_randomization != "none" and not skip_randomization_mapping:
             self.door_color_mapping = get_world_door_mapping(self)
+            # TODO: Make these conversions happen at a parent object so you don't need to iterate
             self.options.door_color_mapping.value = {area: mapping.to_dict() for area, mapping in self.door_color_mapping.items()}
 
         # Set starting loadout
         init_starting_loadout(self)
+
+        # Reconcile starting loadout with door color mapping, if applicable
+        remap_doors_to_power_beam_if_necessary(self)
+
 
         # Randomize Elevators
         if self.options.elevator_randomization.value and not skip_randomization_mapping:

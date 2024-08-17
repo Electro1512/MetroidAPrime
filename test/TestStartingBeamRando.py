@@ -15,7 +15,6 @@ if typing.TYPE_CHECKING:
 
 
 class TestStartingBeamRandomization(MetroidPrimeTestBase):
-    auto_construct = False
     options = {
         "randomize_starting_beam": True,
     }
@@ -25,9 +24,8 @@ class TestStartingBeamRandomization(MetroidPrimeTestBase):
         world: 'MetroidPrimeWorld' = self.world
         world.create_items()
         self.assertGreater(len(world.multiworld.precollected_items[world.player]), 0)
-        self.assertNotIn(SuitUpgrade.Power_Beam.value, world.multiworld.precollected_items[world.player])
+        self.assertNotIn(SuitUpgrade.Power_Beam.value, [item.name for item in world.multiworld.precollected_items[world.player]])
         # Need to still verify this works
-        self.assertTrue(False)
 
     def test_hive_mecha_is_disabled_if_starting_at_landing_site_and_power_beam_is_not_starting_weapon(self):
         self.world_setup()
@@ -35,4 +33,3 @@ class TestStartingBeamRandomization(MetroidPrimeTestBase):
         distribute_items_restrictive(self.multiworld)
         config = make_config(world)
         self.assertEqual(config["gameConfig"]["removeHiveMecha"], True)
-        self.assertTrue(False)

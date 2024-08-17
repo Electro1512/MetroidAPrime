@@ -199,6 +199,7 @@ class ElevatorRandomization(Toggle):
 
 class ElevatorMapping(OptionDict):
     """Which elevators go to which regions, only visible for spoiler"""
+    display_name= "Elevator Mapping"
     visibility = Visibility.spoiler
     default = {}
 
@@ -218,6 +219,7 @@ class DoorColorRandomization(Choice):
 
 class DoorColorMapping(OptionDict):
     """Which door colors go to which colors, only visible for spoiler"""
+    display_name= "Door Color Mapping"
     visibility = Visibility.spoiler
     default = {}
 
@@ -235,7 +237,7 @@ class IncludeMorphBallBombDoors(Toggle):
 
 
 class RandomizeStartingBeam(Toggle):
-    """If enabled, the starting beam will be randomized to a random beam that is not the Power Beam"""
+    """If enabled, the starting beam will be randomized to a random beam that is not the Power Beam. Note that if vanilla start is used, the hive mecha boss will be disabled."""
     display_name = "Randomize Starting Beam"
     default = False
 

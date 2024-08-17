@@ -96,6 +96,21 @@ def get_world_door_mapping(world: 'MetroidPrimeWorld') -> Dict[str, AreaDoorType
 
 def get_available_lock_types(world: 'MetroidPrimeWorld', area: MetroidPrimeArea) -> list[DoorLockType]:
     locks = COLOR_LOCK_TYPES[:]
-    if world.options.include_power_beam_doors:
+    # If start beam is randomized, we replace whatever the mapping to starting beam is with Power Beam Only
+    if world.options.include_power_beam_doors and not world.options.randomize_starting_beam:
         locks.append(DoorLockType.Power_Beam)
     return locks
+
+
+# This needs to take place after the starting beam is initialized
+def remap_doors_to_power_beam_if_necessary(world: 'MetroidPrimeWorld'):
+    if world.options.include_power_beam_doors and world.options.randomize_starting_beam:
+        # TODO: Use new starting beam data here
+        starting_beam = next((item for item in world.starting_room_data.selected_loadout.loadout if "Beam" in item.name), None)
+        if starting_beam is not None and starting_beam is not SuitUpgrade.Power_Beam:
+            for area, mapping in world.door_color_mapping.items():
+                for original, new in mapping.type_mapping.items():
+                    if new == BEAM_TO_LOCK_MAPPING[starting_beam].value:
+                        world.door_color_mapping[area].type_mapping[original] = DoorLockType.Power_Beam.value
+                        # TODO: Make these conversions happen at a parent object so you don't need to iterate
+            world.options.door_color_mapping.value = {area: mapping.to_dict() for area, mapping in world.door_color_mapping.items()}

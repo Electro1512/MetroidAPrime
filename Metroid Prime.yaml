@@ -1,3 +1,30 @@
+# Q. What is this file?
+# A. This file contains options which allow you to configure your multiworld experience while allowing
+#    others to play how they want as well.
+#
+# Q. How do I use it?
+# A. The options in this file are weighted. This means the higher number you assign to a value, the
+#    more chances you have for that option to be chosen. For example, an option like this:
+#
+#    map_shuffle:
+#      on: 5
+#      off: 15
+#
+#    Means you have 5 chances for map shuffle to occur, and 15 chances for map shuffle to be turned
+#    off.
+#
+# Q. I've never seen a file like this before. What characters am I allowed to use?
+# A. This is a .yaml file. You are allowed to use most characters.
+#    To test if your yaml is valid or not, you can use this website:
+#        http://www.yamllint.com/
+#    You can also verify that your Archipelago options are valid at this site:
+#        https://archipelago.gg/check
+
+# Your name in-game, limited to 16 characters.
+#     {player} will be replaced with the player's slot number.
+#     {PLAYER} will be replaced with the player's slot number, if that slot number is greater than 1.
+#     {number} will be replaced with the counter value of the name.
+#     {NUMBER} will be replaced with the counter value of the name, if the counter value is greater than 1.
 name: Player{number}
 
 # Used to describe your yaml. Useful if you have multiple files.
@@ -8,6 +35,48 @@ requires:
   version: 0.5.0 # Version of Archipelago required for this yaml to work as expected.
 
 Metroid Prime:
+  # Game Options
+  progression_balancing:
+    # A system that can move progression earlier, to try and prevent the player from getting stuck and bored early.
+    #
+    # A lower setting means more getting stuck. A higher setting means less getting stuck.
+    #
+    # You can define additional values between the minimum and maximum values.
+    # Minimum value is 0
+    # Maximum value is 99
+    random: 0
+    random-low: 0
+    random-high: 0
+    disabled: 0 # equivalent to 0
+    normal: 50 # equivalent to 50
+    extreme: 0 # equivalent to 99
+
+  accessibility:
+    # Set rules for reachability of your items/locations.
+    #
+    # - **Locations:** ensure everything can be reached and acquired.
+    # - **Items:** ensure all logically relevant items can be acquired.
+    # - **Minimal:** ensure what is needed to reach your goal can be acquired.
+    locations: 0
+    items: 50
+    minimal: 0
+
+  required_artifacts:
+    # Determines the amount of Artifacts needed to begin the endgame sequence.
+    #
+    # You can define additional values between the minimum and maximum values.
+    # Minimum value is 1
+    # Maximum value is 12
+    12: 50
+    random: 0
+    random-low: 0
+    random-high: 0
+
+  exclude_items:
+    # Replaces the following items with filler. INPUT AT YOUR OWN RISK. I cannot promise that removing
+    # progression items will not break logic. (for now please leave the default starting items in)
+    {}
+
   final_bosses:
     # Determines the final bosses required to beat the seed. Choose from Meta Ridley, Metroid Prime,
     # both, or neither.
@@ -18,33 +87,33 @@ Metroid Prime:
 
   artifact_hints:
     # If enabled, scanning the artifact stones in the temple will give a hint to their location. Additionally, hints will be pre collected in the client
-    "false": 0
-    "true": 50
+    'false': 0
+    'true': 50
 
   missile_launcher:
     # If enabled, the missile launcher will be added to the item pool. This will only allow you to use missiles once the missile launcher is found (regardless of missile expansions received).
-    "false": 50
-    "true": 0
+    'false': 50
+    'true': 0
 
   main_power_bomb:
     # If enabled, the main power bomb will be added to the item pool. This will only allow you to use power bombs once the main power bombs is found (regardless of power bomb expansions received).
-    "false": 50
-    "true": 0
+    'false': 50
+    'true': 0
 
   shuffle_scan_visor:
     # If enabled, the scan visor will be shuffled into the item pool and will need to be found in order to scan dash and open certain locks
-    "false": 50
-    "true": 0
+    'false': 50
+    'true': 0
 
   pre_scan_elevators:
     # Pre scans the elevators in the game, allowing for faster transitions between regions. Makes for more interesting gameply if disabled when the scan visor is shuffled.
-    "false": 0
-    "true": 50
+    'false': 0
+    'true': 50
 
   elevator_randomization:
     # Randomizes the elevators between regions
-    "false": 50
-    "true": 0
+    'false': 50
+    'true': 0
 
   door_color_randomization:
     # Determine if/how door colors are randomized.
@@ -54,6 +123,21 @@ Metroid Prime:
     none: 50
     global: 0
     regional: 0
+
+  include_power_beam_doors:
+    # If enabled, Power Beam doors will be an available door color for randomization, this will also attempt to randomize the starting beam.
+    'false': 50
+    'true': 0
+
+  include_morph_ball_bomb_doors:
+    # If enabled, Morph Ball Bomb doors will be added as an available door color for door randomization
+    'false': 50
+    'true': 0
+
+  randomize_starting_beam:
+    # If enabled, the starting beam will be randomized to a random beam that is not the Power Beam. Note that if vanilla start is used, the hive mecha boss will be disabled.
+    'false': 50
+    'true': 0
 
   starting_room:
     # Determines the starting room of the game. This will change your starting loadout depending on the room
@@ -67,18 +151,18 @@ Metroid Prime:
   disable_starting_room_bk_prevention:
     # Normally, starting rooms will give you a minimum set of items in order to have access to several checks immediately. This option disables that behavior as well as any pre filled items that would have been set.
     #    WARNING: This will possibly require multiple attempts to generate, especially in solo worlds
-    "false": 50
-    "true": 0
+    'false': 50
+    'true': 0
 
   progressive_beam_upgrades:
     # If enabled, 3 progressive beam items will be added into the item pool per beam. The first unlocks the beam, the second unlocks the ability to charge the beam, and the third unlocks the missile combo for it. Progressive items share the same model as the associated beam combo model(all progressive wave beams will look like the wavebuster)
-    "false": 50
-    "true": 0
+    'false': 50
+    'true': 0
 
   non_varia_heat_damage:
     # If enabled, the gravity suit and phazon suit will not protect against heat damage which will change the required logic of the game
-    "false": 0
-    "true": 50
+    'false': 0
+    'true': 50
 
   staggered_suit_damage:
     # Configure how suit damage reduction is calculated
@@ -113,38 +197,38 @@ Metroid Prime:
 
   flaahgra_power_bombs:
     # If enabled, makes the sandstone block at the top of arboretum breakable with power bombs. Note that this will require the player to have 4 power bombs in order to defeat flaahgra
-    "false": 50
-    "true": 0
+    'false': 50
+    'true': 0
 
   backwards_lower_mines:
     # If enabled, allows the player to progress through the lower mines in reverse by removing the locks in the PCA room
-    "false": 50
-    "true": 0
+    'false': 50
+    'true': 0
 
   remove_xray_requirements:
     # If enabled, removes xray visor requirements for everything but omega pirate and metroid prime
-    "false": 50
-    "true": 0
+    'false': 50
+    'true': 0
 
   remove_thermal_requirements:
     # If enabled, removes thermal visor requirements for everything but metroid prime (note this means wave beam panels will be in logic without the visor to see them)
-    "false": 50
-    "true": 0
+    'false': 50
+    'true': 0
 
   remove_hive_mecha:
     # If enabled, the trigger for the Hive Mecha boss will be removed from the game
-    "false": 50
-    "true": 0
+    'false': 50
+    'true': 0
 
   spring_ball:
     # Enables the spring ball when you receive Morph Ball Bombs. This will allow you to jump while in morph ball form by pressing up on the c stick, reducing the complexity of double bomb jumps.
-    "false": 0
-    "true": 50
+    'false': 0
+    'true': 50
 
   fusion_suit:
     # Whether to use the fusion suit or not
-    "false": 50
-    "true": 0
+    'false': 50
+    'true': 0
 
   hud_color:
     # Determines the color of the HUD in the game. Will be overriden if any of the color overrides are greater than 0. Note: Certain colors will change the colors of the beam icons.
@@ -197,13 +281,13 @@ Metroid Prime:
 
   randomize_suit_colors:
     # Randomize the colors of the suits. Is overriden if any of the color overrides are greater than 0. Note: This is not compatible with the Fusion Suit and will have no effect
-    "false": 50
-    "true": 0
+    'false': 50
+    'true': 0
 
   show_suit_index_on_pause_menu:
     # If enabled, the selected suit color index will be shown on the pause menu under "Suits". Note: This has unexpected behavior on non US versions
-    "false": 0
-    "true": 50
+    'false': 0
+    'true': 50
 
   power_suit_color:
     # Override the color of the Power Suit using an index from the game's color wheel
@@ -251,8 +335,8 @@ Metroid Prime:
 
   death_link:
     # When you die, everyone dies. Of course the reverse is true too.
-    "false": 50
-    "true": 0
+    'false': 50
+    'true': 0
 
   # Item & Location Options
   local_items:
@@ -291,46 +375,4 @@ Metroid Prime:
     # Start with these items and don't place them in the world.
     #
     # The game decides what the replacement items will be.
-    {}
-
-  # Game Options
-  progression_balancing:
-    # A system that can move progression earlier, to try and prevent the player from getting stuck and bored early.
-    #
-    # A lower setting means more getting stuck. A higher setting means less getting stuck.
-    #
-    # You can define additional values between the minimum and maximum values.
-    # Minimum value is 0
-    # Maximum value is 99
-    random: 0
-    random-low: 0
-    random-high: 0
-    disabled: 0 # equivalent to 0
-    normal: 50 # equivalent to 50
-    extreme: 0 # equivalent to 99
-
-  accessibility:
-    # Set rules for reachability of your items/locations.
-    #
-    # - **Locations:** ensure everything can be reached and acquired.
-    # - **Items:** ensure all logically relevant items can be acquired.
-    # - **Minimal:** ensure what is needed to reach your goal can be acquired.
-    locations: 0
-    items: 50
-    minimal: 0
-
-  required_artifacts:
-    # Determines the amount of Artifacts needed to begin the endgame sequence.
-    #
-    # You can define additional values between the minimum and maximum values.
-    # Minimum value is 1
-    # Maximum value is 12
-    12: 50
-    random: 0
-    random-low: 0
-    random-high: 0
-
-  exclude_items:
-    # Replaces the following items with filler. INPUT AT YOUR OWN RISK. I cannot promise that removing
-    # progression items will not break logic. (for now please leave the default starting items in)
     {}
