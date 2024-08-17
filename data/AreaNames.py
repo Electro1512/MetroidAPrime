@@ -7,4 +7,5 @@ class MetroidPrimeArea(Enum):
     Magmoor_Caverns = "Magmoor Caverns"
     Tallon_Overworld = "Tallon Overworld"
     Phazon_Mines = "Phazon Mines"
+    # TODO: Remove impact crater
     Impact_Crater = "Impact Crater"

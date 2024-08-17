@@ -2,12 +2,7 @@ import typing
 
 from .Logic import can_ice_beam, can_missile, can_phazon, can_plasma_beam, can_power_beam, can_scan, can_super_missile, can_thermal, can_wave_beam, can_xray, has_energy_tanks, has_required_artifact_count
 from .LogicCombat import can_combat_prime, can_combat_ridley
-from .data.ChozoRuins import ChozoRuinsAreaData
-from .data.MagmoorCaverns import MagmoorCavernsAreaData
-from .data.PhazonMines import PhazonMinesAreaData
-from .data.PhendranaDrifts import PhendranaDriftsAreaData
 from .data.RoomNames import RoomName
-from .data.TallonOverworld import TallonOverworldAreaData
 from BaseClasses import CollectionState, Region
 if typing.TYPE_CHECKING:
     from . import MetroidPrimeWorld
@@ -19,7 +14,7 @@ def create_regions(world: 'MetroidPrimeWorld', final_boss_selection):
     world.multiworld.regions.append(menu)
 
     for area_data in world.game_region_data.values():
-      area_data.create_world_region(world)
+        area_data.create_world_region(world)
 
     impact_crater = Region("Impact Crater", world.player, world.multiworld)
     world.multiworld.regions.append(impact_crater)

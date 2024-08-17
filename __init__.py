@@ -19,7 +19,7 @@ from .Regions import create_regions
 from .Locations import every_location
 from .PrimeOptions import MetroidPrimeOptions, VariaSuitColorOverride
 from .Items import PROGRESSIVE_ITEM_MAPPING, MetroidPrimeItem, ProgressiveUpgrade, SuitUpgrade, get_item_for_options, get_progressive_upgrade_for_item, suit_upgrade_table, artifact_table, item_table
-from .data.StartRoomData import StartRoomData, init_starting_loadout, init_starting_room_data
+from .data.StartRoomData import StartRoomData, init_starting_beam, init_starting_loadout, init_starting_room_data
 from .Container import MetroidPrimeContainer
 from BaseClasses import Item, MultiWorld, Tutorial, ItemClassification
 import typing
@@ -149,12 +149,13 @@ class MetroidPrimeWorld(World):
             # TODO: Make these conversions happen at a parent object so you don't need to iterate
             self.options.door_color_mapping.value = {area: mapping.to_dict() for area, mapping in self.door_color_mapping.items()}
 
-        # Set starting loadout
-        init_starting_loadout(self)
+        init_starting_beam(self)
 
-        # Reconcile starting loadout with door color mapping, if applicable
+        # Reconcile starting beam with door color mapping, if applicable
         remap_doors_to_power_beam_if_necessary(self)
 
+        # Set starting loadout
+        init_starting_loadout(self)
 
         # Randomize Elevators
         if self.options.elevator_randomization.value and not skip_randomization_mapping:

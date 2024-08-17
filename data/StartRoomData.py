@@ -227,8 +227,6 @@ def init_starting_loadout(world: 'MetroidPrimeWorld'):
     if disable_bk_prevention:
         world.starting_room_data.selected_loadout.loadout = [item for item in world.starting_room_data.selected_loadout.loadout if item in BEAM_ITEMS]
 
-    init_starting_beam(world)
-
     # Update the loadout with the correct items based on options (progressive upgrades, missile launcher, etc.)
     updated_loadout = []
     for item in world.starting_room_data.selected_loadout.loadout:
@@ -247,13 +245,20 @@ def init_starting_loadout(world: 'MetroidPrimeWorld'):
 def init_starting_beam(world: 'MetroidPrimeWorld'):
     loadout_beam = next((item for item in world.starting_room_data.selected_loadout.loadout if item in BEAM_ITEMS), None)
 
-    def replace_starting_beam(new_beam):
+    def replace_starting_beam(new_beam: SuitUpgrade):
         if loadout_beam is not None:
             world.starting_room_data.selected_loadout.loadout.remove(loadout_beam)
         world.starting_room_data.selected_loadout.loadout.append(new_beam)
+        world.options.starting_beam.value = new_beam.value
+
+    # Use the starting beam if it was set in the options (or for UT)
+    if world.options.starting_beam.value is not None and world.options.starting_beam.value is not 'none':
+        new_beam = SuitUpgrade.get_by_value(world.options.starting_beam)
+        if new_beam is not None:
+          replace_starting_beam(new_beam)
 
     # Remap beam to a new color based on door randomization
-    if world.options.door_color_randomization != "none" and loadout_beam is not None and loadout_beam is not SuitUpgrade.Power_Beam and not world.starting_room_data.force_starting_beam:
+    elif world.options.door_color_randomization != "none" and loadout_beam is not None and loadout_beam is not SuitUpgrade.Power_Beam and not world.starting_room_data.force_starting_beam:
         # replace the beam with whatever the new one should be mapped to
         original_door_color = BEAM_TO_LOCK_MAPPING[loadout_beam].value
         # Select new beam based off of what the original color is now mapped to
@@ -272,6 +277,7 @@ def init_starting_beam(world: 'MetroidPrimeWorld'):
     elif world.options.randomize_starting_beam and not world.starting_room_data.force_starting_beam:
         new_beam = world.random.choice([beam for beam in BEAM_ITEMS if beam != SuitUpgrade.Power_Beam])
         replace_starting_beam(new_beam)
+
     # Hive mecha needs to be disabled if we don't have power beam in vanilla start locations (otherwise no checks can be reached)
     # TODO: Make this use the new starting beam data
     if (world.starting_room_data.name == RoomName.Landing_Site.value or RoomName.Save_Station_1.value) and SuitUpgrade.Power_Beam not in world.starting_room_data.selected_loadout.loadout:

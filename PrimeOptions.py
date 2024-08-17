@@ -199,7 +199,7 @@ class ElevatorRandomization(Toggle):
 
 class ElevatorMapping(OptionDict):
     """Which elevators go to which regions, only visible for spoiler"""
-    display_name= "Elevator Mapping"
+    display_name = "Elevator Mapping"
     visibility = Visibility.spoiler
     default = {}
 
@@ -219,7 +219,7 @@ class DoorColorRandomization(Choice):
 
 class DoorColorMapping(OptionDict):
     """Which door colors go to which colors, only visible for spoiler"""
-    display_name= "Door Color Mapping"
+    display_name = "Door Color Mapping"
     visibility = Visibility.spoiler
     default = {}
 
@@ -240,6 +240,13 @@ class RandomizeStartingBeam(Toggle):
     """If enabled, the starting beam will be randomized to a random beam that is not the Power Beam. Note that if vanilla start is used, the hive mecha boss will be disabled."""
     display_name = "Randomize Starting Beam"
     default = False
+
+
+class StartingBeam(TextChoice):
+    visibility = Visibility.spoiler
+    display_name = "Starting Beam"
+    default = "none"
+    """Used to override the starting beam if Randomize Starting Beam is disabled, or to display the starting beam if it is enabled"""
 
 
 class PreScanElevators(Toggle):
@@ -361,6 +368,7 @@ class MetroidPrimeOptions(PerGameCommonOptions):
     include_power_beam_doors: IncludePowerBeamDoors
     include_morph_ball_bomb_doors: IncludeMorphBallBombDoors
     randomize_starting_beam: RandomizeStartingBeam
+    starting_beam: StartingBeam
     starting_room: StartingRoom
     starting_room_name: StartingRoomName
     disable_starting_room_bk_prevention: DisableStartingRoomBKPrevention
