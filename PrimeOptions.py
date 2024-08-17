@@ -225,7 +225,7 @@ class DoorColorMapping(OptionDict):
 
 
 class IncludePowerBeamDoors(Toggle):
-    """If enabled, Power Beam doors will be an available door color for randomization, this will also attempt to randomize the starting beam."""
+    """If enabled, Power Beam doors will be an available door color for randomization. If the starting beam is also randomized, it will remove the new starting beam's color from the pool of available door colors"""
     display_name = "Include Power Beam Doors"
     default = False
 
