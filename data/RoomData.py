@@ -6,7 +6,7 @@ import typing
 from BaseClasses import CollectionState, ItemClassification, LocationProgressType, Region
 from ..DoorRando import DoorLockType
 from ..Items import ProgressiveUpgrade, SuitUpgrade
-from ..Logic import can_bomb, can_ice_beam, can_missile, can_plasma_beam, can_wave_beam
+from ..Logic import can_bomb, can_ice_beam, can_missile, can_plasma_beam, can_power_beam, can_wave_beam
 from ..PrimeOptions import MetroidPrimeOptions
 from ..data.AreaNames import MetroidPrimeArea
 from ..Locations import MetroidPrimeLocation, every_location
@@ -217,6 +217,8 @@ def _can_access_door(state: CollectionState, player: int, door_data: DoorData) -
             can_open = can_ice_beam(state, player)
         elif lock == DoorLockType.Plasma:
             can_open = can_plasma_beam(state, player)
+        elif lock == DoorLockType.Power_Beam:
+            can_open = can_power_beam(state, player)
         elif lock == DoorLockType.Missile:
             can_open = can_missile(state, player)
         elif lock == DoorLockType.Bomb:

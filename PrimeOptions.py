@@ -215,10 +215,29 @@ class DoorColorRandomization(Choice):
     option_regional = "Regional"
     default = option_none
 
+
 class DoorColorMapping(OptionDict):
     """Which door colors go to which colors, only visible for spoiler"""
     visibility = Visibility.spoiler
     default = {}
+
+
+class IncludePowerBeamDoors(Toggle):
+    """If enabled, Power Beam doors will be an available door color for randomization, this will also attempt to randomize the starting beam."""
+    display_name = "Include Power Beam Doors"
+    default = False
+
+
+class IncludeMorphBallBombDoors(Toggle):
+    """If enabled, Morph Ball Bomb doors will be added as an available door color for door randomization"""
+    display_name = "Include Morph Ball Bomb Doors"
+    default = False
+
+
+class RandomizeStartingBeam(Toggle):
+    """If enabled, the starting beam will be randomized to a random beam that is not the Power Beam"""
+    display_name = "Randomize Starting Beam"
+    default = False
 
 
 class PreScanElevators(Toggle):
@@ -337,6 +356,9 @@ class MetroidPrimeOptions(PerGameCommonOptions):
     elevator_mapping: ElevatorMapping
     door_color_randomization: DoorColorRandomization
     door_color_mapping: DoorColorMapping
+    include_power_beam_doors: IncludePowerBeamDoors
+    include_morph_ball_bomb_doors: IncludeMorphBallBombDoors
+    randomize_starting_beam: RandomizeStartingBeam
     starting_room: StartingRoom
     starting_room_name: StartingRoomName
     disable_starting_room_bk_prevention: DisableStartingRoomBKPrevention

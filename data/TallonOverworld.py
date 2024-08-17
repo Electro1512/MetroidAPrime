@@ -143,7 +143,7 @@ class TallonOverworldAreaData(AreaData):
 
             RoomName.Gully: RoomData(
                 doors={
-                    0: DoorData(RoomName.Tallon_Canyon, defaultLock=DoorLockType.Bomb, exclude_from_rando=True, rule_func=lambda state, player: can_bomb(state, player) and can_space_jump(state, player)),
+                    0: DoorData(RoomName.Tallon_Canyon, defaultLock=DoorLockType.Blue, exclude_from_rando=True, rule_func=lambda state, player: can_bomb(state, player) and can_space_jump(state, player)),
                     1: DoorData(RoomName.Landing_Site, exclude_from_rando=True, rule_func=lambda state, player: can_bomb(state, player) and can_space_jump(state, player)),  # Alcove Via Landing Site
                     2: DoorData(RoomName.Alcove, exclude_from_rando=True)  # Alcove Via Landing Site
                 },
@@ -246,7 +246,7 @@ class TallonOverworldAreaData(AreaData):
                 doors={
                     0: DoorData(RoomName.Canyon_Cavern),
                     1: DoorData(RoomName.Transport_Tunnel_A, destinationArea=MetroidPrimeArea.Tallon_Overworld),
-                    2: DoorData(RoomName.Gully, defaultLock=DoorLockType.Bomb, rule_func=lambda state, player: can_space_jump(state, player) or (can_boost(state, player) and can_bomb(state, player))),
+                    2: DoorData(RoomName.Gully, defaultLock=DoorLockType.Blue, rule_func=lambda state, player: can_space_jump(state, player) or (can_boost(state, player) and can_bomb(state, player))),
                     3: DoorData(RoomName.Root_Tunnel)
                 }
             ),

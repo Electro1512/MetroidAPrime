@@ -15,6 +15,7 @@ from ..data.RoomNames import RoomName
 if TYPE_CHECKING:
     from .. import MetroidPrimeWorld
 
+# TODO: Make starting_beam an attribute on the start room data instead of another regular item, update in init and tests
 BEAM_ITEMS = [SuitUpgrade.Power_Beam, SuitUpgrade.Ice_Beam, SuitUpgrade.Wave_Beam, SuitUpgrade.Plasma_Beam]
 
 
@@ -205,8 +206,6 @@ def _is_no_pre_scan_elevators_with_shuffle_scan_and_vanilla_starting_room(world:
 def init_starting_room_data(world: 'MetroidPrimeWorld'):
     difficulty = world.options.starting_room.value
     yaml_name = world.options.starting_room_name.value
-    disable_bk_prevention = world.options.disable_starting_room_bk_prevention.value
-
     world.prefilled_item_map = {}
     if yaml_name:
         if yaml_name in all_start_rooms:
@@ -222,13 +221,17 @@ def init_starting_room_data(world: 'MetroidPrimeWorld'):
             world.starting_room_data = get_random_start_room_by_difficulty(world, difficulty)
         world.options.starting_room_name.value = world.starting_room_data.name
 
-    # Clear non starting beam upgrades out of loadout
+
+def init_starting_loadout(world: 'MetroidPrimeWorld'):
+    disable_bk_prevention = world.options.disable_starting_room_bk_prevention.value
+   # Clear non starting beam upgrades out of loadout
     if disable_bk_prevention:
         world.starting_room_data.selected_loadout.loadout = [item for item in world.starting_room_data.selected_loadout.loadout if item in BEAM_ITEMS]
 
+    # TODO: Clean this up
     loadout_beam = next((item for item in world.starting_room_data.selected_loadout.loadout if item in BEAM_ITEMS), None)
     if world.options.door_color_randomization != "none" and loadout_beam is not None and loadout_beam is not SuitUpgrade.Power_Beam and not world.starting_room_data.force_starting_beam:
-        # replace the beam with a random one
+        # replace the beam with whatever the new one should be mapped to
         world.starting_room_data.selected_loadout.loadout.remove(loadout_beam)
         original_door_color = BEAM_TO_LOCK_MAPPING[loadout_beam].value
         # Select new beam based off of what the original color is now mapped to

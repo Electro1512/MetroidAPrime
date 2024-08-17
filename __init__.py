@@ -19,7 +19,7 @@ from .Regions import create_regions
 from .Locations import every_location
 from .PrimeOptions import MetroidPrimeOptions, VariaSuitColorOverride
 from .Items import PROGRESSIVE_ITEM_MAPPING, MetroidPrimeItem, ProgressiveUpgrade, SuitUpgrade, get_item_for_options, get_progressive_upgrade_for_item, suit_upgrade_table, artifact_table, item_table
-from .data.StartRoomData import StartRoomData, init_starting_room_data
+from .data.StartRoomData import StartRoomData, init_starting_loadout, init_starting_room_data
 from .Container import MetroidPrimeContainer
 from BaseClasses import Item, MultiWorld, Tutorial, ItemClassification
 import typing
@@ -94,6 +94,7 @@ class MetroidPrimeWorld(World):
     elevator_mapping: Dict[str, Dict[str, str]] = default_elevator_mappings
     door_color_mapping: Optional[Dict[MetroidPrimeArea, AreaDoorTypeMapping]] = None
     game_region_data: Dict[MetroidPrimeArea, AreaData]
+    has_generated_bomb_doors: bool = False
 
     def __init__(self, multiworld: MultiWorld, player: int):
         super().__init__(multiworld, player)
@@ -137,13 +138,20 @@ class MetroidPrimeWorld(World):
             self.init_tracker_data()
             skip_randomization_mapping = True
 
+        # Select Start Room
+        init_starting_room_data(self)
+
+        # Randomize Door Colors
         if self.options.door_color_mapping:
             self.door_color_mapping = {area: AreaDoorTypeMapping.from_dict(mapping) for area, mapping in self.options.door_color_mapping.value.items()}
         elif self.options.door_color_randomization != "none" and not skip_randomization_mapping:
             self.door_color_mapping = get_world_door_mapping(self)
             self.options.door_color_mapping.value = {area: mapping.to_dict() for area, mapping in self.door_color_mapping.items()}
 
-        init_starting_room_data(self)
+        # Set starting loadout
+        init_starting_loadout(self)
+
+        # Randomize Elevators
         if self.options.elevator_randomization.value and not skip_randomization_mapping:
             self.elevator_mapping = get_random_elevator_mapping(self)
 

@@ -1,6 +1,7 @@
 import typing
 
 from Fill import distribute_items_restrictive
+from ..Items import SuitUpgrade
 from ..DoorRando import DoorLockType
 
 from ..config import make_config
@@ -103,8 +104,7 @@ class TestDoorRandoWithDifferentStartRoomNonRequiredBeam(MetroidPrimeTestBase):
         distribute_items_restrictive(world.multiworld)
         config = make_config(world)
         self.assertTrue(config["gameConfig"]["startingItems"]["wave"] == 0)
-        self.assertTrue(config["gameConfig"]["startingItems"]["ice"] == 1)
-        self.assertEqual(config["gameConfig"]["startingBeam"], "Ice", "Starting beam should be Ice")
+        self.assertNotEqual(config["gameConfig"]["startingBeam"], "Wave", "Starting beam should not be Wave")
 
 
 class TestDoorRandoWithDifferentStartRoomWithRequiredBeam(MetroidPrimeTestBase):
@@ -178,3 +178,92 @@ class TestDoorPlando(MetroidPrimeTestBase):
             if area == MetroidPrimeArea.Impact_Crater:
                 continue
             self.assertEqual(world.door_color_mapping[area.value].type_mapping, world.options.door_color_mapping.get(area.value).get("type_mapping"), "Door color mapping should be set from plando")
+
+
+class TestGlobalDoorRandoWithBombAndPowerDoors(MetroidPrimeTestBase):
+    options = {
+        "door_color_randomization": "global",
+        "include_morph_ball_bomb_doors": True,
+        "include_power_beam_doors": True,
+    }
+
+    def test_bomb_doors_are_applied_to_single_region_that_is_not_start(self):
+        world: 'MetroidPrimeWorld' = self.world
+        world.options.door_color_mapping.value = None
+        world.generate_early()
+        bomb_door_region = None
+
+        for area, mapping in world.door_color_mapping.items():
+            if DoorLockType.Bomb.value in mapping.type_mapping.values():
+                if bomb_door_region is None:
+                    bomb_door_region = area
+                else:
+                    self.fail("Bomb doors should only be applied to a single region")
+
+        self.assertIsNotNone(bomb_door_region, "Bomb doors should be applied to one region")
+        self.assertNotEqual(bomb_door_region, MetroidPrimeArea.Tallon_Overworld.value, "Bomb doors should not be applied to the starting region")
+
+    def test_power_beam_doors_are_included_in_at_least_one_region(self):
+        self.world.generate_early()
+        world: 'MetroidPrimeWorld' = self.world
+        power_beam_door_found = False
+
+        for area, mapping in world.door_color_mapping.items():
+            if DoorLockType.Power_Beam.value in mapping.type_mapping.values():
+                power_beam_door_found = True
+                break
+
+        self.assertTrue(power_beam_door_found, "Power beam doors should be included in at least one region")
+
+
+class TestRegionalobalDoorRandoWithBombAndPowerDoors(MetroidPrimeTestBase):
+    options = {
+        "door_color_randomization": "regional",
+        "include_morph_ball_bomb_doors": True,
+        "include_power_beam_doors": True,
+    }
+
+    def test_bomb_doors_are_applied_to_single_region_that_is_not_start(self):
+        world: 'MetroidPrimeWorld' = self.world
+        world.generate_early()
+        bomb_door_region = None
+
+        for area, mapping in world.door_color_mapping.items():
+            if DoorLockType.Bomb.value in mapping.type_mapping.values():
+                if bomb_door_region is None:
+                    bomb_door_region = area
+                else:
+                    self.fail("Bomb doors should only be applied to a single region")
+
+        self.assertIsNotNone(bomb_door_region, "Bomb doors should be applied to one region")
+        self.assertNotEqual(bomb_door_region, MetroidPrimeArea.Tallon_Overworld.value, "Bomb doors should not be applied to the starting region")
+
+
+class TestBeamRandoWithDoorRando(MetroidPrimeTestBase):
+    options = {
+        "door_color_randomization": "regional",
+        "include_power_beam_doors": True,
+        "randomize_starting_beam": True,
+    }
+
+    def test_when_power_beam_is_not_starting_beam_and_power_beam_doors_are_included_the_new_starting_beam_doors_are_not_included(self):
+        world: 'MetroidPrimeWorld' = self.world
+        world.generate_early()
+
+        # Check if the starting beam is not the power beam
+        starting_beam = None
+        for item in world.starting_room_data.selected_loadout.loadout:
+            if "Beam" in item.name:
+                starting_beam = item
+                break
+
+        self.assertNotEqual(starting_beam, SuitUpgrade.Power_Beam.value, "Starting beam should not be the power beam")
+
+        new_starting_beam_doors_found = False
+
+        for area, mapping in world.door_color_mapping.items():
+            if starting_beam.value in mapping.type_mapping.values():
+                new_starting_beam_doors_found = True
+                break
+
+        self.assertFalse(new_starting_beam_doors_found, "New starting beam doors should not be included when power beam doors are included")
