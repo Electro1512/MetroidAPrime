@@ -55,7 +55,7 @@ class MagmoorCavernsAreaData(AreaData):
             RoomName.Monitor_Station: RoomData(doors={
                 0: DoorData(RoomName.Monitor_Tunnel, rule_func=can_heat),
                 1: DoorData(RoomName.Transport_Tunnel_A, rule_func=can_heat, destinationArea=MetroidPrimeArea.Magmoor_Caverns),
-                2: DoorData(RoomName.Warrior_Shrine, rule_func=lambda state, player: can_heat(state, player) and can_space_jump(state, player) and can_boost(state, player), tricks=[Tricks.warrior_shrine_no_boost, Tricks.warrior_shrine_minimal_reqs]),
+                2: DoorData(RoomName.Warrior_Shrine, rule_func=lambda state, player: can_heat(state, player) and can_space_jump(state, player) and can_boost(state, player), tricks=[Tricks.warrior_shrine_no_boost, Tricks.warrior_shrine_scan_only, Tricks.warrior_shrine_no_items]),
                 3: DoorData(RoomName.Shore_Tunnel, rule_func=can_heat),
             }),
             RoomName.Monitor_Tunnel: RoomData(doors={
