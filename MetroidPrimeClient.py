@@ -343,9 +343,14 @@ async def patch_and_run_game(apmp1_file: str):
             logger.info("Patching ISO...")
             py_randomprime.patch_iso(input_iso_path, output_path, config_json, notifier)
             logger.info("Patching Complete")
-        except Exception as e:
-            logger.error(f"Error patching ISO: {e}")
-            return
+
+        except BaseException as e:
+            logger.error(f"Failed to patch ISO: {e}")
+            # Delete the output file if it exists since it will be corrupted
+            if os.path.exists(output_path):
+                os.remove(output_path)
+
+            raise RuntimeError(f"Failed to patch ISO: {e}")
         logger.info("--------------")
 
     Utils.async_start(run_game(output_path))
