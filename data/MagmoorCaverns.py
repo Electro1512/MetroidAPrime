@@ -8,7 +8,7 @@ from .RoomNames import RoomName
 
 
 class MagmoorCavernsAreaData(AreaData):
-    def __init__(self ):
+    def __init__(self):
         super().__init__(MetroidPrimeArea.Magmoor_Caverns.value)
         self.rooms = {
             RoomName.Burning_Trail: RoomData(doors={
@@ -71,8 +71,8 @@ class MagmoorCavernsAreaData(AreaData):
                 1: DoorData(RoomName.Lava_Lake, rule_func=lambda state, player: can_heat(state, player) and (can_morph_ball(state, player) or can_space_jump(state, player))),
             }),
             RoomName.Plasma_Processing: RoomData(doors={
-                0: DoorData(RoomName.Geothermal_Core, defaultLock=DoorLockType.Plasma),
-            }, pickups=[PickupData('Magmoor Caverns: Plasma Processing', rule_func=can_plasma_beam)]),  # Requires plasma beam to exit
+                0: DoorData(RoomName.Geothermal_Core, lock=DoorLockType.Blue, defaultLock=DoorLockType.Plasma, exclude_from_rando=True),  # Force blue to prevent softlock
+            }, pickups=[PickupData('Magmoor Caverns: Plasma Processing')]),  # Requires plasma beam to exit
             RoomName.Save_Station_Magmoor_A: RoomData(doors={
                 0: DoorData(RoomName.Burning_Trail, defaultLock=DoorLockType.Missile),
             }),

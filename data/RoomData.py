@@ -101,20 +101,26 @@ class RoomData:
             "pickups": [pickup.get_config_data(world) for pickup in self.pickups if not pickup.exclude_from_config],
         }
 
-        if world.options.door_color_randomization != "none":
-            config["doors"] = self.get_door_config_data(world, parent_area)
+        config["doors"] = self.get_door_config_data(world, parent_area)
 
         return config
 
     def get_door_config_data(self, world: 'MetroidPrimeWorld', parent_area: str):
         door_data = {}
-        color_mapping: Dict[str, str] = world.door_color_mapping[parent_area].type_mapping
-        for door_id, door in self.doors.items():
-            if door.exclude_from_rando or door.defaultLock.value not in color_mapping:
-                continue
-            door_data[f"{door_id}"] = {
-                "shieldType": door.lock.value if door.lock is not None else door.defaultLock.value,
-            }
+        if world.door_color_mapping is not None:
+            color_mapping: Dict[str, str] = world.door_color_mapping[parent_area].type_mapping
+            for door_id, door in self.doors.items():
+                if door.defaultLock.value not in color_mapping or not door.lock:
+                    continue
+                door_data[f"{door_id}"] = {
+                    "shieldType": door.lock.value if door.lock is not None else door.defaultLock.value,
+                }
+        else:
+            for door_id, door in self.doors.items():
+                if door.lock is not door.defaultLock and door.lock is not None:
+                    door_data[f"{door_id}"] = {
+                        "shieldType": door.lock.value if door.lock is not None else door.defaultLock.value,
+                    }
         return door_data
 
     def get_region_name(self, name: str):

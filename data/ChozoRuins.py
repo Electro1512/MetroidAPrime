@@ -39,7 +39,8 @@ class ChozoRuinsAreaData(AreaData):
     def __init__(self):
         super().__init__(MetroidPrimeArea.Chozo_Ruins.value)
         self.rooms = {
-            RoomName.Antechamber: RoomData(doors={0: DoorData(RoomName.Reflecting_Pool, defaultLock=DoorLockType.Ice, rule_func=can_missile)}, pickups=[PickupData('Chozo Ruins: Antechamber', rule_func=can_ice_beam), ]),  # Requires Ice beam to exit
+            #  Force blue to prevent softlocks
+            RoomName.Antechamber: RoomData(doors={0: DoorData(RoomName.Reflecting_Pool, lock=DoorLockType.Blue, defaultLock=DoorLockType.Ice, rule_func=can_missile, exclude_from_rando=True)}, pickups=[PickupData('Chozo Ruins: Antechamber'), ]),  # Requires Ice beam to exit
             RoomName.Arboretum_Access: RoomData(doors={
                 0: DoorData(RoomName.Arboretum),
                 1: DoorData(RoomName.Ruined_Fountain),
