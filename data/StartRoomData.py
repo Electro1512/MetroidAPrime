@@ -73,7 +73,6 @@ all_start_rooms: Dict[str, StartRoomData] = {
     ),
     RoomName.Save_Station_1.value: StartRoomData(
         area=MetroidPrimeArea.Chozo_Ruins,
-        force_starting_beam=True,
         loadouts=[StartRoomLoadout([SuitUpgrade.Power_Beam],
                                    item_rules=[
             {"Chozo Ruins: Hive Totem": [SuitUpgrade.Missile_Launcher]}
