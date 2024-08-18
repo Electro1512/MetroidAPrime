@@ -103,7 +103,6 @@ class TallonOverworldAreaData(AreaData):
                     1: DoorData(RoomName.Cargo_Freight_Lift_to_Deck_Gamma, defaultLock=DoorLockType.Ice,
                                 rule_func=can_crashed_frigate,
                                 tricks=[Tricks.frigate_no_gravity],
-                                exclude_from_rando=True
                                 ),
                     2: DoorData(RoomName.Overgrown_Cavern, defaultLock=DoorLockType.Ice,
                                 rule_func=lambda state, player: False,  # Can't reach unless a trick is used
