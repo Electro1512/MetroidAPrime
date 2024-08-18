@@ -22,13 +22,13 @@ def can_climb_sun_tower(state: CollectionState, player: int) -> bool:
 
 def can_flaahgra(state: CollectionState, player: int) -> bool:
     world: 'MetroidPrimeWorld' = state.multiworld.worlds[player]
+    bomb_req = (can_bomb(state, player) or (can_power_bomb(state, player) and has_power_bomb_count(state, player, 4)))
     if world.starting_room_data.name == RoomName.Sunchamber_Lobby.value:
-        return True
+        return bomb_req
     return state.can_reach_region(RoomName.Sunchamber.value, player) \
         and can_combat_flaaghra(state, player) \
         and can_missile(state, player) and can_scan(state, player) \
-        and (can_bomb(state, player) or (can_power_bomb(state, player) and has_power_bomb_count(state, player, 4))) \
-
+        and bomb_req
 
 
 def can_climb_tower_of_light(state: CollectionState, player: int) -> bool:
