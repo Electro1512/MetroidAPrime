@@ -34,7 +34,7 @@ class PhazonMinesAreaData(AreaData):
                 1: DoorData(RoomName.Elevator_A, defaultLock=DoorLockType.Ice,),
             }),
             RoomName.Elevator_Access_B: RoomData(doors={
-                0: DoorData(RoomName.Metroid_Quarantine_B, defaultLock=DoorLockType.Ice),
+                0: DoorData(RoomName.Metroid_Quarantine_A, defaultLock=DoorLockType.Ice),
                 1: DoorData(RoomName.Elevator_B, defaultLock=DoorLockType.Plasma),
             }),
             RoomName.Elevator_B: RoomData(doors={
