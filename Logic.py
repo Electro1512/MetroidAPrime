@@ -82,7 +82,7 @@ def can_morph_ball(state: CollectionState, player: int) -> bool:
 def can_xray(state: CollectionState, player: int, usually_required: bool = False, hard_required: bool = False) -> bool:
     if hard_required:
         return state.has(SuitUpgrade.X_Ray_Visor.value, player)
-    if usually_required and _get_options(state, player).remove_xray_requirements == "remove_prime":
+    if usually_required and _get_options(state, player).remove_xray_requirements == "remove_all_but_omega_pirate":
         return True
     if usually_required:
         return state.has(SuitUpgrade.X_Ray_Visor.value, player)
