@@ -82,7 +82,7 @@ def can_morph_ball(state: CollectionState, player: int) -> bool:
 def can_xray(state: CollectionState, player: int, usually_required: bool = False, hard_required: bool = False) -> bool:
     if hard_required:
         return state.has(SuitUpgrade.X_Ray_Visor.value, player)
-    if usually_required and _get_options(state, player).remove_xray_requirements.value:
+    if usually_required and _get_options(state, player).remove_xray_requirements == "remove_prime":
         return True
     return state.has(SuitUpgrade.X_Ray_Visor.value, player)
 
@@ -90,7 +90,7 @@ def can_xray(state: CollectionState, player: int, usually_required: bool = False
 def can_thermal(state: CollectionState, player: int, usually_required: bool = False, hard_required: bool = False) -> bool:
     if hard_required:
         return state.has(SuitUpgrade.Thermal_Visor.value, player)
-    if usually_required and _get_options(state, player).remove_thermal_requirements.value:
+    if usually_required and _get_options(state, player).remove_thermal_requirements == "remove_all":
         return True
     return state.has(SuitUpgrade.Thermal_Visor.value, player)
 
