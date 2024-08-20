@@ -290,7 +290,7 @@ class ChozoRuinsAreaData(AreaData):
                 0: DoorData(RoomName.Tower_of_Light, defaultLock=DoorLockType.Wave),
             }, pickups=[PickupData('Chozo Ruins: Tower Chamber', rule_func=lambda state, player: True), ]),
             RoomName.Tower_of_Light_Access: RoomData(doors={
-                0: DoorData(RoomName.Tower_of_Light),
+                0: DoorData(RoomName.Tower_of_Light, defaultLock=DoorLockType.Wave),
                 1: DoorData(RoomName.Ruined_Shrine),
             }),
             RoomName.Tower_of_Light: RoomData(
