@@ -89,7 +89,7 @@ Metroid Prime:
   starting_room:
     # Determines the starting room of the game. This will change your starting loadout depending on the room
     #    normal: Start at the Talon Overworld Landing Site. If elevator randomization is enabled, or Shuffle Scan Visor + Don't Pre Scan Elevators, this will switch to Save Station 1 in Chozo Ruins
-    #    safe: Start in rooms that will not require a significant combat challenge to progress from
+    #    safe: Start in rooms that will not require a significant combat challenge to progress from. Without disable_starting_room_bk_prevention enabled, this may assign you a new beam and an item in order to make the seed feasible
     #    buckle_up: Start in rooms that will pose a significant challenge to players with no energy tanks or suit upgrades. Fun for the aspiring masochist (less fun for their friends in BK).
     normal: 50
     safe: 0
