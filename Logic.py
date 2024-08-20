@@ -79,18 +79,18 @@ def can_morph_ball(state: CollectionState, player: int) -> bool:
     return state.has(SuitUpgrade.Morph_Ball.value, player)
 
 
-def can_xray(state: CollectionState, player: int, hard_required: bool = False) -> bool:
+def can_xray(state: CollectionState, player: int, usually_required: bool = False, hard_required: bool = False) -> bool:
     if hard_required:
         return state.has(SuitUpgrade.X_Ray_Visor.value, player)
-    elif _get_options(state, player).remove_xray_requirements.value:
+    if usually_required and _get_options(state, player).remove_xray_requirements.value:
         return True
     return state.has(SuitUpgrade.X_Ray_Visor.value, player)
 
 
-def can_thermal(state: CollectionState, player: int, hard_required: bool = False) -> bool:
+def can_thermal(state: CollectionState, player: int, usually_required: bool = False, hard_required: bool = False) -> bool:
     if hard_required:
         return state.has(SuitUpgrade.Thermal_Visor.value, player)
-    elif _get_options(state, player).remove_thermal_requirements.value:
+    if usually_required and _get_options(state, player).remove_thermal_requirements.value:
         return True
     return state.has(SuitUpgrade.Thermal_Visor.value, player)
 
