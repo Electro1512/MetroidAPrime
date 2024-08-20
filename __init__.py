@@ -133,10 +133,8 @@ class MetroidPrimeWorld(World):
                         option.value = value
 
     def generate_early(self) -> None:
-        skip_randomization_mapping = False
         if hasattr(self.multiworld, "re_gen_passthrough"):
             self.init_tracker_data()
-            skip_randomization_mapping = True
 
         # Select Start Room
         init_starting_room_data(self)
@@ -144,7 +142,7 @@ class MetroidPrimeWorld(World):
         # Randomize Door Colors
         if self.options.door_color_mapping:
             self.door_color_mapping = {area: AreaDoorTypeMapping.from_dict(mapping) for area, mapping in self.options.door_color_mapping.value.items()}
-        elif self.options.door_color_randomization != "none" and not skip_randomization_mapping:
+        elif self.options.door_color_randomization != "none":
             self.door_color_mapping = get_world_door_mapping(self)
             # TODO: Make these conversions happen at a parent object so you don't need to iterate
             self.options.door_color_mapping.value = {area: mapping.to_dict() for area, mapping in self.door_color_mapping.items()}
@@ -158,10 +156,11 @@ class MetroidPrimeWorld(World):
         init_starting_loadout(self)
 
         # Randomize Elevators
-        if self.options.elevator_randomization.value and not skip_randomization_mapping:
+        if self.options.elevator_mapping:
+            self.elevator_mapping = self.options.elevator_mapping.value
+        elif self.options.elevator_randomization.value:
             self.elevator_mapping = get_random_elevator_mapping(self)
-
-        self.options.elevator_mapping.value = self.elevator_mapping
+            self.options.elevator_mapping.value = self.elevator_mapping
 
     def create_regions(self) -> None:
         boss_selection = int(self.options.final_bosses)
