@@ -42,6 +42,26 @@ default_elevator_mappings = {
     }
 }
 
+ELEVATOR_USEFUL_NAMES: Dict[str, str] = {
+    RoomName.Transport_to_Chozo_Ruins_West.value: 'Tallon Overworld North (Tallon Canyon)',
+    RoomName.Transport_to_Chozo_Ruins_East.value: 'Tallon Overworld East (Frigate Crash Site)',
+    RoomName.Transport_to_Magmoor_Caverns_East.value: 'Tallon Overworld West (Root Cave)',
+    RoomName.Transport_to_Chozo_Ruins_South.value: 'Tallon Overworld South (Great Tree Hall, Upper)',
+    RoomName.Transport_to_Phazon_Mines_East.value: 'Tallon Overworld South (Great Tree Hall, Lower)',
+    RoomName.Transport_to_Tallon_Overworld_North.value: 'Chozo Ruins West (Main Plaza)',
+    RoomName.Transport_to_Magmoor_Caverns_North.value: 'Chozo Ruins North (Sun Tower)',
+    RoomName.Transport_to_Tallon_Overworld_East.value: 'Chozo Ruins East (Reflecting Pool, Save Station)',
+    'Chozo Ruins: ' + RoomName.Transport_to_Tallon_Overworld_South.value: 'Chozo Ruins South (Reflecting Pool, Far End)',
+    RoomName.Transport_to_Chozo_Ruins_North.value: 'Magmoor Caverns North (Lava Lake)',
+    RoomName.Transport_to_Phendrana_Drifts_North.value: 'Magmoor Caverns West (Monitor Station)',
+    RoomName.Transport_to_Tallon_Overworld_West.value: 'Magmoor Caverns East (Twin Fires)',
+    RoomName.Transport_to_Phazon_Mines_West.value: 'Magmoor Caverns South (Magmoor Workstation, Debris)',
+    RoomName.Transport_to_Phendrana_Drifts_South.value: 'Magmoor Caverns South (Magmoor Workstation, Save Station)',
+    RoomName.Transport_to_Magmoor_Caverns_West.value: 'Phendrana Drifts North (Phendrana Shorelines)',
+    'Phendrana Drifts: ' + RoomName.Transport_to_Magmoor_Caverns_South.value: 'Phendrana Drifts South (Quarantine Cave)',
+    'Phazon Mines: ' + RoomName.Transport_to_Tallon_Overworld_South.value: 'Phazon Mines East (Main Quarry)',
+    'Phazon Mines: ' + RoomName.Transport_to_Magmoor_Caverns_South.value: 'Phazon Mines West (Phazon Processing Center)',
+}
 
 def temple_dest(boss) -> str:
     if boss == 0 or boss == 2:

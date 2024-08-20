@@ -13,7 +13,7 @@ from .DoorRando import AreaDoorTypeMapping, get_world_door_mapping, remap_doors_
 from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess
 import settings
 from worlds.AutoWorld import World, WebWorld
-from .data.Transports import default_elevator_mappings, get_random_elevator_mapping
+from .data.Transports import ELEVATOR_USEFUL_NAMES, default_elevator_mappings, get_random_elevator_mapping
 from .config import make_config
 from .Regions import create_regions
 from .Locations import every_location
@@ -24,7 +24,7 @@ from .Container import MetroidPrimeContainer
 from BaseClasses import Item, MultiWorld, Tutorial, ItemClassification
 import typing
 import os
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, TextIO
 from logging import info
 
 
@@ -325,3 +325,24 @@ class MetroidPrimeWorld(World):
         # returning slot_data so it regens, giving it back in multiworld.re_gen_passthrough
         info("Regenerating world for tracker")
         return slot_data
+
+    def write_spoiler(self, spoiler_handle: TextIO):
+        player_name = self.multiworld.get_player_name(self.player)
+
+        if self.options.elevator_randomization:
+            spoiler_handle.write(f'\n\nElevator Mapping({player_name}):\n')
+            for area, mapping in self.elevator_mapping.items():
+                spoiler_handle.write(f'{area}:\n')
+                for source, target in mapping.items():
+                    spoiler_handle.write(f'    {ELEVATOR_USEFUL_NAMES[source]} -> {ELEVATOR_USEFUL_NAMES[target]}\n')
+
+        if self.options.door_color_randomization == "regional":
+            spoiler_handle.write(f'\n\nDoor Color Mapping({player_name}):\n')
+            for area, mapping in self.door_color_mapping.items():
+                spoiler_handle.write(f'{area}:\n')
+                for door, color in mapping.type_mapping.items():
+                    spoiler_handle.write(f'    {door} -> {color}\n')
+        elif self.options.door_color_randomization == "global":
+            spoiler_handle.write(f'\n\nDoor Color Mapping({player_name}):\n')
+            for door, color in self.door_color_mapping[MetroidPrimeArea.Tallon_Overworld.value].type_mapping.items():
+                spoiler_handle.write(f'    {door} -> {color}\n')

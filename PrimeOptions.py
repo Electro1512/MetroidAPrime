@@ -200,7 +200,7 @@ class ElevatorRandomization(Toggle):
 class ElevatorMapping(OptionDict):
     """Which elevators go to which regions, only visible for spoiler"""
     display_name = "Elevator Mapping"
-    visibility = Visibility.spoiler
+    visibility = Visibility.none
     default = {}
 
 
@@ -218,9 +218,9 @@ class DoorColorRandomization(Choice):
 
 
 class DoorColorMapping(OptionDict):
-    """Which door colors go to which colors, only visible for spoiler"""
+    """Which door colors go to which colors"""
     display_name = "Door Color Mapping"
-    visibility = Visibility.spoiler
+    visibility = Visibility.none
     default = {}
 
 
