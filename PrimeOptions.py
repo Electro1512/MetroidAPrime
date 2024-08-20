@@ -146,14 +146,14 @@ class RemoveXrayRequirements(Choice):
     """Determines the xray visor requirements
        remove_none: No xray visor requirements are removed.
        remove_most: All xray visor requirements are removed except for metroid prime, chozo ghosts (normal/minimal combat difficulty), and omega pirate.
-       remove_all_but_omega: All xray visor requirements are removed except for omega pirate.
+       remove_all_but_omega_pirate: All xray visor requirements are removed except for omega pirate.
     """
     display_name = "Remove Xray Visor Requirements"
     option_remove_none = 0
     alias_false = 0
     option_remove_most = 1
     alias_true = 1
-    option_remove_prime = 2
+    option_remove_all_but_omega_pirate = 2
     default = 0
 
 
