@@ -142,16 +142,34 @@ class FlaahgraPowerBombs(Toggle):
     default = False
 
 
-class RemoveXrayRequirements(Toggle):
-    """If enabled, removes xray visor requirements for everything but omega pirate and metroid prime"""
+class RemoveXrayRequirements(Choice):
+    """Determines the xray visor requirements
+       remove_none: No xray visor requirements are removed.
+       remove_most: All xray visor requirements are removed except for metroid prime, chozo ghosts (normal/minimal combat difficulty), and omega pirate.
+       remove_all_but_omega_pirate: All xray visor requirements are removed except for omega pirate.
+    """
     display_name = "Remove Xray Visor Requirements"
-    default = False
+    option_remove_none = 0
+    alias_false = 0
+    option_remove_most = 1
+    alias_true = 1
+    option_remove_all_but_omega_pirate = 2
+    default = 0
 
 
-class RemoveThermalRequirements(Toggle):
-    """If enabled, removes thermal visor requirements for everything but metroid prime (note this means wave beam panels will be in logic without the visor to see them)"""
+class RemoveThermalRequirements(Choice):
+    """Determines the thermal visor requirements
+       remove_none: No thermal visor requirements are removed.
+       remove_most: All thermal visor requirements are removed except for metroid prime (note this means wave beam panels will be in logic without the visor to see them).
+       remove_all: All thermal visor requirements are removed (note this means wave beam panels will be in logic without the visor to see them).
+    """
     display_name = "Remove Thermal Visor Requirements"
-    default = False
+    option_remove_none = 0
+    alias_false = 0
+    option_remove_most = 1
+    alias_true = 1
+    option_remove_all = 2
+    default = 0
 
 
 class StartingRoom(Choice):

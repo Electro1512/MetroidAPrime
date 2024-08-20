@@ -56,10 +56,10 @@ class PhazonMinesAreaData(AreaData):
             }),
             RoomName.Elite_Quarters: RoomData(
                 doors={
-                    0: DoorData(RoomName.Elite_Quarters_Access, defaultLock=DoorLockType.Plasma, rule_func=lambda state, player: can_combat_omega_pirate(state, player) and can_xray(state, player, True)),
-                    1: DoorData(RoomName.Processing_Center_Access, defaultLock=DoorLockType.Plasma, rule_func=lambda state, player: can_combat_omega_pirate(state, player) and can_xray(state, player, True) and can_scan(state, player)),
+                    0: DoorData(RoomName.Elite_Quarters_Access, defaultLock=DoorLockType.Plasma, rule_func=lambda state, player: can_combat_omega_pirate(state, player) and can_xray(state, player, hard_required=True)),
+                    1: DoorData(RoomName.Processing_Center_Access, defaultLock=DoorLockType.Plasma, rule_func=lambda state, player: can_combat_omega_pirate(state, player) and can_xray(state, player, hard_required=True) and can_scan(state, player)),
                 },
-                pickups=[PickupData('Phazon Mines: Elite Quarters', rule_func=lambda state, player: can_combat_omega_pirate(state, player) and can_xray(state, player, True)), ]),
+                pickups=[PickupData('Phazon Mines: Elite Quarters', rule_func=lambda state, player: can_combat_omega_pirate(state, player) and can_xray(state, player, hard_required=True)), ]),
             RoomName.Elite_Research: RoomData(
                 doors={
                     0: DoorData(RoomName.Research_Access, defaultLock=DoorLockType.Ice, rule_func=lambda state, player: can_bomb(state, player) and can_boost(state, player) and can_space_jump(state, player) and can_scan(state, player), tricks=[Tricks.elite_research_spinner_no_boost]),
