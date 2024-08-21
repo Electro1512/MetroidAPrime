@@ -251,10 +251,10 @@ def init_starting_beam(world: 'MetroidPrimeWorld'):
         world.options.starting_beam.value = new_beam.value
 
     # Use the starting beam if it was set in the options (or for UT)
-    if world.options.starting_beam.value is not None and world.options.starting_beam.value is not 'none':
+    if world.options.starting_beam.value is not None and world.options.starting_beam.value != "none":
         new_beam = SuitUpgrade.get_by_value(world.options.starting_beam)
         if new_beam is not None:
-          replace_starting_beam(new_beam)
+            replace_starting_beam(new_beam)
 
     # Remap beam to a new color based on door randomization
     elif world.options.door_color_randomization != "none" and loadout_beam is not None and loadout_beam is not SuitUpgrade.Power_Beam and not world.starting_room_data.force_starting_beam:
