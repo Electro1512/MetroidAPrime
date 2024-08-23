@@ -257,10 +257,10 @@ def make_config(world: 'MetroidPrimeWorld'):
             "backwardsLabs": True,
             "backwardsFrigate": True,
             "backwardsUpperMines": True,
-            "backwardsLowerMines": bool(world.options.backwards_lower_mines.value),
+            "backwardsLowerMines": bool(world.options.backwards_lower_mines),
             "patchPowerConduits": False,
             "removeMineSecurityStationLocks": False,
-            "powerBombArboretumSandstone": True,
+            "powerBombArboretumSandstone": bool(world.options.flaahgra_power_bombs),
             "artifactHints": make_artifact_hints(world),
             "requiredArtifactCount": world.options.required_artifacts.value
         },
