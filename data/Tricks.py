@@ -154,7 +154,7 @@ class Tricks:
 
     phendrana_canyon_escape_no_items = TrickInfo("Phendrana Canyon Escape No Items", "You can leave Phendrana Canyon without any items by jumping on the crates. However, if you destroy the crates and don't have Boost Ball or Space Jump, you will softlock.", TrickDifficulty.Easy, lambda state, player: True)
     phendrana_courtyard_no_boost_spider = TrickInfo("Phendrana Courtyard No Boost Spider", "There is standable collision near the lower door that can be used to climb to the top of the room.", TrickDifficulty.Easy, lambda state, player: can_space_jump(state, player))
-    phendrana_courtyard_item_no_boost_spider = TrickInfo("Phendrana Courtyard No Boost Spider", "There is standable collision near the lower door that can be used to climb to the top of the room.", TrickDifficulty.Easy, lambda state, player: can_space_jump(state, player) and can_morph_ball(state, player))
+    phendrana_courtyard_item_no_boost_spider = TrickInfo("Phendrana Courtyard No Boost Spider", "There is standable collision near the lower door that can be used to climb to the top of the room. You can enter the hole by jumping on top of it and then morphin.", TrickDifficulty.Easy, lambda state, player: can_space_jump(state, player) and can_morph_ball(state, player))
 
     control_tower_item_no_plasma = TrickInfo("Control Tower Item No Plasma", "Reach the Control Tower item without Plasma Beam by jumping off of crates in the middle and missiling the tower base", TrickDifficulty.Easy, lambda state, player: can_bomb(state, player) and can_missile(state, player) and can_space_jump(state, player))
 

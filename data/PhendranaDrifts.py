@@ -33,7 +33,7 @@ class PhendranaDriftsAreaData(AreaData):
                 1: DoorData(RoomName.Gravity_Chamber, defaultLock=DoorLockType.Wave),
             }),
             RoomName.Chapel_of_the_Elders: RoomData(doors={
-              # Force blue to prevent soft lock
+                # Force blue to prevent soft lock
                 0: DoorData(RoomName.Chapel_Tunnel, lock=DoorLockType.Blue, defaultLock=DoorLockType.Wave, exclude_from_rando=True, rule_func=lambda state, player: can_defeat_sheegoth(state, player) and can_space_jump(state, player) and can_wave_beam(state, player), tricks=[Tricks.chapel_of_elders_escape_no_sj]),
             }, pickups=[PickupData('Phendrana Drifts: Chapel of the Elders', rule_func=lambda state, player: can_space_jump(state, player), tricks=[Tricks.chapel_of_elders_escape_no_sj]), ]),
             RoomName.Chapel_Tunnel: RoomData(doors={
@@ -230,7 +230,7 @@ class PhendranaDriftsAreaData(AreaData):
                     2: DoorData(RoomName.Specimen_Storage, defaultLock=DoorLockType.Wave, rule_func=lambda state, player: _can_reach_top_of_ruined_courtyard(state, player), tricks=[Tricks.phendrana_courtyard_no_boost_spider]),
                     3: DoorData(RoomName.Quarantine_Access, rule_func=lambda state, player: _can_reach_top_of_ruined_courtyard(state, player) and can_wave_beam(state, player) and can_thermal(state, player) and can_super_missile(state, player), tricks=[Tricks.phendrana_courtyard_no_boost_spider]),
                 },
-                pickups=[PickupData('Phendrana Drifts: Ruined Courtyard', rule_func=lambda state, player: _can_reach_top_of_ruined_courtyard(state, player), tricks=[Tricks.phendrana_courtyard_item_no_boost_spider]), ]),
+                pickups=[PickupData('Phendrana Drifts: Ruined Courtyard', rule_func=lambda state, player: _can_reach_top_of_ruined_courtyard(state, player) and can_bomb(state, player), tricks=[Tricks.phendrana_courtyard_item_no_boost_spider]), ]),
             RoomName.Ruins_Entryway: RoomData(doors={
                 0: DoorData(RoomName.Ice_Ruins_West),
                 1: DoorData(RoomName.Phendrana_Shorelines),
