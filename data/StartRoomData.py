@@ -45,6 +45,9 @@ class StartRoomData:
     force_starting_beam: Optional[bool] = False
     """Used for situations where starting beam cannot be randomized, disqualifies a room from being selected when randomizing blue doors is on"""
 
+    no_power_beam_door_on_starting_level: Optional[bool] = False
+    """Used when the starting beam is required to not be insta bk'd"""
+
 
 all_start_rooms: Dict[str, StartRoomData] = {
     RoomName.Landing_Site.value: StartRoomData(difficulty=StartRoomDifficulty.Normal, area=MetroidPrimeArea.Tallon_Overworld, loadouts=[StartRoomLoadout([SuitUpgrade.Power_Beam], [
@@ -112,6 +115,7 @@ all_start_rooms: Dict[str, StartRoomData] = {
     ],
     )],
         is_eligible=lambda world: world.options.shuffle_scan_visor.value == False or world.multiworld.players > 1,
+        no_power_beam_door_on_starting_level=True,
         difficulty=StartRoomDifficulty.Buckle_Up),
 
     RoomName.Save_Station_B.value: StartRoomData(
@@ -279,5 +283,5 @@ def init_starting_beam(world: 'MetroidPrimeWorld'):
 
     # Hive mecha needs to be disabled if we don't have power beam in vanilla start locations (otherwise no checks can be reached)
     # TODO: Make this use the new starting beam data
-    if (world.starting_room_data.name == RoomName.Landing_Site.value or RoomName.Save_Station_1.value) and SuitUpgrade.Power_Beam not in world.starting_room_data.selected_loadout.loadout:
+    if (world.starting_room_data.name == RoomName.Landing_Site.value or world.starting_room_data.name == RoomName.Save_Station_1.value) and SuitUpgrade.Power_Beam not in world.starting_room_data.selected_loadout.loadout:
         world.options.remove_hive_mecha.value = True

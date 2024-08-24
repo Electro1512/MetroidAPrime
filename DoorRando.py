@@ -109,6 +109,8 @@ def remap_doors_to_power_beam_if_necessary(world: 'MetroidPrimeWorld'):
         starting_beam = next((item for item in world.starting_room_data.selected_loadout.loadout if "Beam" in item.name), None)
         if starting_beam is not None and starting_beam is not SuitUpgrade.Power_Beam:
             for area, mapping in world.door_color_mapping.items():
+                if area == world.starting_room_data.area.value and world.starting_room_data.no_power_beam_door_on_starting_level:
+                    continue
                 for original, new in mapping.type_mapping.items():
                     if new == BEAM_TO_LOCK_MAPPING[starting_beam].value:
                         world.door_color_mapping[area].type_mapping[original] = DoorLockType.Power_Beam.value
