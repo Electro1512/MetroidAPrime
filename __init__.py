@@ -258,9 +258,12 @@ class MetroidPrimeWorld(World):
         if self.options.progressive_beam_upgrades.value:
             def quantity_in_start_inventory(item: ProgressiveUpgrade) -> int:
                 return start_inventory.count(item.value)
+
+            def quantity_in_prefill(item: ProgressiveUpgrade) -> int:
+                return list(self.prefilled_item_map.values()).count(item.value)
             for progressive_item in PROGRESSIVE_ITEM_MAPPING:
                 progression_per_item = 3
-                to_make = progression_per_item - quantity_in_start_inventory(progressive_item)
+                to_make = progression_per_item - quantity_in_start_inventory(progressive_item) - quantity_in_prefill(progressive_item)
                 for i in range(to_make):
                     # Last item in the progression is useful (except power beam/super missile), the rest are progression
                     classification = ItemClassification.progression if i < to_make - 1 else ItemClassification.useful

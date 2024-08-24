@@ -234,7 +234,7 @@
     "backwardsLowerMines": false,
     "patchPowerConduits": false,
     "removeMineSecurityStationLocks": false,
-    "powerBombArboretumSandstone": true,
+    "powerBombArboretumSandstone": false,
     "artifactHints": {
       "Artifact of Chozo": "The &push;&main-color=#c300ff;Artifact of Chozo&pop; can be found in &push;&main-color=#d4cc33;your&pop; &push;&main-color=#89a1ff;Chozo Ruins: Gathering Hall&pop;.",
       "Artifact of Nature": "The &push;&main-color=#c300ff;Artifact of Nature&pop; can be found in &push;&main-color=#d4cc33;your&pop; &push;&main-color=#89a1ff;Chozo Ruins: Watery Hall - Scan Puzzle&pop;.",
