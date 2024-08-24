@@ -207,12 +207,13 @@ class MetroidPrimeInterface:
         current_suit = self.get_current_cosmetic_suit()
         if item_id == 23:
             self.set_current_suit(MetroidPrimeSuit.Phazon)
-        elif item_id == 21:
+        elif item_id == 21 and current_suit != MetroidPrimeSuit.Gravity:
             self.set_current_suit(MetroidPrimeSuit.Gravity)
         elif item_id == 22 and current_suit != MetroidPrimeSuit.Gravity:
             self.set_current_suit(MetroidPrimeSuit.Varia)
-        else:
-            self.set_current_suit(MetroidPrimeSuit.Power)
+        # Power suit is never reverted to
+        # else:
+        #     self.set_current_suit(MetroidPrimeSuit.Power)
 
     def check_for_new_locations(self):
         pass
