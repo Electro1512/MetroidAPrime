@@ -290,8 +290,8 @@ class PhendranaDriftsAreaData(AreaData):
                 1: DoorData(RoomName.Frost_Cave, rule_func=can_morph_ball, defaultLock=DoorLockType.Wave),
             }),
             RoomName.West_Tower_Entrance: RoomData(doors={
-                0: DoorData(RoomName.Observatory, defaultLock=DoorLockType.Wave),
-                1: DoorData(RoomName.West_Tower, defaultLock=DoorLockType.Missile),
+                0: DoorData(RoomName.West_Tower, defaultLock=DoorLockType.Missile),
+                1: DoorData(RoomName.Observatory, defaultLock=DoorLockType.Wave),
             }),
             RoomName.West_Tower: RoomData(doors={
                 0: DoorData(RoomName.West_Tower_Entrance, defaultLock=DoorLockType.Missile),
