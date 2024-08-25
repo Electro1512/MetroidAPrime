@@ -58,6 +58,21 @@ def slw(output_register: 'GeneralRegister', input_register: 'GeneralRegister', s
                                 ))
 
 
+def slwi(output_register: 'GeneralRegister', input_register: 'GeneralRegister', literal: int):
+    """
+    output_register = input_register << shift_amount_register
+    """
+    from ppc_asm.assembler.ppc import Instruction
+    return Instruction.compose(((21, 6, False),  # Opcode for slwi
+                                (input_register.number, 5, False),
+                                (output_register.number, 5, False),
+                                (literal, 5, False),
+                                (0, 5, False),
+                                (31 - literal, 5, False),
+                                (0, 1, False)  # Rc bit
+                                ))
+
+
 def construct_hook_patch(game_version: str, progressive_beams: bool) -> List[int]:
     from ppc_asm.assembler.ppc import addi, bl, li, lwz, r1, r3, r4, r5, r6, r31, stw, cmpwi, bne, mtspr, blr, lmw, r0, LR, stwu, mfspr, or_, lbz, stmw, stb, lis, r7, r9, nop, ori, GeneralRegister
     from ppc_asm import assembler
@@ -150,7 +165,7 @@ def _load_player_state_to_r6(game_version: str) -> List[int]:
 
 
 def construct_progressive_beam_patch(game_version: str, progressive_beams: bool) -> List[int]:
-    from ppc_asm.assembler.ppc import addi, bl, b, li, lwz, r1, r3, r4, r5, r6, r8, r10, r31, stw, cmpwi, bne, mtspr, blr, lmw, r0, LR, stwu, mfspr, or_, lbz, stmw, stb, lis, r7, r9, nop, ori, GeneralRegister, Instruction
+    from ppc_asm.assembler.ppc import addi, bl, b, li, lwz, r1, r3, r4, r5, r6, r8, r10, r31, stw, cmpwi, bgt, mtspr, blr, lmw, r0, LR, stwu, mfspr, or_, stmw, stw, lis, r7, r9, nop, ori, GeneralRegister, Instruction
 
     def add(output_register: GeneralRegister, input_register1: GeneralRegister, input_register2: GeneralRegister):
         """
@@ -167,35 +182,35 @@ def construct_progressive_beam_patch(game_version: str, progressive_beams: bool)
     if not progressive_beams:
         return []
     cstate_manager_global = GAMES[game_version]["cstate_manager_global"]
-    charge_beam_offset = 0x7F
+    charge_beam_offset = 0x7C
     instructions: List = [
         # Step 0: Get the player state address
         *_load_player_state_to_r6(game_version),
 
         # Step 1: Get the current beam from the player state
-        lbz(r5, 0xB, r6),  # Load the current beam value
+        lwz(r5, 0x8, r6),          # Load the current beam value
 
-        # Step 2: Read the value at the progressive beam address
-        lis(r7, GAMES[game_version]["PROGRESSIVE_BEAM_ADDRESS"] >> 16),  # Load upper 16 bits of progressive beam address
-        ori(r7, r7, GAMES[game_version]["PROGRESSIVE_BEAM_ADDRESS"] & 0xFFFF),  # Load lower 16 bits of progressive beam address
-        add(r7, r7, r5),  # Add 0 to the address (no offset
-        lbz(r8, 0, r7),  # Load the value at the progressive beam address
+        # Step 2: Read the value at the beam address in CPlayerState::PowerUps[41]
+        slwi(r5, r5, 3),     # Multiply by 8
+        addi(r7, r6, 0x2c),        # Add powerups array offset + 4 (to get item capacity)
+        add(r7, r7, r5),           # Add power beam offset
+        lwz(r8, 0, r7),            # Load the value at the progressive beam address
 
         # Step 3: Check the value and set the appropriate address
-        cmpwi(r8, 0),
-        bne('activate_charge_beam'),
+        cmpwi(r8, 1),
+        bgt('activate_charge_beam'),
 
         # If value is 0, set the byte at player state address + charge_beam_offset to 0
         li(r9, 0),
 
-        addi(r10, r6, charge_beam_offset),  # Calculate player state address + charge_beam_offset
-        stb(r9, 0, r10),  # Store 0 at the calculated address
-        b('early_return_beam'),
+        b('set_charge_beam'),
 
         # If value is 1, set the byte at player state address + charge_beam_offset to 1
         li(r9, 1).with_label('activate_charge_beam'),
-        addi(r10, r6, charge_beam_offset),  # Calculate player state address + charge_beam_offset
-        stb(r9, 0, r10),  # Store 1 at the calculated address
+
+        # Set charge beam state
+        addi(r10, r6, charge_beam_offset).with_label('set_charge_beam'),  # Calculate player state address + charge_beam_offset
+        stw(r9, 0, r10),           # Store 1 at the calculated address
         b('early_return_beam'),
     ]
     return instructions

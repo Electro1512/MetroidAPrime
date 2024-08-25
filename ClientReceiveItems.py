@@ -81,7 +81,7 @@ async def handle_disable_gravity_suit(ctx: 'MetroidPrimeContext', current_items:
 
 async def handle_receive_missiles(ctx: 'MetroidPrimeContext', current_items: dict[str, InventoryItemData]):
     # Slot data is required for missiles + Power Bombs so we can check if launcher / main pb are enabled
-    if ctx.slot_data is not None:
+    if ctx.slot_data is not None and "Missile Expansion" in current_items:
         # Handle Missile Expansions
         amount_per_expansion = 5
         missile_item = current_items["Missile Expansion"]
@@ -127,7 +127,7 @@ async def handle_receive_missiles(ctx: 'MetroidPrimeContext', current_items: dic
 
 async def handle_receive_power_bombs(ctx: 'MetroidPrimeContext', current_items: dict[str, InventoryItemData]):
     # Handle Power Bomb Expansions
-    if ctx.slot_data is not None:
+    if ctx.slot_data is not None and "Power Bomb Expansion" in current_items:
         # Handle Missile Expansions
         amount_per_expansion = 1
         pb_item = current_items["Power Bomb Expansion"]
@@ -178,33 +178,34 @@ async def handle_receive_power_bombs(ctx: 'MetroidPrimeContext', current_items: 
 
 async def handle_receive_energy_tanks(ctx: 'MetroidPrimeContext', current_items: dict[str, InventoryItemData]):
     # Handle Energy Tanks
-    energy_tank_item = current_items["Energy Tank"]
-    num_energy_tanks_received = 0
-    energy_tank_sender = None
-    for network_item in ctx.items_received:
-        item_data = inventory_item_by_network_id(
-            network_item.item, current_items)
-        if item_data is None:
-            continue
+    if "Energy Tank" in current_items:
+        energy_tank_item = current_items["Energy Tank"]
+        num_energy_tanks_received = 0
+        energy_tank_sender = None
+        for network_item in ctx.items_received:
+            item_data = inventory_item_by_network_id(
+                network_item.item, current_items)
+            if item_data is None:
+                continue
 
-        if item_data.name == "Energy Tank":
-            num_energy_tanks_received += 1
-            energy_tank_sender = network_item.player
+            if item_data.name == "Energy Tank":
+                num_energy_tanks_received += 1
+                energy_tank_sender = network_item.player
 
-    diff = num_energy_tanks_received - energy_tank_item.current_capacity
-    if diff > 0 and energy_tank_item.current_capacity < energy_tank_item.max_capacity:
-        new_capacity = min(num_energy_tanks_received,
-                           energy_tank_item.max_capacity)
-        ctx.game_interface.give_item_to_player(
-            energy_tank_item.id, new_capacity, new_capacity)
+        diff = num_energy_tanks_received - energy_tank_item.current_capacity
+        if diff > 0 and energy_tank_item.current_capacity < energy_tank_item.max_capacity:
+            new_capacity = min(num_energy_tanks_received,
+                               energy_tank_item.max_capacity)
+            ctx.game_interface.give_item_to_player(
+                energy_tank_item.id, new_capacity, new_capacity)
 
-        if energy_tank_sender != ctx.slot and diff > 0:
-            message = f"Energy Tank capacity increased by {diff}" if diff > 5 else f"Energy Tank capacity increased by {diff} ({ctx.player_names[energy_tank_sender]})"
-            ctx.notification_manager.queue_notification(message)
+            if energy_tank_sender != ctx.slot and diff > 0:
+                message = f"Energy Tank capacity increased by {diff}" if diff > 5 else f"Energy Tank capacity increased by {diff} ({ctx.player_names[energy_tank_sender]})"
+                ctx.notification_manager.queue_notification(message)
 
-        # Heal player when they receive a new energy tank
-        # Player starts with 99 health and each energy tank adds 100 additional
-        ctx.game_interface.set_current_health(new_capacity * 100.0 + 99)
+            # Heal player when they receive a new energy tank
+            # Player starts with 99 health and each energy tank adds 100 additional
+            ctx.game_interface.set_current_health(new_capacity * 100.0 + 99)
 
 
 async def handle_receive_progressive_items(ctx: 'MetroidPrimeContext', current_items: dict[str, InventoryItemData]):
@@ -231,7 +232,7 @@ async def handle_receive_progressive_items(ctx: 'MetroidPrimeContext', current_i
                 give_item_if_not_owned(ctx, inventory_item, network_item)
 
 
-def inventory_item_by_network_id(network_id: int, current_inventory: dict[str, InventoryItemData]) -> InventoryItemData:
+def inventory_item_by_network_id(network_id: int, current_inventory: dict[str, InventoryItemData]) -> InventoryItemData | None:
     for item in current_inventory.values():
         if item.code == network_id:
             return item

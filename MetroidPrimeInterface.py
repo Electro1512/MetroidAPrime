@@ -18,7 +18,6 @@ GAMES = {
         "cplayer_vtable": 0x803d96e8,
         "HUD_MESSAGE_ADDRESS": 0x803efb90,
         "HUD_TRIGGER_ADDRESS": 0x80572414,  # When this is 1 the game will display the message and then set it back to 0
-        "PROGRESSIVE_BEAM_ADDRESS": 0x80572415,  # When this is 1 the game will display the message and then set it back to 0
     },
     "0-01": {
         "game_id": b"GM8E01",
@@ -28,7 +27,6 @@ GAMES = {
         "cplayer_vtable": 0x803d98c8,
         "HUD_MESSAGE_ADDRESS": 0x803efd70,
         "HUD_TRIGGER_ADDRESS": 0x805724f4,  # When this is 1 the game will display the message and then set it back to 0
-        "PROGRESSIVE_BEAM_ADDRESS": 0x805724f5,  # When this is 1 the game will display the message and then set it back to 0
     },
     "0-02": {
         "game_id": b"GM8E01",
@@ -38,7 +36,6 @@ GAMES = {
         "cplayer_vtable": 0x803da7a8,
         "HUD_MESSAGE_ADDRESS": 0x803f0ba8,
         "HUD_TRIGGER_ADDRESS": 0x80573494,  # When this is 1 the game will display the message and then set it back to 0
-        "PROGRESSIVE_BEAM_ADDRESS": 0x80573495,  # When this is 1 the game will display the message and then set it back to 0
     },
     "jpn": {
         "game_id": b"GM8J01",
@@ -48,7 +45,6 @@ GAMES = {
         "cplayer_vtable": 0x803c5b28,
         "HUD_MESSAGE_ADDRESS": 0x803d89c8,
         "HUD_TRIGGER_ADDRESS": 0x8055b474,  # When this is 1 the game will display the message and then set it back to 0
-        "PROGRESSIVE_BEAM_ADDRESS": 0x8055b475,  # When this is 1 the game will display the message and then set it back to 0
     },
     "kor": {
         "game_id": b"GM8E01",
@@ -58,7 +54,6 @@ GAMES = {
         "cplayer_vtable": 0x803d97e8,
         "HUD_MESSAGE_ADDRESS": 0x803efc90,
         "HUD_TRIGGER_ADDRESS": 0x805720f4,  # When this is 1 the game will display the message and then set it back to 0
-        "PROGRESSIVE_BEAM_ADDRESS": 0x805720f5,  # When this is 1 the game will display the message and then set it back to 0
     },
     "pal": {
         "game_id": b"GM8P01",
@@ -68,7 +63,6 @@ GAMES = {
         "cplayer_vtable": 0x803c4b88,
         "HUD_MESSAGE_ADDRESS": 0x803d7a28,
         "HUD_TRIGGER_ADDRESS": 0x804344b4,  # When this is 1 the game will display the message and then set it back to 0
-        "PROGRESSIVE_BEAM_ADDRESS": 0x804344b5,  # When this is 1 the game will display the message and then set it back to 0
     },
 }
 
@@ -218,31 +212,31 @@ class MetroidPrimeInterface:
     def check_for_new_locations(self):
         pass
 
-    def get_item(self, item_id: int) -> InventoryItemData:
-        for item in item_table.values():
-            if item.id == item_id:
-                return self.get_item(item)
+    def get_item(self, item_data: ItemData | int) -> InventoryItemData | None:
+        if isinstance(item_data, int):
+            for item in item_table.values():
+                if item.id == item_data:
+                    return self.get_item(item)
+        if isinstance(item_data, ItemData):
+            if item_data.id in custom_charge_id_to_beam:
+                return InventoryItemData(item_data, int(self.get_progressive_beam_charge_state(custom_charge_id_to_beam[item_data.id])), 1)
+            result = self.dolphin_client.read_pointer(
+                self.__get_player_state_pointer(), calculate_item_offset(item_data.id), 8)
+            if result is not None:
+                current_ammount, current_capacity = struct.unpack(">II", result)
+                return InventoryItemData(item_data, current_ammount, current_capacity)
         return None
-
-    def get_item(self, item: ItemData) -> InventoryItemData:
-        if item.id in custom_charge_id_to_beam:
-            return InventoryItemData(item, int(self.get_progressive_beam_charge_state(custom_charge_id_to_beam[item.id])), 1)
-
-        result = self.dolphin_client.read_pointer(
-            self.__get_player_state_pointer(), calculate_item_offset(item.id), 8)
-        if result is None:
-            return None
-        current_ammount, current_capacity = struct.unpack(">II", result)
-        return InventoryItemData(item, current_ammount, current_capacity)
 
     def get_current_inventory(self) -> dict[str, InventoryItemData]:
         MAX_VANILLA_ITEM_ID = 40
         inventory: dict[str, InventoryItemData] = {}
         for item in item_table.values():
-            if item.id <= MAX_VANILLA_ITEM_ID:
-                inventory[item.name] = self.get_item(item)
-            elif item.id in custom_charge_id_to_beam:
-                inventory[item.name] = self.get_item(item)
+            i = self.get_item(item)
+            if i is not None:
+                if item.id <= MAX_VANILLA_ITEM_ID:
+                    inventory[item.name] = i
+                elif item.id in custom_charge_id_to_beam:
+                    inventory[item.name] = i
         return inventory
 
     def get_current_cosmetic_suit(self) -> MetroidPrimeSuit:
@@ -309,8 +303,9 @@ class MetroidPrimeInterface:
     def set_last_received_index(self, index: int):
         """Sets the received index to the index of the last item received. This is stored as the max amount for the power suit"""
         inventory_item = self.get_item(item_table[SuitUpgrade.Power_Suit.value])
-        inventory_item.current_amount = index
-        self.give_item_to_player(inventory_item.id, inventory_item.current_amount, inventory_item.current_capacity)
+        if inventory_item is not None:
+            inventory_item.current_amount = index
+            self.give_item_to_player(inventory_item.id, inventory_item.current_amount, inventory_item.current_capacity)
 
     def connect_to_game(self):
         """Initializes the connection to dolphin and verifies it is connected to Metroid Prime"""
@@ -387,27 +382,44 @@ class MetroidPrimeInterface:
 
         self.dolphin_client.write_address(GAMES[self.current_game]["HUD_MESSAGE_ADDRESS"], encoded_message)
 
-    def __get_progressive_beam_charge_offset(self, charge_beam: SuitUpgrade) -> int:
-        offset = 0
-        if charge_beam == SuitUpgrade.Power_Charge_Beam:
-            offset = 0
-        elif charge_beam == SuitUpgrade.Wave_Charge_Beam:
-            offset = 2
-        elif charge_beam == SuitUpgrade.Ice_Charge_Beam:
-            offset = 1
-        elif charge_beam == SuitUpgrade.Plasma_Charge_Beam:
-            offset = 3
-        return offset
+    def __progressive_beam_to_beam(self, charge_beam: SuitUpgrade) -> SuitUpgrade | None:
+        match charge_beam:
+            case SuitUpgrade.Power_Charge_Beam:
+                return SuitUpgrade.Power_Beam
+            case SuitUpgrade.Wave_Charge_Beam:
+                return SuitUpgrade.Wave_Beam
+            case SuitUpgrade.Ice_Charge_Beam:
+                return SuitUpgrade.Ice_Beam
+            case SuitUpgrade.Plasma_Charge_Beam:
+                return SuitUpgrade.Plasma_Beam
+        return None
 
-    def set_progressive_beam_charge_state(self, beam: SuitUpgrade, state: bool):
-        offset = self.__get_progressive_beam_charge_offset(beam)
-        state = b"\x01" if state else b"\x00"
-        self.dolphin_client.write_address(GAMES[self.current_game]["PROGRESSIVE_BEAM_ADDRESS"] + offset, state)
+    def set_progressive_beam_charge_state(self, charge_beam: SuitUpgrade, state: bool):
+        cplayer_state = self.__get_player_state_pointer()
+        beam_upgrade = self.__progressive_beam_to_beam(charge_beam)
 
-    def get_progressive_beam_charge_state(self, beam: SuitUpgrade) -> bool:
-        offset = self.__get_progressive_beam_charge_offset(beam)
-        state = self.dolphin_client.read_address(GAMES[self.current_game]["PROGRESSIVE_BEAM_ADDRESS"] + offset, 1)
-        return state == b"\x01"
+        if beam_upgrade is not None:
+            self.dolphin_client.write_pointer(
+                cplayer_state,
+                calculate_item_offset(suit_upgrade_table[beam_upgrade.value].id),
+                struct.pack(">II", 2, 2)
+            )
+
+    def get_progressive_beam_charge_state(self, charge_beam: SuitUpgrade) -> bool:
+        cplayer_state = self.__get_player_state_pointer()
+        beam_upgrade = self.__progressive_beam_to_beam(charge_beam)
+
+        if beam_upgrade is not None:
+            _, cap = struct.unpack(">II", self.dolphin_client.read_pointer(
+                cplayer_state,
+                calculate_item_offset(suit_upgrade_table[beam_upgrade.value].id),
+                struct.calcsize(">II")
+            ))
+            # if beam capacity is 1 we have uncharged beam
+            # else we have charge beam if it is 2
+            return cap >= 2
+
+        return False
 
     def __is_player_table_ready(self) -> bool:
         """Check if the player table is ready to be read from memory, indicating the game is in a playable state"""
