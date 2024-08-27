@@ -313,7 +313,7 @@ class ChozoRuinsAreaData(AreaData):
                     0: DoorData(RoomName.Training_Chamber_Access, defaultLock=DoorLockType.Wave),
                     1: DoorData(RoomName.Piston_Tunnel, rule_func=lambda state, player: can_boost(state, player) and can_bomb(state, player))
                 },
-                pickups=[PickupData('Chozo Ruins: Training Chamber', rule_func=lambda state, player: can_boost(state, player) and can_spider(state, player) and can_bomb(state, player))]),
+                pickups=[PickupData('Chozo Ruins: Training Chamber', rule_func=lambda state, player: can_boost(state, player) and can_spider(state, player) and can_bomb(state, player) and can_power_beam(state, player) and can_combat_ghosts(state, player))]),
             RoomName.Transport_Access_North: RoomData(
                 doors={
                     0: DoorData(RoomName.Hive_Totem, defaultLock=DoorLockType.Missile, rule_func=can_bomb),
