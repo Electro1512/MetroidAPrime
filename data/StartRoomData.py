@@ -91,6 +91,7 @@ all_start_rooms: Dict[str, StartRoomData] = {
     ]
     )]),
     RoomName.Warrior_Shrine.value: StartRoomData(
+        is_eligible=lambda world: world.options.disable_starting_room_bk_prevention.value != True, # Varia suit is definitely required here
         area=MetroidPrimeArea.Magmoor_Caverns,
         loadouts=[
             StartRoomLoadout([SuitUpgrade.Varia_Suit], [
