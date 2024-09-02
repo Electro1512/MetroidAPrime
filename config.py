@@ -1,6 +1,5 @@
-from enum import Enum
 import os
-from typing import TYPE_CHECKING, Dict, Any, List, Optional
+from typing import TYPE_CHECKING, Dict, Any, List
 
 from .Items import ProgressiveUpgrade, SuitUpgrade
 
@@ -8,11 +7,6 @@ from .Items import ProgressiveUpgrade, SuitUpgrade
 from .PrimeOptions import HudColor, MetroidPrimeOptions
 from .data.RoomData import MetroidPrimeArea
 from .data.Transports import get_transport_data
-from .data.MagmoorCaverns import MagmoorCavernsAreaData
-from .data.PhazonMines import PhazonMinesAreaData
-from .data.PhendranaDrifts import PhendranaDriftsAreaData
-from .data.TallonOverworld import TallonOverworldAreaData
-from .data.ChozoRuins import ChozoRuinsAreaData
 
 MAX_32_BIT_INT = 0x7fffffff
 
@@ -210,10 +204,10 @@ def make_config(world: 'MetroidPrimeWorld'):
             "doorOpenMode": "Original",
             "etankCapacity": 100,
             "itemMaxCapacity": {
-                "Power Beam": 1,
-                "Ice Beam": 1,
-                "Wave Beam": 1,
-                "Plasma Beam": 1,
+                "Power Beam": 2 if bool(world.options.progressive_beam_upgrades.value) else 1,
+                "Ice Beam": 2 if bool(world.options.progressive_beam_upgrades.value) else 1,
+                "Wave Beam": 2 if bool(world.options.progressive_beam_upgrades.value) else 1,
+                "Plasma Beam": 2 if bool(world.options.progressive_beam_upgrades.value) else 1,
                 "Missile": 999,
                 "Scan Visor": 1,
                 "Morph Ball Bomb": 1,
