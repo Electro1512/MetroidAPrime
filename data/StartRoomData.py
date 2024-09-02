@@ -91,7 +91,7 @@ all_start_rooms: Dict[str, StartRoomData] = {
     ]
     )]),
     RoomName.Warrior_Shrine.value: StartRoomData(
-        is_eligible=lambda world: world.options.disable_starting_room_bk_prevention.value != True, # Varia suit is definitely required here
+        is_eligible=lambda world: world.options.disable_starting_room_bk_prevention.value != True,  # Varia suit is definitely required here
         area=MetroidPrimeArea.Magmoor_Caverns,
         loadouts=[
             StartRoomLoadout([SuitUpgrade.Varia_Suit], [
@@ -250,7 +250,7 @@ def init_starting_beam(world: 'MetroidPrimeWorld'):
     loadout_beam = next((item for item in world.starting_room_data.selected_loadout.loadout if item in BEAM_ITEMS), None)
 
     def replace_starting_beam(new_beam: SuitUpgrade):
-        if loadout_beam is not None:
+        if loadout_beam != None:
             world.starting_room_data.selected_loadout.loadout.remove(loadout_beam)
         world.starting_room_data.selected_loadout.loadout.append(new_beam)
         world.options.starting_beam.value = new_beam.value
@@ -258,11 +258,11 @@ def init_starting_beam(world: 'MetroidPrimeWorld'):
     # Use the starting beam if it was set in the options (or for UT)
     if world.options.starting_beam.value is not None and world.options.starting_beam.value != "none":
         new_beam = SuitUpgrade.get_by_value(world.options.starting_beam)
-        if new_beam is not None:
+        if new_beam != None:
             replace_starting_beam(new_beam)
 
     # Remap beam to a new color based on door randomization
-    elif world.options.door_color_randomization != "none" and loadout_beam is not None and loadout_beam is not SuitUpgrade.Power_Beam and not world.starting_room_data.force_starting_beam:
+    elif world.options.door_color_randomization != "none" and loadout_beam != None and loadout_beam != SuitUpgrade.Power_Beam and not world.starting_room_data.force_starting_beam:
         # replace the beam with whatever the new one should be mapped to
         original_door_color = BEAM_TO_LOCK_MAPPING[loadout_beam].value
         # Select new beam based off of what the original color is now mapped to
