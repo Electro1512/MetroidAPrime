@@ -205,12 +205,18 @@ class MetroidPrimeWorld(World):
             if item not in self.multiworld.precollected_items[self.player]:
                 self.multiworld.push_precollected(item)
 
+# TODO: Find a less complicated way to do this (maybe explicitly rather than implicitly)
         items_with_multiple = [SuitUpgrade.Missile_Expansion.value, SuitUpgrade.Power_Bomb_Expansion.value, SuitUpgrade.Energy_Tank.value]
         for start_item in {*suit_upgrade_table}:
             # get suitupgrade by string value
 
             if self.options.progressive_beam_upgrades.value and get_progressive_upgrade_for_item(SuitUpgrade.get_by_value(start_item)) is not None:
                 continue
+
+            if start_item in self.prefilled_item_map.values() and start_item in items_with_multiple:
+                for prefilled_item in self.prefilled_item_map.values():
+                    if prefilled_item == start_item:
+                        items_added += 1
 
             # Don't add items that are already placed locally via start room logic or starting loadout to the multiworld pool.
             # Missile expansions, PB expansions, and energy tanks are added still since there are multiple of them.
@@ -222,9 +228,10 @@ class MetroidPrimeWorld(World):
             if start_item in excluded:
                 continue
             if start_item == "Missile Expansion":
-                for new_item in range(0, 8):
+                PROGRESSIVE_EXPANSIONS = 8
+                for new_item in range(0, PROGRESSIVE_EXPANSIONS):  # This is the number of missile expansions that are required
                     local_itempool += [self.create_item('Missile Expansion', ItemClassification.progression)]
-                items_added += 8
+                    items_added += 1
             elif start_item == "Energy Tank":
                 max_tanks = 14
                 progression_tanks = 8
