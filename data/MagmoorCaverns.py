@@ -1,5 +1,5 @@
 
-from ..DoorRando import DoorLockType
+from ..DoorRando import BlastShieldType, DoorLockType
 from .Tricks import Tricks
 from .AreaNames import MetroidPrimeArea
 from .RoomData import AreaData, DoorData, PickupData, RoomData
@@ -14,7 +14,7 @@ class MagmoorCavernsAreaData(AreaData):
             RoomName.Burning_Trail: RoomData(doors={
                 0: DoorData(RoomName.Lake_Tunnel, destinationArea=MetroidPrimeArea.Magmoor_Caverns),
                 1: DoorData(RoomName.Transport_to_Chozo_Ruins_North),
-                2: DoorData(RoomName.Save_Station_Magmoor_A, defaultLock=DoorLockType.Missile),
+                2: DoorData(RoomName.Save_Station_Magmoor_A, blastShield=BlastShieldType.Missile),
             }),
             RoomName.Fiery_Shores: RoomData(doors={
                 0: DoorData(RoomName.Shore_Tunnel, rule_func=lambda state, player: can_heat(state, player) and (can_bomb(state, player) or can_grapple(state, player) or has_energy_tanks(state, player, 4))),
@@ -74,10 +74,10 @@ class MagmoorCavernsAreaData(AreaData):
                 0: DoorData(RoomName.Geothermal_Core, lock=DoorLockType.Blue, defaultLock=DoorLockType.Plasma, exclude_from_rando=True),  # Force blue to prevent softlock
             }, pickups=[PickupData('Magmoor Caverns: Plasma Processing')]),  # Requires plasma beam to exit
             RoomName.Save_Station_Magmoor_A: RoomData(doors={
-                0: DoorData(RoomName.Burning_Trail, defaultLock=DoorLockType.Missile),
+                0: DoorData(RoomName.Burning_Trail, blastShield=BlastShieldType.Missile),
             }),
             RoomName.Save_Station_Magmoor_B: RoomData(doors={
-                0: DoorData(RoomName.Transport_to_Phendrana_Drifts_South, defaultLock=DoorLockType.Missile),
+                0: DoorData(RoomName.Transport_to_Phendrana_Drifts_South, blastShield=BlastShieldType.Missile),
             }),
             RoomName.Shore_Tunnel: RoomData(doors={
                 0: DoorData(RoomName.Monitor_Station, rule_func=can_heat),
@@ -98,7 +98,7 @@ class MagmoorCavernsAreaData(AreaData):
                 0: DoorData(RoomName.Transport_Tunnel_A, destinationArea=MetroidPrimeArea.Magmoor_Caverns),
             }),
             RoomName.Transport_to_Phendrana_Drifts_South: RoomData(doors={
-                0: DoorData(RoomName.Save_Station_Magmoor_B, defaultLock=DoorLockType.Missile, exclude_from_rando=True),  # Door 1 is not annotated, not sure which one is which
+                0: DoorData(RoomName.Save_Station_Magmoor_B, blastShield=BlastShieldType.Missile, exclude_from_rando=True),  # Door 1 is not annotated, not sure which one is which
                 1: DoorData(RoomName.Transport_Tunnel_C, destinationArea=MetroidPrimeArea.Magmoor_Caverns, defaultLock=DoorLockType.Wave, exclude_from_rando=True),
             }),
             RoomName.Transport_to_Tallon_Overworld_West: RoomData(doors={

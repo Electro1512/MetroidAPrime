@@ -4,7 +4,7 @@ from typing import Callable, Dict, List, Optional
 import typing
 
 from BaseClasses import CollectionState, ItemClassification, LocationProgressType, Region
-from ..DoorRando import DoorLockType
+from ..DoorRando import BlastShieldType, DoorLockType
 from ..Items import ProgressiveUpgrade, SuitUpgrade
 from ..Logic import can_bomb, can_ice_beam, can_missile, can_plasma_beam, can_power_beam, can_wave_beam
 from ..PrimeOptions import MetroidPrimeOptions
@@ -56,6 +56,7 @@ def get_config_item_model(world: 'MetroidPrimeWorld', location) -> str:
 class DoorData:
     defaultDestination: Optional[RoomName]
     defaultLock: DoorLockType = DoorLockType.Blue
+    blastShield: Optional[BlastShieldType] = None
     lock: Optional[DoorLockType] = None
     destination: Optional[RoomName] = None
     destinationArea: Optional[MetroidPrimeArea] = None  # Used for rooms that have the same name in different areas like Transport Tunnel A

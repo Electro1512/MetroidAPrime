@@ -235,11 +235,59 @@ class DoorColorRandomization(Choice):
     default = option_none
 
 
+class BlastShieldRandomization(Choice):
+    """Determine if/how blast shields are randomized. Note that this will have a difficult time generating in solo worlds with no tricks enabled.
+       None: No blast shields will be randomized
+       Replace Existing: Each existing Missile Blast Shield will be replaced with a different Blast Shield type
+       Mix it up: Each Region will remove all existing blast shields and instead add a specified number to new doors
+"""
+    display_name = "Blast Shield Randomization"
+    option_none = "None"
+    option_replace_existing = "Replace Existing"
+    option_mix_it_up = "Mix it up"
+    default = option_none
+
+
 class DoorColorMapping(OptionDict):
     """Which door colors go to which colors"""
     display_name = "Door Color Mapping"
     visibility = Visibility.none
     default = {}
+
+
+class BlastShieldMapping(OptionDict):
+    """Which blast shield types go to which colors"""
+    display_name = "Door Color Mapping"
+    visibility = Visibility.none
+    default = {}
+
+
+class BlastShieldAvailableTypes(Choice):
+    """Which blast shield types are available for randomization.
+       All: All blast shield types are available, including beam combos, bomb, power bomb, charge beam, and super missiles
+       No beam combos: Flamethrower, Wavebuster, and Ice Spreader will not be included as blast shield types
+       """
+    display_name = "Blast Shield Available Types"
+    option_all = 1
+    option_no_beam_combos = 0
+    default = option_no_beam_combos
+
+
+class BlastShieldFrequency(Choice):
+    """If enabled, how many blast shields should be added per region?
+       Low: 1-2 blast shields per region
+       Medium: 3-6 blast shields per region
+       High: 5-9 blast shields per region"""
+    display_name = "Blast Shield Frequency"
+    option_low = "Low"
+    option_medium = "Medium"
+    option_high = "High"
+    default = option_medium
+
+
+class IncludeLockedDoors(Toggle):
+    """If enabled, locked doors will also be added to the list of available blast shield types. These will only be placed in spots that will not prevent progression but may force alternate paths"""
+    display_name = "Include Locked Doors in Blast Shield Randomization"
 
 
 class IncludePowerBeamDoors(Toggle):
@@ -383,6 +431,11 @@ class MetroidPrimeOptions(PerGameCommonOptions):
     elevator_mapping: ElevatorMapping
     door_color_randomization: DoorColorRandomization
     door_color_mapping: DoorColorMapping
+    blast_shield_randomization: BlastShieldRandomization
+    blast_shield_mapping: BlastShieldMapping
+    blast_shield_frequency: BlastShieldFrequency
+    blast_shield_available_types: BlastShieldAvailableTypes
+    include_locked_doors: IncludeLockedDoors
     include_power_beam_doors: IncludePowerBeamDoors
     include_morph_ball_bomb_doors: IncludeMorphBallBombDoors
     randomize_starting_beam: RandomizeStartingBeam

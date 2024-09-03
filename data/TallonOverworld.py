@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from BaseClasses import CollectionState
-from ..DoorRando import DoorLockType
+from ..DoorRando import BlastShieldType, DoorLockType
 from ..Logic import can_bomb, can_boost, can_charge_beam, can_grapple, can_missile, can_morph_ball, can_move_underwater, can_power_beam, can_power_bomb, can_space_jump, can_spider, can_super_missile, can_xray, can_wave_beam, can_thermal
 from ..LogicCombat import can_combat_ghosts
 from .Tricks import Tricks
@@ -99,7 +99,7 @@ class TallonOverworldAreaData(AreaData):
 
             RoomName.Frigate_Crash_Site: RoomData(
                 doors={
-                    0: DoorData(RoomName.Waterfall_Cavern, defaultLock=DoorLockType.Missile, rule_func=can_missile),
+                    0: DoorData(RoomName.Waterfall_Cavern, blastShield=BlastShieldType.Missile, rule_func=can_missile),
                     1: DoorData(RoomName.Cargo_Freight_Lift_to_Deck_Gamma, defaultLock=DoorLockType.Ice,
                                 rule_func=can_crashed_frigate,
                                 tricks=[Tricks.frigate_no_gravity],
@@ -220,7 +220,7 @@ class TallonOverworldAreaData(AreaData):
             RoomName.Root_Cave: RoomData(
                 doors={
                     0: DoorData(RoomName.Transport_Tunnel_B, destinationArea=MetroidPrimeArea.Tallon_Overworld),
-                    1: DoorData(RoomName.Root_Tunnel, defaultLock=DoorLockType.Missile),
+                    1: DoorData(RoomName.Root_Tunnel, blastShield=BlastShieldType.Missile),
                     2: DoorData(RoomName.Arbor_Chamber, defaultLock=DoorLockType.Plasma,
                                 rule_func=lambda state, player: can_grapple(state, player) and can_xray(state, player) and can_space_jump(state, player),
                                 tricks=[Tricks.root_cave_arbor_chamber_no_grapple_xray]
@@ -233,7 +233,7 @@ class TallonOverworldAreaData(AreaData):
 
             RoomName.Root_Tunnel: RoomData(
                 doors={
-                    0: DoorData(RoomName.Root_Cave, defaultLock=DoorLockType.Missile),
+                    0: DoorData(RoomName.Root_Cave, blastShield=BlastShieldType.Missile),
                     1: DoorData(RoomName.Tallon_Canyon),
                 },
             ),
@@ -260,14 +260,14 @@ class TallonOverworldAreaData(AreaData):
             RoomName.Temple_Lobby: RoomData(
                 doors={
                     0: DoorData(RoomName.Artifact_Temple),
-                    1: DoorData(RoomName.Temple_Security_Station, defaultLock=DoorLockType.Missile),
+                    1: DoorData(RoomName.Temple_Security_Station, blastShield=BlastShieldType.Missile),
                 },
             ),
 
             RoomName.Temple_Security_Station: RoomData(
                 doors={
                     0: DoorData(RoomName.Temple_Hall),
-                    1: DoorData(RoomName.Temple_Lobby, defaultLock=DoorLockType.Missile),
+                    1: DoorData(RoomName.Temple_Lobby, blastShield=BlastShieldType.Missile),
                 },
             ),
 
@@ -347,7 +347,7 @@ class TallonOverworldAreaData(AreaData):
             RoomName.Waterfall_Cavern: RoomData(
                 doors={
                     0: DoorData(RoomName.Landing_Site, rule_func=can_morph_ball),
-                    1: DoorData(RoomName.Frigate_Crash_Site, defaultLock=DoorLockType.Missile, rule_func=can_morph_ball)
+                    1: DoorData(RoomName.Frigate_Crash_Site, blastShield=BlastShieldType.Missile, rule_func=can_morph_ball)
                 },
             )
         }

@@ -11,6 +11,17 @@ if TYPE_CHECKING:
     from . import MetroidPrimeWorld
 
 
+class BlastShieldType(Enum):
+    Bomb = "Bomb"
+    Charge_Beam = "Charge Beam"
+    Flamethrower = "Flamethrower"
+    Ice_Spreader = "Ice Spreader"
+    Wavebuster = "Wavebuster"
+    Power_Bomb = "Power Bomb"
+    Super_Missile = "Super Missile"
+    Missile = "Missile"
+
+
 class DoorLockType(Enum):
     Blue = "Blue"
     Wave = "Wave Beam"
