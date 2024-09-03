@@ -13,14 +13,14 @@ class PhazonMinesAreaData(AreaData):
         super().__init__(MetroidPrimeArea.Phazon_Mines.value)
         self.rooms = {
             RoomName.Central_Dynamo: RoomData(
-                area=MetroidPrimeArea.Phazon_Mines,
+                include_area_in_name=True,
                 doors={
                     0: DoorData(RoomName.Dynamo_Access, rule_func=lambda state, player: can_combat_mines(state, player) and can_space_jump(state, player) and can_power_bomb(state, player), defaultLock=DoorLockType.Ice, destinationArea=MetroidPrimeArea.Phazon_Mines),
                     1: DoorData(RoomName.Quarantine_Access_A, rule_func=lambda state, player: can_space_jump(state, player) and can_power_bomb(state, player), defaultLock=DoorLockType.Ice),
                     2: DoorData(RoomName.Save_Station_Mines_B, defaultLock=DoorLockType.Ice, rule_func=can_bomb),  # Door only unlocks after defeating drone and then completing the maze
                 }, pickups=[PickupData('Phazon Mines: Central Dynamo', rule_func=can_bomb), ]),
             RoomName.Dynamo_Access: RoomData(
-                area=MetroidPrimeArea.Phazon_Mines,
+                include_area_in_name=True,
                 doors={
                     0: DoorData(RoomName.Central_Dynamo, defaultLock=DoorLockType.Ice, destinationArea=MetroidPrimeArea.Phazon_Mines),
                     1: DoorData(RoomName.Omega_Research, defaultLock=DoorLockType.Ice),  # Vertical going up
@@ -56,7 +56,7 @@ class PhazonMinesAreaData(AreaData):
             }),
             RoomName.Elite_Quarters: RoomData(
                 doors={
-                  # TODO: Move xray requirements to omega pirate reqs
+                    # TODO: Move xray requirements to omega pirate reqs
                     0: DoorData(RoomName.Elite_Quarters_Access, defaultLock=DoorLockType.Plasma, rule_func=lambda state, player: can_combat_omega_pirate(state, player) and can_xray(state, player, hard_required=True)),
                     1: DoorData(RoomName.Processing_Center_Access, defaultLock=DoorLockType.Plasma, rule_func=lambda state, player: can_combat_omega_pirate(state, player) and can_xray(state, player, hard_required=True) and can_scan(state, player)),
                 },
@@ -188,17 +188,19 @@ class PhazonMinesAreaData(AreaData):
             }),
             RoomName.Storage_Depot_A: RoomData(doors={0: DoorData(RoomName.Mine_Security_Station, defaultLock=DoorLockType.Plasma), }, pickups=[PickupData('Phazon Mines: Storage Depot A'), ]),
             RoomName.Storage_Depot_B: RoomData(doors={0: DoorData(RoomName.Ore_Processing, defaultLock=DoorLockType.Ice), }, pickups=[PickupData('Phazon Mines: Storage Depot B'), ]),
-            RoomName.Transport_Access: RoomData(area=MetroidPrimeArea.Phazon_Mines, doors={
+            RoomName.Transport_Access: RoomData(
+              include_area_in_name=True,
+              doors={
                 0: DoorData(RoomName.Phazon_Processing_Center, defaultLock=DoorLockType.Ice),
                 1: DoorData(RoomName.Transport_to_Magmoor_Caverns_South, defaultLock=DoorLockType.Ice, destinationArea=MetroidPrimeArea.Phazon_Mines),
             }),
             RoomName.Transport_to_Magmoor_Caverns_South: RoomData(
-                area=MetroidPrimeArea.Phazon_Mines,
+                include_area_in_name=True,
                 doors={
                     0: DoorData(RoomName.Transport_Access, defaultLock=DoorLockType.Ice, destinationArea=MetroidPrimeArea.Phazon_Mines),
                 }),
             RoomName.Transport_to_Tallon_Overworld_South: RoomData(
-                area=MetroidPrimeArea.Phazon_Mines,
+                include_area_in_name=True,
                 doors={
                     0: DoorData(RoomName.Quarry_Access, defaultLock=DoorLockType.Wave,),
                 }),
@@ -214,3 +216,4 @@ class PhazonMinesAreaData(AreaData):
 
             })
         }
+        self._init_room_names_and_areas()

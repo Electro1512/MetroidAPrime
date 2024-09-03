@@ -119,7 +119,7 @@ class PhendranaDriftsAreaData(AreaData):
                 },
                 pickups=[PickupData('Phendrana Drifts: Ice Ruins West', rule_func=lambda state, player: can_melt_ice(state, player) and can_space_jump(state, player) and can_missile(state, player)), ]),
             RoomName.Lake_Tunnel: RoomData(
-                area=MetroidPrimeArea.Phendrana_Drifts,
+                include_area_in_name=True,
                 doors={
                     0: DoorData(RoomName.Hunter_Cave, defaultLock=DoorLockType.Wave),
                     1: DoorData(RoomName.Gravity_Chamber, defaultLock=DoorLockType.Wave),
@@ -129,7 +129,7 @@ class PhendranaDriftsAreaData(AreaData):
                 1: DoorData(RoomName.Hunter_Cave, defaultLock=DoorLockType.Wave, rule_func=can_morph_ball),
             }),
             RoomName.Map_Station: RoomData(
-                area=MetroidPrimeArea.Phendrana_Drifts,
+                include_area_in_name=True,
                 doors={
                     0: DoorData(RoomName.Research_Entrance),
                 }),
@@ -271,13 +271,13 @@ class PhendranaDriftsAreaData(AreaData):
                 1: DoorData(RoomName.Phendrana_Shorelines, rule_func=lambda state, player: can_missile(state, player) or can_charge_beam(state, player) or can_plasma_beam(state, player)),
             }),
             RoomName.Transport_Access: RoomData(
-                area=MetroidPrimeArea.Phendrana_Drifts,
+                include_area_in_name=True,
                 doors={
                     0: DoorData(RoomName.Transport_to_Magmoor_Caverns_South, defaultLock=DoorLockType.Ice, destinationArea=MetroidPrimeArea.Phendrana_Drifts),
                     1: DoorData(RoomName.Frozen_Pike, defaultLock=DoorLockType.Ice),
                 }, pickups=[PickupData('Phendrana Drifts: Transport Access', rule_func=can_melt_ice), ]),
             RoomName.Transport_to_Magmoor_Caverns_South: RoomData(
-                area=MetroidPrimeArea.Phendrana_Drifts,
+                include_area_in_name=True,
                 doors={
                     0: DoorData(RoomName.Transport_Access, defaultLock=DoorLockType.Ice, destinationArea=MetroidPrimeArea.Phendrana_Drifts, rule_func=can_spider),
                     1: DoorData(RoomName.South_Quarantine_Tunnel, defaultLock=DoorLockType.Wave)
@@ -298,3 +298,4 @@ class PhendranaDriftsAreaData(AreaData):
                 1: DoorData(RoomName.Control_Tower, rule_func=can_scan, defaultLock=DoorLockType.Wave),
             })
         }
+        self._init_room_names_and_areas()

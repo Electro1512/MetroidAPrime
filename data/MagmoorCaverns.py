@@ -33,7 +33,7 @@ class MagmoorCavernsAreaData(AreaData):
                 2: DoorData(RoomName.South_Core_Tunnel, rule_func=can_space_jump),
             }),
             RoomName.Lake_Tunnel: RoomData(
-                area=MetroidPrimeArea.Magmoor_Caverns,
+                include_area_in_name=True,
                 doors={
                     0: DoorData(RoomName.Lava_Lake, rule_func=can_heat, tricks=[Tricks.lava_lake_item_suitless]),
                     1: DoorData(RoomName.Burning_Trail, rule_func=can_heat, tricks=[Tricks.lava_lake_item_suitless]),
@@ -108,15 +108,15 @@ class MagmoorCavernsAreaData(AreaData):
             RoomName.Transport_Tunnel_A: RoomData(doors={
                 0: DoorData(RoomName.Transport_to_Phendrana_Drifts_North, rule_func=lambda state, player: can_heat(state, player) and can_bomb(state, player)),
                 1: DoorData(RoomName.Monitor_Station, rule_func=lambda state, player: can_heat(state, player) and can_bomb(state, player)),
-            }, pickups=[PickupData('Magmoor Caverns: Transport Tunnel A', rule_func=lambda state, player: can_heat(state, player) and can_bomb(state, player))], area=MetroidPrimeArea.Magmoor_Caverns),
+            }, pickups=[PickupData('Magmoor Caverns: Transport Tunnel A', rule_func=lambda state, player: can_heat(state, player) and can_bomb(state, player))], include_area_in_name=True),
             RoomName.Transport_Tunnel_B: RoomData(doors={
                 0: DoorData(RoomName.Transport_to_Tallon_Overworld_West, rule_func=lambda state, player: can_heat(state, player) and can_morph_ball(state, player), tricks=[Tricks.transport_tunnel_b_damage_boost]),
                 1: DoorData(RoomName.Fiery_Shores, rule_func=lambda state, player: can_heat(state, player) and can_morph_ball(state, player), tricks=[Tricks.transport_tunnel_b_damage_boost]),
-            }, area=MetroidPrimeArea.Magmoor_Caverns),
+            }, include_area_in_name=True),
             RoomName.Transport_Tunnel_C: RoomData(doors={
                 0: DoorData(RoomName.Transport_to_Phendrana_Drifts_South, defaultLock=DoorLockType.Wave),
                 1: DoorData(RoomName.Magmoor_Workstation, defaultLock=DoorLockType.Wave),
-            }, area=MetroidPrimeArea.Magmoor_Caverns),
+            }, include_area_in_name=True),
             RoomName.Triclops_Pit: RoomData(
                 doors={
                     0: DoorData(RoomName.Monitor_Tunnel, rule_func=lambda state, player: can_heat(state, player)),
@@ -147,3 +147,4 @@ class MagmoorCavernsAreaData(AreaData):
                 1: DoorData(RoomName.Magmoor_Workstation, rule_func=can_power_bomb),
             })
         }
+        self._init_room_names_and_areas()

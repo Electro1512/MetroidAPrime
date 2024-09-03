@@ -2,7 +2,7 @@ import typing
 
 from Fill import distribute_items_restrictive
 
-from ..DoorRando import BlastShieldType
+from ..DoorRando import BlastShieldType, DoorLockType
 
 from ..config import make_config
 
@@ -33,8 +33,12 @@ class TestNoBlastShieldRando(MetroidPrimeTestBase):
         distribute_items_restrictive(self.multiworld)
         config = make_config(world)
         level_key = config["levelData"]["Chozo Ruins"]["rooms"]
-        self.assertTrue(level_key["Main Plaza"]["doors"]["2"]["blastShieldType"] == BlastShieldType.Missile.value)
-        self.assertTrue(level_key["Ruined Shrine Access"]["doors"]["1"]["blastShieldType"] == BlastShieldType.Missile.value, "Paired mapping is not set")
+        self.assertTrue(level_key[RoomName.Main_Plaza.value]["doors"]["2"]["blastShieldType"] == BlastShieldType.Missile.value)
+        self.assertTrue(level_key[RoomName.Ruined_Shrine_Access.value]["doors"]["1"]["blastShieldType"] == BlastShieldType.Missile.value)
+
+        self.assertTrue(level_key[RoomName.Reflecting_Pool.value]["doors"]["3"]["blastShieldType"] == BlastShieldType.Missile.value)
+        self.assertTrue(level_key[RoomName.Antechamber.value]["doors"]["0"]["blastShieldType"] == BlastShieldType.Missile.value, "Paired mapping is not set")
+        self.assertTrue(level_key[RoomName.Antechamber.value]["doors"]["0"]["shieldType"] == DoorLockType.Blue.value, "Existing shield type override is not preserved")
 
 
 # class TestReplaceBlastShieldRando(MetroidPrimeTestBase):

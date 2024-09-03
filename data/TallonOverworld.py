@@ -306,7 +306,7 @@ class TallonOverworldAreaData(AreaData):
                     0: DoorData(RoomName.Transport_to_Chozo_Ruins_West),
                     1: DoorData(RoomName.Tallon_Canyon),
                 },
-                area=MetroidPrimeArea.Tallon_Overworld,
+                include_area_in_name=True,
             ),
 
             RoomName.Transport_Tunnel_B: RoomData(
@@ -314,13 +314,13 @@ class TallonOverworldAreaData(AreaData):
                     0: DoorData(RoomName.Transport_to_Magmoor_Caverns_East),
                     1: DoorData(RoomName.Root_Cave)
                 },
-                area=MetroidPrimeArea.Tallon_Overworld,
+                include_area_in_name=True,
                 pickups=[
                     PickupData('Tallon Overworld: Transport Tunnel B'),
                 ]),
 
             RoomName.Transport_Tunnel_C: RoomData(
-                area=MetroidPrimeArea.Tallon_Overworld,
+                include_area_in_name=True,
                 doors={
                     0: DoorData(RoomName.Overgrown_Cavern, defaultLock=DoorLockType.Ice),
                     1: DoorData(RoomName.Transport_to_Chozo_Ruins_East, defaultLock=DoorLockType.Ice),
@@ -328,7 +328,7 @@ class TallonOverworldAreaData(AreaData):
             ),
 
             RoomName.Transport_Tunnel_D: RoomData(
-                area=MetroidPrimeArea.Tallon_Overworld,
+                include_area_in_name=True,
                 doors={
                     0: DoorData(RoomName.Great_Tree_Hall, defaultLock=DoorLockType.Ice),
                     1: DoorData(RoomName.Transport_to_Chozo_Ruins_South, defaultLock=DoorLockType.Ice),
@@ -336,7 +336,7 @@ class TallonOverworldAreaData(AreaData):
             ),
 
             RoomName.Transport_Tunnel_E: RoomData(
-                area=MetroidPrimeArea.Tallon_Overworld,
+                include_area_in_name=True,
                 doors={
                     0: DoorData(RoomName.Transport_to_Phazon_Mines_East, defaultLock=DoorLockType.Ice),
                     1: DoorData(RoomName.Great_Tree_Hall, defaultLock=DoorLockType.Ice, rule_func=can_boost),
@@ -351,3 +351,4 @@ class TallonOverworldAreaData(AreaData):
                 },
             )
         }
+        self._init_room_names_and_areas()

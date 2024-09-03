@@ -571,13 +571,18 @@
           ],
           "doors": {
             "0": {
-              "shieldType": "Blue"
+              "shieldType": "Blue",
+              "blastShieldType": "Missile"
             }
           }
         },
         "Arboretum Access": {
           "pickups": [],
-          "doors": {}
+          "doors": {
+            "0": {
+              "blastShieldType": "Missile"
+            }
+          }
         },
         "Arboretum": {
           "pickups": [],
@@ -737,6 +742,9 @@
         "Gathering Hall Access": {
           "pickups": [],
           "doors": {
+            "0": {
+              "blastShieldType": "Missile"
+            },
             "1": {
               "blastShieldType": "Missile"
             }
@@ -1011,7 +1019,11 @@
         },
         "Sunchamber Lobby": {
           "pickups": [],
-          "doors": {}
+          "doors": {
+            "1": {
+              "blastShieldType": "Missile"
+            }
+          }
         },
         "Sunchamber": {
           "pickups": [

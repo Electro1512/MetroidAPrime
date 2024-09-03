@@ -71,13 +71,13 @@ class ChozoRuinsAreaData(AreaData):
                 },
                 pickups=[PickupData('Chozo Ruins: Crossway', rule_func=lambda state, player: can_bomb(state, player) and can_boost(state, player) and can_spider(state, player) and can_super_missile(state, player) and can_scan(state, player), tricks=[Tricks.crossway_item_fewer_reqs]), ]),
             RoomName.Dynamo_Access: RoomData(
-                area=MetroidPrimeArea.Chozo_Ruins,
+                include_area_in_name=True,
                 doors={
                     0: DoorData(RoomName.Watery_Hall, blastShield=BlastShieldType.Missile, rule_func=can_bomb),
                     1: DoorData(RoomName.Dynamo, destinationArea=MetroidPrimeArea.Chozo_Ruins),
                 }),
             RoomName.Dynamo: RoomData(
-                area=MetroidPrimeArea.Chozo_Ruins,
+                include_area_in_name=True,
                 doors={
                     0: DoorData(RoomName.Dynamo_Access, destinationArea=MetroidPrimeArea.Chozo_Ruins),
                 },
@@ -167,7 +167,7 @@ class ChozoRuinsAreaData(AreaData):
                          PickupData('Chozo Ruins: Main Plaza - Tree', rule_func=can_super_missile, tricks=[]),
                          PickupData('Chozo Ruins: Main Plaza - Locked Door', rule_func=lambda state, player: state.can_reach_region(RoomName.Plaza_Access.value, player) and can_morph_ball(state, player), tricks=[Tricks.vault_via_plaza]), ]),  # If we do room rando, the logic for this will need to be adjusted
             RoomName.Map_Station: RoomData(
-                area=MetroidPrimeArea.Chozo_Ruins,
+                include_area_in_name=True,
                 doors={
                     0: DoorData(RoomName.Ruined_Gallery),
                 }),
@@ -336,7 +336,7 @@ class ChozoRuinsAreaData(AreaData):
                 0: DoorData(RoomName.Ruins_Entrance)
             }),
             RoomName.Transport_to_Tallon_Overworld_South: RoomData(
-                area=MetroidPrimeArea.Chozo_Ruins,
+                include_area_in_name=True,
                 doors={
                     0: DoorData(RoomName.Transport_Access_South),
                 }),
@@ -375,3 +375,4 @@ class ChozoRuinsAreaData(AreaData):
                 PickupData('Chozo Ruins: Furnace - Inside Furnace', rule_func=can_bomb, exclude_from_config=True)
             ])  # This is not actually in west furnace but it can only be accessed from west furnace, logic-wise
         }
+        self._init_room_names_and_areas()

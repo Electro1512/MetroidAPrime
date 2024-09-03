@@ -54,7 +54,7 @@ def get_config_item_model(world: 'MetroidPrimeWorld', location) -> str:
 
 @dataclass
 class DoorData:
-    defaultDestination: Optional[RoomName]
+    default_destination: Optional[RoomName]
     defaultLock: DoorLockType = DoorLockType.Blue
     blastShield: Optional[BlastShieldType] = None
     lock: Optional[DoorLockType] = None
@@ -65,7 +65,7 @@ class DoorData:
     exclude_from_rando: bool = False  # Used primarily for door rando when a door doesn't actually exist
 
     def get_destination_region_name(self):
-        destination = self.destination.value if self.destination is not None else self.defaultDestination.value
+        destination = self.destination.value if self.destination is not None else self.default_destination.value
         if self.destinationArea is not None:
             return f"{self.destinationArea.value}: {destination}"
         return destination
@@ -95,7 +95,9 @@ class PickupData:
 class RoomData:
     doors: dict[int, DoorData] = field(default_factory=dict)
     pickups: list[PickupData] = field(default_factory=list)
-    area: Optional[MetroidPrimeArea] = None  # Used for rooms that have duplicate names in different areas
+    include_area_in_name: bool = False  # Used for rooms that have duplicate names in different areas
+    area: Optional[MetroidPrimeArea] = None
+    room_name: Optional[RoomName] = None
 
     def get_config_data(self, world: 'MetroidPrimeWorld', parent_area: str):
         config = {
@@ -127,7 +129,7 @@ class RoomData:
 
         for door_id, door in self.doors.items():
             if door.blastShield is not None:
-                if door_id not in door_data:
+                if f"{door_id}" not in door_data:
                     door_data[f"{door_id}"] = {}
                 door_data[f"{door_id}"]["blastShieldType"] = door.blastShield.value
 
@@ -135,15 +137,27 @@ class RoomData:
 
     def get_region_name(self, name: str):
         """Returns the name of the region, used primarily for rooms with duplicate names"""
-        if self.area is not None:
+        if self.include_area_in_name:
             return f"{self.area.value}: {name}"
         return name
+
+    def get_matching_door(self, source_door: DoorData, world: 'MetroidPrimeWorld') -> Optional[DoorData]:
+        target_room = world.game_region_data.get(self.area).rooms.get(source_door.default_destination)
+        for door_data in target_room.doors.values():
+            if door_data.default_destination == self.room_name:
+                return door_data
+        return None
 
 
 class AreaData:
     def __init__(self, area_name: str):
         self.rooms: dict[RoomName, RoomData] = {}
         self.area_name: str = area_name
+
+    def _init_room_names_and_areas(self):
+        for room_name, room_data in self.rooms.items():
+            room_data.room_name = room_name
+            room_data.area = MetroidPrimeArea(self.area_name)
 
     def get_config_data(self, world: 'MetroidPrimeWorld'):
         return {
@@ -177,13 +191,19 @@ class AreaData:
             name = room_data.get_region_name(room_name.value)
             region = world.multiworld.get_region(name, world.player)
             for door_id, door_data in room_data.doors.items():
-                destination = door_data.destination or door_data.defaultDestination
+                destination = door_data.destination or door_data.default_destination
                 if world.options.door_color_randomization != "none" and door_data.exclude_from_rando is False and door_data.defaultLock.value in color_mapping:
                     door_data.lock = DoorLockType(color_mapping[door_data.defaultLock.value])
 
                 # TODO: Check if should receive blast shield from mapping
 
                 # TODO: Verify blast shield is also set on paired door or if paired door has a blast shield so we should too
+                paired_door = room_data.get_matching_door(door_data, world)
+                if paired_door is not None and paired_door.blastShield is not None:
+                    door_data.blastShield = paired_door.blastShield
+                elif door_data.blastShield is not None:
+                    paired_door.blastShield = door_data.blastShield
+
                 if door_data.blastShield is not None:
                     pass
 
