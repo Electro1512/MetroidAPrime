@@ -33,8 +33,8 @@ class TestNoBlastShieldRando(MetroidPrimeTestBase):
         distribute_items_restrictive(self.multiworld)
         config = make_config(world)
         level_key = config["levelData"]["Chozo Ruins"]["rooms"]
-        self.assertTrue(level_key["Ruined Shrine Access"]["doors"]["1"]["blastShieldType"] == BlastShieldType.Missile)
-        self.assertTrue(level_key["Main Plaza"]["doors"]["2"]["blastShieldType"] == BlastShieldType.Missile)
+        self.assertTrue(level_key["Main Plaza"]["doors"]["2"]["blastShieldType"] == BlastShieldType.Missile.value)
+        self.assertTrue(level_key["Ruined Shrine Access"]["doors"]["1"]["blastShieldType"] == BlastShieldType.Missile.value, "Paired mapping is not set")
 
 
 # class TestReplaceBlastShieldRando(MetroidPrimeTestBase):

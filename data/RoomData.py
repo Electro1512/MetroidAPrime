@@ -106,6 +106,8 @@ class RoomData:
 
         return config
 
+# TODO: Reduce duplication here w/ if/else. Make a single loop and operate on each door individually
+# TODO: Make a test that verifies door rando output config so this will fail if it is not correct
     def get_door_config_data(self, world: 'MetroidPrimeWorld', parent_area: str):
         door_data = {}
         if world.door_color_mapping is not None:
@@ -122,6 +124,13 @@ class RoomData:
                     door_data[f"{door_id}"] = {
                         "shieldType": door.lock.value if door.lock is not None else door.defaultLock.value,
                     }
+
+        for door_id, door in self.doors.items():
+            if door.blastShield is not None:
+                if door_id not in door_data:
+                    door_data[f"{door_id}"] = {}
+                door_data[f"{door_id}"]["blastShieldType"] = door.blastShield.value
+
         return door_data
 
     def get_region_name(self, name: str):
