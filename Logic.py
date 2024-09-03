@@ -112,6 +112,18 @@ def can_charge_beam(state: CollectionState, player: int, required_beam: typing.O
     return state.has(SuitUpgrade.Charge_Beam.value, player) or state.has_any_count({upgrade.value: 2 for upgrade in ProgressiveUpgrade}, player)
 
 
+def can_beam_combo(state: CollectionState, player: int, required_beam: SuitUpgrade) -> bool:
+    if not can_missile(state, player) and not can_charge_beam(state, player, required_beam):
+        return False
+
+    if required_beam == SuitUpgrade.Wave_Beam:
+        return state.has(SuitUpgrade.Wavebuster.value)
+    elif required_beam == SuitUpgrade.Ice_Beam:
+        return state.has(SuitUpgrade.Ice_Spreader.value)
+    elif required_beam == SuitUpgrade.Plasma_Beam:
+        return state.has(SuitUpgrade.Flamethrower.value)
+
+
 def can_scan(state: CollectionState, player: int) -> bool:
     return state.has(SuitUpgrade.Scan_Visor.value, player)
 

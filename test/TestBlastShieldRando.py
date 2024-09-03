@@ -47,3 +47,4 @@ class TestNoBlastShieldRando(MetroidPrimeTestBase):
 #         test_region = RoomName.Ruined_Shrine_Access.value
 #         self.collect(self.get_item_by_name(SuitUpgrade.Missile_Expansion.value))
 #         self.assertFalse(self.can_reach_region(test_region))
+#       def test_blast_shields_are_paired(self):
