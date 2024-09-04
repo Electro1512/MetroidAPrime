@@ -18,7 +18,7 @@ from .data.Transports import ELEVATOR_USEFUL_NAMES, default_elevator_mappings, g
 from .config import make_config
 from .Regions import create_regions
 from .Locations import every_location
-from .PrimeOptions import BlastShieldRandomization, MetroidPrimeOptions, VariaSuitColorOverride
+from .PrimeOptions import BlastShieldAvailableTypes, BlastShieldRandomization, MetroidPrimeOptions, VariaSuitColorOverride
 from .Items import PROGRESSIVE_ITEM_MAPPING, MetroidPrimeItem, ProgressiveUpgrade, SuitUpgrade, get_item_for_options, get_progressive_upgrade_for_item, suit_upgrade_table, artifact_table, item_table
 from .data.StartRoomData import StartRoomData, init_starting_beam, init_starting_loadout, init_starting_room_data
 from .Container import MetroidPrimeContainer
@@ -159,9 +159,11 @@ class MetroidPrimeWorld(World):
 
         # Randomize Blast Shields
         if self.options.blast_shield_mapping:
+          # TODO: Make these conversions happen at a parent object so you don't need to iterate
             self.blast_shield_mapping = {area: AreaBlastShieldMapping.from_dict(mapping) for area, mapping in self.options.blast_shield_mapping.value.items()}
         else:
             self.blast_shield_mapping = get_world_blast_shield_mapping(self)
+            self.options.blast_shield_mapping.value = {area: mapping.to_dict() for area, mapping in self.blast_shield_mapping.items()}
         apply_blast_shield_mapping(self)
 
         # Randomize Elevators
@@ -191,6 +193,12 @@ class MetroidPrimeWorld(World):
         # add artifacts
         local_itempool = []
         items_added = 0
+        has_blast_shield_rando_with_combos = (
+            self.options.blast_shield_available_types.value
+            == BlastShieldAvailableTypes.option_all
+            and self.options.blast_shield_randomization.value
+            != BlastShieldRandomization.option_none
+        )
         for start_item in artifact_table:
             local_itempool += [self.create_item(start_item)]
             items_added += 1
@@ -217,8 +225,6 @@ class MetroidPrimeWorld(World):
 # TODO: Find a less complicated way to do this (maybe explicitly rather than implicitly)
         items_with_multiple = [SuitUpgrade.Missile_Expansion.value, SuitUpgrade.Power_Bomb_Expansion.value, SuitUpgrade.Energy_Tank.value]
         for start_item in {*suit_upgrade_table}:
-            # get suitupgrade by string value
-
             if self.options.progressive_beam_upgrades.value and get_progressive_upgrade_for_item(SuitUpgrade.get_by_value(start_item)) is not None:
                 continue
 
@@ -254,8 +260,12 @@ class MetroidPrimeWorld(World):
                 for new_item in range(0, 4):
                     local_itempool += [self.create_item("Power Bomb Expansion")]
                 items_added += 5
+
             else:
-                local_itempool += [self.create_item(start_item)]
+                if has_blast_shield_rando_with_combos and start_item in [SuitUpgrade.Wavebuster.value, SuitUpgrade.Ice_Spreader.value, SuitUpgrade.Flamethrower.value]:
+                    local_itempool += [self.create_item(start_item, ItemClassification.progression)]
+                else:
+                    local_itempool += [self.create_item(start_item)]
                 items_added += 1
 
         if self.options.missile_launcher.value:
@@ -277,14 +287,15 @@ class MetroidPrimeWorld(World):
 
             def quantity_in_prefill(item: ProgressiveUpgrade) -> int:
                 return list(self.prefilled_item_map.values()).count(item.value)
+
             for progressive_item in PROGRESSIVE_ITEM_MAPPING:
                 progression_per_item = 3
                 to_make = progression_per_item - quantity_in_start_inventory(progressive_item) - quantity_in_prefill(progressive_item)
                 for i in range(to_make):
-                    # Last item in the progression is useful (except power beam/super missile), the rest are progression
+                    # Last item in the progression is useful (except power beam/super missile), the rest are progression (unless all are available in blast shield rando)
                     classification = ItemClassification.progression if i < to_make - 1 else ItemClassification.useful
-                    if progressive_item == ProgressiveUpgrade.Progressive_Power_Beam:
-                        classification = ItemClassification.progression  # Super missile is always progression
+                    if progressive_item == ProgressiveUpgrade.Progressive_Power_Beam or has_blast_shield_rando_with_combos:  # Super missile is always required
+                        classification = ItemClassification.progression
                     local_itempool += [self.create_item(progressive_item.value, classification)]
                     items_added += 1
 

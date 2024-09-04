@@ -63,6 +63,7 @@ class SuitUpgrade(Enum):
     def __str__(self):
         return self.value
 
+  # TODO: pretty sure I can remove this and just do SuitUpgrade(value)
     @staticmethod
     def get_by_value(value: str) -> 'SuitUpgrade':
         for suit in SuitUpgrade:
@@ -77,6 +78,7 @@ class ProgressiveUpgrade(Enum):
     Progressive_Wave_Beam = "Progressive Wave Beam"
     Progressive_Plasma_Beam = "Progressive Plasma Beam"
 
+# TODO: Same as above
     @staticmethod
     def get_by_value(value: str) -> 'SuitUpgrade':
         for upgrade in ProgressiveUpgrade:

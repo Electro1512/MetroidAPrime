@@ -22,7 +22,6 @@ class BlastShieldType(Enum):
     Super_Missile = "Super Missile"
     Missile = "Missile"
 
-
 @dataclass
 class AreaBlastShieldMapping:
     area: str
