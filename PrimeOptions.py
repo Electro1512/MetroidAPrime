@@ -122,11 +122,13 @@ class TrickDifficulty(Choice):
 class TrickAllowList(OptionList):
     """A list of tricks to explicitly allow in logic, regardless of selected difficulty. Values should match the trick name found here: https://github.com/Electro1512/MetroidAPrime/blob/main/data/Tricks.py#L55
        For example, "Crashed Frigate Scan Dash" or "Alcove Escape" """
+    display_name = "Trick Allow List"
     default = []
 
 
 class TrickDenyList(OptionList):
     """A list of tricks to explicitly deny in logic, regardless of selected difficulty. Values should match the trick name found here: https://github.com/Electro1512/MetroidAPrime/blob/main/data/Tricks.py#L55. For example, "Crashed Frigate Scan Dash" or "Alcove Escape" """
+    display_name = "Trick Deny List"
     default = []
 
 
@@ -274,7 +276,7 @@ class BlastShieldAvailableTypes(Choice):
 
 
 class BlastShieldFrequency(Choice):
-    """If enabled, how many blast shields should be added per region?
+    """If using 'Mix it up' for blast shield randomization,, how many blast shields should be added per region?
        Low: 1-2 blast shields per region
        Medium: 3-6 blast shields per region
        High: 5-9 blast shields per region"""

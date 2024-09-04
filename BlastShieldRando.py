@@ -25,7 +25,7 @@ class BlastShieldType(Enum):
 @dataclass
 class AreaBlastShieldMapping:
     area: str
-    type_mapping: Dict[str, Dict[int, str]]
+    type_mapping: Dict[str, Dict[int, BlastShieldType]]
 
     def to_dict(self) -> Dict[str, Any]:
         return {

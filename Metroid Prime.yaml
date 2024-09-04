@@ -71,6 +71,36 @@ Metroid Prime:
     global: 0
     regional: 0
 
+  blast_shield_randomization:
+    # Determine if/how blast shields are randomized. Note that this will have a difficult time generating in solo worlds with no tricks enabled.
+    #    None: No blast shields will be randomized
+    #    Replace Existing: Each existing Missile Blast Shield will be replaced with a different Blast Shield type
+    #    Mix it up: Each Region will remove all existing blast shields and instead add a specified number to new doors
+    none: 50
+    replace_existing: 0
+    mix_it_up: 0
+
+  blast_shield_frequency:
+    # If using 'Mix it up' for blast shield randomization, how many blast shields should be added per region?
+    #    Low: 1-2 blast shields per region
+    #    Medium: 3-6 blast shields per region
+    #    High: 5-9 blast shields per region
+    low: 0
+    medium: 50
+    high: 0
+
+  blast_shield_available_types:
+    # Which blast shield types are available for randomization.
+    #    All: All blast shield types are available, including beam combos, bomb, power bomb, charge beam, and super missiles
+    #    No beam combos: Flamethrower, Wavebuster, and Ice Spreader will not be included as blast shield types (Super Missiles will still be included)
+    all: 0
+    no_beam_combos: 50
+
+  include_locked_doors:
+    # If enabled, locked doors will also be added to the list of available blast shield types. These will only be placed in spots that will not prevent progression but may force alternate paths
+    "false": 50
+    "true": 0
+
   include_power_beam_doors:
     # If enabled, Power Beam doors will be an available door color for randomization. If the starting beam is also randomized, it will remove the new starting beam's color from the pool of available door colors
     "false": 50

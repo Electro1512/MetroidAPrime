@@ -213,7 +213,8 @@ class AreaData:
 
                 lock = door_data.lock or door_data.defaultLock
                 target_region = world.multiworld.get_region(door_data.get_destination_region_name(), world.player)
-                region.connect(target_region, f"{lock.value} Door from {name} to {destination.value}", generate_rule_func(door_data))
+                blast_shield_text = "" if door_data.blast_shield is None else f" {door_data.blast_shield.value}"
+                region.connect(target_region, lock.value + blast_shield_text + f" Door from {name} to {destination.value}", generate_rule_func(door_data))
 
 
 def _get_options(state: CollectionState, player: int) -> MetroidPrimeOptions:

@@ -1,3 +1,4 @@
+from .data.RoomNames import RoomName
 from .data.PhazonMines import PhazonMinesAreaData
 from .data.PhendranaDrifts import PhendranaDriftsAreaData
 from .data.MagmoorCaverns import MagmoorCavernsAreaData
@@ -366,6 +367,7 @@ class MetroidPrimeWorld(World):
                 for source, target in mapping.items():
                     spoiler_handle.write(f'    {ELEVATOR_USEFUL_NAMES[source]} -> {ELEVATOR_USEFUL_NAMES[target]}\n')
 
+        # TODO: go through and replace strings with option_value for consistency
         if self.options.door_color_randomization == "regional":
             spoiler_handle.write(f'\n\nDoor Color Mapping({player_name}):\n')
             for area, mapping in self.door_color_mapping.items():
@@ -376,3 +378,25 @@ class MetroidPrimeWorld(World):
             spoiler_handle.write(f'\n\nDoor Color Mapping({player_name}):\n')
             for door, color in self.door_color_mapping[MetroidPrimeArea.Tallon_Overworld.value].type_mapping.items():
                 spoiler_handle.write(f'    {door} -> {color}\n')
+
+        if self.options.blast_shield_randomization.value != BlastShieldRandomization.option_none:
+            spoiler_handle.write(f'\n\nBlast Shield Mapping({player_name}):\n')
+            written_mappings: List[List[str, str]] = []
+
+            for area, mapping in self.blast_shield_mapping.items():
+                spoiler_handle.write(f'{area}:\n')
+                if len(mapping.type_mapping) == 0:
+                    spoiler_handle.write(f'    None\n')
+                for room, doors in mapping.type_mapping.items():
+                    for door in doors.keys():
+                        source_room = self.game_region_data[MetroidPrimeArea(area)].rooms[RoomName(room)]
+                        # Use the door_data blast shield since it may have been overridden by the door on the other side
+                        door_data = source_room.doors[door]
+                        destination = door_data.default_destination.value
+
+                        # Don't double write mappings since each door is paired
+                        if [destination, room] in written_mappings:
+                            continue
+
+                        spoiler_handle.write(f'    {room} <--> {destination}: {door_data.blast_shield.value}\n')
+                        written_mappings.append([room, destination])
