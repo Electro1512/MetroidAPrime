@@ -265,7 +265,7 @@ class BlastShieldMapping(OptionDict):
 class BlastShieldAvailableTypes(Choice):
     """Which blast shield types are available for randomization.
        All: All blast shield types are available, including beam combos, bomb, power bomb, charge beam, and super missiles
-       No beam combos: Flamethrower, Wavebuster, and Ice Spreader will not be included as blast shield types
+       No beam combos: Flamethrower, Wavebuster, and Ice Spreader will not be included as blast shield types (Super Missiles will still be included)
        """
     display_name = "Blast Shield Available Types"
     option_all = 1

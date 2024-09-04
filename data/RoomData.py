@@ -4,7 +4,8 @@ from typing import Callable, Dict, List, Optional
 import typing
 
 from BaseClasses import CollectionState, ItemClassification, LocationProgressType, Region
-from ..DoorRando import BlastShieldType, DoorLockType
+from ..BlastShieldRando import BlastShieldType
+from ..DoorRando import DoorLockType
 from ..Items import ProgressiveUpgrade, SuitUpgrade
 from ..Logic import can_beam_combo, can_bomb, can_charge_beam, can_ice_beam, can_missile, can_plasma_beam, can_power_beam, can_power_bomb, can_super_missile, can_wave_beam
 from ..PrimeOptions import MetroidPrimeOptions
@@ -56,18 +57,19 @@ def get_config_item_model(world: 'MetroidPrimeWorld', location) -> str:
 class DoorData:
     default_destination: Optional[RoomName]
     defaultLock: DoorLockType = DoorLockType.Blue
-    blastShield: Optional[BlastShieldType] = None
+    blast_shield: Optional[BlastShieldType] = None
     lock: Optional[DoorLockType] = None
+    # TODO: Remove destination, not going to pursue room rando
     destination: Optional[RoomName] = None
-    destinationArea: Optional[MetroidPrimeArea] = None  # Used for rooms that have the same name in different areas like Transport Tunnel A
+    destination_area: Optional[MetroidPrimeArea] = None  # Used for rooms that have the same name in different areas like Transport Tunnel A
     rule_func: Optional[Callable[[CollectionState, int], bool]] = None
     tricks: List[TrickInfo] = field(default_factory=list)
     exclude_from_rando: bool = False  # Used primarily for door rando when a door doesn't actually exist
 
     def get_destination_region_name(self):
         destination = self.destination.value if self.destination is not None else self.default_destination.value
-        if self.destinationArea is not None:
-            return f"{self.destinationArea.value}: {destination}"
+        if self.destination_area is not None:
+            return f"{self.destination_area.value}: {destination}"
         return destination
 
 
@@ -128,10 +130,10 @@ class RoomData:
                     }
 
         for door_id, door in self.doors.items():
-            if door.blastShield is not None:
+            if door.blast_shield is not None:
                 if f"{door_id}" not in door_data:
                     door_data[f"{door_id}"] = {}
-                door_data[f"{door_id}"]["blastShieldType"] = door.blastShield.value
+                door_data[f"{door_id}"]["blastShieldType"] = door.blast_shield.value
 
         return door_data
 
@@ -195,17 +197,11 @@ class AreaData:
                 if world.options.door_color_randomization != "none" and door_data.exclude_from_rando is False and door_data.defaultLock.value in color_mapping:
                     door_data.lock = DoorLockType(color_mapping[door_data.defaultLock.value])
 
-                # TODO: Check if should receive blast shield from mapping
-
-                # TODO: Verify blast shield is also set on paired door or if paired door has a blast shield so we should too
                 paired_door = room_data.get_matching_door(door_data, world)
-                if paired_door is not None and paired_door.blastShield is not None:
-                    door_data.blastShield = paired_door.blastShield
-                elif door_data.blastShield is not None:
-                    paired_door.blastShield = door_data.blastShield
-
-                if door_data.blastShield is not None:
-                    pass
+                if paired_door is not None and paired_door.blast_shield is not None:
+                    door_data.blast_shield = paired_door.blast_shield
+                elif door_data.blast_shield is not None:
+                    paired_door.blast_shield = door_data.blast_shield
 
                 if destination is None:
                     continue
@@ -270,22 +266,22 @@ def _can_access_door(state: CollectionState, player: int, door_data: DoorData) -
     else:
         can_color = True
 
-    if door_data.blastShield is not None:
-        if door_data.blastShield == BlastShieldType.Bomb:
+    if door_data.blast_shield is not None:
+        if door_data.blast_shield == BlastShieldType.Bomb:
             can_blast_shield = can_bomb(state, player)
-        elif door_data.blastShield == BlastShieldType.Missile:
+        elif door_data.blast_shield == BlastShieldType.Missile:
             can_blast_shield = can_missile(state, player)
-        elif door_data.blastShield == BlastShieldType.Power_Bomb:
+        elif door_data.blast_shield == BlastShieldType.Power_Bomb:
             can_blast_shield = can_power_bomb(state, player)
-        elif door_data.blastShield == BlastShieldType.Charge_Beam:
+        elif door_data.blast_shield == BlastShieldType.Charge_Beam:
             can_blast_shield = can_charge_beam(state, player)
-        elif door_data.blastShield == BlastShieldType.Super_Missile:
+        elif door_data.blast_shield == BlastShieldType.Super_Missile:
             can_blast_shield = can_super_missile(state, player)
-        elif door_data.blastShield == BlastShieldType.Wavebuster:
+        elif door_data.blast_shield == BlastShieldType.Wavebuster:
             can_blast_shield = can_beam_combo(state, player, SuitUpgrade.Wave_Beam)
-        elif door_data.blastShield == BlastShieldType.Ice_Spreader:
+        elif door_data.blast_shield == BlastShieldType.Ice_Spreader:
             can_blast_shield = can_beam_combo(state, player, SuitUpgrade.Ice_Beam)
-        elif door_data.blastShield == BlastShieldType.Flamethrower:
+        elif door_data.blast_shield == BlastShieldType.Flamethrower:
             can_blast_shield = can_beam_combo(state, player, SuitUpgrade.Plasma_Beam)
     else:
         can_blast_shield = True

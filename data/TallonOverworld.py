@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from BaseClasses import CollectionState
-from ..DoorRando import BlastShieldType, DoorLockType
+from ..BlastShieldRando import BlastShieldType
+from ..DoorRando import DoorLockType
 from ..Logic import can_bomb, can_boost, can_charge_beam, can_grapple, can_missile, can_morph_ball, can_move_underwater, can_power_beam, can_power_bomb, can_space_jump, can_spider, can_super_missile, can_xray, can_wave_beam, can_thermal
 from ..LogicCombat import can_combat_ghosts
 from .Tricks import Tricks
@@ -99,7 +100,7 @@ class TallonOverworldAreaData(AreaData):
 
             RoomName.Frigate_Crash_Site: RoomData(
                 doors={
-                    0: DoorData(RoomName.Waterfall_Cavern, blastShield=BlastShieldType.Missile, rule_func=can_missile),
+                    0: DoorData(RoomName.Waterfall_Cavern, blast_shield=BlastShieldType.Missile, rule_func=can_missile),
                     1: DoorData(RoomName.Cargo_Freight_Lift_to_Deck_Gamma, defaultLock=DoorLockType.Ice,
                                 rule_func=can_crashed_frigate,
                                 tricks=[Tricks.frigate_no_gravity],
@@ -131,12 +132,12 @@ class TallonOverworldAreaData(AreaData):
                 doors={
                     0: DoorData(RoomName.Hydro_Access_Tunnel, rule_func=lambda state, player: False, tricks=[Tricks.great_tree_hall_skip_bars], exclude_from_rando=True),  # Can't reach from other doors unless you use a trick until after you go through frigate
                     1: DoorData(RoomName.Great_Tree_Chamber, rule_func=lambda state, player: can_xray(state, player) and can_space_jump(state, player), tricks=[Tricks.great_tree_chamber_no_xray, Tricks.great_tree_chamber_nsj_no_xray]),
-                    2: DoorData(RoomName.Transport_Tunnel_D, defaultLock=DoorLockType.Ice, destinationArea=MetroidPrimeArea.Tallon_Overworld),  # Can't reach from other doors unless you use a trick until after you go through frigate
+                    2: DoorData(RoomName.Transport_Tunnel_D, defaultLock=DoorLockType.Ice, destination_area=MetroidPrimeArea.Tallon_Overworld),  # Can't reach from other doors unless you use a trick until after you go through frigate
                     3: DoorData(RoomName.Life_Grove_Tunnel, defaultLock=DoorLockType.Ice,
                                 rule_func=can_spider,
                                 tricks=[Tricks.great_tree_hall_no_spider_ball]
                                 ),
-                    4: DoorData(RoomName.Transport_Tunnel_E, defaultLock=DoorLockType.Ice, destinationArea=MetroidPrimeArea.Tallon_Overworld, rule_func=lambda state, player: False, tricks=[Tricks.great_tree_hall_skip_bars]),  # Can't reach from other doors unless you use a trick until after you go through frigate
+                    4: DoorData(RoomName.Transport_Tunnel_E, defaultLock=DoorLockType.Ice, destination_area=MetroidPrimeArea.Tallon_Overworld, rule_func=lambda state, player: False, tricks=[Tricks.great_tree_hall_skip_bars]),  # Can't reach from other doors unless you use a trick until after you go through frigate
                 },
             ),
 
@@ -155,7 +156,7 @@ class TallonOverworldAreaData(AreaData):
                                 tricks=[Tricks.hydro_access_tunnel_no_gravity]),
 
                     # This one isn't an actual door but is instead accounting for not being able to access the great tree hall lower from upper
-                    2: DoorData(RoomName.Transport_Tunnel_E, destinationArea=MetroidPrimeArea.Tallon_Overworld, defaultLock=DoorLockType.Ice, rule_func=can_crashed_frigate, tricks=[Tricks.hydro_access_tunnel_no_gravity], exclude_from_rando=True),
+                    2: DoorData(RoomName.Transport_Tunnel_E, destination_area=MetroidPrimeArea.Tallon_Overworld, defaultLock=DoorLockType.Ice, rule_func=can_crashed_frigate, tricks=[Tricks.hydro_access_tunnel_no_gravity], exclude_from_rando=True),
                 },
                 pickups=[
                     PickupData('Tallon Overworld: Hydro Access Tunnel', rule_func=lambda state, player: can_bomb(state, player) and can_move_underwater(state, player), tricks=[Tricks.hydro_access_tunnel_no_gravity]),
@@ -208,7 +209,7 @@ class TallonOverworldAreaData(AreaData):
             RoomName.Overgrown_Cavern: RoomData(
                 doors={
                     0: DoorData(RoomName.Frigate_Crash_Site, defaultLock=DoorLockType.Ice, rule_func=can_morph_ball),
-                    1: DoorData(RoomName.Transport_Tunnel_C, destinationArea=MetroidPrimeArea.Tallon_Overworld, defaultLock=DoorLockType.Ice, rule_func=can_morph_ball),
+                    1: DoorData(RoomName.Transport_Tunnel_C, destination_area=MetroidPrimeArea.Tallon_Overworld, defaultLock=DoorLockType.Ice, rule_func=can_morph_ball),
                 },
                 pickups=[
                     PickupData('Tallon Overworld: Overgrown Cavern', rule_func=can_morph_ball),
@@ -219,8 +220,8 @@ class TallonOverworldAreaData(AreaData):
 
             RoomName.Root_Cave: RoomData(
                 doors={
-                    0: DoorData(RoomName.Transport_Tunnel_B, destinationArea=MetroidPrimeArea.Tallon_Overworld),
-                    1: DoorData(RoomName.Root_Tunnel, blastShield=BlastShieldType.Missile),
+                    0: DoorData(RoomName.Transport_Tunnel_B, destination_area=MetroidPrimeArea.Tallon_Overworld),
+                    1: DoorData(RoomName.Root_Tunnel, blast_shield=BlastShieldType.Missile),
                     2: DoorData(RoomName.Arbor_Chamber, defaultLock=DoorLockType.Plasma,
                                 rule_func=lambda state, player: can_grapple(state, player) and can_xray(state, player) and can_space_jump(state, player),
                                 tricks=[Tricks.root_cave_arbor_chamber_no_grapple_xray]
@@ -233,7 +234,7 @@ class TallonOverworldAreaData(AreaData):
 
             RoomName.Root_Tunnel: RoomData(
                 doors={
-                    0: DoorData(RoomName.Root_Cave, blastShield=BlastShieldType.Missile),
+                    0: DoorData(RoomName.Root_Cave, blast_shield=BlastShieldType.Missile),
                     1: DoorData(RoomName.Tallon_Canyon),
                 },
             ),
@@ -244,7 +245,7 @@ class TallonOverworldAreaData(AreaData):
             RoomName.Tallon_Canyon: RoomData(
                 doors={
                     0: DoorData(RoomName.Canyon_Cavern),
-                    1: DoorData(RoomName.Transport_Tunnel_A, destinationArea=MetroidPrimeArea.Tallon_Overworld),
+                    1: DoorData(RoomName.Transport_Tunnel_A, destination_area=MetroidPrimeArea.Tallon_Overworld),
                     2: DoorData(RoomName.Gully, defaultLock=DoorLockType.Blue, rule_func=lambda state, player: can_space_jump(state, player) or (can_boost(state, player) and can_bomb(state, player))),
                     3: DoorData(RoomName.Root_Tunnel)
                 }
@@ -260,44 +261,44 @@ class TallonOverworldAreaData(AreaData):
             RoomName.Temple_Lobby: RoomData(
                 doors={
                     0: DoorData(RoomName.Artifact_Temple),
-                    1: DoorData(RoomName.Temple_Security_Station, blastShield=BlastShieldType.Missile),
+                    1: DoorData(RoomName.Temple_Security_Station, blast_shield=BlastShieldType.Missile),
                 },
             ),
 
             RoomName.Temple_Security_Station: RoomData(
                 doors={
                     0: DoorData(RoomName.Temple_Hall),
-                    1: DoorData(RoomName.Temple_Lobby, blastShield=BlastShieldType.Missile),
+                    1: DoorData(RoomName.Temple_Lobby, blast_shield=BlastShieldType.Missile),
                 },
             ),
 
             RoomName.Transport_to_Chozo_Ruins_East: RoomData(
                 doors={
-                    0: DoorData(RoomName.Transport_Tunnel_C, destinationArea=MetroidPrimeArea.Tallon_Overworld, defaultLock=DoorLockType.Ice),
+                    0: DoorData(RoomName.Transport_Tunnel_C, destination_area=MetroidPrimeArea.Tallon_Overworld, defaultLock=DoorLockType.Ice),
                 },
             ),
 
             RoomName.Transport_to_Chozo_Ruins_South: RoomData(
                 doors={
-                    0: DoorData(RoomName.Transport_Tunnel_D, defaultLock=DoorLockType.Ice, destinationArea=MetroidPrimeArea.Tallon_Overworld),
+                    0: DoorData(RoomName.Transport_Tunnel_D, defaultLock=DoorLockType.Ice, destination_area=MetroidPrimeArea.Tallon_Overworld),
                 },
             ),
 
             RoomName.Transport_to_Chozo_Ruins_West: RoomData(
                 doors={
-                    0: DoorData(RoomName.Transport_Tunnel_A, destinationArea=MetroidPrimeArea.Tallon_Overworld),
+                    0: DoorData(RoomName.Transport_Tunnel_A, destination_area=MetroidPrimeArea.Tallon_Overworld),
                 },
             ),
 
             RoomName.Transport_to_Magmoor_Caverns_East: RoomData(
                 doors={
-                    0: DoorData(RoomName.Transport_Tunnel_B, destinationArea=MetroidPrimeArea.Tallon_Overworld)
+                    0: DoorData(RoomName.Transport_Tunnel_B, destination_area=MetroidPrimeArea.Tallon_Overworld)
                 },
             ),
 
             RoomName.Transport_to_Phazon_Mines_East: RoomData(
                 doors={
-                    0: DoorData(RoomName.Transport_Tunnel_E, defaultLock=DoorLockType.Ice, destinationArea=MetroidPrimeArea.Tallon_Overworld),
+                    0: DoorData(RoomName.Transport_Tunnel_E, defaultLock=DoorLockType.Ice, destination_area=MetroidPrimeArea.Tallon_Overworld),
                 },
             ),
 
@@ -347,7 +348,7 @@ class TallonOverworldAreaData(AreaData):
             RoomName.Waterfall_Cavern: RoomData(
                 doors={
                     0: DoorData(RoomName.Landing_Site, rule_func=can_morph_ball),
-                    1: DoorData(RoomName.Frigate_Crash_Site, blastShield=BlastShieldType.Missile, rule_func=can_morph_ball)
+                    1: DoorData(RoomName.Frigate_Crash_Site, blast_shield=BlastShieldType.Missile, rule_func=can_morph_ball)
                 },
             )
         }

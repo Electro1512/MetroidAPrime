@@ -15,14 +15,14 @@ class PhazonMinesAreaData(AreaData):
             RoomName.Central_Dynamo: RoomData(
                 include_area_in_name=True,
                 doors={
-                    0: DoorData(RoomName.Dynamo_Access, rule_func=lambda state, player: can_combat_mines(state, player) and can_space_jump(state, player) and can_power_bomb(state, player), defaultLock=DoorLockType.Ice, destinationArea=MetroidPrimeArea.Phazon_Mines),
+                    0: DoorData(RoomName.Dynamo_Access, rule_func=lambda state, player: can_combat_mines(state, player) and can_space_jump(state, player) and can_power_bomb(state, player), defaultLock=DoorLockType.Ice, destination_area=MetroidPrimeArea.Phazon_Mines),
                     1: DoorData(RoomName.Quarantine_Access_A, rule_func=lambda state, player: can_space_jump(state, player) and can_power_bomb(state, player), defaultLock=DoorLockType.Ice),
                     2: DoorData(RoomName.Save_Station_Mines_B, defaultLock=DoorLockType.Ice, rule_func=can_bomb),  # Door only unlocks after defeating drone and then completing the maze
                 }, pickups=[PickupData('Phazon Mines: Central Dynamo', rule_func=can_bomb), ]),
             RoomName.Dynamo_Access: RoomData(
                 include_area_in_name=True,
                 doors={
-                    0: DoorData(RoomName.Central_Dynamo, defaultLock=DoorLockType.Ice, destinationArea=MetroidPrimeArea.Phazon_Mines),
+                    0: DoorData(RoomName.Central_Dynamo, defaultLock=DoorLockType.Ice, destination_area=MetroidPrimeArea.Phazon_Mines),
                     1: DoorData(RoomName.Omega_Research, defaultLock=DoorLockType.Ice),  # Vertical going up
                 }),
             RoomName.Elevator_A: RoomData(doors={
@@ -125,7 +125,7 @@ class PhazonMinesAreaData(AreaData):
             RoomName.Omega_Research: RoomData(doors={
                 0: DoorData(RoomName.Map_Station_Mines, defaultLock=DoorLockType.Ice, rule_func=lambda state, player: can_combat_mines(state, player) and can_power_bomb(state, player)),
                 1: DoorData(RoomName.Ventilation_Shaft, defaultLock=DoorLockType.Ice, rule_func=lambda state, player: can_combat_mines(state, player) and can_power_bomb(state, player)),
-                2: DoorData(RoomName.Dynamo_Access, defaultLock=DoorLockType.Ice, destinationArea=MetroidPrimeArea.Phazon_Mines, rule_func=lambda state, player: can_combat_mines(state, player) and can_power_bomb(state, player)),  # Vertical door going down
+                2: DoorData(RoomName.Dynamo_Access, defaultLock=DoorLockType.Ice, destination_area=MetroidPrimeArea.Phazon_Mines, rule_func=lambda state, player: can_combat_mines(state, player) and can_power_bomb(state, player)),  # Vertical door going down
             }),
             RoomName.Ore_Processing: RoomData(doors={
                 0: DoorData(RoomName.Research_Access, defaultLock=DoorLockType.Ice, rule_func=lambda state, player: True),
@@ -140,7 +140,7 @@ class PhazonMinesAreaData(AreaData):
             }, pickups=[PickupData('Phazon Mines: Phazon Mining Tunnel', rule_func=lambda state, player: can_phazon(state, player) and can_bomb(state, player), tricks=[]), ]),
             RoomName.Phazon_Processing_Center: RoomData(
                 doors={
-                    0: DoorData(RoomName.Transport_Access, destinationArea=MetroidPrimeArea.Phazon_Mines, defaultLock=DoorLockType.Ice, rule_func=lambda state, player: can_spider(state, player) and can_bomb(state, player) and can_space_jump(state, player), tricks=[Tricks.climb_phazon_processing_center_no_spider]),
+                    0: DoorData(RoomName.Transport_Access, destination_area=MetroidPrimeArea.Phazon_Mines, defaultLock=DoorLockType.Ice, rule_func=lambda state, player: can_spider(state, player) and can_bomb(state, player) and can_space_jump(state, player), tricks=[Tricks.climb_phazon_processing_center_no_spider]),
                     1: DoorData(RoomName.Maintenance_Tunnel, defaultLock=DoorLockType.Ice, rule_func=lambda state, player: can_spider(state, player) and can_bomb(state, player) and can_space_jump(state, player), tricks=[Tricks.climb_phazon_processing_center_no_spider]),
                     2: DoorData(RoomName.Processing_Center_Access, defaultLock=DoorLockType.Plasma, rule_func=can_phazon, tricks=[Tricks.phazon_processing_center_no_phazon_suit]),
                 },
@@ -152,7 +152,7 @@ class PhazonMinesAreaData(AreaData):
                 },
                 pickups=[PickupData('Phazon Mines: Processing Center Access', rule_func=lambda state, player: can_backwards_lower_mines(state, player) or state.can_reach(RoomName.Elite_Quarters.value, None, player), tricks=[]), ]),
             RoomName.Quarantine_Access_A: RoomData(doors={
-                0: DoorData(RoomName.Central_Dynamo, defaultLock=DoorLockType.Ice, destinationArea=MetroidPrimeArea.Phazon_Mines),
+                0: DoorData(RoomName.Central_Dynamo, defaultLock=DoorLockType.Ice, destination_area=MetroidPrimeArea.Phazon_Mines),
                 1: DoorData(RoomName.Metroid_Quarantine_A, defaultLock=DoorLockType.Wave),
             }),
             RoomName.Quarantine_Access_B: RoomData(doors={
@@ -161,7 +161,7 @@ class PhazonMinesAreaData(AreaData):
             }),
             RoomName.Quarry_Access: RoomData(doors={
                 0: DoorData(RoomName.Main_Quarry, defaultLock=DoorLockType.Wave),
-                1: DoorData(RoomName.Transport_to_Tallon_Overworld_South, defaultLock=DoorLockType.Wave, destinationArea=MetroidPrimeArea.Phazon_Mines),
+                1: DoorData(RoomName.Transport_to_Tallon_Overworld_South, defaultLock=DoorLockType.Wave, destination_area=MetroidPrimeArea.Phazon_Mines),
             }),
             RoomName.Research_Access: RoomData(doors={
                 0: DoorData(RoomName.Ore_Processing, defaultLock=DoorLockType.Ice),
@@ -173,7 +173,7 @@ class PhazonMinesAreaData(AreaData):
                 0: DoorData(RoomName.Main_Quarry, defaultLock=DoorLockType.Wave),
             }),
             RoomName.Save_Station_Mines_B: RoomData(doors={
-                0: DoorData(RoomName.Central_Dynamo, defaultLock=DoorLockType.Ice, destinationArea=MetroidPrimeArea.Phazon_Mines),
+                0: DoorData(RoomName.Central_Dynamo, defaultLock=DoorLockType.Ice, destination_area=MetroidPrimeArea.Phazon_Mines),
             }),
             RoomName.Save_Station_Mines_C: RoomData(doors={
                 0: DoorData(RoomName.Metroid_Quarantine_B, defaultLock=DoorLockType.Plasma),
@@ -192,12 +192,12 @@ class PhazonMinesAreaData(AreaData):
               include_area_in_name=True,
               doors={
                 0: DoorData(RoomName.Phazon_Processing_Center, defaultLock=DoorLockType.Ice),
-                1: DoorData(RoomName.Transport_to_Magmoor_Caverns_South, defaultLock=DoorLockType.Ice, destinationArea=MetroidPrimeArea.Phazon_Mines),
+                1: DoorData(RoomName.Transport_to_Magmoor_Caverns_South, defaultLock=DoorLockType.Ice, destination_area=MetroidPrimeArea.Phazon_Mines),
             }),
             RoomName.Transport_to_Magmoor_Caverns_South: RoomData(
                 include_area_in_name=True,
                 doors={
-                    0: DoorData(RoomName.Transport_Access, defaultLock=DoorLockType.Ice, destinationArea=MetroidPrimeArea.Phazon_Mines),
+                    0: DoorData(RoomName.Transport_Access, defaultLock=DoorLockType.Ice, destination_area=MetroidPrimeArea.Phazon_Mines),
                 }),
             RoomName.Transport_to_Tallon_Overworld_South: RoomData(
                 include_area_in_name=True,

@@ -1,11 +1,12 @@
-from .PrimeUtils import setup_lib_path
-setup_lib_path()  # NOTE: This MUST be called before importing any other metroidprime modules (other than PrimeUtils)
-# Setup local dependencies if running in an apworld
 from .data.PhazonMines import PhazonMinesAreaData
 from .data.PhendranaDrifts import PhendranaDriftsAreaData
 from .data.MagmoorCaverns import MagmoorCavernsAreaData
 from .data.ChozoRuins import ChozoRuinsAreaData
 from .data.TallonOverworld import TallonOverworldAreaData
+from .PrimeUtils import setup_lib_path
+setup_lib_path()  # NOTE: This MUST be called before importing any other metroidprime modules (other than PrimeUtils)
+# Setup local dependencies if running in an apworld
+from .BlastShieldRando import AreaBlastShieldMapping, apply_blast_shield_mapping, get_world_blast_shield_mapping
 from .data.RoomData import AreaData
 from .data.AreaNames import MetroidPrimeArea
 from .DoorRando import AreaDoorTypeMapping, get_world_door_mapping, remap_doors_to_power_beam_if_necessary
@@ -17,7 +18,7 @@ from .data.Transports import ELEVATOR_USEFUL_NAMES, default_elevator_mappings, g
 from .config import make_config
 from .Regions import create_regions
 from .Locations import every_location
-from .PrimeOptions import MetroidPrimeOptions, VariaSuitColorOverride
+from .PrimeOptions import BlastShieldRandomization, MetroidPrimeOptions, VariaSuitColorOverride
 from .Items import PROGRESSIVE_ITEM_MAPPING, MetroidPrimeItem, ProgressiveUpgrade, SuitUpgrade, get_item_for_options, get_progressive_upgrade_for_item, suit_upgrade_table, artifact_table, item_table
 from .data.StartRoomData import StartRoomData, init_starting_beam, init_starting_loadout, init_starting_room_data
 from .Container import MetroidPrimeContainer
@@ -93,6 +94,7 @@ class MetroidPrimeWorld(World):
     prefilled_item_map: Dict[str, str] = {}  # Dict of location name to item name
     elevator_mapping: Dict[str, Dict[str, str]] = default_elevator_mappings
     door_color_mapping: Optional[Dict[MetroidPrimeArea, AreaDoorTypeMapping]] = None
+    blast_shield_mapping: Optional[Dict[str, AreaBlastShieldMapping]] = None
     game_region_data: Dict[MetroidPrimeArea, AreaData]
     has_generated_bomb_doors: bool = False
 
@@ -154,6 +156,13 @@ class MetroidPrimeWorld(World):
 
         # Set starting loadout
         init_starting_loadout(self)
+
+        # Randomize Blast Shields
+        if self.options.blast_shield_mapping:
+            self.blast_shield_mapping = {area: AreaBlastShieldMapping.from_dict(mapping) for area, mapping in self.options.blast_shield_mapping.value.items()}
+        else:
+            self.blast_shield_mapping = get_world_blast_shield_mapping(self)
+        apply_blast_shield_mapping(self)
 
         # Randomize Elevators
         if self.options.elevator_mapping:
