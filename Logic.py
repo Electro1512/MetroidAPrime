@@ -113,7 +113,7 @@ def can_charge_beam(state: CollectionState, player: int, required_beam: typing.O
 
 
 def can_beam_combo(state: CollectionState, player: int, required_beam: SuitUpgrade) -> bool:
-    if not can_missile(state, player) and not can_charge_beam(state, player, required_beam):
+    if not can_missile(state, player) or not can_charge_beam(state, player, required_beam):
         return False
 
     if required_beam == SuitUpgrade.Wave_Beam:

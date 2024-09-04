@@ -7,7 +7,7 @@ from ..BlastShieldRando import AreaBlastShieldMapping, BlastShieldType
 from ..DoorRando import DoorLockType
 from ..config import make_config
 from ..data.RoomNames import RoomName
-from ..Items import SuitUpgrade
+from ..Items import ProgressiveUpgrade, SuitUpgrade
 from . import MetroidPrimeTestBase
 if typing.TYPE_CHECKING:
     from .. import MetroidPrimeWorld
@@ -29,6 +29,9 @@ def _get_default_area_data(area: MetroidPrimeArea) -> AreaData:
     return mapping[area]()
 
 
+beam_combo_items = [BlastShieldType.Flamethrower, BlastShieldType.Ice_Spreader, BlastShieldType.Wavebuster]
+
+
 class TestNoBlastShieldRando(MetroidPrimeTestBase):
     options = {
         "blast_shield_randomization": "none",
@@ -38,7 +41,7 @@ class TestNoBlastShieldRando(MetroidPrimeTestBase):
         """Verify that the blast shield to ruined shrine access is still there and not randomized"""
         test_region = RoomName.Ruined_Shrine_Access.value
         self.assertFalse(self.can_reach_region(test_region))
-        self.collect(self.get_item_by_name(SuitUpgrade.Missile_Expansion.value))
+        self.collect_by_name(SuitUpgrade.Missile_Expansion.value)
         self.assertTrue(self.can_reach_region(test_region))
 
     def test_output_generates_correctly_with_paired_blast_shields(self):
@@ -86,19 +89,21 @@ class TestReplaceBlastShieldRando(MetroidPrimeTestBase):
         for mapping in world.blast_shield_mapping.values():
             for room in mapping.type_mapping.values():
                 for door in room.values():
-                    self.assertNotIn(door, [BlastShieldType.Flamethrower, BlastShieldType.Ice_Spreader, BlastShieldType.Wavebuster])
+                    self.assertNotIn(door, beam_combo_items)
 
 
 class TestBlastShieldMapping(MetroidPrimeTestBase):
     run_default_tests = False
     options = {
-        "blast_shield_randomization": "none",
+        "blast_shield_randomization": "replace_existing",
+        "blast_shield_available_types": "all",
         "blast_shield_mapping": {
             "Tallon Overworld": {
                 "area": "Tallon Overworld",
                 "type_mapping": {
                     "Landing Site": {
-                        1: "Bomb"
+                        1: "Bomb",
+                        2: "Flamethrower"
                     }
                 }
             }
@@ -110,18 +115,72 @@ class TestBlastShieldMapping(MetroidPrimeTestBase):
         world: 'MetroidPrimeWorld' = self.world
         self.assertEqual(
             world.blast_shield_mapping[MetroidPrimeArea.Tallon_Overworld.value],
-            AreaBlastShieldMapping(MetroidPrimeArea.Tallon_Overworld.value, {"Landing Site": {1: BlastShieldType.Bomb}})
+            AreaBlastShieldMapping(MetroidPrimeArea.Tallon_Overworld.value, {"Landing Site": {1: BlastShieldType.Bomb, 2: BlastShieldType.Flamethrower}})
         )
         self.assertFalse(self.can_reach_region(test_region))
-        self.collect([self.get_item_by_name(SuitUpgrade.Morph_Ball_Bomb.value), self.get_item_by_name(SuitUpgrade.Morph_Ball.value)])
+        self.collect_by_name([SuitUpgrade.Morph_Ball_Bomb.value, SuitUpgrade.Morph_Ball.value])
+        self.assertTrue(self.can_reach_region(test_region))
+
+    def test_beam_combos_are_included_in_logic_without_progressive_beams(self):
+        test_region = RoomName.Temple_Hall.value
+        self.assertFalse(self.can_reach_region(test_region))
+
+        self.collect_by_name([SuitUpgrade.Flamethrower.value])
+        self.assertFalse(self.can_reach_region(test_region))
+
+        self.collect_by_name([
+            SuitUpgrade.Plasma_Beam.value,
+            SuitUpgrade.Charge_Beam.value,
+            SuitUpgrade.Missile_Expansion.value,
+        ])
+        self.assertTrue(self.can_reach_region(test_region))
+
+
+class TestBlastShieldMappingWithProgressiveBeams(MetroidPrimeTestBase):
+    run_default_tests = False
+    options = {
+        "blast_shield_randomization": "replace_existing",
+        "blast_shield_available_types": "all",
+        "progressive_beam_upgrades": True,
+        "blast_shield_mapping": {
+            "Tallon Overworld": {
+                "area": "Tallon Overworld",
+                "type_mapping": {
+                    "Landing Site": {
+                        1: "Bomb",
+                        2: "Flamethrower"
+                    }
+                }
+            }
+        }
+    }
+
+    def test_beam_combos_are_included_in_logic_with_progressive_beams(self):
+        test_region = RoomName.Temple_Hall.value
+        self.assertFalse(self.can_reach_region(test_region))
+        self.collect_by_name([
+            SuitUpgrade.Missile_Expansion.value,
+            ProgressiveUpgrade.Progressive_Plasma_Beam.value,
+            ProgressiveUpgrade.Progressive_Plasma_Beam.value,
+            ProgressiveUpgrade.Progressive_Plasma_Beam.value,
+        ])
         self.assertTrue(self.can_reach_region(test_region))
 
 
 class TestIncludeBeamCombos(MetroidPrimeTestBase):
     options = {
         "blast_shield_randomization": "replace_existing",
-        "blast_shield_available_types": "all"
+        "blast_shield_available_types": "all",
+        "trick_difficulty": "easy", # Tricks are recommended if solo seeding w/ blast shield on
     }
 
     def test_beam_combos_are_included(self):
-        pass
+        has_beam_combo = False
+        world: 'MetroidPrimeWorld' = self.world
+        for area, mapping in world.blast_shield_mapping.items():
+            for room in mapping.type_mapping.values():
+                for shieldType in room.values():
+                    if shieldType in beam_combo_items:
+                        has_beam_combo = True
+
+        self.assertTrue(has_beam_combo)

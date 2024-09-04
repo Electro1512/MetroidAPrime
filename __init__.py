@@ -1,12 +1,12 @@
+from .PrimeUtils import setup_lib_path
+setup_lib_path()  # NOTE: This MUST be called before importing any other metroidprime modules (other than PrimeUtils)
+# Setup local dependencies if running in an apworld
 from .data.RoomNames import RoomName
 from .data.PhazonMines import PhazonMinesAreaData
 from .data.PhendranaDrifts import PhendranaDriftsAreaData
 from .data.MagmoorCaverns import MagmoorCavernsAreaData
 from .data.ChozoRuins import ChozoRuinsAreaData
 from .data.TallonOverworld import TallonOverworldAreaData
-from .PrimeUtils import setup_lib_path
-setup_lib_path()  # NOTE: This MUST be called before importing any other metroidprime modules (other than PrimeUtils)
-# Setup local dependencies if running in an apworld
 from .BlastShieldRando import AreaBlastShieldMapping, apply_blast_shield_mapping, get_world_blast_shield_mapping
 from .data.RoomData import AreaData
 from .data.AreaNames import MetroidPrimeArea

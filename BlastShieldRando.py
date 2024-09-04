@@ -22,6 +22,7 @@ class BlastShieldType(Enum):
     Super_Missile = "Super Missile"
     Missile = "Missile"
 
+
 @dataclass
 class AreaBlastShieldMapping:
     area: str
@@ -30,7 +31,10 @@ class AreaBlastShieldMapping:
     def to_dict(self) -> Dict[str, Any]:
         return {
             "area": self.area,
-            "type_mapping": self.type_mapping
+            "type_mapping": {
+                room: {door: shield.value for door, shield in doors.items()}
+                for room, doors in self.type_mapping.items()
+            }
         }
 
     @classmethod
