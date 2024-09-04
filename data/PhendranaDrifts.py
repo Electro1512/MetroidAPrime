@@ -274,7 +274,7 @@ class PhendranaDriftsAreaData(AreaData):
                 area=MetroidPrimeArea.Phendrana_Drifts,
                 doors={
                     0: DoorData(RoomName.Transport_to_Magmoor_Caverns_South, defaultLock=DoorLockType.Ice, destinationArea=MetroidPrimeArea.Phendrana_Drifts),
-                    1: DoorData(RoomName.Frozen_Pike, defaultLock=DoorLockType.Ice),
+                    1: DoorData(RoomName.Frozen_Pike, defaultLock=DoorLockType.Wave),
                 }, pickups=[PickupData('Phendrana Drifts: Transport Access', rule_func=can_melt_ice), ]),
             RoomName.Transport_to_Magmoor_Caverns_South: RoomData(
                 area=MetroidPrimeArea.Phendrana_Drifts,
