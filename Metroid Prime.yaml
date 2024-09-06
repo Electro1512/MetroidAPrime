@@ -81,13 +81,15 @@ Metroid Prime:
     mix_it_up: 0
 
   blast_shield_frequency:
-    # If using 'Mix it up' for blast shield randomization, how many blast shields should be added per region?
-    #    Low: 1-2 blast shields per region
-    #    Medium: 3-6 blast shields per region
-    #    High: 5-9 blast shields per region
+    # If using 'Mix it up' for blast shield randomization,, how many blast shields should be added per region? These are added using a percentage of total possible placements so exact numbers will vary by region. Higher numbers will have more difficulty genning in solo worlds with less tricks.
+    #    Low: 10%
+    #    Medium: 30%
+    #    High: 50%
+    #    A whole lotta blast shields: 80% (This may not be fun but it's an option)
     low: 0
     medium: 50
     high: 0
+    a_whole_lotta_blast_shields: 0
 
   blast_shield_available_types:
     # Which blast shield types are available for randomization.

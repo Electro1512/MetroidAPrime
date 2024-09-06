@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING, Any, Dict, List
 
 from .data.RoomNames import RoomName
 
-from .PrimeOptions import BlastShieldAvailableTypes, BlastShieldRandomization
+from .PrimeOptions import BlastShieldAvailableTypes, BlastShieldFrequency, BlastShieldRandomization
 
 from .data.AreaNames import MetroidPrimeArea
 
