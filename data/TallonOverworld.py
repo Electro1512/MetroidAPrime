@@ -96,6 +96,9 @@ class TallonOverworldAreaData(AreaData):
             # ),
 
             # RoomName.Frigate_Access_Tunnel: RoomData(
+            #   doors={
+
+            #   }
             # ),
 
             RoomName.Frigate_Crash_Site: RoomData(
