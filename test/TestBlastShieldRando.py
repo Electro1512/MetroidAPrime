@@ -1,9 +1,9 @@
 import typing
 
 from Fill import distribute_items_restrictive
-from ..data.RoomData import AreaData
+from ..data.RoomData import AreaData, DoorData, _can_access_door
 from ..data.AreaNames import MetroidPrimeArea
-from ..BlastShieldRando import AreaBlastShieldMapping, BlastShieldType
+from ..BlastShieldRando import MAX_BEAM_COMBO_DOORS_PER_AREA, AreaBlastShieldMapping, BlastShieldType
 from ..DoorRando import DoorLockType
 from ..config import make_config
 from ..data.RoomNames import RoomName
@@ -171,16 +171,14 @@ class TestIncludeBeamCombos(MetroidPrimeTestBase):
     options = {
         "blast_shield_randomization": "replace_existing",
         "blast_shield_available_types": "all",
-        "trick_difficulty": "easy", # Tricks are recommended if solo seeding w/ blast shield on
     }
 
-    def test_beam_combos_are_included(self):
-        has_beam_combo = False
+    def test_beam_combos_are_included_within_limits(self):
         world: 'MetroidPrimeWorld' = self.world
         for area, mapping in world.blast_shield_mapping.items():
+            beam_combo_count = 0
             for room in mapping.type_mapping.values():
                 for shieldType in room.values():
                     if shieldType in beam_combo_items:
-                        has_beam_combo = True
-
-        self.assertTrue(has_beam_combo)
+                        beam_combo_count += 1
+            self.assertLessEqual(beam_combo_count, MAX_BEAM_COMBO_DOORS_PER_AREA, f"Too many beam combos in {area}, {beam_combo_count} found")

@@ -50,6 +50,11 @@ class AreaBlastShieldMapping:
         return mapping
 
 
+MAX_BEAM_COMBO_DOORS_PER_AREA = 1
+ALL_SHIELDS: List[BlastShieldType] = [shield for shield in BlastShieldType]
+BEAM_COMBOS: List[BlastShieldType] = [BlastShieldType.Flamethrower, BlastShieldType.Ice_Spreader, BlastShieldType.Wavebuster]
+
+
 def get_world_blast_shield_mapping(world: 'MetroidPrimeWorld') -> Dict[str, AreaBlastShieldMapping]:
     mapping: Dict[str, AreaBlastShieldMapping] = {}
     if world.options.blast_shield_randomization.value != BlastShieldRandomization.option_none:
@@ -60,7 +65,7 @@ def get_world_blast_shield_mapping(world: 'MetroidPrimeWorld') -> Dict[str, Area
 
 def _generate_blast_shield_mapping_for_area(world: 'MetroidPrimeWorld', area: MetroidPrimeArea) -> Dict[str, Dict[int, str]]:
     area_mapping: Dict[str, Dict[str, str]] = {}
-
+    total_beam_combo_doors = 0
     if world.options.blast_shield_randomization.value != BlastShieldRandomization.option_replace_existing:
         return area_mapping
 
@@ -69,24 +74,25 @@ def _generate_blast_shield_mapping_for_area(world: 'MetroidPrimeWorld', area: Me
             if door_data.blast_shield:
                 if room_name.value not in area_mapping:
                     area_mapping[room_name.value] = {}
-                area_mapping[room_name.value][door_id] = world.random.choice(_get_available_blast_shields(world))
+
+                shield_type = world.random.choice(_get_available_blast_shields(world, total_beam_combo_doors >= MAX_BEAM_COMBO_DOORS_PER_AREA))
+                area_mapping[room_name.value][door_id] = shield_type
+
+                if shield_type in BEAM_COMBOS:
+                    total_beam_combo_doors += 1
 
     return area_mapping
 
 
-def _get_available_blast_shields(world: 'MetroidPrimeWorld') -> List[BlastShieldType]:
-    all_shields: List[BlastShieldType] = [shield for shield in BlastShieldType]
-    beam_combos: List[BlastShieldType] = [BlastShieldType.Flamethrower, BlastShieldType.Ice_Spreader, BlastShieldType.Wavebuster]
-
+def _get_available_blast_shields(world: 'MetroidPrimeWorld', force_exclude_combo_doors: bool = False) -> List[BlastShieldType]:
+    available_shields = ALL_SHIELDS.copy()
     if world.options.blast_shield_randomization.value == BlastShieldRandomization.option_replace_existing:
-        all_shields.remove(BlastShieldType.Missile)
+        available_shields.remove(BlastShieldType.Missile)
 
-    if world.options.blast_shield_available_types.value == BlastShieldAvailableTypes.option_all:
-        return all_shields
-    elif world.options.blast_shield_available_types.value == BlastShieldAvailableTypes.option_no_beam_combos:
-        return [shield for shield in all_shields if shield not in beam_combos]
+    if world.options.blast_shield_available_types.value == BlastShieldAvailableTypes.option_all and not force_exclude_combo_doors:
+        return available_shields
     else:
-        return [BlastShieldType.Missile]
+        return [shield for shield in available_shields if shield not in BEAM_COMBOS]
 
 
 def apply_blast_shield_mapping(world: 'MetroidPrimeWorld'):
