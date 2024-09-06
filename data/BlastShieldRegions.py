@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from typing import Dict, List
 
 from .RoomNames import RoomName
@@ -5,11 +6,13 @@ from .RoomNames import RoomName
 from .AreaNames import MetroidPrimeArea
 
 
+@dataclass
 class BlastShieldRegion:
-    can_be_locked: bool = False
     doors: Dict[RoomName, RoomName]
+    can_be_locked: bool = False
 
 
+@dataclass
 class BlastShieldArea:
     """Regions used to determine where blast shields can be placed within a prime area"""
     area: MetroidPrimeArea
@@ -45,7 +48,6 @@ ChozoRuinsBlastShieldRegions = BlastShieldArea(
             can_be_locked=True,
             doors={
                 RoomName.Main_Plaza: RoomName.Nursery_Access,
-                RoomName.Ruined_Shrine_Access: RoomName.Ruined_Nursery,
             }
         ),
         BlastShieldRegion(
@@ -328,91 +330,98 @@ PhazonMinesBlastShieldRegions = BlastShieldArea(
     regions=[
         BlastShieldRegion(
             doors={
-                BlastShieldRegion(
-                    doors={
-                        RoomName.Main_Quarry: RoomName.Quarry_Access,
-                    }
-                ),
-                BlastShieldRegion(
-                    doors={
-                        RoomName.Main_Quarry: RoomName.Waste_Disposal
-                    }
-                ),
-                BlastShieldRegion(
-                    can_be_locked=True,
-                    doors={
-                        RoomName.Main_Quarry: RoomName.Security_Access_A,
-                        RoomName.Security_Access_B: RoomName.Elite_Research,
-                    }
-                ),
-                BlastShieldRegion(
-                    can_be_locked=True,
-                    doors={
-                        RoomName.Research_Access: RoomName.Ore_Processing
-                    }
-                ),
-                BlastShieldRegion(
-                    can_be_locked=True,
-                    doors={
-                        RoomName.Ore_Processing: RoomName.Elevator_Access_A,
-                        RoomName.Elevator_Access_A: RoomName.Elevator_A
-                    }
-                ),
-                BlastShieldRegion(
-                    doors={
-                        RoomName.Ore_Processing: RoomName.Storage_Depot_B
-                    }
-                ),
-                BlastShieldRegion(
-                    can_be_locked=True,
-                    doors={
-                        RoomName.Elite_Control_Access: RoomName.Elite_Control
-                    }
-                ),
-                BlastShieldRegion(
-                    can_be_locked=True,
-                    doors={
-                        RoomName.Elite_Control: RoomName.Maintenance_Tunnel
-                    }
-                ),
-                BlastShieldRegion(
-                    can_be_locked=True,
-                    doors={
-                        RoomName.Elite_Control: RoomName.Ventilation_Shaft
-                    }
-                ),
-                BlastShieldRegion(
-                    can_be_locked=True,
-                    doors={
-                        RoomName.Central_Dynamo: RoomName.Quarantine_Access_A,
-                        RoomName.Metroid_Quarantine_A: RoomName.Quarantine_Access_A,
-                        RoomName.Metroid_Quarantine_A: RoomName.Elevator_Access_B
-                    }
-                ),
-                BlastShieldRegion(
-                    can_be_locked=True,
-                    doors={
-                        RoomName.Fungal_Hall_Access: RoomName.Fungal_Hall_A,
-                        RoomName.Fungal_Hall_A: RoomName.Phazon_Mining_Tunnel,
-                        RoomName.Fungal_Hall_B: RoomName.Quarantine_Access_B,
-                        RoomName.Metroid_Quarantine_B: RoomName.Elite_Quarters_Access
-                    }
-                ),
-                BlastShieldRegion(
-                    can_be_locked=True,
-                    doors={
-                        RoomName.Elite_Quarters: RoomName.Processing_Center_Access
-                    }
-                ),
-                BlastShieldRegion(
-                    Can_be_locked=True,
-                    doors={
-                        RoomName.Phazon_Processing_Center: RoomName.Maintenance_Tunnel
-                    }
-                ),
-
-
+                RoomName.Main_Quarry: RoomName.Quarry_Access,
             }
-        )
+        ),
+        BlastShieldRegion(
+            doors={
+                RoomName.Main_Quarry: RoomName.Waste_Disposal
+            }
+        ),
+        BlastShieldRegion(
+            can_be_locked=True,
+            doors={
+                RoomName.Main_Quarry: RoomName.Security_Access_A,
+                RoomName.Security_Access_B: RoomName.Elite_Research,
+            }
+        ),
+        BlastShieldRegion(
+            can_be_locked=True,
+            doors={
+                RoomName.Research_Access: RoomName.Ore_Processing
+            }
+        ),
+        BlastShieldRegion(
+            can_be_locked=True,
+            doors={
+                RoomName.Ore_Processing: RoomName.Elevator_Access_A,
+                RoomName.Elevator_Access_A: RoomName.Elevator_A
+            }
+        ),
+        BlastShieldRegion(
+            doors={
+                RoomName.Ore_Processing: RoomName.Storage_Depot_B
+            }
+        ),
+        BlastShieldRegion(
+            can_be_locked=True,
+            doors={
+                RoomName.Elite_Control_Access: RoomName.Elite_Control
+            }
+        ),
+        BlastShieldRegion(
+            can_be_locked=True,
+            doors={
+                RoomName.Elite_Control: RoomName.Maintenance_Tunnel
+            }
+        ),
+        BlastShieldRegion(
+            can_be_locked=True,
+            doors={
+                RoomName.Elite_Control: RoomName.Ventilation_Shaft
+            }
+        ),
+        BlastShieldRegion(
+            can_be_locked=True,
+            doors={
+                RoomName.Central_Dynamo: RoomName.Quarantine_Access_A,
+                RoomName.Metroid_Quarantine_A: RoomName.Quarantine_Access_A,
+                RoomName.Metroid_Quarantine_A: RoomName.Elevator_Access_B
+            }
+        ),
+        BlastShieldRegion(
+            can_be_locked=True,
+            doors={
+                RoomName.Fungal_Hall_Access: RoomName.Fungal_Hall_A,
+                RoomName.Fungal_Hall_A: RoomName.Phazon_Mining_Tunnel,
+                RoomName.Fungal_Hall_B: RoomName.Quarantine_Access_B,
+                RoomName.Metroid_Quarantine_B: RoomName.Elite_Quarters_Access
+            }
+        ),
+        BlastShieldRegion(
+            can_be_locked=True,
+            doors={
+                RoomName.Elite_Quarters: RoomName.Processing_Center_Access
+            }
+        ),
+        BlastShieldRegion(
+            can_be_locked=True,
+            doors={
+                RoomName.Phazon_Processing_Center: RoomName.Maintenance_Tunnel
+            }
+        ),
     ]
 )
+
+
+def get_blast_shield_regions_by_area(area: MetroidPrimeArea) -> BlastShieldArea:
+    if area == MetroidPrimeArea.Chozo_Ruins:
+        return ChozoRuinsBlastShieldRegions
+    elif area == MetroidPrimeArea.Tallon_Overworld:
+        return TallonOverworldBlastShieldRegions
+    elif area == MetroidPrimeArea.Phendrana_Drifts:
+        return PhendranaDriftsBlastShieldRegions
+    elif area == MetroidPrimeArea.Magmoor_Caverns:
+        return MagmoorCavernsBlastShieldRegions
+    elif area == MetroidPrimeArea.Phazon_Mines:
+        return PhazonMinesBlastShieldRegions

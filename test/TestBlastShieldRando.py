@@ -1,7 +1,9 @@
 import typing
+from unittest import TestCase
 
 from Fill import distribute_items_restrictive
-from ..data.RoomData import AreaData, DoorData, _can_access_door
+from ..data.BlastShieldRegions import get_blast_shield_regions_by_area
+from ..data.RoomData import AreaData, DoorData, _can_access_door, get_door_data_by_room_names
 from ..data.AreaNames import MetroidPrimeArea
 from ..BlastShieldRando import MAX_BEAM_COMBO_DOORS_PER_AREA, AreaBlastShieldMapping, BlastShieldType
 from ..DoorRando import DoorLockType
@@ -182,3 +184,19 @@ class TestIncludeBeamCombos(MetroidPrimeTestBase):
                     if shieldType in beam_combo_items:
                         beam_combo_count += 1
             self.assertLessEqual(beam_combo_count, MAX_BEAM_COMBO_DOORS_PER_AREA, f"Too many beam combos in {area}, {beam_combo_count} found")
+
+
+class TestBlastShieldRegionMapping(MetroidPrimeTestBase):
+    """These mappings are manually entered, so we need to verify that they are valid"""
+    run_default_tests = False
+
+    def test_each_room_is_paired_to_a_valid_room(self):
+        invalid_rooms = []
+        for area in MetroidPrimeArea:
+            blast_shield_mapping = get_blast_shield_regions_by_area(area)
+            for region in blast_shield_mapping.regions:
+                for source_room, target_room in region.doors.items():
+                    door_data = get_door_data_by_room_names(source_room, target_room, area, self.world)
+                    if not door_data:
+                        invalid_rooms.append((source_room, target_room, area))
+        self.assertFalse(invalid_rooms, f"Invalid room pairings found: {invalid_rooms}")
