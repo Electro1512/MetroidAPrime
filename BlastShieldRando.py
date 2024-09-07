@@ -69,7 +69,7 @@ def _generate_blast_shield_mapping_for_area(world: 'MetroidPrimeWorld', area: Me
     # TODO: Make this less repetitive
     if world.options.blast_shield_randomization.value == BlastShieldRandomization.option_mix_it_up:
         blast_shield_regions = get_blast_shield_regions_by_area(area).regions
-        num_shields_to_add = math.ceil(world.options.blast_shield_frequency.value * len(blast_shield_regions) * .01)
+        num_shields_to_add = math.ceil(world.options.blast_shield_frequency.value * len(blast_shield_regions) * .1)
         world.random.shuffle(blast_shield_regions)
         for i in range(num_shields_to_add):
             region = blast_shield_regions[i]

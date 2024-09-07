@@ -280,13 +280,13 @@ class BlastShieldFrequency(Choice):
        Low: 10%
        Medium: 30%
        High: 50%
-       A whole lotta blast shields: 80% (This may not be fun but it's an option)"""
+       A whole lotta blast shields: 80% (This may have a hard time generating)"""
     display_name = "Blast Shield Frequency"
     option_low = 1
-    option_medium = 25
-    option_high = 4
-    option_a_whole_lotta_blast_shields = 8
-    default = 25
+    option_medium = 4
+    option_high = 6
+    option_a_whole_lotta_blast_shields = 10
+    default = 4
 
 
 class IncludeLockedDoors(Toggle):

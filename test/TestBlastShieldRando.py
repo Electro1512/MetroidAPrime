@@ -203,7 +203,7 @@ class TestMixItUpBlastShieldRando(MetroidPrimeTestBase):
             for room in mapping.type_mapping.values():
                 blast_shield_count += len(room.values())
             self.assertGreater(blast_shield_count, 0, f"No blast shields found in {area}")
-            self.assertEqual(blast_shield_count, math.ceil(total_available_blast_shield_options * world.options.blast_shield_frequency * .01), f"Invalid number of blast shields in {area}, {blast_shield_count} found")
+            self.assertEqual(blast_shield_count, math.ceil(total_available_blast_shield_options * world.options.blast_shield_frequency * .1), f"Invalid number of blast shields in {area}, {blast_shield_count} found")
 
 
 class TestBlastShieldRegionMapping(MetroidPrimeTestBase):
