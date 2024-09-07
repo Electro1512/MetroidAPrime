@@ -4,7 +4,8 @@ from ..LogicCombat import can_combat_mines, can_combat_omega_pirate
 from .Tricks import Tricks
 from .RoomNames import RoomName
 from .AreaNames import MetroidPrimeArea
-from .RoomData import AreaData, DoorData, PickupData, RoomData
+from .RoomData import AreaData, PickupData, RoomData
+from .DoorData import DoorData
 from ..Logic import can_backwards_lower_mines, can_bomb, can_boost, can_grapple, can_melt_ice, can_morph_ball, can_phazon, can_plasma_beam, can_power_bomb, can_scan, can_space_jump, can_spider, can_super_missile, can_thermal, can_wave_beam, can_xray
 
 

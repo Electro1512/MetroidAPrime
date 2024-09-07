@@ -3,8 +3,9 @@ import typing
 from unittest import TestCase
 
 from Fill import distribute_items_restrictive
+from ..data.DoorData import get_door_data_by_room_names
 from ..data.BlastShieldRegions import get_blast_shield_regions_by_area
-from ..data.RoomData import AreaData, DoorData, _can_access_door, get_door_data_by_room_names
+from ..data.RoomData import AreaData
 from ..data.AreaNames import MetroidPrimeArea
 from ..BlastShieldRando import MAX_BEAM_COMBO_DOORS_PER_AREA, AreaBlastShieldMapping, BlastShieldType
 from ..DoorRando import DoorLockType
@@ -191,16 +192,18 @@ class TestMixItUpBlastShieldRando(MetroidPrimeTestBase):
     options = {
         "blast_shield_randomization": "mix_it_up",
         "blast_shield_frequency": "medium",
+        "trick_difficulty": "easy"
     }
 
     def test_blast_shields_are_placed_in_regions_with_appropriate_quantities(self):
         world: 'MetroidPrimeWorld' = self.world
         for area, mapping in world.blast_shield_mapping.items():
             blast_shield_count = 0
-            total_available_blast_shield_options = len(get_blast_shield_regions_by_area(area).regions)
+            total_available_blast_shield_options = len(get_blast_shield_regions_by_area(MetroidPrimeArea(area)).regions)
             for room in mapping.type_mapping.values():
                 blast_shield_count += len(room.values())
-            self.assertEqual(blast_shield_count, math.ceil(total_available_blast_shield_options * world.options.blast_shield_frequency), f"Invalid number of blast shields in {area}, {blast_shield_count} found")
+            self.assertGreater(blast_shield_count, 0, f"No blast shields found in {area}")
+            self.assertEqual(blast_shield_count, math.ceil(total_available_blast_shield_options * world.options.blast_shield_frequency * .01), f"Invalid number of blast shields in {area}, {blast_shield_count} found")
 
 
 class TestBlastShieldRegionMapping(MetroidPrimeTestBase):

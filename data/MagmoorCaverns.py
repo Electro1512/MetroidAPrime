@@ -3,7 +3,8 @@ from ..BlastShieldRando import BlastShieldType
 from ..DoorRando import DoorLockType
 from .Tricks import Tricks
 from .AreaNames import MetroidPrimeArea
-from .RoomData import AreaData, DoorData, PickupData, RoomData
+from .RoomData import AreaData, PickupData, RoomData
+from .DoorData import DoorData
 from ..Logic import can_bomb, can_boost, can_grapple, can_heat, can_missile, can_morph_ball, can_move_underwater, can_plasma_beam, can_power_bomb, can_scan, can_space_jump, can_spider, can_thermal, can_wave_beam, can_xray, has_energy_tanks, can_warp_to_start
 from .RoomNames import RoomName
 

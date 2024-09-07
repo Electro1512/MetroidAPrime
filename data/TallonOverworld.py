@@ -6,7 +6,8 @@ from ..Logic import can_bomb, can_boost, can_charge_beam, can_grapple, can_missi
 from ..LogicCombat import can_combat_ghosts
 from .Tricks import Tricks
 from .AreaNames import MetroidPrimeArea
-from .RoomData import AreaData, DoorData, PickupData, RoomData
+from .RoomData import AreaData, PickupData, RoomData
+from .DoorData import DoorData
 from .RoomNames import RoomName
 
 

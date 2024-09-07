@@ -1,12 +1,12 @@
 from dataclasses import dataclass
 from enum import Enum
-from typing import TYPE_CHECKING, Any, Dict, List
-
+import math
+from .data.DoorData import get_door_data_by_room_names
+from .data.BlastShieldRegions import get_blast_shield_regions_by_area
 from .data.RoomNames import RoomName
-
-from .PrimeOptions import BlastShieldAvailableTypes, BlastShieldFrequency, BlastShieldRandomization
-
+from .PrimeOptions import BlastShieldAvailableTypes, BlastShieldRandomization
 from .data.AreaNames import MetroidPrimeArea
+from typing import TYPE_CHECKING, Any, Dict, List
 
 if TYPE_CHECKING:
     from . import MetroidPrimeWorld
@@ -66,20 +66,35 @@ def get_world_blast_shield_mapping(world: 'MetroidPrimeWorld') -> Dict[str, Area
 def _generate_blast_shield_mapping_for_area(world: 'MetroidPrimeWorld', area: MetroidPrimeArea) -> Dict[str, Dict[int, str]]:
     area_mapping: Dict[str, Dict[str, str]] = {}
     total_beam_combo_doors = 0
-    if world.options.blast_shield_randomization.value != BlastShieldRandomization.option_replace_existing:
-        return area_mapping
+    # TODO: Make this less repetitive
+    if world.options.blast_shield_randomization.value == BlastShieldRandomization.option_mix_it_up:
+        blast_shield_regions = get_blast_shield_regions_by_area(area).regions
+        num_shields_to_add = math.ceil(world.options.blast_shield_frequency.value * len(blast_shield_regions) * .01)
+        world.random.shuffle(blast_shield_regions)
+        for i in range(num_shields_to_add):
+            region = blast_shield_regions[i]
+            source_room = world.random.choice(list(region.doors.keys()))
+            _, door_id = get_door_data_by_room_names(source_room, region.doors[source_room], area, world)
+            shield_type = world.random.choice(_get_available_blast_shields(world, total_beam_combo_doors >= MAX_BEAM_COMBO_DOORS_PER_AREA))
+            if source_room.value not in area_mapping:
+                area_mapping[source_room.value] = {}
+            area_mapping[source_room.value][door_id] = shield_type
 
-    for room_name, room_data in world.game_region_data[area].rooms.items():
-        for door_id, door_data in room_data.doors.items():
-            if door_data.blast_shield:
-                if room_name.value not in area_mapping:
-                    area_mapping[room_name.value] = {}
+            if shield_type in BEAM_COMBOS:
+                total_beam_combo_doors += 1
 
-                shield_type = world.random.choice(_get_available_blast_shields(world, total_beam_combo_doors >= MAX_BEAM_COMBO_DOORS_PER_AREA))
-                area_mapping[room_name.value][door_id] = shield_type
+    elif world.options.blast_shield_randomization.value == BlastShieldRandomization.option_replace_existing:
+        for room_name, room_data in world.game_region_data[area].rooms.items():
+            for door_id, door_data in room_data.doors.items():
+                if door_data.blast_shield:
+                    if room_name.value not in area_mapping:
+                        area_mapping[room_name.value] = {}
 
-                if shield_type in BEAM_COMBOS:
-                    total_beam_combo_doors += 1
+                    shield_type = world.random.choice(_get_available_blast_shields(world, total_beam_combo_doors >= MAX_BEAM_COMBO_DOORS_PER_AREA))
+                    area_mapping[room_name.value][door_id] = shield_type
+
+                    if shield_type in BEAM_COMBOS:
+                        total_beam_combo_doors += 1
 
     return area_mapping
 
