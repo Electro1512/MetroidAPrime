@@ -2,8 +2,8 @@ from enum import Enum
 
 
 class MetroidPrimeArea(Enum):
-    Phendrana_Drifts = "Phendrana Drifts"
+    Tallon_Overworld = "Tallon Overworld"
     Chozo_Ruins = "Chozo Ruins"
     Magmoor_Caverns = "Magmoor Caverns"
-    Tallon_Overworld = "Tallon Overworld"
+    Phendrana_Drifts = "Phendrana Drifts"
     Phazon_Mines = "Phazon Mines"

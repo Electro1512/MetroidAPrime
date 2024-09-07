@@ -280,7 +280,7 @@ class BlastShieldFrequency(Choice):
        Low: 10%
        Medium: 30%
        High: 50%
-       A whole lotta blast shields: 80% (This may have a hard time generating)"""
+       A whole lotta blast shields: 80% (This may have a hard time generating in solo worlds)"""
     display_name = "Blast Shield Frequency"
     option_low = 1
     option_medium = 4

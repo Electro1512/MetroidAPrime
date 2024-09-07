@@ -85,7 +85,7 @@ Metroid Prime:
     #    Low: 10%
     #    Medium: 30%
     #    High: 50%
-    #    A whole lotta blast shields: 80% (This may not be fun but it's an option)
+    #    A whole lotta blast shields: 80% (This may have a hard time generating in solo worlds)
     low: 0
     medium: 50
     high: 0
