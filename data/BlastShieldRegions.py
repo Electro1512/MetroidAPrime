@@ -102,7 +102,7 @@ def __get_chozo_region():
             ),
             BlastShieldRegion(
                 doors={
-                    RoomName.Energy_Core: RoomName.Burn_Dome_Access,
+                    RoomName.Burn_Dome_Access: RoomName.Burn_Dome,
                 }
             ),
             BlastShieldRegion(

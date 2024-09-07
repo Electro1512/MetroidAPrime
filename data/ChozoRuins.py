@@ -56,7 +56,9 @@ class ChozoRuinsAreaData(AreaData):
                 0: DoorData(RoomName.Burn_Dome),
                 1: DoorData(RoomName.Energy_Core, rule_func=can_bomb, defaultLock=DoorLockType.None_, exclude_from_rando=True),
             }),
-            RoomName.Burn_Dome: RoomData(doors={}, pickups=[PickupData('Chozo Ruins: Burn Dome - Missile', rule_func=can_bomb), PickupData('Chozo Ruins: Burn Dome - Incinerator Drone'), ]),
+            RoomName.Burn_Dome: RoomData(doors={
+                0: DoorData(RoomName.Burn_Dome_Access),
+            }, pickups=[PickupData('Chozo Ruins: Burn Dome - Missile', rule_func=can_bomb), PickupData('Chozo Ruins: Burn Dome - Incinerator Drone'), ]),
             RoomName.Crossway_Access_South: RoomData(doors={
                 0: DoorData(RoomName.Crossway, defaultLock=DoorLockType.Ice, rule_func=can_morph_ball),
                 1: DoorData(RoomName.Hall_of_the_Elders, defaultLock=DoorLockType.Ice, rule_func=can_morph_ball),

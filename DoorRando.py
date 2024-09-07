@@ -104,7 +104,7 @@ def get_available_lock_types(world: 'MetroidPrimeWorld', area: MetroidPrimeArea)
 
 # This needs to take place after the starting beam is initialized
 def remap_doors_to_power_beam_if_necessary(world: 'MetroidPrimeWorld'):
-    if world.options.include_power_beam_doors:
+    if world.options.include_power_beam_doors and world.door_color_mapping:
         # TODO: Use new starting beam data here
         starting_beam = next((item for item in world.starting_room_data.selected_loadout.loadout if "Beam" in item.name), None)
         if starting_beam is not None and starting_beam is not SuitUpgrade.Power_Beam:

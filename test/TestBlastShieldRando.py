@@ -7,7 +7,7 @@ from ..data.DoorData import get_door_data_by_room_names
 from ..data.BlastShieldRegions import get_blast_shield_regions_by_area
 from ..data.RoomData import AreaData
 from ..data.AreaNames import MetroidPrimeArea
-from ..BlastShieldRando import MAX_BEAM_COMBO_DOORS_PER_AREA, AreaBlastShieldMapping, BlastShieldType
+from ..BlastShieldRando import MAX_BEAM_COMBO_DOORS_PER_AREA, AreaBlastShieldMapping, BlastShieldType, apply_blast_shield_mapping, remove_vanilla_blast_shields
 from ..DoorRando import DoorLockType
 from ..config import make_config
 from ..data.RoomNames import RoomName
@@ -206,6 +206,13 @@ class TestMixItUpBlastShieldRando(MetroidPrimeTestBase):
                     self.assertNotEqual(shieldType, BlastShieldType.Disabled, "Disabled should not be included in mapping")
             self.assertGreater(blast_shield_count, 0, f"No blast shields found in {area}")
             self.assertEqual(blast_shield_count, math.ceil(total_available_blast_shield_options * world.options.blast_shield_frequency * .1), f"Invalid number of blast shields in {area}, {blast_shield_count} found")
+
+    def test_vanilla_blast_shields_are_not_included(self):
+        world: 'MetroidPrimeWorld' = self.world
+        distribute_items_restrictive(self.multiworld)
+        config = make_config(world)
+        level_key = config["levelData"]["Chozo Ruins"]["rooms"]
+        self.assertEqual(level_key[RoomName.Dynamo_Access.value]["doors"]["0"]["blastShieldType"], BlastShieldType._None.value)
 
 
 class TestBlastShieldRegionMapping(MetroidPrimeTestBase):

@@ -98,10 +98,16 @@ Metroid Prime:
     all: 0
     no_beam_combos: 50
 
-  include_locked_doors:
-    # If enabled, locked doors will also be added to the list of available blast shield types. These will only be placed in spots that will not prevent progression but may force alternate paths
-    "false": 50
-    "true": 0
+  locked_door_count:
+    # If greater than 0, locked doors will be placed in the game (maximum of 1 per level). These will only be placed in spots that will not prevent progression but may force alternate paths
+    #
+    # You can define additional values between the minimum and maximum values.
+    # Minimum value is 0
+    # Maximum value is 3
+    0: 50
+    random: 0
+    random-low: 0
+    random-high: 0
 
   include_power_beam_doors:
     # If enabled, Power Beam doors will be an available door color for randomization. If the starting beam is also randomized, it will remove the new starting beam's color from the pool of available door colors

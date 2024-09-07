@@ -162,10 +162,12 @@ class MetroidPrimeWorld(World):
         if self.options.blast_shield_mapping:
           # TODO: Make these conversions happen at a parent object so you don't need to iterate
             self.blast_shield_mapping = {area: AreaBlastShieldMapping.from_dict(mapping) for area, mapping in self.options.blast_shield_mapping.value.items()}
-        else:
+        elif self.options.blast_shield_randomization.value != BlastShieldRandomization.option_none or self.options.locked_door_count > 0:
             self.blast_shield_mapping = get_world_blast_shield_mapping(self)
             self.options.blast_shield_mapping.value = {area: mapping.to_dict() for area, mapping in self.blast_shield_mapping.items()}
-        apply_blast_shield_mapping(self)
+
+        if self.blast_shield_mapping:
+            apply_blast_shield_mapping(self)
 
         # Randomize Elevators
         if self.options.elevator_mapping:
@@ -379,7 +381,7 @@ class MetroidPrimeWorld(World):
             for door, color in self.door_color_mapping[MetroidPrimeArea.Tallon_Overworld.value].type_mapping.items():
                 spoiler_handle.write(f'    {door} -> {color}\n')
 
-        if self.options.blast_shield_randomization.value != BlastShieldRandomization.option_none:
+        if self.options.blast_shield_randomization.value != BlastShieldRandomization.option_none or self.options.locked_door_count > 0:
             spoiler_handle.write(f'\n\nBlast Shield Mapping({player_name}):\n')
             written_mappings: List[List[str, str]] = []
 

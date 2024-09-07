@@ -22,6 +22,7 @@ class BlastShieldType(Enum):
     Super_Missile = "Super Missile"
     Missile = "Missile"
     Disabled = "Disabled"  # This is technically a door type, but functionally we want to add it the way that shields are added
+    _None = "None"
 
 
 @dataclass
@@ -120,7 +121,7 @@ def _generate_blast_shield_mapping_for_area(world: 'MetroidPrimeWorld', area: Me
 
 
 def _get_available_blast_shields(world: 'MetroidPrimeWorld', force_exclude_combo_doors: bool = False) -> List[BlastShieldType]:
-    available_shields = [shield for shield in ALL_SHIELDS.copy() if shield != BlastShieldType.Disabled]
+    available_shields = [shield for shield in ALL_SHIELDS.copy() if shield not in [BlastShieldType.Disabled, BlastShieldType._None]]
     if world.options.blast_shield_randomization.value == BlastShieldRandomization.option_replace_existing:
         available_shields.remove(BlastShieldType.Missile)
 
@@ -131,8 +132,17 @@ def _get_available_blast_shields(world: 'MetroidPrimeWorld', force_exclude_combo
 
 
 def apply_blast_shield_mapping(world: 'MetroidPrimeWorld'):
+    remove_vanilla_blast_shields(world)
     mapping = world.blast_shield_mapping
     for area, area_mapping in mapping.items():
         for room_name, door_mapping in area_mapping.type_mapping.items():
             for door_id, shield_type in door_mapping.items():
                 world.game_region_data[MetroidPrimeArea(area)].rooms[RoomName(room_name)].doors[door_id].blast_shield = shield_type
+
+
+def remove_vanilla_blast_shields(world: 'MetroidPrimeWorld'):
+    for area in MetroidPrimeArea:
+        for room_name, room_data in world.game_region_data[area].rooms.items():
+            for door_id, door_data in room_data.doors.items():
+                if door_data.blast_shield:
+                    door_data.blast_shield = BlastShieldType._None

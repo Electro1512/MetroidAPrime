@@ -34,6 +34,14 @@ class TestNoDoorRando(MetroidPrimeTestBase):
         self.assertEqual(config["gameConfig"]["startingBeam"], "Power", "Starting beam should be Power")
 
 
+class TestStartingBeamRandoWithNoDoorRando(MetroidPrimeTestBase):
+    options = {
+        "door_color_randomization": "none",
+        "randomize_starting_beam": True,
+        "include_power_beam_doors": True,
+    }
+
+
 class TestGlobalDoorRando(MetroidPrimeTestBase):
     options = {
         "door_color_randomization": "global",
