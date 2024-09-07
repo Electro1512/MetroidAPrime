@@ -114,7 +114,11 @@ class RoomData:
             if door.blast_shield is not None:
                 if f"{door_id}" not in door_data:
                     door_data[f"{door_id}"] = {}
-                door_data[f"{door_id}"]["blastShieldType"] = door.blast_shield.value
+                # We store locked doors under the blast shield mapping but randomprime expects them under the shield type
+                if door.blast_shield == BlastShieldType.Disabled:
+                    door_data[f"{door_id}"]["shieldType"] = door.blast_shield.value
+                else:
+                    door_data[f"{door_id}"]["blastShieldType"] = door.blast_shield.value
 
         return door_data
 
@@ -265,6 +269,8 @@ def _can_access_door(state: CollectionState, player: int, door_data: DoorData) -
             can_blast_shield = can_beam_combo(state, player, SuitUpgrade.Ice_Beam)
         elif door_data.blast_shield == BlastShieldType.Flamethrower:
             can_blast_shield = can_beam_combo(state, player, SuitUpgrade.Plasma_Beam)
+        elif door_data.blast_shield == BlastShieldType.Disabled:
+            can_blast_shield = False
     else:
         can_blast_shield = True
 

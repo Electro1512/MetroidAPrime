@@ -289,10 +289,12 @@ class BlastShieldFrequency(Choice):
     default = 4
 
 
-class IncludeLockedDoors(Toggle):
-    """If enabled, locked doors will also be added to the list of available blast shield types. These will only be placed in spots that will not prevent progression but may force alternate paths"""
-    display_name = "Include Locked Doors in Blast Shield Randomization"
-
+class LockedDoorCount(Range):
+    """If greater than 0, locked doors will be placed in the game (maximum of 1 per level). These will only be placed in spots that will not prevent progression but may force alternate paths"""
+    display_name = "Number of Locked Doors to Include"
+    range_start = 0
+    range_end = 3
+    default = 0
 
 class IncludePowerBeamDoors(Toggle):
     """If enabled, Power Beam doors will be an available door color for randomization. If the starting beam is also randomized, it will remove the new starting beam's color from the pool of available door colors"""
@@ -439,7 +441,7 @@ class MetroidPrimeOptions(PerGameCommonOptions):
     blast_shield_mapping: BlastShieldMapping
     blast_shield_frequency: BlastShieldFrequency
     blast_shield_available_types: BlastShieldAvailableTypes
-    include_locked_doors: IncludeLockedDoors
+    locked_door_count: LockedDoorCount
     include_power_beam_doors: IncludePowerBeamDoors
     include_morph_ball_bomb_doors: IncludeMorphBallBombDoors
     randomize_starting_beam: RandomizeStartingBeam

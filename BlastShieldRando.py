@@ -21,6 +21,7 @@ class BlastShieldType(Enum):
     Power_Bomb = "Power Bomb"
     Super_Missile = "Super Missile"
     Missile = "Missile"
+    Disabled = "Disabled"  # This is technically a door type, but functionally we want to add it the way that shields are added
 
 
 @dataclass
@@ -57,13 +58,22 @@ BEAM_COMBOS: List[BlastShieldType] = [BlastShieldType.Flamethrower, BlastShieldT
 
 def get_world_blast_shield_mapping(world: 'MetroidPrimeWorld') -> Dict[str, AreaBlastShieldMapping]:
     mapping: Dict[str, AreaBlastShieldMapping] = {}
+    areas_with_locks = []
+    if world.options.locked_door_count > 0:
+        # No locks for magmoor since it is too linear and a central hub
+        areas_with_locks = world.random.sample([area for area in list(MetroidPrimeArea) if area != MetroidPrimeArea.Magmoor_Caverns], world.options.locked_door_count)
+
     if world.options.blast_shield_randomization.value != BlastShieldRandomization.option_none:
         for area in MetroidPrimeArea:
-            mapping[area.value] = AreaBlastShieldMapping(area.value, _generate_blast_shield_mapping_for_area(world, area))
+            mapping[area.value] = AreaBlastShieldMapping(area.value, _generate_blast_shield_mapping_for_area(world, area, area in areas_with_locks))
+    # Still generate mapping for areas with locks even if blast shields are disabled
+    elif areas_with_locks:
+        for area in areas_with_locks:
+            mapping[area.value] = AreaBlastShieldMapping(area.value, _generate_blast_shield_mapping_for_area(world, area, True))
     return mapping
 
 
-def _generate_blast_shield_mapping_for_area(world: 'MetroidPrimeWorld', area: MetroidPrimeArea) -> Dict[str, Dict[int, str]]:
+def _generate_blast_shield_mapping_for_area(world: 'MetroidPrimeWorld', area: MetroidPrimeArea, include_locked_door: bool) -> Dict[str, Dict[int, str]]:
     area_mapping: Dict[str, Dict[str, str]] = {}
     total_beam_combo_doors = 0
     # TODO: Make this less repetitive
@@ -96,11 +106,21 @@ def _generate_blast_shield_mapping_for_area(world: 'MetroidPrimeWorld', area: Me
                     if shield_type in BEAM_COMBOS:
                         total_beam_combo_doors += 1
 
+    if include_locked_door:
+        lockable_regions = [regions for regions in get_blast_shield_regions_by_area(area).regions if regions.can_be_locked]
+        if lockable_regions:
+            region = lockable_regions[0]
+            source_room = world.random.choice(list(region.doors.keys()))
+            _, door_id = get_door_data_by_room_names(source_room, region.doors[source_room], area, world)
+            if source_room.value not in area_mapping:
+                area_mapping[source_room.value] = {}
+            area_mapping[source_room.value][door_id] = BlastShieldType.Disabled
+
     return area_mapping
 
 
 def _get_available_blast_shields(world: 'MetroidPrimeWorld', force_exclude_combo_doors: bool = False) -> List[BlastShieldType]:
-    available_shields = ALL_SHIELDS.copy()
+    available_shields = [shield for shield in ALL_SHIELDS.copy() if shield != BlastShieldType.Disabled]
     if world.options.blast_shield_randomization.value == BlastShieldRandomization.option_replace_existing:
         available_shields.remove(BlastShieldType.Missile)
 

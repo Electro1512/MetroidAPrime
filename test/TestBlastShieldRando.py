@@ -191,7 +191,7 @@ class TestIncludeBeamCombos(MetroidPrimeTestBase):
 class TestMixItUpBlastShieldRando(MetroidPrimeTestBase):
     options = {
         "blast_shield_randomization": "mix_it_up",
-        "blast_shield_frequency": "medium",
+        "blast_shield_frequency": "low",
         "trick_difficulty": "easy"
     }
 
@@ -202,6 +202,8 @@ class TestMixItUpBlastShieldRando(MetroidPrimeTestBase):
             total_available_blast_shield_options = len(get_blast_shield_regions_by_area(MetroidPrimeArea(area)).regions)
             for room in mapping.type_mapping.values():
                 blast_shield_count += len(room.values())
+                for shieldType in room.values():
+                    self.assertNotEqual(shieldType, BlastShieldType.Disabled, "Disabled should not be included in mapping")
             self.assertGreater(blast_shield_count, 0, f"No blast shields found in {area}")
             self.assertEqual(blast_shield_count, math.ceil(total_available_blast_shield_options * world.options.blast_shield_frequency * .1), f"Invalid number of blast shields in {area}, {blast_shield_count} found")
 
@@ -220,3 +222,75 @@ class TestBlastShieldRegionMapping(MetroidPrimeTestBase):
                     if not door_data:
                         invalid_rooms.append((source_room, target_room, area))
         self.assertFalse(invalid_rooms, f"Invalid room pairings found: {invalid_rooms}")
+
+
+class TestLockedDoorsNoBlastShieldOrDoorColorRando(MetroidPrimeTestBase):
+    options = {
+        "locked_door_count": 1,
+        "trick_difficulty": "easy"
+    }
+
+    def test_locked_doors_are_added_to_blast_shield_mapping_when_no_other_door_rando_is_enabled(self):
+        world: 'MetroidPrimeWorld' = self.world
+        total_locked_doors = 0
+        for area, mapping in world.blast_shield_mapping.items():
+            area_locked_doors = 0
+            for room in mapping.type_mapping.values():
+                for door in room.values():
+                    if door == BlastShieldType.Disabled:
+                        total_locked_doors += 1
+                        area_locked_doors += 1
+            self.assertLessEqual(area_locked_doors, 1, f"Areas should have a max of 1 door {area}")
+        self.assertEqual(total_locked_doors, world.options.locked_door_count, "Invalid number of locked doors, received {total_locked_doors} expected {world.options.locked_door_count}")
+
+
+class TestLockedDoorsInBlastShieldMapping(MetroidPrimeTestBase):
+    options = {
+        "blast_shield_mapping": {
+            "Tallon Overworld": {
+                "area": "Tallon Overworld",
+                "type_mapping": {
+                    "Landing Site": {
+                        0: "Disabled",
+                    }
+                }
+            }
+        },
+        "trick_difficulty": "medium"
+    }
+
+    def test_locked_doors_are_added_to_blast_shield_mapping(self):
+        world: 'MetroidPrimeWorld' = self.world
+        mapped_value = world.blast_shield_mapping[MetroidPrimeArea.Tallon_Overworld.value].type_mapping["Landing Site"][0]
+        self.assertEqual(mapped_value, BlastShieldType.Disabled, "Locked door not added to mapping")
+
+    def test_locked_doors_are_added_to_config(self):
+        world: 'MetroidPrimeWorld' = self.world
+        distribute_items_restrictive(self.multiworld)
+        config = make_config(world)
+        level_key = config["levelData"]["Tallon Overworld"]["rooms"]
+        self.assertTrue(level_key[RoomName.Landing_Site.value]["doors"]["0"]["shieldType"] == BlastShieldType.Disabled.value)
+
+    def test_locked_doors_are_respected_in_logic(self):
+        test_region = RoomName.Gully.value
+        self.assertFalse(self.can_reach_region(test_region))
+
+
+class TestLockedDoorsWithDoorColorRandoAndBlastShieldRandomization(MetroidPrimeTestBase):
+    options = {
+        "locked_door_count": 1,
+        "blast_shield_frequency": "low",
+        "blast_shield_randomization": "mix_it_up",
+        "door_color_randomization": "global",
+        "trick_difficulty": "medium"
+    }
+
+    def test_locked_doors_are_not_overwritten(self):
+        world: 'MetroidPrimeWorld' = self.world
+        total_locked_doors = 0
+        for _, mapping in world.blast_shield_mapping.items():
+            for room in mapping.type_mapping.values():
+                for door in room.values():
+                    if door == BlastShieldType.Disabled:
+                        total_locked_doors += 1
+        self.assertEqual(total_locked_doors, world.options.locked_door_count, "Invalid number of locked doors, received {total_locked_doors} expected {world.options.locked_door_count}")

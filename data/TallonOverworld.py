@@ -28,7 +28,6 @@ class TallonOverworldAreaData(AreaData):
                     0: DoorData(RoomName.Landing_Site,
                                 rule_func=can_space_jump,
                                 tricks=[Tricks.alcove_escape]),
-                    1: DoorData(RoomName.Gully, exclude_from_rando=True),  # Gully Via Landing Site
                 },
                 pickups=[
                     PickupData('Tallon Overworld: Alcove',
