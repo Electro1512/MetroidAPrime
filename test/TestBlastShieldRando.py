@@ -175,6 +175,7 @@ class TestIncludeBeamCombos(MetroidPrimeTestBase):
     options = {
         "blast_shield_randomization": "replace_existing",
         "blast_shield_available_types": "all",
+        "trick_difficulty": "easy"
     }
 
     def test_beam_combos_are_included_within_limits(self):

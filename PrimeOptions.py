@@ -2,8 +2,8 @@
 from enum import Enum
 from Options import DeathLink, DefaultOnToggle, OptionDict, OptionList, TextChoice, Toggle, Range, ItemDict, StartInventoryPool, Choice, PerGameCommonOptions, Visibility
 from dataclasses import dataclass
-from .data.StartRoomData import StartRoomDifficulty
 from .LogicCombat import CombatLogicDifficulty
+from .data.StartRoomData import StartRoomDifficulty
 
 
 class HudColor(Enum):
@@ -176,7 +176,7 @@ class RemoveThermalRequirements(Choice):
 
 class StartingRoom(Choice):
     """Determines the starting room of the game. This will change your starting loadout depending on the room
-       normal: Start at the Talon Overworld Landing Site. If elevator randomization is enabled, or Shuffle Scan Visor + Don't Pre Scan Elevators, this will switch to Save Station 1 in Chozo Ruins
+       normal: Start at the Talon Overworld Landing Site. If elevator randomization is enabled, or Shuffle Scan Visor + Don't Pre Scan Elevators and the player does not have tricks or mix it up blast shield randomization enabled, this will switch to Save Station 1 in Chozo Ruins.
        safe: Start in rooms that will not require a significant combat challenge to progress from. Without disable_starting_room_bk_prevention enabled, this may assign you a new beam and an item in order to make the seed feasible
        buckle_up: Start in rooms that will pose a significant challenge to players with no energy tanks or suit upgrades. Fun for the aspiring masochist (less fun for their friends in BK).
     """
@@ -188,7 +188,7 @@ class StartingRoom(Choice):
 
 
 class DisableStartingRoomBKPrevention(Toggle):
-    """Normally, starting rooms will give you a minimum set of items in order to have access to several checks immediately. This option disables that behavior as well as any pre filled items that would have been set.
+    """Normally, starting rooms will give you a minimum set of items in order to have access to several checks immediately. This option disables that behavior as well as any pre filled items that would have been set. This will automatically get set to true if starting room is normal and tricks or blast shield rando is enabled
        WARNING: This will possibly require multiple attempts to generate, especially in solo worlds
 """
     display_name = "Disable Starting Room BK Prevention"
@@ -295,6 +295,7 @@ class LockedDoorCount(Range):
     range_start = 0
     range_end = 3
     default = 0
+
 
 class IncludePowerBeamDoors(Toggle):
     """If enabled, Power Beam doors will be an available door color for randomization. If the starting beam is also randomized, it will remove the new starting beam's color from the pool of available door colors"""

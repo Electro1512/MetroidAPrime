@@ -198,12 +198,16 @@ def get_starting_room_by_name(world: 'MetroidPrimeWorld', room_name: str) -> Sta
     return room
 
 
-def _is_elevator_rando_with_vanilla_starting_room(world: 'MetroidPrimeWorld') -> bool:
-    return world.options.elevator_randomization.value and world.options.starting_room.value == StartRoomDifficulty.Normal.value
+def _has_elevator_rando(world: 'MetroidPrimeWorld') -> bool:
+    return world.options.elevator_randomization.value
 
 
-def _is_no_pre_scan_elevators_with_shuffle_scan_and_vanilla_starting_room(world: 'MetroidPrimeWorld') -> bool:
-    return world.options.pre_scan_elevators.value == False and world.options.shuffle_scan_visor.value and world.options.starting_room.value == StartRoomDifficulty.Normal.value
+def _has_no_pre_scan_elevators_with_shuffle_scan(world: 'MetroidPrimeWorld') -> bool:
+    return world.options.pre_scan_elevators.value == False and world.options.shuffle_scan_visor.value
+
+
+def _has_options_that_allow_more_landing_site_checks(world: 'MetroidPrimeWorld') -> bool:
+    return world.options.blast_shield_randomization.value != 'None' or world.options.trick_difficulty.value != -1
 
 
 def init_starting_room_data(world: 'MetroidPrimeWorld'):
@@ -217,9 +221,16 @@ def init_starting_room_data(world: 'MetroidPrimeWorld'):
             world.starting_room_data = StartRoomData(name=world.options.starting_room_name.value)
             world.starting_room_data.loadouts = [StartRoomLoadout(loadout=[SuitUpgrade.Power_Beam])]
     else:
-        if _is_elevator_rando_with_vanilla_starting_room(world) or _is_no_pre_scan_elevators_with_shuffle_scan_and_vanilla_starting_room(world):
-            # Can't start at landing site since there are no pickups without tricks
-            world.starting_room_data = get_starting_room_by_name(world, RoomName.Save_Station_1.value)
+        if world.options.starting_room.value == StartRoomDifficulty.Normal.value:
+            if (_has_elevator_rando(world) or _has_no_pre_scan_elevators_with_shuffle_scan(world)) and not _has_options_that_allow_more_landing_site_checks(world):
+                # Can't start at landing site since there are no pickups without tricks
+                world.starting_room_data = get_starting_room_by_name(world, RoomName.Save_Station_1.value)
+
+            else:
+                world.starting_room_data = get_starting_room_by_name(world, RoomName.Landing_Site.value)
+            # Give the randomizer more flexibility if they have options that allow more starting_room checks
+            if _has_options_that_allow_more_landing_site_checks(world):
+                world.options.disable_starting_room_bk_prevention.value = True
         else:
             world.starting_room_data = get_random_start_room_by_difficulty(world, difficulty)
         world.options.starting_room_name.value = world.starting_room_data.name
