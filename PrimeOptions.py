@@ -2,8 +2,8 @@
 from enum import Enum
 from Options import DeathLink, DefaultOnToggle, OptionDict, OptionList, TextChoice, Toggle, Range, ItemDict, StartInventoryPool, Choice, PerGameCommonOptions, Visibility
 from dataclasses import dataclass
-from .data.StartRoomData import StartRoomDifficulty
 from .LogicCombat import CombatLogicDifficulty
+from .data.StartRoomData import StartRoomDifficulty
 
 
 class HudColor(Enum):
@@ -122,11 +122,13 @@ class TrickDifficulty(Choice):
 class TrickAllowList(OptionList):
     """A list of tricks to explicitly allow in logic, regardless of selected difficulty. Values should match the trick name found here: https://github.com/Electro1512/MetroidAPrime/blob/main/data/Tricks.py#L55
        For example, "Crashed Frigate Scan Dash" or "Alcove Escape" """
+    display_name = "Trick Allow List"
     default = []
 
 
 class TrickDenyList(OptionList):
     """A list of tricks to explicitly deny in logic, regardless of selected difficulty. Values should match the trick name found here: https://github.com/Electro1512/MetroidAPrime/blob/main/data/Tricks.py#L55. For example, "Crashed Frigate Scan Dash" or "Alcove Escape" """
+    display_name = "Trick Deny List"
     default = []
 
 
@@ -174,7 +176,7 @@ class RemoveThermalRequirements(Choice):
 
 class StartingRoom(Choice):
     """Determines the starting room of the game. This will change your starting loadout depending on the room
-       normal: Start at the Talon Overworld Landing Site. If elevator randomization is enabled, or Shuffle Scan Visor + Don't Pre Scan Elevators, this will switch to Save Station 1 in Chozo Ruins
+       normal: Start at the Talon Overworld Landing Site. If elevator randomization is enabled, or Shuffle Scan Visor + Don't Pre Scan Elevators and the player does not have tricks or mix it up blast shield randomization enabled, this will switch to Save Station 1 in Chozo Ruins.
        safe: Start in rooms that will not require a significant combat challenge to progress from. Without disable_starting_room_bk_prevention enabled, this may assign you a new beam and an item in order to make the seed feasible
        buckle_up: Start in rooms that will pose a significant challenge to players with no energy tanks or suit upgrades. Fun for the aspiring masochist (less fun for their friends in BK).
     """
@@ -186,7 +188,7 @@ class StartingRoom(Choice):
 
 
 class DisableStartingRoomBKPrevention(Toggle):
-    """Normally, starting rooms will give you a minimum set of items in order to have access to several checks immediately. This option disables that behavior as well as any pre filled items that would have been set.
+    """Normally, starting rooms will give you a minimum set of items in order to have access to several checks immediately. This option disables that behavior as well as any pre filled items that would have been set. This will automatically get set to true if starting room is normal and tricks or blast shield rando is enabled
        WARNING: This will possibly require multiple attempts to generate, especially in solo worlds
 """
     display_name = "Disable Starting Room BK Prevention"
@@ -235,11 +237,64 @@ class DoorColorRandomization(Choice):
     default = option_none
 
 
+class BlastShieldRandomization(Choice):
+    """Determine if/how blast shields are randomized. Note that this will have a difficult time generating in solo worlds with no tricks enabled.
+       None: No blast shields will be randomized
+       Replace Existing: Each existing Missile Blast Shield will be replaced with a different Blast Shield type
+       Mix it up: Each Region will remove all existing blast shields and instead add a specified number to new doors
+"""
+    display_name = "Blast Shield Randomization"
+    option_none = "None"
+    option_replace_existing = "Replace Existing"
+    option_mix_it_up = "Mix it up"
+    default = option_none
+
+
 class DoorColorMapping(OptionDict):
     """Which door colors go to which colors"""
     display_name = "Door Color Mapping"
     visibility = Visibility.none
     default = {}
+
+
+class BlastShieldMapping(OptionDict):
+    """Which blast shield types go to which colors"""
+    display_name = "Door Color Mapping"
+    visibility = Visibility.none
+    default = {}
+
+
+class BlastShieldAvailableTypes(Choice):
+    """Which blast shield types are available for randomization.
+       All: All blast shield types are available, including beam combos, bomb, power bomb, charge beam, and super missiles
+       No beam combos: Flamethrower, Wavebuster, and Ice Spreader will not be included as blast shield types (Super Missiles will still be included)
+       """
+    display_name = "Blast Shield Available Types"
+    option_all = 1
+    option_no_beam_combos = 0
+    default = option_no_beam_combos
+
+
+class BlastShieldFrequency(Choice):
+    """If using 'Mix it up' for blast shield randomization,, how many blast shields should be added per region? These are added using a percentage of total possible placements so exact numbers will vary by region. Higher numbers will have more difficulty genning in solo worlds with less tricks.
+       Low: 10%
+       Medium: 30%
+       High: 50%
+       A whole lotta blast shields: 80% (This may have a hard time generating in solo worlds)"""
+    display_name = "Blast Shield Frequency"
+    option_low = 1
+    option_medium = 4
+    option_high = 6
+    option_a_whole_lotta_blast_shields = 10
+    default = 4
+
+
+class LockedDoorCount(Range):
+    """If greater than 0, locked doors will be placed in the game (maximum of 1 per level). These will only be placed in spots that will not prevent progression but may force alternate paths"""
+    display_name = "Number of Locked Doors to Include"
+    range_start = 0
+    range_end = 3
+    default = 0
 
 
 class IncludePowerBeamDoors(Toggle):
@@ -285,12 +340,6 @@ class RandomizeSuitColors(Toggle):
     """Randomize the colors of the suits. Is overriden if any of the color overrides are greater than 0. Note: This is not compatible with the Fusion Suit and will have no effect"""
     display_name = "Randomize Suit Colors"
     default = False
-
-
-class ShowSuitIndexOnPauseMenu(DefaultOnToggle):
-    """If enabled, the selected suit color index will be shown on the pause menu under "Suits". Note: This has unexpected behavior on non US versions """
-    display_name = "Show Suit Index on Pause Menu (Disable if using non US version)"
-    default = True
 
 
 class PowerSuitColorOverride(Range):
@@ -383,6 +432,11 @@ class MetroidPrimeOptions(PerGameCommonOptions):
     elevator_mapping: ElevatorMapping
     door_color_randomization: DoorColorRandomization
     door_color_mapping: DoorColorMapping
+    blast_shield_randomization: BlastShieldRandomization
+    blast_shield_mapping: BlastShieldMapping
+    blast_shield_frequency: BlastShieldFrequency
+    blast_shield_available_types: BlastShieldAvailableTypes
+    locked_door_count: LockedDoorCount
     include_power_beam_doors: IncludePowerBeamDoors
     include_morph_ball_bomb_doors: IncludeMorphBallBombDoors
     randomize_starting_beam: RandomizeStartingBeam
@@ -411,7 +465,6 @@ class MetroidPrimeOptions(PerGameCommonOptions):
     hud_color_green: HudColorOverrideGreen
     hud_color_blue: HudColorOverrideBlue
     randomize_suit_colors: RandomizeSuitColors
-    show_suit_index_on_pause_menu: ShowSuitIndexOnPauseMenu
     power_suit_color: PowerSuitColorOverride
     varia_suit_color: VariaSuitColorOverride
     gravity_suit_color: GravitySuitColorOverride

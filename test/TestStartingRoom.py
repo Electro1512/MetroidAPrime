@@ -120,5 +120,17 @@ class TestNormalStartingRoom(MetroidPrimeTestBase):
         "starting_room": StartRoomDifficulty.Normal.value
     }
 
-    def test_buckle_up(self):
+    def test_normal(self):
+        self.assertTrue(self.world.options.starting_room_name.value == RoomName.Landing_Site.value)
+
+
+class TestNormalStartingRoomWithBlastShieldRandoMixItUp(MetroidPrimeTestBase):
+    run_default_tests = False
+    options = {
+        "starting_room": StartRoomDifficulty.Normal.value,
+        "blast_shield_randomization": 'mix_it_up',
+        "elevator_randomization": True
+    }
+
+    def test_starting_room_is_landing_site_when_elevator_rando_is_enabled_and_mix_it_up(self):
         self.assertTrue(self.world.options.starting_room_name.value == RoomName.Landing_Site.value)

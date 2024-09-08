@@ -1,8 +1,10 @@
 
+from ..BlastShieldRando import BlastShieldType
 from ..DoorRando import DoorLockType
 from .Tricks import Tricks
 from .AreaNames import MetroidPrimeArea
-from .RoomData import AreaData, DoorData, PickupData, RoomData
+from .RoomData import AreaData, PickupData, RoomData
+from .DoorData import DoorData
 from ..Logic import can_bomb, can_boost, can_grapple, can_heat, can_missile, can_morph_ball, can_move_underwater, can_plasma_beam, can_power_bomb, can_scan, can_space_jump, can_spider, can_thermal, can_wave_beam, can_xray, has_energy_tanks, can_warp_to_start
 from .RoomNames import RoomName
 
@@ -12,13 +14,13 @@ class MagmoorCavernsAreaData(AreaData):
         super().__init__(MetroidPrimeArea.Magmoor_Caverns.value)
         self.rooms = {
             RoomName.Burning_Trail: RoomData(doors={
-                0: DoorData(RoomName.Lake_Tunnel, destinationArea=MetroidPrimeArea.Magmoor_Caverns),
+                0: DoorData(RoomName.Lake_Tunnel, destination_area=MetroidPrimeArea.Magmoor_Caverns),
                 1: DoorData(RoomName.Transport_to_Chozo_Ruins_North),
-                2: DoorData(RoomName.Save_Station_Magmoor_A, defaultLock=DoorLockType.Missile),
+                2: DoorData(RoomName.Save_Station_Magmoor_A, blast_shield=BlastShieldType.Missile),
             }),
             RoomName.Fiery_Shores: RoomData(doors={
                 0: DoorData(RoomName.Shore_Tunnel, rule_func=lambda state, player: can_heat(state, player) and (can_bomb(state, player) or can_grapple(state, player) or has_energy_tanks(state, player, 4))),
-                1: DoorData(RoomName.Transport_Tunnel_B, destinationArea=MetroidPrimeArea.Magmoor_Caverns, rule_func=lambda state, player: can_heat(state, player) and (can_bomb(state, player) or can_grapple(state, player))),
+                1: DoorData(RoomName.Transport_Tunnel_B, destination_area=MetroidPrimeArea.Magmoor_Caverns, rule_func=lambda state, player: can_heat(state, player) and (can_bomb(state, player) or can_grapple(state, player))),
                 # 2: DoorData(RoomName.Warrior_Shrine, rule_func=lambda state, player: False), Can't access, one way trip
             }, pickups=[
                 PickupData('Magmoor Caverns: Fiery Shores - Morph Track', tricks=[Tricks.fiery_shores_morphball_track_sj], rule_func=can_bomb),
@@ -33,14 +35,14 @@ class MagmoorCavernsAreaData(AreaData):
                 2: DoorData(RoomName.South_Core_Tunnel, rule_func=can_space_jump),
             }),
             RoomName.Lake_Tunnel: RoomData(
-                area=MetroidPrimeArea.Magmoor_Caverns,
+                include_area_in_name=True,
                 doors={
                     0: DoorData(RoomName.Lava_Lake, rule_func=can_heat, tricks=[Tricks.lava_lake_item_suitless]),
                     1: DoorData(RoomName.Burning_Trail, rule_func=can_heat, tricks=[Tricks.lava_lake_item_suitless]),
                 }),
             RoomName.Lava_Lake: RoomData(
                 doors={
-                    0: DoorData(RoomName.Lake_Tunnel, destinationArea=MetroidPrimeArea.Magmoor_Caverns, rule_func=lambda state, player: can_heat(state, player) and (can_bomb(state, player) or can_power_bomb(state, player)), tricks=[Tricks.lava_lake_item_suitless]),
+                    0: DoorData(RoomName.Lake_Tunnel, destination_area=MetroidPrimeArea.Magmoor_Caverns, rule_func=lambda state, player: can_heat(state, player) and (can_bomb(state, player) or can_power_bomb(state, player)), tricks=[Tricks.lava_lake_item_suitless]),
                     1: DoorData(RoomName.Pit_Tunnel, rule_func=lambda state, player: can_heat(state, player) and (can_bomb(state, player) or can_power_bomb(state, player)), tricks=[Tricks.lava_lake_item_suitless]),
                 },
                 pickups=[PickupData('Magmoor Caverns: Lava Lake', rule_func=lambda state, player: can_missile(state, player) and can_space_jump(state, player) and state.can_reach("Magmoor Caverns: " + RoomName.Lake_Tunnel.value, None, player), tricks=[Tricks.lava_lake_item_missiles_only, Tricks.lava_lake_item_suitless]), ]),
@@ -48,13 +50,13 @@ class MagmoorCavernsAreaData(AreaData):
                 doors={
                     0: DoorData(RoomName.South_Core_Tunnel),
                     1: DoorData(RoomName.Workstation_Tunnel, rule_func=can_space_jump),
-                    2: DoorData(RoomName.Transport_Tunnel_C, defaultLock=DoorLockType.Wave, destinationArea=MetroidPrimeArea.Magmoor_Caverns, rule_func=can_space_jump),
+                    2: DoorData(RoomName.Transport_Tunnel_C, defaultLock=DoorLockType.Wave, destination_area=MetroidPrimeArea.Magmoor_Caverns, rule_func=can_space_jump),
                 },
                 pickups=[PickupData('Magmoor Caverns: Magmoor Workstation', rule_func=lambda state, player: can_thermal(state, player) and can_wave_beam(state, player) and can_scan(state, player) and can_morph_ball(state, player),
                                     tricks=[Tricks.magmoor_workstation_no_thermal]), ]),
             RoomName.Monitor_Station: RoomData(doors={
                 0: DoorData(RoomName.Monitor_Tunnel, rule_func=can_heat),
-                1: DoorData(RoomName.Transport_Tunnel_A, rule_func=can_heat, destinationArea=MetroidPrimeArea.Magmoor_Caverns),
+                1: DoorData(RoomName.Transport_Tunnel_A, rule_func=can_heat, destination_area=MetroidPrimeArea.Magmoor_Caverns),
                 2: DoorData(RoomName.Warrior_Shrine, rule_func=lambda state, player: can_heat(state, player) and can_space_jump(state, player) and can_boost(state, player), tricks=[Tricks.warrior_shrine_no_boost, Tricks.warrior_shrine_scan_only, Tricks.warrior_shrine_no_items]),
                 3: DoorData(RoomName.Shore_Tunnel, rule_func=can_heat),
             }),
@@ -74,10 +76,10 @@ class MagmoorCavernsAreaData(AreaData):
                 0: DoorData(RoomName.Geothermal_Core, lock=DoorLockType.Blue, defaultLock=DoorLockType.Plasma, exclude_from_rando=True),  # Force blue to prevent softlock
             }, pickups=[PickupData('Magmoor Caverns: Plasma Processing')]),  # Requires plasma beam to exit
             RoomName.Save_Station_Magmoor_A: RoomData(doors={
-                0: DoorData(RoomName.Burning_Trail, defaultLock=DoorLockType.Missile),
+                0: DoorData(RoomName.Burning_Trail, blast_shield=BlastShieldType.Missile),
             }),
             RoomName.Save_Station_Magmoor_B: RoomData(doors={
-                0: DoorData(RoomName.Transport_to_Phendrana_Drifts_South, defaultLock=DoorLockType.Missile),
+                0: DoorData(RoomName.Transport_to_Phendrana_Drifts_South, blast_shield=BlastShieldType.Missile),
             }),
             RoomName.Shore_Tunnel: RoomData(doors={
                 0: DoorData(RoomName.Monitor_Station, rule_func=can_heat),
@@ -95,28 +97,28 @@ class MagmoorCavernsAreaData(AreaData):
                 0: DoorData(RoomName.Workstation_Tunnel, defaultLock=DoorLockType.Ice),
             }),
             RoomName.Transport_to_Phendrana_Drifts_North: RoomData(doors={
-                0: DoorData(RoomName.Transport_Tunnel_A, destinationArea=MetroidPrimeArea.Magmoor_Caverns),
+                0: DoorData(RoomName.Transport_Tunnel_A, destination_area=MetroidPrimeArea.Magmoor_Caverns),
             }),
             RoomName.Transport_to_Phendrana_Drifts_South: RoomData(doors={
-                0: DoorData(RoomName.Save_Station_Magmoor_B, defaultLock=DoorLockType.Missile, exclude_from_rando=True),  # Door 1 is not annotated, not sure which one is which
-                1: DoorData(RoomName.Transport_Tunnel_C, destinationArea=MetroidPrimeArea.Magmoor_Caverns, defaultLock=DoorLockType.Wave, exclude_from_rando=True),
+                0: DoorData(RoomName.Save_Station_Magmoor_B, blast_shield=BlastShieldType.Missile, exclude_from_rando=True),  # Door 1 is not annotated, not sure which one is which
+                1: DoorData(RoomName.Transport_Tunnel_C, destination_area=MetroidPrimeArea.Magmoor_Caverns, defaultLock=DoorLockType.Wave),
             }),
             RoomName.Transport_to_Tallon_Overworld_West: RoomData(doors={
                 0: DoorData(RoomName.Twin_Fires_Tunnel),
-                1: DoorData(RoomName.Transport_Tunnel_B, destinationArea=MetroidPrimeArea.Magmoor_Caverns),
+                1: DoorData(RoomName.Transport_Tunnel_B, destination_area=MetroidPrimeArea.Magmoor_Caverns),
             }),
             RoomName.Transport_Tunnel_A: RoomData(doors={
                 0: DoorData(RoomName.Transport_to_Phendrana_Drifts_North, rule_func=lambda state, player: can_heat(state, player) and can_bomb(state, player)),
                 1: DoorData(RoomName.Monitor_Station, rule_func=lambda state, player: can_heat(state, player) and can_bomb(state, player)),
-            }, pickups=[PickupData('Magmoor Caverns: Transport Tunnel A', rule_func=lambda state, player: can_heat(state, player) and can_bomb(state, player))], area=MetroidPrimeArea.Magmoor_Caverns),
+            }, pickups=[PickupData('Magmoor Caverns: Transport Tunnel A', rule_func=lambda state, player: can_heat(state, player) and can_bomb(state, player))], include_area_in_name=True),
             RoomName.Transport_Tunnel_B: RoomData(doors={
                 0: DoorData(RoomName.Transport_to_Tallon_Overworld_West, rule_func=lambda state, player: can_heat(state, player) and can_morph_ball(state, player), tricks=[Tricks.transport_tunnel_b_damage_boost]),
                 1: DoorData(RoomName.Fiery_Shores, rule_func=lambda state, player: can_heat(state, player) and can_morph_ball(state, player), tricks=[Tricks.transport_tunnel_b_damage_boost]),
-            }, area=MetroidPrimeArea.Magmoor_Caverns),
+            }, include_area_in_name=True),
             RoomName.Transport_Tunnel_C: RoomData(doors={
                 0: DoorData(RoomName.Transport_to_Phendrana_Drifts_South, defaultLock=DoorLockType.Wave),
                 1: DoorData(RoomName.Magmoor_Workstation, defaultLock=DoorLockType.Wave),
-            }, area=MetroidPrimeArea.Magmoor_Caverns),
+            }, include_area_in_name=True),
             RoomName.Triclops_Pit: RoomData(
                 doors={
                     0: DoorData(RoomName.Monitor_Tunnel, rule_func=lambda state, player: can_heat(state, player)),
@@ -147,3 +149,4 @@ class MagmoorCavernsAreaData(AreaData):
                 1: DoorData(RoomName.Magmoor_Workstation, rule_func=can_power_bomb),
             })
         }
+        self._init_room_names_and_areas()

@@ -11,6 +11,7 @@ import py_randomprime
 from CommonClient import ClientCommandProcessor, CommonContext, get_base_parser, logger, server_loop, gui_enabled
 from NetUtils import ClientStatus
 import Utils
+from .config import make_version_specific_changes
 from .PrimeUtils import get_apworld_version
 from .Items import suit_upgrade_table
 from .ClientReceiveItems import handle_receive_items
@@ -339,6 +340,7 @@ async def patch_and_run_game(apmp1_file: str):
             logger.info(f"Input ISO Path: {input_iso_path}")
             logger.info(f"Output ISO Path: {output_path}")
             disc_version = py_randomprime.rust.get_iso_mp1_version(os.fspath(input_iso_path))
+            config_json = make_version_specific_changes(config_json, disc_version)
             logger.info(f"Disc Version: {disc_version}")
             logger.info("Patching ISO...")
             py_randomprime.patch_iso(input_iso_path, output_path, config_json, notifier)

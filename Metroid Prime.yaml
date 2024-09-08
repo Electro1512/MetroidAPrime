@@ -71,6 +71,44 @@ Metroid Prime:
     global: 0
     regional: 0
 
+  blast_shield_randomization:
+    # Determine if/how blast shields are randomized. Note that this will have a difficult time generating in solo worlds with no tricks enabled.
+    #    None: No blast shields will be randomized
+    #    Replace Existing: Each existing Missile Blast Shield will be replaced with a different Blast Shield type
+    #    Mix it up: Each Region will remove all existing blast shields and instead add a specified number to new doors
+    none: 50
+    replace_existing: 0
+    mix_it_up: 0
+
+  blast_shield_frequency:
+    # If using 'Mix it up' for blast shield randomization,, how many blast shields should be added per region? These are added using a percentage of total possible placements so exact numbers will vary by region. Higher numbers will have more difficulty genning in solo worlds with less tricks.
+    #    Low: 10%
+    #    Medium: 30%
+    #    High: 50%
+    #    A whole lotta blast shields: 80% (This may have a hard time generating in solo worlds)
+    low: 0
+    medium: 50
+    high: 0
+    a_whole_lotta_blast_shields: 0
+
+  blast_shield_available_types:
+    # Which blast shield types are available for randomization.
+    #    All: All blast shield types are available, including beam combos, bomb, power bomb, charge beam, and super missiles
+    #    No beam combos: Flamethrower, Wavebuster, and Ice Spreader will not be included as blast shield types (Super Missiles will still be included)
+    all: 0
+    no_beam_combos: 50
+
+  locked_door_count:
+    # If greater than 0, locked doors will be placed in the game (maximum of 1 per level). These will only be placed in spots that will not prevent progression but may force alternate paths
+    #
+    # You can define additional values between the minimum and maximum values.
+    # Minimum value is 0
+    # Maximum value is 3
+    0: 50
+    random: 0
+    random-low: 0
+    random-high: 0
+
   include_power_beam_doors:
     # If enabled, Power Beam doors will be an available door color for randomization. If the starting beam is also randomized, it will remove the new starting beam's color from the pool of available door colors
     "false": 50
@@ -230,11 +268,6 @@ Metroid Prime:
     # Randomize the colors of the suits. Is overriden if any of the color overrides are greater than 0. Note: This is not compatible with the Fusion Suit and will have no effect
     "false": 50
     "true": 0
-
-  show_suit_index_on_pause_menu:
-    # If enabled, the selected suit color index will be shown on the pause menu under "Suits". Note: This has unexpected behavior on non US versions
-    "false": 0
-    "true": 50
 
   power_suit_color:
     # Override the color of the Power Suit using an index from the game's color wheel

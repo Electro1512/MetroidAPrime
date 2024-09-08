@@ -331,6 +331,10 @@
           ],
           "doors": {}
         },
+        "Frigate Access Tunnel": {
+          "pickups": [],
+          "doors": {}
+        },
         "Frigate Crash Site": {
           "pickups": [
             {
@@ -342,7 +346,11 @@
               "showIcon": true
             }
           ],
-          "doors": {}
+          "doors": {
+            "0": {
+              "blastShieldType": "Missile"
+            }
+          }
         },
         "Great Tree Chamber": {
           "pickups": [
@@ -449,11 +457,19 @@
               "showIcon": true
             }
           ],
-          "doors": {}
+          "doors": {
+            "1": {
+              "blastShieldType": "Missile"
+            }
+          }
         },
         "Root Tunnel": {
           "pickups": [],
-          "doors": {}
+          "doors": {
+            "0": {
+              "blastShieldType": "Missile"
+            }
+          }
         },
         "Tallon Canyon": {
           "pickups": [],
@@ -465,11 +481,19 @@
         },
         "Temple Lobby": {
           "pickups": [],
-          "doors": {}
+          "doors": {
+            "1": {
+              "blastShieldType": "Missile"
+            }
+          }
         },
         "Temple Security Station": {
           "pickups": [],
-          "doors": {}
+          "doors": {
+            "1": {
+              "blastShieldType": "Missile"
+            }
+          }
         },
         "Transport to Chozo Ruins East": {
           "pickups": [],
@@ -522,7 +546,11 @@
         },
         "Waterfall Cavern": {
           "pickups": [],
-          "doors": {}
+          "doors": {
+            "1": {
+              "blastShieldType": "Missile"
+            }
+          }
         }
       }
     },
@@ -547,17 +575,32 @@
           ],
           "doors": {
             "0": {
-              "shieldType": "Blue"
+              "shieldType": "Blue",
+              "blastShieldType": "Missile"
             }
           }
         },
         "Arboretum Access": {
           "pickups": [],
-          "doors": {}
+          "doors": {
+            "0": {
+              "blastShieldType": "Missile"
+            }
+          }
         },
         "Arboretum": {
           "pickups": [],
-          "doors": {}
+          "doors": {
+            "0": {
+              "blastShieldType": "Missile"
+            },
+            "1": {
+              "blastShieldType": "Missile"
+            },
+            "2": {
+              "blastShieldType": "Missile"
+            }
+          }
         },
         "Burn Dome Access": {
           "pickups": [],
@@ -603,11 +646,19 @@
               "showIcon": true
             }
           ],
-          "doors": {}
+          "doors": {
+            "2": {
+              "blastShieldType": "Missile"
+            }
+          }
         },
         "Dynamo Access": {
           "pickups": [],
-          "doors": {}
+          "doors": {
+            "0": {
+              "blastShieldType": "Missile"
+            }
+          }
         },
         "Dynamo": {
           "pickups": [
@@ -653,7 +704,11 @@
         },
         "Elder Hall Access": {
           "pickups": [],
-          "doors": {}
+          "doors": {
+            "1": {
+              "blastShieldType": "Missile"
+            }
+          }
         },
         "Energy Core Access": {
           "pickups": [],
@@ -690,7 +745,14 @@
         },
         "Gathering Hall Access": {
           "pickups": [],
-          "doors": {}
+          "doors": {
+            "0": {
+              "blastShieldType": "Missile"
+            },
+            "1": {
+              "blastShieldType": "Missile"
+            }
+          }
         },
         "Gathering Hall": {
           "pickups": [
@@ -703,7 +765,14 @@
               "showIcon": true
             }
           ],
-          "doors": {}
+          "doors": {
+            "1": {
+              "blastShieldType": "Missile"
+            },
+            "2": {
+              "blastShieldType": "Missile"
+            }
+          }
         },
         "Hall of the Elders": {
           "pickups": [
@@ -729,7 +798,11 @@
               "showIcon": true
             }
           ],
-          "doors": {}
+          "doors": {
+            "1": {
+              "blastShieldType": "Missile"
+            }
+          }
         },
         "Magma Pool": {
           "pickups": [
@@ -779,7 +852,11 @@
               "showIcon": true
             }
           ],
-          "doors": {}
+          "doors": {
+            "2": {
+              "blastShieldType": "Missile"
+            }
+          }
         },
         "Map Station": {
           "pickups": [],
@@ -811,7 +888,14 @@
         },
         "Reflecting Pool": {
           "pickups": [],
-          "doors": {}
+          "doors": {
+            "0": {
+              "blastShieldType": "Missile"
+            },
+            "3": {
+              "blastShieldType": "Missile"
+            }
+          }
         },
         "Ruined Fountain Access": {
           "pickups": [],
@@ -866,7 +950,11 @@
         },
         "Ruined Shrine Access": {
           "pickups": [],
-          "doors": {}
+          "doors": {
+            "1": {
+              "blastShieldType": "Missile"
+            }
+          }
         },
         "Ruined Shrine": {
           "pickups": [
@@ -907,11 +995,19 @@
         },
         "Save Station 2": {
           "pickups": [],
-          "doors": {}
+          "doors": {
+            "0": {
+              "blastShieldType": "Missile"
+            }
+          }
         },
         "Save Station 3": {
           "pickups": [],
-          "doors": {}
+          "doors": {
+            "0": {
+              "blastShieldType": "Missile"
+            }
+          }
         },
         "Sun Tower": {
           "pickups": [],
@@ -927,7 +1023,11 @@
         },
         "Sunchamber Lobby": {
           "pickups": [],
-          "doors": {}
+          "doors": {
+            "1": {
+              "blastShieldType": "Missile"
+            }
+          }
         },
         "Sunchamber": {
           "pickups": [
@@ -1021,7 +1121,11 @@
               "showIcon": true
             }
           ],
-          "doors": {}
+          "doors": {
+            "0": {
+              "blastShieldType": "Missile"
+            }
+          }
         },
         "Transport Access South": {
           "pickups": [],
@@ -1071,7 +1175,11 @@
               "showIcon": true
             }
           ],
-          "doors": {}
+          "doors": {
+            "1": {
+              "blastShieldType": "Missile"
+            }
+          }
         },
         "Watery Hall": {
           "pickups": [
@@ -1092,7 +1200,14 @@
               "showIcon": true
             }
           ],
-          "doors": {}
+          "doors": {
+            "0": {
+              "blastShieldType": "Missile"
+            },
+            "1": {
+              "blastShieldType": "Missile"
+            }
+          }
         },
         "West Furnace Access": {
           "pickups": [],
@@ -1111,7 +1226,11 @@
       "rooms": {
         "Burning Trail": {
           "pickups": [],
-          "doors": {}
+          "doors": {
+            "2": {
+              "blastShieldType": "Missile"
+            }
+          }
         },
         "Fiery Shores": {
           "pickups": [
@@ -1203,11 +1322,19 @@
         },
         "Save Station Magmoor A": {
           "pickups": [],
-          "doors": {}
+          "doors": {
+            "0": {
+              "blastShieldType": "Missile"
+            }
+          }
         },
         "Save Station Magmoor B": {
           "pickups": [],
-          "doors": {}
+          "doors": {
+            "0": {
+              "blastShieldType": "Missile"
+            }
+          }
         },
         "Shore Tunnel": {
           "pickups": [
@@ -1253,7 +1380,11 @@
         },
         "Transport to Phendrana Drifts South": {
           "pickups": [],
-          "doors": {}
+          "doors": {
+            "0": {
+              "blastShieldType": "Missile"
+            }
+          }
         },
         "Transport to Tallon Overworld West": {
           "pickups": [],
@@ -1332,7 +1463,11 @@
         },
         "Canyon Entryway": {
           "pickups": [],
-          "doors": {}
+          "doors": {
+            "1": {
+              "blastShieldType": "Missile"
+            }
+          }
         },
         "Chamber Access": {
           "pickups": [],
@@ -1483,7 +1618,11 @@
               "showIcon": true
             }
           ],
-          "doors": {}
+          "doors": {
+            "2": {
+              "blastShieldType": "Missile"
+            }
+          }
         },
         "Lake Tunnel": {
           "pickups": [],
@@ -1516,7 +1655,11 @@
               "showIcon": true
             }
           ],
-          "doors": {}
+          "doors": {
+            "2": {
+              "blastShieldType": "Missile"
+            }
+          }
         },
         "Phendrana Canyon": {
           "pickups": [
@@ -1660,7 +1803,11 @@
               "showIcon": true
             }
           ],
-          "doors": {}
+          "doors": {
+            "1": {
+              "blastShieldType": "Missile"
+            }
+          }
         },
         "Ruins Entryway": {
           "pickups": [],
@@ -1668,7 +1815,11 @@
         },
         "Save Station A": {
           "pickups": [],
-          "doors": {}
+          "doors": {
+            "0": {
+              "blastShieldType": "Missile"
+            }
+          }
         },
         "Save Station B": {
           "pickups": [],
@@ -1680,7 +1831,11 @@
         },
         "Save Station D": {
           "pickups": [],
-          "doors": {}
+          "doors": {
+            "0": {
+              "blastShieldType": "Missile"
+            }
+          }
         },
         "Security Cave": {
           "pickups": [
@@ -1751,11 +1906,19 @@
         },
         "West Tower Entrance": {
           "pickups": [],
-          "doors": {}
+          "doors": {
+            "0": {
+              "blastShieldType": "Missile"
+            }
+          }
         },
         "West Tower": {
           "pickups": [],
-          "doors": {}
+          "doors": {
+            "0": {
+              "blastShieldType": "Missile"
+            }
+          }
         }
       }
     },

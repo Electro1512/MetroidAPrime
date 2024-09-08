@@ -5,7 +5,7 @@ from enum import Enum
 from .Items import SuitUpgrade
 
 from .data.AreaNames import MetroidPrimeArea
-from typing import TYPE_CHECKING, Dict
+from typing import TYPE_CHECKING, Dict, List
 
 if TYPE_CHECKING:
     from . import MetroidPrimeWorld
@@ -87,14 +87,14 @@ def get_world_door_mapping(world: 'MetroidPrimeWorld') -> Dict[str, AreaDoorType
 
     # Add Bomb doors to a random area if they are enabled
     if world.options.include_morph_ball_bomb_doors:
-        bomb_door_area = world.random.choice([area for area in MetroidPrimeArea if area != world.starting_room_data.area and area != MetroidPrimeArea.Impact_Crater])
+        bomb_door_area = world.random.choice([area for area in MetroidPrimeArea if area != world.starting_room_data.area])
         replacement_color = world.random.choice(COLOR_LOCK_TYPES)
         door_type_mapping[bomb_door_area.value].type_mapping[replacement_color.value] = DoorLockType.Bomb.value
 
     return door_type_mapping
 
 
-def get_available_lock_types(world: 'MetroidPrimeWorld', area: MetroidPrimeArea) -> list[DoorLockType]:
+def get_available_lock_types(world: 'MetroidPrimeWorld', area: MetroidPrimeArea) -> List[DoorLockType]:
     locks = COLOR_LOCK_TYPES[:]
     # If start beam is randomized, we replace whatever the mapping to starting beam is with Power Beam Only
     if world.options.include_power_beam_doors and not world.options.randomize_starting_beam:
@@ -104,7 +104,7 @@ def get_available_lock_types(world: 'MetroidPrimeWorld', area: MetroidPrimeArea)
 
 # This needs to take place after the starting beam is initialized
 def remap_doors_to_power_beam_if_necessary(world: 'MetroidPrimeWorld'):
-    if world.options.include_power_beam_doors:
+    if world.options.include_power_beam_doors and world.door_color_mapping:
         # TODO: Use new starting beam data here
         starting_beam = next((item for item in world.starting_room_data.selected_loadout.loadout if "Beam" in item.name), None)
         if starting_beam is not None and starting_beam is not SuitUpgrade.Power_Beam:

@@ -61,6 +61,3 @@ def create_regions(world: 'MetroidPrimeWorld', final_boss_selection):
         artifact_temple.connect(mission_complete, "Mission Complete", lambda state: (
             can_missile(state, world.player) and
             has_required_artifact_count(state, world.player)))
-
-    # from Utils import visualize_regions
-    # visualize_regions(world.multiworld.get_region("Menu", world.player), "my_world.puml")

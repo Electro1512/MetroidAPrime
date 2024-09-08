@@ -34,6 +34,14 @@ class TestNoDoorRando(MetroidPrimeTestBase):
         self.assertEqual(config["gameConfig"]["startingBeam"], "Power", "Starting beam should be Power")
 
 
+class TestStartingBeamRandoWithNoDoorRando(MetroidPrimeTestBase):
+    options = {
+        "door_color_randomization": "none",
+        "randomize_starting_beam": True,
+        "include_power_beam_doors": True,
+    }
+
+
 class TestGlobalDoorRando(MetroidPrimeTestBase):
     options = {
         "door_color_randomization": "global",
@@ -74,7 +82,7 @@ class TestRegionalDoorRando(MetroidPrimeTestBase):
         self.assertTrue(len(world.door_color_mapping) > 0, "Door color mapping should not be empty")
         same_areas = []
         for area in MetroidPrimeArea:
-            if world.door_color_mapping[area.value].type_mapping is None or area == MetroidPrimeArea.Impact_Crater:
+            if world.door_color_mapping[area.value].type_mapping is None:
                 continue
             if first_mapping is None:
                 first_mapping = world.door_color_mapping[area.value].type_mapping
@@ -175,8 +183,6 @@ class TestDoorPlando(MetroidPrimeTestBase):
         world: 'MetroidPrimeWorld' = self.world
         self.assertTrue(len(world.door_color_mapping) > 0, "Door color mapping should not be empty")
         for area in MetroidPrimeArea:
-            if area == MetroidPrimeArea.Impact_Crater:
-                continue
             self.assertEqual(world.door_color_mapping[area.value].type_mapping, world.options.door_color_mapping.get(area.value).get("type_mapping"), "Door color mapping should be set from plando")
 
 
