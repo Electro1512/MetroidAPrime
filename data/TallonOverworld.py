@@ -72,7 +72,8 @@ class TallonOverworldAreaData(AreaData):
 
             RoomName.Cargo_Freight_Lift_to_Deck_Gamma: RoomData(
                 doors={
-                    0: DoorData(RoomName.Frigate_Crash_Site, defaultLock=DoorLockType.Ice,
+                    0: DoorData(RoomName.Frigate_Access_Tunnel,
+                                exclude_from_rando=True,
                                 rule_func=can_crashed_frigate_backwards,
                                 tricks=[Tricks.frigate_backwards_no_gravity]),
                     1: DoorData(RoomName.Biohazard_Containment,
@@ -95,19 +96,22 @@ class TallonOverworldAreaData(AreaData):
             # RoomName.Deck_Beta_Transit_Hall: RoomData(
             # ),
 
-            # RoomName.Frigate_Access_Tunnel: RoomData(
-            #   doors={
+            RoomName.Frigate_Access_Tunnel: RoomData(
+                doors={
+                    0: DoorData(RoomName.Cargo_Freight_Lift_to_Deck_Gamma,
+                                rule_func=can_crashed_frigate,
+                                tricks=[Tricks.frigate_no_gravity],
+                                exclude_from_rando=True
+                                ),
+                    1: DoorData(RoomName.Frigate_Crash_Site, defaultLock=DoorLockType.Ice),
 
-            #   }
-            # ),
+                }
+            ),
 
             RoomName.Frigate_Crash_Site: RoomData(
                 doors={
                     0: DoorData(RoomName.Waterfall_Cavern, blast_shield=BlastShieldType.Missile, rule_func=can_missile),
-                    1: DoorData(RoomName.Cargo_Freight_Lift_to_Deck_Gamma, defaultLock=DoorLockType.Ice,
-                                rule_func=can_crashed_frigate,
-                                tricks=[Tricks.frigate_no_gravity],
-                                ),
+                    1: DoorData(RoomName.Frigate_Access_Tunnel, defaultLock=DoorLockType.Ice),
                     2: DoorData(RoomName.Overgrown_Cavern, defaultLock=DoorLockType.Ice,
                                 rule_func=lambda state, player: False,  # Can't reach unless a trick is used
                                 tricks=[Tricks.frigate_crash_site_climb_to_overgrown_cavern]
