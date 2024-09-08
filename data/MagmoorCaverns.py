@@ -101,7 +101,7 @@ class MagmoorCavernsAreaData(AreaData):
             }),
             RoomName.Transport_to_Phendrana_Drifts_South: RoomData(doors={
                 0: DoorData(RoomName.Save_Station_Magmoor_B, blast_shield=BlastShieldType.Missile, exclude_from_rando=True),  # Door 1 is not annotated, not sure which one is which
-                1: DoorData(RoomName.Transport_Tunnel_C, destination_area=MetroidPrimeArea.Magmoor_Caverns, defaultLock=DoorLockType.Wave, exclude_from_rando=True),
+                1: DoorData(RoomName.Transport_Tunnel_C, destination_area=MetroidPrimeArea.Magmoor_Caverns, defaultLock=DoorLockType.Wave),
             }),
             RoomName.Transport_to_Tallon_Overworld_West: RoomData(doors={
                 0: DoorData(RoomName.Twin_Fires_Tunnel),

@@ -331,6 +331,10 @@
           ],
           "doors": {}
         },
+        "Frigate Access Tunnel": {
+          "pickups": [],
+          "doors": {}
+        },
         "Frigate Crash Site": {
           "pickups": [
             {
