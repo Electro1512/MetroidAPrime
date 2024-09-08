@@ -346,7 +346,7 @@ class MetroidPrimeWorld(World):
         apmp1.write()
 
     def fill_slot_data(self) -> Dict[str, Any]:
-        exclude_options = ["fusion_suit", "show_suit_index_on_pause_menu", "as_dict", "artifact_hints", "staggered_suit_damage", "start_hints"]
+        exclude_options = ["fusion_suit", "as_dict", "artifact_hints", "staggered_suit_damage", "start_hints"]
         non_cosmetic_options = [o for o in dir(self.options) if "suit_color" not in o and o not in exclude_options and not o.startswith("__")]
         slot_data: Dict[str, Any] = self.options.as_dict(*non_cosmetic_options)
 

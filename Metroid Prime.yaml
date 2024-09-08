@@ -269,11 +269,6 @@ Metroid Prime:
     "false": 50
     "true": 0
 
-  show_suit_index_on_pause_menu:
-    # If enabled, the selected suit color index will be shown on the pause menu under "Suits". Note: This has unexpected behavior on non US versions
-    "false": 0
-    "true": 50
-
   power_suit_color:
     # Override the color of the Power Suit using an index from the game's color wheel
     #
