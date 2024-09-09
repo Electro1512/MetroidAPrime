@@ -14,7 +14,6 @@ from ..data.RoomNames import RoomName
 if TYPE_CHECKING:
     from .. import MetroidPrimeWorld
 
-# TODO: Make starting_beam an attribute on the start room data instead of another regular item, update in init and tests
 BEAM_ITEMS = [SuitUpgrade.Power_Beam, SuitUpgrade.Ice_Beam, SuitUpgrade.Wave_Beam, SuitUpgrade.Plasma_Beam]
 
 
@@ -29,6 +28,7 @@ class StartRoomDifficulty(Enum):
 class StartRoomLoadout:
     loadout: List[SuitUpgrade] = field(default_factory=list)
     item_rules: List[Dict[str, List[SuitUpgrade]]] = field(default_factory=list)
+    starting_beam: SuitUpgrade = SuitUpgrade.Power_Beam
     """List of locations that can have a list of possible required items for that location"""
 
 
@@ -50,9 +50,9 @@ class StartRoomData:
 
 
 all_start_rooms: Dict[str, StartRoomData] = {
-    RoomName.Landing_Site.value: StartRoomData(difficulty=StartRoomDifficulty.Normal, area=MetroidPrimeArea.Tallon_Overworld, loadouts=[StartRoomLoadout([SuitUpgrade.Power_Beam], [
+    RoomName.Landing_Site.value: StartRoomData(difficulty=StartRoomDifficulty.Normal, area=MetroidPrimeArea.Tallon_Overworld, loadouts=[StartRoomLoadout(item_rules=[
         {"Chozo Ruins: Hive Totem": [SuitUpgrade.Missile_Launcher]}
-    ])]),
+    ], starting_beam=SuitUpgrade.Power_Beam)]),
     RoomName.Arboretum.value: StartRoomData(
         area=MetroidPrimeArea.Chozo_Ruins,
         loadouts=[StartRoomLoadout([SuitUpgrade.Missile_Launcher])],
@@ -76,19 +76,21 @@ all_start_rooms: Dict[str, StartRoomData] = {
     ),
     RoomName.Save_Station_1.value: StartRoomData(
         area=MetroidPrimeArea.Chozo_Ruins,
-        loadouts=[StartRoomLoadout([SuitUpgrade.Power_Beam],
-                                   item_rules=[
-            {"Chozo Ruins: Hive Totem": [SuitUpgrade.Missile_Launcher]}
-        ])]),
+        loadouts=[StartRoomLoadout(
+            starting_beam=SuitUpgrade.Power_Beam,
+            item_rules=[
+                {"Chozo Ruins: Hive Totem": [SuitUpgrade.Missile_Launcher]}
+            ])]),
     RoomName.Save_Station_2.value: StartRoomData(area=MetroidPrimeArea.Chozo_Ruins, loadouts=[StartRoomLoadout([SuitUpgrade.Missile_Launcher])]),
-    RoomName.Tower_Chamber.value: StartRoomData(area=MetroidPrimeArea.Chozo_Ruins, loadouts=[StartRoomLoadout([SuitUpgrade.Wave_Beam],
-                                                                                                              item_rules=[
-        {
-            "Chozo Ruins: Tower Chamber": [SuitUpgrade.Morph_Ball],
-            "Chozo Ruins: Ruined Shrine - Plated Beetle": [SuitUpgrade.Morph_Ball_Bomb, SuitUpgrade.Main_Power_Bomb],
-            "Chozo Ruins: Ruined Shrine - Lower Tunnel": [SuitUpgrade.Missile_Launcher],
-        },
-    ]
+    RoomName.Tower_Chamber.value: StartRoomData(area=MetroidPrimeArea.Chozo_Ruins, loadouts=[StartRoomLoadout(
+        starting_beam=SuitUpgrade.Wave_Beam,
+        item_rules=[
+            {
+                "Chozo Ruins: Tower Chamber": [SuitUpgrade.Morph_Ball],
+                "Chozo Ruins: Ruined Shrine - Plated Beetle": [SuitUpgrade.Morph_Ball_Bomb, SuitUpgrade.Main_Power_Bomb],
+                "Chozo Ruins: Ruined Shrine - Lower Tunnel": [SuitUpgrade.Missile_Launcher],
+            },
+        ]
     )]),
     RoomName.Warrior_Shrine.value: StartRoomData(
         is_eligible=lambda world: world.options.disable_starting_room_bk_prevention.value != True,  # Varia suit is definitely required here
@@ -107,13 +109,14 @@ all_start_rooms: Dict[str, StartRoomData] = {
             }
         }
     ),
-    RoomName.East_Tower.value: StartRoomData(area=MetroidPrimeArea.Phendrana_Drifts, loadouts=[StartRoomLoadout([SuitUpgrade.Wave_Beam, SuitUpgrade.Missile_Launcher],
-                                                                                                                [
-        {
-            "Phendrana Drifts: Phendrana Canyon": [SuitUpgrade.Space_Jump_Boots],
-            "Phendrana Drifts: Research Lab Aether - Tank": [SuitUpgrade.Plasma_Beam]
-        }
-    ],
+    RoomName.East_Tower.value: StartRoomData(area=MetroidPrimeArea.Phendrana_Drifts, loadouts=[StartRoomLoadout(
+        starting_beam=SuitUpgrade.Wave_Beam, loadout=[SuitUpgrade.Missile_Launcher],
+        item_rules=[
+            {
+                "Phendrana Drifts: Phendrana Canyon": [SuitUpgrade.Space_Jump_Boots],
+                "Phendrana Drifts: Research Lab Aether - Tank": [SuitUpgrade.Plasma_Beam]
+            }
+        ],
     )],
         is_eligible=lambda world: world.options.shuffle_scan_visor.value == False or world.multiworld.players > 1,
         no_power_beam_door_on_starting_level=True,
@@ -123,10 +126,11 @@ all_start_rooms: Dict[str, StartRoomData] = {
         area=MetroidPrimeArea.Phendrana_Drifts,
         force_starting_beam=True,
         loadouts=[
-            StartRoomLoadout([SuitUpgrade.Plasma_Beam, SuitUpgrade.Missile_Launcher],
-                             item_rules=[
-                {"Phendrana Drifts: Phendrana Shorelines - Behind Ice": [SuitUpgrade.Space_Jump_Boots, SuitUpgrade.Morph_Ball]},
-            ],
+            StartRoomLoadout(
+                starting_beam=SuitUpgrade.Plasma_Beam, loadout=[SuitUpgrade.Missile_Launcher],
+                item_rules=[
+                    {"Phendrana Drifts: Phendrana Shorelines - Behind Ice": [SuitUpgrade.Space_Jump_Boots, SuitUpgrade.Morph_Ball]},
+                ],
             )
         ]
     ),
@@ -140,22 +144,25 @@ all_start_rooms: Dict[str, StartRoomData] = {
             }
         }
     ),
-    RoomName.Transport_to_Chozo_Ruins_East.value: StartRoomData(area=MetroidPrimeArea.Tallon_Overworld, loadouts=[StartRoomLoadout([SuitUpgrade.Ice_Beam, SuitUpgrade.Morph_Ball],
-                                                                                                                                   item_rules=[
-        {
-            "Tallon Overworld: Overgrown Cavern": [SuitUpgrade.Missile_Launcher]
-        }
-    ]
+    RoomName.Transport_to_Chozo_Ruins_East.value: StartRoomData(area=MetroidPrimeArea.Tallon_Overworld, loadouts=[StartRoomLoadout(
+        starting_beam=SuitUpgrade.Ice_Beam, loadout=[SuitUpgrade.Morph_Ball],
+        item_rules=[
+            {
+                "Tallon Overworld: Overgrown Cavern": [SuitUpgrade.Missile_Launcher]
+            }
+        ]
     )]),
-    RoomName.Quarantine_Monitor.value: StartRoomData(area=MetroidPrimeArea.Phendrana_Drifts, loadouts=[StartRoomLoadout([SuitUpgrade.Wave_Beam, SuitUpgrade.Thermal_Visor],
-                                                                                                                        item_rules=[
-        {
-            "Phendrana Drifts: Quarantine Monitor": [SuitUpgrade.Morph_Ball],
-            "Phendrana Drifts: Quarantine Cave": [SuitUpgrade.Spider_Ball],
-            "Phendrana Drifts: Ice Ruins East - Spider Track": [SuitUpgrade.Space_Jump_Boots],
-            "Phendrana Drifts: Ruined Courtyard": [SuitUpgrade.Plasma_Beam]
-        },
-    ]
+    RoomName.Quarantine_Monitor.value: StartRoomData(area=MetroidPrimeArea.Phendrana_Drifts, loadouts=[StartRoomLoadout(
+        starting_beam=SuitUpgrade.Wave_Beam,
+        loadout=[SuitUpgrade.Thermal_Visor],
+        item_rules=[
+            {
+                "Phendrana Drifts: Quarantine Monitor": [SuitUpgrade.Morph_Ball],
+                "Phendrana Drifts: Quarantine Cave": [SuitUpgrade.Spider_Ball],
+                "Phendrana Drifts: Ice Ruins East - Spider Track": [SuitUpgrade.Space_Jump_Boots],
+                "Phendrana Drifts: Ruined Courtyard": [SuitUpgrade.Plasma_Beam]
+            },
+        ]
     )], difficulty=StartRoomDifficulty.Buckle_Up,
         is_eligible=lambda world: world.options.shuffle_scan_visor.value == False or world.multiworld.players > 1,
     ),
@@ -232,7 +239,7 @@ def init_starting_loadout(world: 'MetroidPrimeWorld'):
     disable_bk_prevention = world.options.disable_starting_room_bk_prevention.value
    # Clear non starting beam upgrades out of loadout
     if disable_bk_prevention:
-        world.starting_room_data.selected_loadout.loadout = [item for item in world.starting_room_data.selected_loadout.loadout if item in BEAM_ITEMS]
+        world.starting_room_data.selected_loadout.loadout = []
 
     # Update the loadout with the correct items based on options (progressive upgrades, missile launcher, etc.)
     updated_loadout = []
@@ -248,14 +255,12 @@ def init_starting_loadout(world: 'MetroidPrimeWorld'):
                 world.prefilled_item_map[location_name] = required_item.value
 
 
-# TODO: Make starting beam an explicit attribute on the start room data
 def init_starting_beam(world: 'MetroidPrimeWorld'):
-    loadout_beam = next((item for item in world.starting_room_data.selected_loadout.loadout if item in BEAM_ITEMS), None)
+    loadout_beam = world.starting_room_data.selected_loadout.starting_beam
 
     def replace_starting_beam(new_beam: SuitUpgrade):
         if loadout_beam != None:
-            world.starting_room_data.selected_loadout.loadout.remove(loadout_beam)
-        world.starting_room_data.selected_loadout.loadout.append(new_beam)
+            world.starting_room_data.selected_loadout.starting_beam = new_beam
         world.options.starting_beam.value = new_beam.value
 
     # Use the starting beam if it was set in the options (or for UT)
@@ -287,5 +292,5 @@ def init_starting_beam(world: 'MetroidPrimeWorld'):
 
     # Hive mecha needs to be disabled if we don't have power beam in vanilla start locations (otherwise no checks can be reached)
     # TODO: Make this use the new starting beam data
-    if (world.starting_room_data.name == RoomName.Landing_Site.value or world.starting_room_data.name == RoomName.Save_Station_1.value) and SuitUpgrade.Power_Beam not in world.starting_room_data.selected_loadout.loadout:
+    if (world.starting_room_data.name == RoomName.Landing_Site.value or world.starting_room_data.name == RoomName.Save_Station_1.value) and world.starting_room_data.selected_loadout.starting_beam != SuitUpgrade.Power_Beam:
         world.options.remove_hive_mecha.value = True

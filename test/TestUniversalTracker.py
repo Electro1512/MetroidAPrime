@@ -114,7 +114,15 @@ class TestUniversalTracker(MetroidPrimeTestBase):
         world: 'MetroidPrimeWorld' = self.world
         self.world.generate_early()
         self.assertEqual(world.starting_room_data.name, self.options["starting_room_name"])
-        self.assertIn(SuitUpgrade.get_by_value(self.options["starting_beam"]), world.starting_room_data.selected_loadout.loadout)
+        self.assertEqual(SuitUpgrade.get_by_value(self.options["starting_beam"]), world.starting_room_data.selected_loadout.starting_beam)
+
+    def test_starting_room_info_is_preserved_with_progressive_beams(self):
+        self.options["progressive_beam_upgrades"] = 1
+        self.world_setup()
+        world: 'MetroidPrimeWorld' = self.world
+        self.world.generate_early()
+        self.assertEqual(world.starting_room_data.name, self.options["starting_room_name"])
+        self.assertEqual(SuitUpgrade.get_by_value(self.options["starting_beam"]), world.starting_room_data.selected_loadout.starting_beam)
 
     def test_elevator_mapping_is_preserved(self):
         self.world_setup()

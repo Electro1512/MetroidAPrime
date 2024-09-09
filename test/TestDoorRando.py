@@ -258,17 +258,12 @@ class TestBeamRandoWithDoorRando(MetroidPrimeTestBase):
         world.generate_early()
 
         # Check if the starting beam is not the power beam
-        starting_beam = None
-        for item in world.starting_room_data.selected_loadout.loadout:
-            if "Beam" in item.name:
-                starting_beam = item
-                break
-
+        starting_beam = world.starting_room_data.selected_loadout.starting_beam
         self.assertNotEqual(starting_beam, SuitUpgrade.Power_Beam.value, "Starting beam should not be the power beam")
 
         new_starting_beam_doors_found = False
 
-        for area, mapping in world.door_color_mapping.items():
+        for _, mapping in world.door_color_mapping.items():
             if starting_beam.value in mapping.type_mapping.values():
                 new_starting_beam_doors_found = True
                 break

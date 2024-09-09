@@ -208,16 +208,16 @@ class MetroidPrimeWorld(World):
 
         excluded = self.options.exclude_items
 
-        # Create initial inventory from yaml and starting room
-        start_inventory = []
-        start_inventory += ALWAYS_START_INVENTORY
-        start_inventory += [item.value for item in self.starting_room_data.selected_loadout.loadout]
-        # start_inventory += [item.name for item in self.multiworld.precollected_items[self.player]]
+
+# Create initial inventory from yaml and starting room
+        start_inventory = (
+            ALWAYS_START_INVENTORY +
+            [item.value for item in self.starting_room_data.selected_loadout.loadout] +
+            [get_item_for_options(self, self.starting_room_data.selected_loadout.starting_beam).value]
+        )
+
         if not self.options.shuffle_scan_visor.value:
             start_inventory += [SuitUpgrade.Scan_Visor.value]
-
-        if "Beam" not in "".join(start_inventory):
-            start_inventory += [get_item_for_options(self, SuitUpgrade.Power_Beam).value]
 
         for start_item in start_inventory:
             # Pre collect the ones that start room loadout adds in

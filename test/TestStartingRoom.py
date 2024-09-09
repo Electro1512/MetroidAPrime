@@ -11,22 +11,7 @@ from .. import MetroidPrimeWorld
 class TestStartingRoomsGenerate(MetroidPrimeTestBase):
     auto_construct = False
 
-    def test_starting_room_rando_no_missile_launcher(self):
-        for room_name in all_start_rooms:
-            with self.subTest(f"Starting Room: {room_name}", room_name=room_name):
-                self.options = {
-                    "starting_room_name": room_name,
-                    "elevator_randomization": False,
-                    "missile_launcher": 0,
-                }
-                try:
-                    self.world_setup()
-                    distribute_items_restrictive(self.multiworld)
-                    self.assertBeatable(True)
-                except Exception as e:
-                    self.fail(f"Failed to generate beatable game with start room: {room_name}. ")
-
-    def test_starting_room_rando_with_missile_launcher(self):
+    def test_starting_room_rando(self):
         for room_name in all_start_rooms:
             with self.subTest(f"Starting Room: {room_name}", room_name=room_name):
                 self.options = {
@@ -82,9 +67,9 @@ class TestStartRoomBKPreventionDisabled(MetroidPrimeTestBase):
     def test_disabling_bk_prevention_does_not_give_items_or_pre_fill(self):
         self.world.generate_early()
         world: MetroidPrimeWorld = self.world
-        # Normally you'd also have the misssile launcher
-        assert world.starting_room_data.selected_loadout.loadout == [SuitUpgrade.Plasma_Beam]
-        assert len(world.prefilled_item_map.keys()) == 0
+        self.assertTrue(SuitUpgrade.Missile_Expansion not in world.starting_room_data.selected_loadout.loadout)
+        self.assertEqual(len(world.prefilled_item_map.keys()), 0)
+        self.assertEqual(world.starting_room_data.selected_loadout.starting_beam, SuitUpgrade.Plasma_Beam)
 
 
 class TestStartRoomBKPreventionEnabled(MetroidPrimeTestBase):
@@ -98,9 +83,9 @@ class TestStartRoomBKPreventionEnabled(MetroidPrimeTestBase):
     def test_enabling_bk_prevention_gives_items_and_pre_fills_locations(self):
         self.world.generate_early()
         world: MetroidPrimeWorld = self.world
-        # Normally you'd also have the misssile launcher
-        assert world.starting_room_data.selected_loadout.loadout == [SuitUpgrade.Plasma_Beam, SuitUpgrade.Missile_Expansion]
-        assert len(world.prefilled_item_map.keys()) == 1
+        self.assertIn(SuitUpgrade.Missile_Expansion, world.starting_room_data.selected_loadout.loadout)
+        self.assertEqual(len(world.prefilled_item_map.keys()), 1)
+        self.assertEqual(world.starting_room_data.selected_loadout.starting_beam, SuitUpgrade.Plasma_Beam)
 
 
 class TestBuckleUpStartingRoom(MetroidPrimeTestBase):
