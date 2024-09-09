@@ -52,7 +52,8 @@ function get_deps() {
         pip install dolphin-memory-engine==1.2.0 \
             --target ${to}/${platform} \
             --platform ${OLD_LINUX_FOR_DME} \
-            --only-binary=:all:
+            --only-binary=:all: \
+            --no-user
     fi
 
     # Fetch the libraries binary files for the specified platform.
@@ -61,7 +62,8 @@ function get_deps() {
         --target ${to}/${platform} \
         --platform ${platform} \
         --only-binary=:all: \
-        --requirement ${requirements_file}
+        --requirement ${requirements_file} \
+        --no-user
 
     # If platform is manylinux_2_28_x86_64 then also install dolphin memory engine 1.2.0
 
