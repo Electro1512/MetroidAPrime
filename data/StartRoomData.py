@@ -128,15 +128,7 @@ all_start_rooms: Dict[str, StartRoomData] = {
                 {"Phendrana Drifts: Phendrana Shorelines - Behind Ice": [SuitUpgrade.Space_Jump_Boots, SuitUpgrade.Morph_Ball]},
             ],
             )
-        ], is_eligible=lambda world:
-        world.options.combat_logic_difficulty.value == CombatLogicDifficulty.NO_LOGIC.value or world.options.elevator_randomization.value or world.multiworld.players > 1,
-        denied_elevators={
-            MetroidPrimeArea.Phendrana_Drifts.value: {
-                RoomName.Transport_to_Magmoor_Caverns_West.value: [RoomName.Transport_to_Phazon_Mines_East.value, RoomName.Transport_to_Tallon_Overworld_East.value, "Chozo Ruins :" + RoomName.Transport_to_Tallon_Overworld_South.value, RoomName.Transport_to_Tallon_Overworld_West.value, RoomName.Transport_to_Phendrana_Drifts_South.value, RoomName.Transport_to_Phazon_Mines_West.value],
-                "Phendrana Drifts: " + RoomName.Transport_to_Magmoor_Caverns_South.value: [RoomName.Transport_to_Chozo_Ruins_North.value]
-            }
-        }
-
+        ]
     ),
     RoomName.Arbor_Chamber.value: StartRoomData(
         area=MetroidPrimeArea.Tallon_Overworld,
