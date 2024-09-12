@@ -63,7 +63,6 @@ def __get_chozo_region():
                 doors={
                     RoomName.Transport_to_Magmoor_Caverns_North: RoomName.Vault_Access,
                     RoomName.Vault: RoomName.Plaza_Access,
-                    RoomName.Plaza_Access: RoomName.Main_Plaza,
                 }
             ),
             BlastShieldRegion(

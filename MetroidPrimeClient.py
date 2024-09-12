@@ -334,6 +334,12 @@ async def patch_and_run_game(apmp1_file: str):
 
         try:
             config_json["gameConfig"]["updateHintStateReplacement"] = construct_hook_patch(game_version, build_progressive_beam_patch)
+
+            # TODO: Remove me
+            config_json["levelData"]["Chozo Ruins"]["rooms"]["Main Plaza"]["doors"]["4"] = {}
+            config_json["levelData"]["Chozo Ruins"]["rooms"]["Plaza Access"]["doors"]["0"] = {}
+            # TODO: End Remove me
+
             notifier = py_randomprime.ProgressNotifier(
                 lambda progress, message: print("Generating ISO: ", progress, message))
             logger.info("--------------")
