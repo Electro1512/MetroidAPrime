@@ -182,7 +182,7 @@ class TallonOverworldAreaData(AreaData):
 
             RoomName.Life_Grove_Tunnel: RoomData(
                 doors={
-                    0: DoorData(RoomName.Great_Tree_Hall, defaultLock=DoorLockType.Ice, rule_func=lambda state, player: can_power_bomb(state, player) and can_boost(state, player), exclude_from_rando=True),
+                    0: DoorData(RoomName.Great_Tree_Hall, defaultLock=DoorLockType.Ice, rule_func=lambda state, player: can_power_bomb(state, player) and can_boost(state, player)),
                     1: DoorData(RoomName.Life_Grove, defaultLock=DoorLockType.None_, rule_func=lambda state, player: can_power_beam(state, player) and can_combat_ghosts(state, player) and can_power_bomb(state, player) and can_boost(state, player), exclude_from_rando=True)
                 },
                 pickups=[
