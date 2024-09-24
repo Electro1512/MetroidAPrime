@@ -187,15 +187,16 @@ class AreaData:
                 def apply_blast_shield_to_both_sides_of_door(door_data: DoorData, target_room_data: RoomData = room_data):
                     paired_door = target_room_data.get_matching_door(door_data, world)
                     # TODO: Handle pairing door mappings in the apply shield logic, also handle locked doors there
+                    shield_applied = False
                     if paired_door is not None and paired_door.blast_shield is not None and paired_door.blast_shield != BlastShieldType._None:
                         door_data.blast_shield = paired_door.blast_shield
+                        shield_applied = True
                     elif door_data.blast_shield is not None and paired_door.blast_shield != BlastShieldType._None:
                         paired_door.blast_shield = door_data.blast_shield
+                        shield_applied = True
 
-                    # Blast shields open the door when destroyed when set via randomprime. Setting them to blue ensures no one way locks
-                    door_data.lock = DoorLockType.Blue
-                    if paired_door is not None:
-                        paired_door.lock = DoorLockType.Blue
+                    if shield_applied:
+                        door_data.lock = DoorLockType.Blue
 
                 def generate_rule_func(origin_door_data) -> Callable[[CollectionState], bool]:
                     def rule_func(state: CollectionState):
