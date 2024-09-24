@@ -124,7 +124,7 @@ def get_strg(world: 'MetroidPrimeWorld') -> Dict[str, List[str]]:
 
 
 def make_version_specific_changes(config_json: Dict[str, Any], version: str) -> Dict[str, Any]:
-    if DEFAULT_OBJECTIVE_STRG_KEY in config_json["strg"] and version == "pal":
+    if DEFAULT_OBJECTIVE_STRG_KEY in config_json["strg"] and version not in ['0-00', '0-01', '0-02', 'kor']:
         value = config_json["strg"][DEFAULT_OBJECTIVE_STRG_KEY]
         del config_json["strg"][DEFAULT_OBJECTIVE_STRG_KEY]
         config_json["strg"][get_objective_strg_key(version)] = value
