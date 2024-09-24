@@ -369,3 +369,77 @@ class TestSubRegionUsesBlastShields(MetroidPrimeTestBase):
         self.collect_by_name(SuitUpgrade.Morph_Ball.value)
         self.collect_by_name(SuitUpgrade.Power_Bomb_Expansion.value)
         self.assertTrue(self.can_reach_region(test_region))
+
+# Blast shields open the door when destroyed when set via randomprime. Setting them to blue ensures no one way locks
+class TestBlastShieldsAndDoorColorRando(MetroidPrimeTestBase):
+    run_default_tests = False
+    options = {
+        "blast_shield_randomization": "mix_it_up",
+        "blast_shield_frequency": "low",
+        "blast_shield_available_types": "all",
+        "blast_shield_mapping": {
+            "Phendrana Drifts": {
+                "area": "Phendrana Drifts",
+                "type_mapping": {
+                    "Ice Ruins West": {
+                        1: "Missile",
+                    }
+                }
+            }
+        },
+        "door_color_randomization": "regional",
+        "door_color_mapping": {
+            "Chozo Ruins": {
+                "area": "Chozo Ruins",
+                "type_mapping": {
+                    "Wave Beam": "Ice Beam",
+                    "Ice Beam": "Plasma Beam",
+                    "Plasma Beam": "Wave Beam"
+                }
+            },
+            "Magmoor Caverns": {
+                "area": "Magmoor Caverns",
+                "type_mapping": {
+                    "Wave Beam": "Plasma Beam",
+                    "Ice Beam": "Wave Beam",
+                    "Plasma Beam": "Ice Beam"
+                },
+            },
+            "Phendrana Drifts": {
+                "area": "Phendrana Drifts",
+                "type_mapping": {
+                        "Wave Beam": "Plasma Beam",
+                        "Ice Beam": "Wave Beam",
+                        "Plasma Beam": "Ice Beam"
+                }
+            },
+            "Tallon Overworld": {
+                "area": "Tallon Overworld",
+                "type_mapping": {
+                        "Wave Beam": "Plasma Beam",
+                        "Ice Beam": "Wave Beam",
+                        "Plasma Beam": "Ice Beam"
+                }
+            },
+            "Phazon Mines": {
+                "area": "Phazon Mines",
+                "type_mapping": {
+                        "Wave Beam": "Plasma Beam",
+                        "Ice Beam": "Wave Beam",
+                        "Plasma Beam": "Ice Beam"
+                }
+            }
+        },
+    }
+
+    def test_color_is_set_to_blue_when_door_has_blast_shield(self):
+        world: 'MetroidPrimeWorld' = self.world
+        self.assertEqual(world.game_region_data[MetroidPrimeArea.Phendrana_Drifts].rooms[RoomName.Ice_Ruins_West].doors[1].blast_shield, BlastShieldType.Missile)
+        self.assertEqual(world.game_region_data[MetroidPrimeArea.Phendrana_Drifts].rooms[RoomName.Ice_Ruins_West].doors[1].lock, DoorLockType.Blue)
+
+    def test_color_is_updated_in_config(self):
+        world: 'MetroidPrimeWorld' = self.world
+        distribute_items_restrictive(self.multiworld)
+        config = make_config(world)
+        level_key = config["levelData"]["Phendrana Drifts"]["rooms"]
+        self.assertTrue(level_key[RoomName.Ice_Ruins_West.value]["doors"]["1"]["shieldType"] == DoorLockType.Blue.value)
