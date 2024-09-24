@@ -28,7 +28,7 @@ class PhazonMinesAreaData(AreaData):
                 }),
             RoomName.Elevator_A: RoomData(doors={
                 0: DoorData(RoomName.Elevator_Access_A, defaultLock=DoorLockType.Ice),
-                1: DoorData(RoomName.Elite_Control_Access, defaultLock=DoorLockType.Ice, exclude_from_rando=True, rule_func=can_scan),  # Not annotated
+                1: DoorData(RoomName.Elite_Control_Access, defaultLock=DoorLockType.Ice, rule_func=can_scan),  # Not annotated
             }),
             RoomName.Elevator_Access_A: RoomData(doors={
                 0: DoorData(RoomName.Ore_Processing, defaultLock=DoorLockType.Ice, rule_func=can_spider, tricks=[Tricks.mines_climb_shafts_no_spider]),
@@ -190,11 +190,11 @@ class PhazonMinesAreaData(AreaData):
             RoomName.Storage_Depot_A: RoomData(doors={0: DoorData(RoomName.Mine_Security_Station, defaultLock=DoorLockType.Plasma), }, pickups=[PickupData('Phazon Mines: Storage Depot A'), ]),
             RoomName.Storage_Depot_B: RoomData(doors={0: DoorData(RoomName.Ore_Processing, defaultLock=DoorLockType.Ice), }, pickups=[PickupData('Phazon Mines: Storage Depot B'), ]),
             RoomName.Transport_Access: RoomData(
-              include_area_in_name=True,
-              doors={
-                0: DoorData(RoomName.Phazon_Processing_Center, defaultLock=DoorLockType.Ice),
-                1: DoorData(RoomName.Transport_to_Magmoor_Caverns_South, defaultLock=DoorLockType.Ice, destination_area=MetroidPrimeArea.Phazon_Mines),
-            }),
+                include_area_in_name=True,
+                doors={
+                    0: DoorData(RoomName.Phazon_Processing_Center, defaultLock=DoorLockType.Ice),
+                    1: DoorData(RoomName.Transport_to_Magmoor_Caverns_South, defaultLock=DoorLockType.Ice, destination_area=MetroidPrimeArea.Phazon_Mines),
+                }),
             RoomName.Transport_to_Magmoor_Caverns_South: RoomData(
                 include_area_in_name=True,
                 doors={
