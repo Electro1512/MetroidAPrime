@@ -24,6 +24,7 @@ class DoorData:
     rule_func: Optional[Callable[[CollectionState, int], bool]] = None
     tricks: List[TrickInfo] = field(default_factory=list)
     exclude_from_rando: bool = False  # Used primarily for door rando when a door doesn't actually exist
+    sub_region_door_index: Optional[int] = None  # Used when this door also provides access to another door in the target room
 
     def get_destination_region_name(self):
         destination = self.destination.value if self.destination is not None else self.default_destination.value

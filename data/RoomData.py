@@ -178,28 +178,48 @@ class AreaData:
             region = world.multiworld.get_region(name, world.player)
             for door_id, door_data in room_data.doors.items():
                 destination = door_data.destination or door_data.default_destination
-                if world.options.door_color_randomization != "none" and door_data.exclude_from_rando is False and door_data.defaultLock.value in color_mapping:
-                    door_data.lock = DoorLockType(color_mapping[door_data.defaultLock.value])
-
-                paired_door = room_data.get_matching_door(door_data, world)
-                # TODO: Handle pairing door mappings in the apply shield logic, also handle locked doors there
-                if paired_door is not None and paired_door.blast_shield is not None and paired_door.blast_shield != BlastShieldType._None:
-                    door_data.blast_shield = paired_door.blast_shield
-                elif door_data.blast_shield is not None and paired_door.blast_shield != BlastShieldType._None:
-                    paired_door.blast_shield = door_data.blast_shield
-
                 if destination is None:
                     continue
 
-                def generate_rule_func(door_data) -> Callable[[CollectionState], bool]:
+                if world.options.door_color_randomization != "none" and door_data.exclude_from_rando is False and door_data.defaultLock.value in color_mapping:
+                    door_data.lock = DoorLockType(color_mapping[door_data.defaultLock.value])
+
+                def apply_blast_shield_to_both_sides_of_door(door_data: DoorData, target_room_data: RoomData = room_data):
+                    paired_door = target_room_data.get_matching_door(door_data, world)
+                    # TODO: Handle pairing door mappings in the apply shield logic, also handle locked doors there
+                    if paired_door is not None and paired_door.blast_shield is not None and paired_door.blast_shield != BlastShieldType._None:
+                        door_data.blast_shield = paired_door.blast_shield
+                    elif door_data.blast_shield is not None and paired_door.blast_shield != BlastShieldType._None:
+                        paired_door.blast_shield = door_data.blast_shield
+
+                def generate_rule_func(origin_door_data) -> Callable[[CollectionState], bool]:
                     def rule_func(state: CollectionState):
-                        return _can_access_door(state, world.player, door_data)
+                        return _can_access_door(state, world.player, origin_door_data)
                     return rule_func
 
-                lock = door_data.lock or door_data.defaultLock
+                def generate_sub_region_rule_func(origin_door_data: DoorData, target_door_data: DoorData) -> Callable[[CollectionState], bool]:
+                    def rule_func(state: CollectionState):
+                        return _can_access_door(state, world.player, origin_door_data) and _can_open_door(state, world.player, target_door_data)
+                    return rule_func
+
+                def get_connection_name(door_data: DoorData, target_room_name: str = name, target_destination: RoomName = destination) -> str:
+                    blast_shield_text = "" if door_data.blast_shield is None or door_data.blast_shield == BlastShieldType._None else f" {door_data.blast_shield.value}"
+                    lock = door_data.lock or door_data.defaultLock
+                    return lock.value + blast_shield_text + f" Door from {target_room_name} to {target_destination.value}"
+
+                apply_blast_shield_to_both_sides_of_door(door_data)
+
                 target_region = world.multiworld.get_region(door_data.get_destination_region_name(), world.player)
-                blast_shield_text = "" if door_data.blast_shield is None or door_data.blast_shield == BlastShieldType._None else f" {door_data.blast_shield.value}"
-                region.connect(target_region, lock.value + blast_shield_text + f" Door from {name} to {destination.value}", generate_rule_func(door_data))
+                region.connect(target_region, get_connection_name(door_data), generate_rule_func(door_data))
+
+                if door_data.sub_region_door_index is not None:
+                    target_room = world.game_region_data[room_data.area].rooms[door_data.default_destination]
+                    target_door = target_room.doors[door_data.sub_region_door_index]
+                    apply_blast_shield_to_both_sides_of_door(target_door, target_room_data=target_room)
+
+                    target_sub_region = world.multiworld.get_region(target_door.get_destination_region_name(), world.player)
+                    region.connect(target_sub_region, get_connection_name(door_data) + " then " + get_connection_name(target_door, target_destination=target_door.default_destination, target_room_name=target_room.room_name.value), generate_sub_region_rule_func(door_data, target_door))
+                    target_sub_region.connect(region, get_connection_name(target_door, target_destination=target_door.default_destination, target_room_name=target_room.room_name) + " then " + get_connection_name(door_data), generate_sub_region_rule_func(target_door, door_data))
 
 
 def _get_options(state: CollectionState, player: int) -> MetroidPrimeOptions:
@@ -224,59 +244,63 @@ def _can_reach_pickup(state: CollectionState, player: int, pickup_data: PickupDa
     return False
 
 
+def _can_open_door(state: CollectionState, player: int, door_data: DoorData) -> bool:
+  can_color = False
+  can_blast_shield = False
+  lock = door_data.lock or door_data.defaultLock
+  if lock is not None:
+      if lock == DoorLockType.None_:
+          can_color = True
+      elif lock == DoorLockType.Blue:
+          can_color = True
+      elif lock == DoorLockType.Wave:
+          can_color = can_wave_beam(state, player)
+      elif lock == DoorLockType.Ice:
+          can_color = can_ice_beam(state, player)
+      elif lock == DoorLockType.Plasma:
+          can_color = can_plasma_beam(state, player)
+      elif lock == DoorLockType.Power_Beam:
+          can_color = can_power_beam(state, player)
+      elif lock == DoorLockType.Missile:
+          can_color = can_missile(state, player)
+      elif lock == DoorLockType.Bomb:
+          can_color = can_bomb(state, player)
+  else:
+      can_color = True
+
+  if door_data.blast_shield is not None:
+      if door_data.blast_shield == BlastShieldType.Bomb:
+          can_blast_shield = can_bomb(state, player)
+      elif door_data.blast_shield == BlastShieldType.Missile:
+          can_blast_shield = can_missile(state, player)
+      elif door_data.blast_shield == BlastShieldType.Power_Bomb:
+          can_blast_shield = can_power_bomb(state, player)
+      elif door_data.blast_shield == BlastShieldType.Charge_Beam:
+          can_blast_shield = can_charge_beam(state, player)
+      elif door_data.blast_shield == BlastShieldType.Super_Missile:
+          can_blast_shield = can_super_missile(state, player)
+      elif door_data.blast_shield == BlastShieldType.Wavebuster:
+          can_blast_shield = can_beam_combo(state, player, SuitUpgrade.Wave_Beam)
+      elif door_data.blast_shield == BlastShieldType.Ice_Spreader:
+          can_blast_shield = can_beam_combo(state, player, SuitUpgrade.Ice_Beam)
+      elif door_data.blast_shield == BlastShieldType.Flamethrower:
+          can_blast_shield = can_beam_combo(state, player, SuitUpgrade.Plasma_Beam)
+      elif door_data.blast_shield == BlastShieldType.Disabled:
+          can_blast_shield = False
+      elif door_data.blast_shield == BlastShieldType._None:
+          can_blast_shield = True
+  else:
+      can_blast_shield = True
+
+  return can_color and can_blast_shield
+
 def _can_access_door(state: CollectionState, player: int, door_data: DoorData) -> bool:
     """Determines if the player can open the door based on the lock type as well as whether they can reach it or not"""
     max_difficulty = _get_options(state, player).trick_difficulty.value
     allow_list = _get_options(state, player).trick_allow_list
     deny_list = _get_options(state, player).trick_deny_list
-    can_color = False
-    can_blast_shield = False
-    lock = door_data.lock or door_data.defaultLock
-    if lock is not None:
-        if lock == DoorLockType.None_:
-            can_color = True
-        elif lock == DoorLockType.Blue:
-            can_color = True
-        elif lock == DoorLockType.Wave:
-            can_color = can_wave_beam(state, player)
-        elif lock == DoorLockType.Ice:
-            can_color = can_ice_beam(state, player)
-        elif lock == DoorLockType.Plasma:
-            can_color = can_plasma_beam(state, player)
-        elif lock == DoorLockType.Power_Beam:
-            can_color = can_power_beam(state, player)
-        elif lock == DoorLockType.Missile:
-            can_color = can_missile(state, player)
-        elif lock == DoorLockType.Bomb:
-            can_color = can_bomb(state, player)
-    else:
-        can_color = True
 
-    if door_data.blast_shield is not None:
-        if door_data.blast_shield == BlastShieldType.Bomb:
-            can_blast_shield = can_bomb(state, player)
-        elif door_data.blast_shield == BlastShieldType.Missile:
-            can_blast_shield = can_missile(state, player)
-        elif door_data.blast_shield == BlastShieldType.Power_Bomb:
-            can_blast_shield = can_power_bomb(state, player)
-        elif door_data.blast_shield == BlastShieldType.Charge_Beam:
-            can_blast_shield = can_charge_beam(state, player)
-        elif door_data.blast_shield == BlastShieldType.Super_Missile:
-            can_blast_shield = can_super_missile(state, player)
-        elif door_data.blast_shield == BlastShieldType.Wavebuster:
-            can_blast_shield = can_beam_combo(state, player, SuitUpgrade.Wave_Beam)
-        elif door_data.blast_shield == BlastShieldType.Ice_Spreader:
-            can_blast_shield = can_beam_combo(state, player, SuitUpgrade.Ice_Beam)
-        elif door_data.blast_shield == BlastShieldType.Flamethrower:
-            can_blast_shield = can_beam_combo(state, player, SuitUpgrade.Plasma_Beam)
-        elif door_data.blast_shield == BlastShieldType.Disabled:
-            can_blast_shield = False
-        elif door_data.blast_shield == BlastShieldType._None:
-            can_blast_shield = True
-    else:
-        can_blast_shield = True
-
-    if not can_color or not can_blast_shield:
+    if not _can_open_door(state, player, door_data):
         return False
 
     for trick in door_data.tricks:

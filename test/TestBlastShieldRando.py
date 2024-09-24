@@ -302,3 +302,70 @@ class TestLockedDoorsWithDoorColorRandoAndBlastShieldRandomization(MetroidPrimeT
                     if door == BlastShieldType.Disabled:
                         total_locked_doors += 1
         self.assertEqual(total_locked_doors, world.options.locked_door_count, "Invalid number of locked doors, received {total_locked_doors} expected {world.options.locked_door_count}")
+
+
+class TestSubRegionUsesBlastShields(MetroidPrimeTestBase):
+    run_default_tests = False
+    options = {
+        "blast_shield_randomization": "mix_it_up",
+        "blast_shield_frequency": "low",
+        "blast_shield_available_types": "all",
+        "blast_shield_mapping": {
+            "Tallon Overworld": {
+                "area": "Tallon Overworld",
+                "type_mapping": {
+                    "Landing Site": {
+                        3: "Bomb",
+                    },
+                    "Gully": {
+                        1: "Missile"
+                    }
+                }
+            },
+            "Phendrana Drifts": {
+                "area": "Phendrana Drifts",
+                "type_mapping": {
+                    "Phendrana Shorelines": {
+                        3: "Power Bomb",
+                        5: "Missile"
+                    }
+                }
+            }
+        },
+    }
+
+    def test_cannot_reach_alcove_sub_region_that_has_blast_shield(self):
+        world: 'MetroidPrimeWorld' = self.world
+        test_region = RoomName.Alcove.value
+        menu = world.get_region("Menu")
+        menu.connect(world.get_region(RoomName.Gully.value))
+        self.assertFalse(self.can_reach_region(test_region))
+
+        self.collect_by_name(SuitUpgrade.Morph_Ball.value)
+        self.collect_by_name(SuitUpgrade.Morph_Ball_Bomb.value)
+        self.assertFalse(self.can_reach_region(test_region))
+
+        self.collect_by_name(SuitUpgrade.Missile_Expansion.value)
+        self.assertTrue(self.can_reach_region(test_region))
+
+    def test_cannot_reach_ruins_entry_sub_region_that_has_blast_shield(self):
+        world: 'MetroidPrimeWorld' = self.world
+        test_region = RoomName.Ruins_Entryway.value
+        menu = world.get_region("Menu")
+        menu.connect(world.get_region(RoomName.Plaza_Walkway.value))
+        self.assertFalse(self.can_reach_region(test_region))
+
+        self.collect_by_name(SuitUpgrade.Morph_Ball.value)
+        self.collect_by_name(SuitUpgrade.Power_Bomb_Expansion.value)
+        self.assertTrue(self.can_reach_region(test_region))
+
+    def test_cannot_reach_ruins_entry_sub_region_that_has_blast_shield(self):
+        world: 'MetroidPrimeWorld' = self.world
+        test_region = RoomName.Plaza_Walkway.value
+        menu = world.get_region("Menu")
+        menu.connect(world.get_region(RoomName.Ruins_Entryway.value))
+        self.assertFalse(self.can_reach_region(test_region))
+
+        self.collect_by_name(SuitUpgrade.Morph_Ball.value)
+        self.collect_by_name(SuitUpgrade.Power_Bomb_Expansion.value)
+        self.assertTrue(self.can_reach_region(test_region))

@@ -182,9 +182,8 @@ class PhendranaDriftsAreaData(AreaData):
                 1: DoorData(RoomName.Research_Core, defaultLock=DoorLockType.Ice),
             }),
             RoomName.Plaza_Walkway: RoomData(doors={
-                0: DoorData(RoomName.Phendrana_Shorelines),
+                0: DoorData(RoomName.Phendrana_Shorelines, sub_region_door_index=3),
                 1: DoorData(RoomName.Ice_Ruins_East),
-                2: DoorData(RoomName.Ruins_Entryway, exclude_from_rando=True),  # Entryway via shoreline
             }),
             RoomName.Quarantine_Access: RoomData(doors={
                 0: DoorData(RoomName.North_Quarantine_Tunnel),
@@ -234,8 +233,7 @@ class PhendranaDriftsAreaData(AreaData):
                 pickups=[PickupData('Phendrana Drifts: Ruined Courtyard', rule_func=lambda state, player: _can_reach_top_of_ruined_courtyard(state, player), tricks=[Tricks.phendrana_courtyard_item_no_boost_spider]), ]),
             RoomName.Ruins_Entryway: RoomData(doors={
                 0: DoorData(RoomName.Ice_Ruins_West),
-                1: DoorData(RoomName.Phendrana_Shorelines),
-                2: DoorData(RoomName.Plaza_Walkway, exclude_from_rando=True),  # Walkway via shoreline
+                1: DoorData(RoomName.Phendrana_Shorelines, sub_region_door_index=4),
             }),
             RoomName.Save_Station_A: RoomData(doors={
                 0: DoorData(RoomName.Ruined_Courtyard, blast_shield=BlastShieldType.Missile),

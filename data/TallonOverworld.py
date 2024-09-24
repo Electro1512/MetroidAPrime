@@ -151,8 +151,7 @@ class TallonOverworldAreaData(AreaData):
             RoomName.Gully: RoomData(
                 doors={
                     0: DoorData(RoomName.Tallon_Canyon, defaultLock=DoorLockType.Blue, exclude_from_rando=True, rule_func=lambda state, player: can_bomb(state, player) and can_space_jump(state, player)),
-                    1: DoorData(RoomName.Landing_Site, exclude_from_rando=True, rule_func=lambda state, player: can_bomb(state, player) and can_space_jump(state, player)),  # Alcove Via Landing Site
-                    2: DoorData(RoomName.Alcove, exclude_from_rando=True)  # Alcove Via Landing Site
+                    1: DoorData(RoomName.Landing_Site, rule_func=lambda state, player: can_bomb(state, player), sub_region_door_index=3),
                 },
             ),
 
