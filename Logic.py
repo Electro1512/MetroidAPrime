@@ -129,7 +129,10 @@ def can_scan(state: CollectionState, player: int) -> bool:
 
 
 def can_heat(state: CollectionState, player: int) -> bool:
-    return state.has(SuitUpgrade.Varia_Suit.value, player)
+    if _get_options(state, player).non_varia_heat_damage.value:
+        return state.has(SuitUpgrade.Varia_Suit.value, player)
+    else:
+        return state.has_any([SuitUpgrade.Varia_Suit.value, SuitUpgrade.Phazon_Suit.value, SuitUpgrade.Gravity_Suit.value], player)
 
 
 def can_phazon(state: CollectionState, player: int) -> bool:
