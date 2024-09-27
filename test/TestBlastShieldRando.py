@@ -127,6 +127,7 @@ class TestBlastShieldMapping(MetroidPrimeTestBase):
 
     def test_beam_combos_are_included_in_logic_without_progressive_beams(self):
         test_region = RoomName.Temple_Hall.value
+        missile_item = self.get_item_by_name(SuitUpgrade.Missile_Expansion.value)
         self.assertFalse(self.can_reach_region(test_region))
 
         self.collect_by_name([SuitUpgrade.Flamethrower.value])
@@ -135,8 +136,14 @@ class TestBlastShieldMapping(MetroidPrimeTestBase):
         self.collect_by_name([
             SuitUpgrade.Plasma_Beam.value,
             SuitUpgrade.Charge_Beam.value,
-            SuitUpgrade.Missile_Expansion.value,
         ])
+        self.assertFalse(self.can_reach_region(test_region))
+
+        self.collect(missile_item)
+        self.assertFalse(self.can_reach_region(test_region))
+
+        # Beam combos require 10 missiles
+        self.collect(missile_item)
         self.assertTrue(self.can_reach_region(test_region))
 
 
@@ -145,6 +152,7 @@ class TestBlastShieldMappingWithProgressiveBeams(MetroidPrimeTestBase):
     options = {
         "blast_shield_randomization": "replace_existing",
         "blast_shield_available_types": "all",
+        "missile_launcher": 1,
         "progressive_beam_upgrades": True,
         "blast_shield_mapping": {
             "Tallon Overworld": {
@@ -162,12 +170,20 @@ class TestBlastShieldMappingWithProgressiveBeams(MetroidPrimeTestBase):
     def test_beam_combos_are_included_in_logic_with_progressive_beams(self):
         test_region = RoomName.Temple_Hall.value
         self.assertFalse(self.can_reach_region(test_region))
-        self.collect_by_name([
-            SuitUpgrade.Missile_Expansion.value,
-            ProgressiveUpgrade.Progressive_Plasma_Beam.value,
-            ProgressiveUpgrade.Progressive_Plasma_Beam.value,
-            ProgressiveUpgrade.Progressive_Plasma_Beam.value,
+        progressive_item = self.get_item_by_name(ProgressiveUpgrade.Progressive_Plasma_Beam.value)
+        missile_item = self.get_item_by_name(SuitUpgrade.Missile_Expansion.value)
+        self.collect([
+            progressive_item,
+            progressive_item,
+            progressive_item,
         ])
+        self.assertFalse(self.can_reach_region(test_region))
+
+        self.collect_by_name([SuitUpgrade.Missile_Launcher.value])
+        self.assertFalse(self.can_reach_region(test_region))
+
+        # Beam combos require 10 missiles
+        self.collect(missile_item)
         self.assertTrue(self.can_reach_region(test_region))
 
 
@@ -371,6 +387,8 @@ class TestSubRegionUsesBlastShields(MetroidPrimeTestBase):
         self.assertTrue(self.can_reach_region(test_region))
 
 # Blast shields open the door when destroyed when set via randomprime. Setting them to blue ensures no one way locks
+
+
 class TestBlastShieldsAndDoorColorRando(MetroidPrimeTestBase):
     run_default_tests = False
     options = {

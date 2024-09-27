@@ -38,10 +38,12 @@ def can_spider(state: CollectionState, player: int) -> bool:
     return state.has_all([SuitUpgrade.Spider_Ball.value, SuitUpgrade.Morph_Ball.value], player)
 
 
-def can_missile(state: CollectionState, player: int) -> bool:
+def can_missile(state: CollectionState, player: int, num_expansions: int = 1) -> bool:
     if _get_options(state, player).missile_launcher.value:
-        return state.has(SuitUpgrade.Missile_Launcher.value, player)
-    return state.has(SuitUpgrade.Missile_Expansion.value, player)
+        can_shoot = state.has(SuitUpgrade.Missile_Launcher.value, player)
+        if num_expansions > 1:
+            return can_shoot and state.has(SuitUpgrade.Missile_Expansion.value, player, num_expansions - 1)
+    return state.has(SuitUpgrade.Missile_Expansion.value, player, num_expansions)
 
 
 def can_super_missile(state: CollectionState, player: int) -> bool:
@@ -113,7 +115,7 @@ def can_charge_beam(state: CollectionState, player: int, required_beam: typing.O
 
 
 def can_beam_combo(state: CollectionState, player: int, required_beam: SuitUpgrade) -> bool:
-    if not can_missile(state, player) or not can_charge_beam(state, player, required_beam):
+    if not can_missile(state, player, 2) or not can_charge_beam(state, player, required_beam):
         return False
 
     if required_beam == SuitUpgrade.Wave_Beam:
