@@ -142,7 +142,10 @@ class TestBlastShieldMapping(MetroidPrimeTestBase):
         self.collect(missile_item)
         self.assertFalse(self.can_reach_region(test_region))
 
-        # Beam combos require 10 missiles
+        self.collect(missile_item)
+        self.assertFalse(self.can_reach_region(test_region))
+
+        # Flamethrower Beam combo requires 11 missiles
         self.collect(missile_item)
         self.assertTrue(self.can_reach_region(test_region))
 
@@ -172,6 +175,7 @@ class TestBlastShieldMappingWithProgressiveBeams(MetroidPrimeTestBase):
         self.assertFalse(self.can_reach_region(test_region))
         progressive_item = self.get_item_by_name(ProgressiveUpgrade.Progressive_Plasma_Beam.value)
         missile_item = self.get_item_by_name(SuitUpgrade.Missile_Expansion.value)
+        missile_launcher_item = self.get_item_by_name(SuitUpgrade.Missile_Launcher.value)
         self.collect([
             progressive_item,
             progressive_item,
@@ -179,10 +183,13 @@ class TestBlastShieldMappingWithProgressiveBeams(MetroidPrimeTestBase):
         ])
         self.assertFalse(self.can_reach_region(test_region))
 
-        self.collect_by_name([SuitUpgrade.Missile_Launcher.value])
+        self.collect(missile_launcher_item)
         self.assertFalse(self.can_reach_region(test_region))
 
         # Beam combos require 10 missiles
+        self.collect(missile_item)
+        self.assertFalse(self.can_reach_region(test_region))
+
         self.collect(missile_item)
         self.assertTrue(self.can_reach_region(test_region))
 

@@ -119,11 +119,11 @@ def can_beam_combo(state: CollectionState, player: int, required_beam: SuitUpgra
         return False
 
     if required_beam == SuitUpgrade.Wave_Beam:
-        return state.has(SuitUpgrade.Wavebuster.value, player) or state.has(ProgressiveUpgrade.Progressive_Wave_Beam.value, player, 3)
+        return can_missile(state, player, 3) and (state.has(SuitUpgrade.Wavebuster.value, player) or state.has(ProgressiveUpgrade.Progressive_Wave_Beam.value, player, 3))
     elif required_beam == SuitUpgrade.Ice_Beam:
         return state.has(SuitUpgrade.Ice_Spreader.value, player) or state.has(ProgressiveUpgrade.Progressive_Ice_Beam.value, player, 3)
     elif required_beam == SuitUpgrade.Plasma_Beam:
-        return state.has(SuitUpgrade.Flamethrower.value, player) or state.has(ProgressiveUpgrade.Progressive_Plasma_Beam.value, player, 3)
+        return can_missile(state, player, 3) and (state.has(SuitUpgrade.Flamethrower.value, player) or state.has(ProgressiveUpgrade.Progressive_Plasma_Beam.value, player, 3))
 
 
 def can_scan(state: CollectionState, player: int) -> bool:
