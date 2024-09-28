@@ -41,8 +41,7 @@ def can_spider(state: CollectionState, player: int) -> bool:
 def can_missile(state: CollectionState, player: int, num_expansions: int = 1) -> bool:
     if _get_options(state, player).missile_launcher.value:
         can_shoot = state.has(SuitUpgrade.Missile_Launcher.value, player)
-        if num_expansions > 1:
-            return can_shoot and state.has(SuitUpgrade.Missile_Expansion.value, player, num_expansions - 1)
+        return can_shoot and (num_expansions <= 1 or state.has(SuitUpgrade.Missile_Expansion.value, player, num_expansions - 1))
     return state.has(SuitUpgrade.Missile_Expansion.value, player, num_expansions)
 
 
