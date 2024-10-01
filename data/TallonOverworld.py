@@ -157,12 +157,9 @@ class TallonOverworldAreaData(AreaData):
 
             RoomName.Hydro_Access_Tunnel: RoomData(
                 doors={
-                    0: DoorData(RoomName.Great_Tree_Hall, rule_func=lambda state, player: can_crashed_frigate(state, player) and can_boost(state, player), tricks=[Tricks.hydro_access_tunnel_no_gravity]),  # Boost is needed to open way in great tree hall
+                    0: DoorData(RoomName.Great_Tree_Hall, rule_func=lambda state, player: can_crashed_frigate(state, player) and can_boost(state, player), tricks=[Tricks.hydro_access_tunnel_no_gravity], sub_region_door_index=4, sub_region_access_override=can_crashed_frigate),  # Boost is needed to open way in great tree hall
                     1: DoorData(RoomName.Biohazard_Containment, rule_func=lambda state, player: can_bomb(state, player) and can_move_underwater(state, player) and can_space_jump(state, player),
                                 tricks=[Tricks.hydro_access_tunnel_no_gravity]),
-
-                    # This one isn't an actual door but is instead accounting for not being able to access the great tree hall lower from upper
-                    2: DoorData(RoomName.Transport_Tunnel_E, destination_area=MetroidPrimeArea.Tallon_Overworld, defaultLock=DoorLockType.Ice, rule_func=can_crashed_frigate, tricks=[Tricks.hydro_access_tunnel_no_gravity], exclude_from_rando=True),
                 },
                 pickups=[
                     PickupData('Tallon Overworld: Hydro Access Tunnel', rule_func=lambda state, player: can_bomb(state, player) and can_move_underwater(state, player), tricks=[Tricks.hydro_access_tunnel_no_gravity]),
@@ -346,8 +343,7 @@ class TallonOverworldAreaData(AreaData):
                 include_area_in_name=True,
                 doors={
                     0: DoorData(RoomName.Transport_to_Phazon_Mines_East, defaultLock=DoorLockType.Ice),
-                    1: DoorData(RoomName.Great_Tree_Hall, defaultLock=DoorLockType.Ice, rule_func=can_boost),
-                    2: DoorData(RoomName.Hydro_Access_Tunnel, defaultLock=DoorLockType.Ice, exclude_from_rando=True),
+                    1: DoorData(RoomName.Great_Tree_Hall, defaultLock=DoorLockType.Ice, rule_func=can_boost, sub_region_door_index=0, sub_region_access_override=lambda state, player: True),
                 },
             ),
 

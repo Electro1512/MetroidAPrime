@@ -205,7 +205,8 @@ class AreaData:
 
                 def generate_sub_region_rule_func(origin_door_data: DoorData, target_door_data: DoorData) -> Callable[[CollectionState], bool]:
                     def rule_func(state: CollectionState):
-                        return _can_access_door(state, world.player, origin_door_data) and _can_open_door(state, world.player, target_door_data)
+                        meets_origin_door_requirements = origin_door_data.sub_region_access_override(state, world.player) and _can_open_door(state, world.player, origin_door_data) if origin_door_data.sub_region_access_override is not None else _can_access_door(state, world.player, origin_door_data)  # Use override if any, otherwise use default access rule
+                        return meets_origin_door_requirements and _can_open_door(state, world.player, target_door_data)
                     return rule_func
 
                 def get_connection_name(door_data: DoorData, target_room_name: str = name, target_destination: RoomName = destination) -> str:

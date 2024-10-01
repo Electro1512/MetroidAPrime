@@ -342,6 +342,9 @@ class TestSubRegionUsesBlastShields(MetroidPrimeTestBase):
                     },
                     "Gully": {
                         1: "Missile"
+                    },
+                    "Transport Tunnel E": {
+                        1: "Missile"
                     }
                 }
             },
@@ -382,7 +385,7 @@ class TestSubRegionUsesBlastShields(MetroidPrimeTestBase):
         self.collect_by_name(SuitUpgrade.Power_Bomb_Expansion.value)
         self.assertTrue(self.can_reach_region(test_region))
 
-    def test_cannot_reach_ruins_entry_sub_region_that_has_blast_shield(self):
+    def test_cannot_reach_plaza_walkway_sub_region_that_has_blast_shield(self):
         world: 'MetroidPrimeWorld' = self.world
         test_region = RoomName.Plaza_Walkway.value
         menu = world.get_region("Menu")
@@ -392,6 +395,35 @@ class TestSubRegionUsesBlastShields(MetroidPrimeTestBase):
         self.collect_by_name(SuitUpgrade.Morph_Ball.value)
         self.collect_by_name(SuitUpgrade.Power_Bomb_Expansion.value)
         self.assertTrue(self.can_reach_region(test_region))
+
+    def test_cannot_reach_transport_tunnel_e_sub_region_that_has_blast_shield(self):
+        world: 'MetroidPrimeWorld' = self.world
+        test_region = "Tallon Overworld: " + RoomName.Transport_Tunnel_E.value
+        other_test_region = RoomName.Great_Tree_Hall.value
+        menu = world.get_region("Menu")
+        menu.connect(world.get_region(RoomName.Hydro_Access_Tunnel.value))
+
+        self.collect_by_name([SuitUpgrade.Space_Jump_Boots.value, SuitUpgrade.Morph_Ball.value, SuitUpgrade.Morph_Ball_Bomb.value, SuitUpgrade.Gravity_Suit.value, SuitUpgrade.Wave_Beam.value, SuitUpgrade.Thermal_Visor.value])
+
+        self.assertFalse(self.can_reach_region(test_region))
+
+        self.collect_by_name(SuitUpgrade.Missile_Expansion.value)
+        self.assertTrue(self.can_reach_region(test_region))
+        self.assertFalse(self.can_reach_region(other_test_region), "boost ball should be required to access this")
+
+    def test_cannot_reach_hydro_tunnel_sub_region_that_has_blast_shield(self):
+        world: 'MetroidPrimeWorld' = self.world
+        source_region = "Tallon Overworld: " + RoomName.Transport_Tunnel_E.value
+        test_region = RoomName.Hydro_Access_Tunnel.value
+        other_test_region = RoomName.Great_Tree_Hall.value
+        menu = world.get_region("Menu")
+        menu.connect(world.get_region(source_region))
+        self.assertFalse(self.can_reach_region(test_region))
+
+        self.collect_by_name(SuitUpgrade.Missile_Expansion.value)
+        self.assertTrue(self.can_reach_region(test_region))
+        self.assertFalse(self.can_reach_region(other_test_region), "boost ball should be required to access this")
+
 
 # Blast shields open the door when destroyed when set via randomprime. Setting them to blue ensures no one way locks
 
