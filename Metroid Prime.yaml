@@ -53,7 +53,7 @@ Metroid Prime:
     "true": 0
 
   pre_scan_elevators:
-    # Pre scans the elevators in the game, allowing for faster transitions between regions. Makes for more interesting gameply if disabled when the scan visor is shuffled.
+    # Pre scans the elevators in the game, allowing for faster transitions between regions. Makes for more interesting gameplay if disabled when the scan visor is shuffled.
     "false": 0
     "true": 50
 
