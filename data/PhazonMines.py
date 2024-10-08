@@ -1,6 +1,7 @@
 
+from ..Items import SuitUpgrade
 from ..DoorRando import DoorLockType
-from ..LogicCombat import can_combat_mines, can_combat_omega_pirate
+from ..LogicCombat import can_combat_beam_pirates, can_combat_mines, can_combat_omega_pirate
 from .Tricks import Tricks
 from .RoomNames import RoomName
 from .AreaNames import MetroidPrimeArea
@@ -64,11 +65,11 @@ class PhazonMinesAreaData(AreaData):
                 pickups=[PickupData('Phazon Mines: Elite Quarters', rule_func=lambda state, player: can_combat_omega_pirate(state, player) and can_xray(state, player, hard_required=True)), ]),
             RoomName.Elite_Research: RoomData(
                 doors={
-                    0: DoorData(RoomName.Research_Access, defaultLock=DoorLockType.Ice, rule_func=lambda state, player: can_bomb(state, player) and can_boost(state, player) and can_space_jump(state, player) and can_scan(state, player), tricks=[Tricks.elite_research_spinner_no_boost]),
-                    0: DoorData(RoomName.Security_Access_B, defaultLock=DoorLockType.Ice),  # Vertical door, going down
+                    0: DoorData(RoomName.Research_Access, defaultLock=DoorLockType.Ice, rule_func=lambda state, player: can_bomb(state, player) and can_boost(state, player) and can_space_jump(state, player) and can_scan(state, player) and can_combat_beam_pirates(state, player, SuitUpgrade.Power_Beam), tricks=[Tricks.elite_research_spinner_no_boost]),
+                    1: DoorData(RoomName.Security_Access_B, defaultLock=DoorLockType.Ice),  # Vertical door, going down
                 },
-                pickups=[PickupData('Phazon Mines: Elite Research - Phazon Elite', rule_func=can_power_bomb),
-                         PickupData('Phazon Mines: Elite Research - Laser', rule_func=lambda state, player: can_bomb(state, player) and can_boost(state, player) and can_space_jump(state, player) and can_scan(state, player), tricks=[Tricks.elite_research_spinner_no_boost]), ]),
+                pickups=[PickupData('Phazon Mines: Elite Research - Phazon Elite', rule_func=lambda state, player: can_power_bomb(state, player) and can_combat_beam_pirates(state, player, SuitUpgrade.Power_Beam)),
+                         PickupData('Phazon Mines: Elite Research - Laser', rule_func=lambda state, player: can_bomb(state, player) and can_boost(state, player) and can_space_jump(state, player) and can_scan(state, player) and can_combat_beam_pirates(state, player, SuitUpgrade.Power_Beam), tricks=[Tricks.elite_research_spinner_no_boost]), ]),
             RoomName.Fungal_Hall_A: RoomData(doors={
                 0: DoorData(RoomName.Phazon_Mining_Tunnel, rule_func=lambda state, player: can_grapple(state, player) and can_space_jump(state, player), defaultLock=DoorLockType.Ice, tricks=[Tricks.fungal_hall_a_no_grapple]),
                 1: DoorData(RoomName.Fungal_Hall_Access, rule_func=can_space_jump, defaultLock=DoorLockType.Ice,),
@@ -110,11 +111,11 @@ class PhazonMinesAreaData(AreaData):
                 pickups=[PickupData('Phazon Mines: Metroid Quarantine A', rule_func=lambda state, player: can_combat_mines(state, player) and (can_scan(state, player) or can_backwards_lower_mines(state, player)) and can_power_bomb(state, player) and can_space_jump(state, player) and can_xray(state, player), tricks=[]), ]),
             RoomName.Metroid_Quarantine_B: RoomData(
                 doors={
-                    0: DoorData(RoomName.Quarantine_Access_B, defaultLock=DoorLockType.Plasma, rule_func=lambda state, player: can_combat_mines(state, player) and can_space_jump(state, player)),
-                    1: DoorData(RoomName.Elite_Quarters_Access, defaultLock=DoorLockType.Plasma, rule_func=lambda state, player: can_combat_mines(state, player) and can_spider(state, player) and can_grapple(state, player) and can_space_jump(state, player) and can_scan(state, player), tricks=[Tricks.metroid_quarantine_b_no_spider_grapple]),
-                    2: DoorData(RoomName.Save_Station_Mines_C, defaultLock=DoorLockType.Plasma, rule_func=lambda state, player: can_combat_mines(state, player) and can_spider(state, player) and can_grapple(state, player) and can_space_jump(state, player) and can_scan(state, player), tricks=[Tricks.metroid_quarantine_b_no_spider_grapple]),
+                    0: DoorData(RoomName.Quarantine_Access_B, defaultLock=DoorLockType.Plasma, rule_func=lambda state, player: can_combat_mines(state, player) and can_combat_beam_pirates(state, player, SuitUpgrade.Plasma_Beam) and can_space_jump(state, player)),
+                    1: DoorData(RoomName.Elite_Quarters_Access, defaultLock=DoorLockType.Plasma, rule_func=lambda state, player: can_combat_mines(state, player) and can_combat_beam_pirates(state, player, SuitUpgrade.Plasma_Beam) and can_spider(state, player) and can_grapple(state, player) and can_space_jump(state, player) and can_scan(state, player), tricks=[Tricks.metroid_quarantine_b_no_spider_grapple]),
+                    2: DoorData(RoomName.Save_Station_Mines_C, defaultLock=DoorLockType.Plasma, rule_func=lambda state, player: can_combat_mines(state, player) and can_combat_beam_pirates(state, player, SuitUpgrade.Plasma_Beam) and can_spider(state, player) and can_grapple(state, player) and can_space_jump(state, player) and can_scan(state, player), tricks=[Tricks.metroid_quarantine_b_no_spider_grapple]),
                 },
-                pickups=[PickupData('Phazon Mines: Metroid Quarantine B', rule_func=lambda state, player: can_combat_mines(state, player) and state.can_reach(RoomName.Elite_Quarters_Access.value, None, player) and can_super_missile(state, player), tricks=[]), ]),
+                pickups=[PickupData('Phazon Mines: Metroid Quarantine B', rule_func=lambda state, player: can_combat_mines(state, player) and can_combat_beam_pirates(state, player, SuitUpgrade.Plasma_Beam) and state.can_reach(RoomName.Elite_Quarters_Access.value, None, player) and can_super_missile(state, player), tricks=[]), ]),
             RoomName.Mine_Security_Station: RoomData(doors={
                 0: DoorData(RoomName.Security_Access_A, defaultLock=DoorLockType.Ice),
                 1: DoorData(RoomName.Security_Access_B, defaultLock=DoorLockType.Wave),
@@ -130,9 +131,9 @@ class PhazonMinesAreaData(AreaData):
             }),
             RoomName.Ore_Processing: RoomData(doors={
                 0: DoorData(RoomName.Research_Access, defaultLock=DoorLockType.Ice, rule_func=lambda state, player: True),
-                1: DoorData(RoomName.Storage_Depot_B, defaultLock=DoorLockType.Ice, rule_func=lambda state, player: (can_spider(state, player) and can_bomb(state, player) and can_power_bomb(state, player)) or (state.can_reach(RoomName.Waste_Disposal.value, None, player) and can_grapple(state, player)), tricks=[Tricks.ore_processing_to_storage_depot_b_no_spider]),
-                2: DoorData(RoomName.Waste_Disposal, defaultLock=DoorLockType.Ice, rule_func=lambda state, player: can_spider(state, player) and can_grapple(state, player) and can_bomb(state, player) and can_power_bomb(state, player) and can_space_jump(state, player), tricks=[Tricks.ore_processing_climb_no_grapple_spider]),
-                3: DoorData(RoomName.Elevator_Access_A, defaultLock=DoorLockType.Ice, rule_func=lambda state, player: can_spider(state, player) and can_grapple(state, player) and can_bomb(state, player) and can_power_bomb(state, player) and can_space_jump(state, player), tricks=[Tricks.ore_processing_climb_no_grapple_spider]),
+                1: DoorData(RoomName.Storage_Depot_B, defaultLock=DoorLockType.Ice, rule_func=lambda state, player: (can_combat_beam_pirates(state, player, SuitUpgrade.Power_Beam) and can_spider(state, player) and can_bomb(state, player) and can_power_bomb(state, player)) or (state.can_reach(RoomName.Waste_Disposal.value, None, player) and can_grapple(state, player)), tricks=[Tricks.ore_processing_to_storage_depot_b_no_spider]),
+                2: DoorData(RoomName.Waste_Disposal, defaultLock=DoorLockType.Ice, rule_func=lambda state, player: can_combat_beam_pirates(state, player, SuitUpgrade.Power_Beam) and can_spider(state, player) and can_grapple(state, player) and can_bomb(state, player) and can_power_bomb(state, player) and can_space_jump(state, player), tricks=[Tricks.ore_processing_climb_no_grapple_spider]),
+                3: DoorData(RoomName.Elevator_Access_A, defaultLock=DoorLockType.Ice, rule_func=lambda state, player: can_combat_beam_pirates(state, player, SuitUpgrade.Power_Beam) and can_spider(state, player) and can_grapple(state, player) and can_bomb(state, player) and can_power_bomb(state, player) and can_space_jump(state, player), tricks=[Tricks.ore_processing_climb_no_grapple_spider]),
             }),
             RoomName.Phazon_Mining_Tunnel: RoomData(doors={
                 0: DoorData(RoomName.Fungal_Hall_B, rule_func=lambda state, player: can_bomb(state, player) and can_power_bomb(state, player), defaultLock=DoorLockType.Plasma),

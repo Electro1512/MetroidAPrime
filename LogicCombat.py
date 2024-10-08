@@ -2,7 +2,7 @@
 from enum import Enum
 
 from BaseClasses import CollectionState
-from .Items import SuitUpgrade
+from .Items import SuitUpgrade, get_item_for_options
 from .Logic import can_charge_beam, can_plasma_beam, can_power_beam, can_wave_beam, can_xray, has_energy_tanks
 from .data.RoomNames import RoomName
 import typing
@@ -37,7 +37,7 @@ def can_combat_mines(state: CollectionState, player: int) -> bool:
 
 def can_combat_labs(state: CollectionState, player: int) -> bool:
     return (_get_options(state, player).starting_room_name.value in [RoomName.East_Tower.value, RoomName.Save_Station_B.value]
-           or _can_combat_generic(state, player, 1, 0, False))
+            or _can_combat_generic(state, player, 1, 0, False))
 
 
 def can_combat_thardus(state: CollectionState, player: int) -> bool:
@@ -59,7 +59,7 @@ def can_combat_omega_pirate(state: CollectionState, player: int) -> bool:
 
 def can_combat_flaaghra(state: CollectionState, player: int) -> bool:
     return (_get_options(state, player).starting_room_name == RoomName.Sunchamber_Lobby.value
-           or _can_combat_generic(state, player, 2, 1, False))
+            or _can_combat_generic(state, player, 2, 1, False))
 
 
 def can_combat_ridley(state: CollectionState, player: int) -> bool:
@@ -78,3 +78,10 @@ def can_combat_ghosts(state: CollectionState, player: int) -> bool:
         return can_charge_beam(state, player, SuitUpgrade.Power_Beam) and can_power_beam(state, player) and can_xray(state, player, True)
     elif difficulty == CombatLogicDifficulty.MINIMAL.value:
         return can_power_beam(state, player)
+
+
+def can_combat_beam_pirates(state: CollectionState, player: int, beam_type: SuitUpgrade) -> bool:
+    options: MetroidPrimeOptions = _get_options(state, player)
+    if options.combat_logic_difficulty.value in [CombatLogicDifficulty.NO_LOGIC.value, CombatLogicDifficulty.MINIMAL.value]:
+        return True
+    return state.has(get_item_for_options(state.multiworld.worlds[player], beam_type).value, player)

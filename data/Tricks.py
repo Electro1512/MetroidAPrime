@@ -3,7 +3,7 @@ from enum import Enum
 from typing import Callable, Dict
 
 from BaseClasses import CollectionState
-from ..LogicCombat import can_combat_ghosts
+from ..LogicCombat import can_combat_beam_pirates, can_combat_ghosts
 from ..Logic import can_bomb, can_boost, can_charge_beam, can_defeat_sheegoth, can_grapple, can_heat, can_ice_beam, can_infinite_speed, can_melt_ice, can_missile, can_morph_ball, can_move_underwater, can_plasma_beam, can_power_beam, can_power_bomb, can_scan, can_space_jump, can_spider, can_super_missile, can_thermal, can_wave_beam, can_xray, has_energy_tanks
 from ..data.RoomNames import RoomName
 from ..Items import SuitUpgrade
@@ -179,14 +179,14 @@ class Tricks:
     main_quarry_item_no_spider = TrickInfo("Main Quarry Item No Spider Ball", "You can slope jump onto the top of the crane and R jump over to the item.", TrickDifficulty.Medium, lambda state, player: can_morph_ball(state, player) and can_bomb(state, player) and can_thermal(state, player) and can_wave_beam(state, player) and can_scan(state, player) and can_space_jump(state, player))
     main_quarry_to_waste_disposal_no_grapple = TrickInfo("Main Quarry to Waste Disposal No Grapple", "You can scan dash from the top of the structure (using the crane spider track scan point) to reach the door to Waste Disposal.", TrickDifficulty.Easy, lambda state, player: can_scan(state, player) and can_space_jump(state, player))
 
-    ore_processing_to_storage_depot_b_no_spider = TrickInfo("Ore Processing Climb to Storage No Grapple Spider", "You can stand on various collision in the room, such as on the rotating column, to climb to the top of Ore Processing.", TrickDifficulty.Easy, lambda state, player: can_bomb(state, player) and can_power_bomb(state, player) and can_space_jump(state, player))
-    ore_processing_climb_no_grapple_spider = TrickInfo("Ore Processing Climb No Grapple Spider", "You can stand on various collision in the room, such as on the rotating column, to climb to the top of Ore Processing.", TrickDifficulty.Easy, lambda state, player: can_bomb(state, player) and can_power_bomb(state, player) and can_space_jump(state, player))
+    ore_processing_to_storage_depot_b_no_spider = TrickInfo("Ore Processing Climb to Storage No Grapple Spider", "You can stand on various collision in the room, such as on the rotating column, to climb to the top of Ore Processing.", TrickDifficulty.Easy, lambda state, player: can_bomb(state, player) and can_power_bomb(state, player) and can_space_jump(state, player) and can_combat_beam_pirates(state, player, SuitUpgrade.Power_Beam))
+    ore_processing_climb_no_grapple_spider = TrickInfo("Ore Processing Climb No Grapple Spider", "You can stand on various collision in the room, such as on the rotating column, to climb to the top of Ore Processing.", TrickDifficulty.Easy, lambda state, player: can_bomb(state, player) and can_power_bomb(state, player) and can_space_jump(state, player) and can_combat_beam_pirates(state, player, SuitUpgrade.Power_Beam))
 
     mines_climb_shafts_no_spider = TrickInfo("Mines Climb Shafts No Spider Ball", "Elevator Access A and Research Access can be climbed without Spider Ball.", TrickDifficulty.Hard, lambda state, player: can_space_jump(state, player) and can_wave_beam(state, player))  # Wave Beam is needed to kill the Bombu
 
-    elite_research_spinner_no_boost = TrickInfo("Elite Research laser No Boost", "You can get the laser turret to spin by wedging the morph ball in the spinner, bombing out, and then spinning the morph ball while in the laser before it locks you in.", TrickDifficulty.Easy, lambda state, player: can_bomb(state, player) and can_scan(state, player) and can_space_jump(state, player))
-    elite_research_backwards_wall_boost: TrickInfo = TrickInfo("Elite Research Infinite Boost", "Enter Elite Research from the top door and use Boost Ball to get through the backwards wall", TrickDifficulty.Easy, can_boost)
-    elite_research_backwards_wall_boost_no_spider: TrickInfo = TrickInfo("Elite Research Infinite Boost", "Reach elite research via Research Access without the spider ball", TrickDifficulty.Hard, lambda state, player: Tricks.elite_research_backwards_wall_boost.rule_func(state, player) and Tricks.mines_climb_shafts_no_spider.rule_func(state, player))
+    elite_research_spinner_no_boost = TrickInfo("Elite Research laser No Boost", "You can get the laser turret to spin by wedging the morph ball in the spinner, bombing out, and then spinning the morph ball while in the laser before it locks you in.", TrickDifficulty.Easy, lambda state, player: can_bomb(state, player) and can_scan(state, player) and can_space_jump(state, player) and can_combat_beam_pirates(state, player, SuitUpgrade.Power_Beam))
+    elite_research_backwards_wall_boost: TrickInfo = TrickInfo("Elite Research Backwards Wall Boost", "Enter Elite Research from the top door and use Boost Ball to get through the backwards wall", TrickDifficulty.Easy, can_boost)
+    elite_research_backwards_wall_boost_no_spider: TrickInfo = TrickInfo("Elite Research Backwards Wall Boost No Spider", "Reach elite research via Research Access without the spider ball", TrickDifficulty.Hard, lambda state, player: Tricks.elite_research_backwards_wall_boost.rule_func(state, player) and Tricks.mines_climb_shafts_no_spider.rule_func(state, player))
 
     ventilation_shaft_hpbj = TrickInfo("Ventilation Shaft HPBJ", "It's possible to return to Elite Control by performing a half pipe bomb jump to reach the Elite Control door.", TrickDifficulty.Hard, lambda state, player: can_bomb(state, player) and can_space_jump(state, player))
 
