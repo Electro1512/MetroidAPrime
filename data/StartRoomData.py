@@ -57,7 +57,7 @@ all_start_rooms: Dict[str, StartRoomData] = {
         area=MetroidPrimeArea.Chozo_Ruins,
         loadouts=[StartRoomLoadout([SuitUpgrade.Missile_Launcher])],
     ),
-    RoomName.Burn_Dome_Access.value: StartRoomData(
+    RoomName.Burn_Dome.value: StartRoomData(
         area=MetroidPrimeArea.Chozo_Ruins,
         loadouts=[StartRoomLoadout([SuitUpgrade.Morph_Ball],
                                    item_rules=[

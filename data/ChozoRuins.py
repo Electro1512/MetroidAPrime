@@ -53,7 +53,7 @@ class ChozoRuinsAreaData(AreaData):
                 2: DoorData(RoomName.Gathering_Hall_Access, blast_shield=BlastShieldType.Missile),
             }),
             RoomName.Burn_Dome_Access: RoomData(doors={
-                0: DoorData(RoomName.Burn_Dome),
+                0: DoorData(RoomName.Burn_Dome, rule_func=can_bomb),
                 1: DoorData(RoomName.Energy_Core, rule_func=can_bomb, defaultLock=DoorLockType.None_, exclude_from_rando=True),
             }),
             RoomName.Burn_Dome: RoomData(doors={
