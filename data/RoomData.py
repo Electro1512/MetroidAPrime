@@ -22,7 +22,9 @@ if typing.TYPE_CHECKING:
 def get_config_item_text(world: 'MetroidPrimeWorld', location) -> str:
     loc = world.multiworld.get_location(location, world.player)
     player_name = f"{world.multiworld.player_name[loc.item.player]}'s " if loc.item.player != world.player else ""
-    return f"{player_name}{loc.item.name}"
+    player_name = player_name.replace("&", "[and]")
+    item_name = loc.item.name.replace("&", "[and]")
+    return f"{player_name}{item_name}"
 
 
 def get_config_item_model(world: 'MetroidPrimeWorld', location) -> str:
