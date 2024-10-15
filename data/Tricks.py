@@ -98,7 +98,7 @@ class Tricks:
     gathering_hall_without_space_jump: TrickInfo = TrickInfo("Gathering Hall Without Space Jump", "Double bomb jump from the side platform to the grate where the item is", TrickDifficulty.Easy, can_bomb)
 
     watery_hall_no_gravity: TrickInfo = TrickInfo("Watery Hall No Gravity", "Reach the Watery Hall Underwater Item without Gravity Suit by using a slope jump", TrickDifficulty.Easy, can_space_jump)
-    watery_hall_no_gravity_no_space_jump: TrickInfo = TrickInfo("Watery Hall No Gravity No Space Jump", "Reach the Watery Hall Underwater Item without Gravity Suit by using a slope jump", TrickDifficulty.Medium, lambda state, player: can_move_underwater(state, player) == False or can_bomb(state, player))
+    watery_hall_no_gravity_no_space_jump: TrickInfo = TrickInfo("Watery Hall No Gravity No Space Jump", "Reach the Watery Hall Underwater Item without Gravity Suit or Space Jump by using a slope jump", TrickDifficulty.Medium, lambda state, player: can_move_underwater(state, player) == False or can_bomb(state, player))
 
     furnace_no_spider_ball = TrickInfo("Furnace No Spider Ball", "Reach the Item inside the Furnace without Spider Ball by jumping on the side of the spider track", TrickDifficulty.Easy, lambda state, player: can_bomb(state, player))
     furnace_spider_track_hbj = TrickInfo("Furnace Spider Track HBJ", "Reach the first track in furnace with a hyper bomb jump", TrickDifficulty.Medium, lambda state, player: can_bomb(state, player) and can_spider(state, player))
