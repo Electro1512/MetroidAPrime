@@ -1,6 +1,6 @@
 
 from enum import Enum
-from Options import DeathLink, DefaultOnToggle, OptionDict, OptionList, TextChoice, Toggle, Range, ItemDict, StartInventoryPool, Choice, PerGameCommonOptions, Visibility
+from Options import DeathLink, DefaultOnToggle, OptionDict, OptionList, TextChoice, Toggle, Range, ItemDict, StartInventoryPool, Choice, PerGameCommonOptions, Visibility, OptionGroup
 from dataclasses import dataclass
 from .LogicCombat import CombatLogicDifficulty
 from .data.StartRoomData import StartRoomDifficulty
@@ -471,3 +471,58 @@ class MetroidPrimeOptions(PerGameCommonOptions):
     phazon_suit_color: PhazonSuitColorOverride
 
     death_link: DeathLink
+
+
+prime_option_groups = [
+    OptionGroup("General", [
+        RequiredArtifacts,
+        ArtifactHints,
+        FinalBosses,
+        StartingRoom,
+        DisableStartingRoomBKPrevention,
+        CombatLogicDifficultyOption,
+    ]),
+    OptionGroup("Gameplay Tweaks", [
+        ProgressiveBeamUpgrades,
+        MissileLauncher,
+        MainPowerBomb,
+        RandomizeStartingBeam,
+        ShuffleScanVisor,
+        PreScanElevators,
+        NonVariaHeatDamage,
+        StaggeredSuitDamage,
+        SpringBall
+    ]),
+    OptionGroup("Door Randomization", [
+        ElevatorRandomization,
+        DoorColorRandomization,
+        BlastShieldRandomization,
+        BlastShieldFrequency,
+        BlastShieldAvailableTypes,
+        LockedDoorCount,
+        IncludePowerBeamDoors,
+        IncludeMorphBallBombDoors
+    ]),
+    OptionGroup("Tricks", [
+        TrickDifficulty,
+        RemoveHiveMecha,
+        BackwardsLowerMines,
+        RemoveXrayRequirements,
+        RemoveThermalRequirements,
+        FlaahgraPowerBombs,
+        TrickAllowList,
+        TrickDenyList,
+    ]),
+    OptionGroup("Cosmetic", [
+        FusionSuit,
+        HudColorOption,
+        HudColorOverrideRed,
+        HudColorOverrideGreen,
+        HudColorOverrideBlue,
+        RandomizeSuitColors,
+        PowerSuitColorOverride,
+        VariaSuitColorOverride,
+        GravitySuitColorOverride,
+        PhazonSuitColorOverride
+    ])
+]

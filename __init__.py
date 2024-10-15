@@ -19,7 +19,7 @@ from .data.Transports import ELEVATOR_USEFUL_NAMES, default_elevator_mappings, g
 from .config import make_config
 from .Regions import create_regions
 from .Locations import every_location
-from .PrimeOptions import BlastShieldAvailableTypes, BlastShieldRandomization, MetroidPrimeOptions, VariaSuitColorOverride
+from .PrimeOptions import BlastShieldAvailableTypes, BlastShieldRandomization, MetroidPrimeOptions, VariaSuitColorOverride, prime_option_groups
 from .Items import PROGRESSIVE_ITEM_MAPPING, MetroidPrimeItem, ProgressiveUpgrade, SuitUpgrade, get_item_for_options, get_progressive_upgrade_for_item, suit_upgrade_table, artifact_table, item_table
 from .data.StartRoomData import StartRoomData, init_starting_beam, init_starting_loadout, init_starting_room_data
 from .Container import MetroidPrimeContainer
@@ -67,6 +67,7 @@ class MetroidPrimeWeb(WebWorld):
         "setup/en",
         ["Electro15", "hesto2"]
     )]
+    option_groups = prime_option_groups
 
 
 # These items will always be given at start
