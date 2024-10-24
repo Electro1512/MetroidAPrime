@@ -1,9 +1,12 @@
 from dataclasses import dataclass
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 from .RoomNames import RoomName
 
 from .AreaNames import MetroidPrimeArea
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from .. import MetroidPrimeWorld
 
 
 @dataclass
@@ -11,6 +14,7 @@ class BlastShieldRegion:
     name: RoomName
     doors: Dict[RoomName, RoomName]
     can_be_locked: bool = False
+    invalid_start_rooms: Optional[List[RoomName]] = None
 
 
 @dataclass
@@ -35,7 +39,8 @@ def __get_chozo_region():
                 name=RoomName.Ruined_Shrine,
                 doors={
                     RoomName.Main_Plaza: RoomName.Ruined_Shrine_Access,
-                }
+                },
+                invalid_start_rooms=[RoomName.Arboretum]
             ),
             BlastShieldRegion(
                 name=RoomName.Tower_of_Light,
@@ -48,7 +53,8 @@ def __get_chozo_region():
                 can_be_locked=True,
                 doors={
                     RoomName.Main_Plaza: RoomName.Nursery_Access,
-                }
+                },
+                invalid_start_rooms=[RoomName.Arboretum]
             ),
             BlastShieldRegion(
                 name=RoomName.Hive_Totem,
@@ -81,21 +87,24 @@ def __get_chozo_region():
                 doors={
                     RoomName.Ruined_Fountain: RoomName.Arboretum_Access,
                     RoomName.Arboretum_Access: RoomName.Arboretum,
-                }
+                },
+                invalid_start_rooms=[RoomName.Arboretum]
             ),
             BlastShieldRegion(
                 name=RoomName.Arboretum,
                 doors={
                     RoomName.Arboretum: RoomName.Sunchamber_Lobby,
                     RoomName.Arboretum: RoomName.Gathering_Hall_Access,
-                }
+                },
+                invalid_start_rooms=[RoomName.Arboretum]
             ),
             BlastShieldRegion(
                 name=RoomName.Watery_Hall,
                 doors={
                     RoomName.Gathering_Hall: RoomName.Watery_Hall_Access,
                     RoomName.Watery_Hall: RoomName.Dynamo_Access
-                }
+                },
+                invalid_start_rooms=[RoomName.Arboretum]
             ),
             BlastShieldRegion(
                 name=RoomName.Energy_Core,
@@ -103,13 +112,15 @@ def __get_chozo_region():
                 doors={
                     RoomName.Gathering_Hall: RoomName.East_Atrium,
                     RoomName.Energy_Core_Access: RoomName.Energy_Core,
-                }
+                },
+                invalid_start_rooms=[RoomName.Arboretum]
             ),
             BlastShieldRegion(
                 name=RoomName.Burn_Dome,
                 doors={
                     RoomName.Burn_Dome_Access: RoomName.Burn_Dome,
-                }
+                },
+                invalid_start_rooms=[RoomName.Burn_Dome, RoomName.Arboretum]
             ),
             BlastShieldRegion(
                 name=RoomName.Furnace,
@@ -481,14 +492,19 @@ def __get_phazon_region():
     )
 
 
-def get_blast_shield_regions_by_area(area: MetroidPrimeArea) -> BlastShieldArea:
+def get_valid_blast_shield_regions_by_area(world: 'MetroidPrimeWorld', area: MetroidPrimeArea) -> List[BlastShieldRegion]:
+    region: BlastShieldArea
     if area == MetroidPrimeArea.Chozo_Ruins:
-        return __get_chozo_region()
+        region = __get_chozo_region()
     elif area == MetroidPrimeArea.Tallon_Overworld:
-        return __get_tallon_region()
+        region = __get_tallon_region()
     elif area == MetroidPrimeArea.Phendrana_Drifts:
-        return __get_phendrana_region()
+        region = __get_phendrana_region()
     elif area == MetroidPrimeArea.Magmoor_Caverns:
-        return __get_magmoor_region()
+        region = __get_magmoor_region()
     elif area == MetroidPrimeArea.Phazon_Mines:
-        return __get_phazon_region()
+        region = __get_phazon_region()
+    if world.starting_room_data is None:
+        return region.regions
+
+    return [region for region in region.regions if region.invalid_start_rooms is None or RoomName(world.starting_room_data.name) not in region.invalid_start_rooms]

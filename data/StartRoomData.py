@@ -5,8 +5,6 @@ from typing import TYPE_CHECKING, Callable, Dict, List, Optional
 
 from ..DoorRando import BEAM_TO_LOCK_MAPPING
 
-from ..LogicCombat import CombatLogicDifficulty
-
 from ..Items import SuitUpgrade, get_item_for_options
 from ..data.AreaNames import MetroidPrimeArea
 from ..data.RoomNames import RoomName
@@ -43,6 +41,7 @@ class StartRoomData:
     allowed_elevators: Optional[Dict[str, Dict[str, List[str]]]] = None
     denied_elevators: Optional[Dict[str, Dict[str, List[str]]]] = None
     force_starting_beam: Optional[bool] = False
+    local_early_items: Optional[List[SuitUpgrade]] = None
     """Used for situations where starting beam cannot be randomized, disqualifies a room from being selected when randomizing blue doors is on"""
 
     no_power_beam_door_on_starting_level: Optional[bool] = False
@@ -55,7 +54,13 @@ all_start_rooms: Dict[str, StartRoomData] = {
     ], starting_beam=SuitUpgrade.Power_Beam)]),
     RoomName.Arboretum.value: StartRoomData(
         area=MetroidPrimeArea.Chozo_Ruins,
-        loadouts=[StartRoomLoadout([SuitUpgrade.Missile_Launcher])],
+        loadouts=[StartRoomLoadout(
+            [SuitUpgrade.Missile_Launcher],
+            item_rules=[{
+                'Chozo Ruins: Watery Hall - Scan Puzzle': [SuitUpgrade.Morph_Ball],
+            }])],
+        is_eligible=lambda world: world.options.shuffle_scan_visor.value == False,
+        local_early_items=[SuitUpgrade.Morph_Ball, SuitUpgrade.Morph_Ball_Bomb]
     ),
     RoomName.Burn_Dome.value: StartRoomData(
         area=MetroidPrimeArea.Chozo_Ruins,
@@ -247,12 +252,17 @@ def init_starting_loadout(world: 'MetroidPrimeWorld'):
         updated_loadout.append(get_item_for_options(world, item))
     world.starting_room_data.selected_loadout.loadout = updated_loadout
 
-    # If we aren't preventing bk then set a few items for prefill if available
+    # If we are preventing bk then set a few items for prefill if available
     if not disable_bk_prevention:
         for mapping in world.starting_room_data.selected_loadout.item_rules:
             for location_name, potential_items in mapping.items():
                 required_item = get_item_for_options(world, world.random.choice(potential_items))
                 world.prefilled_item_map[location_name] = required_item.value
+        if world.starting_room_data.local_early_items:
+            for item in world.starting_room_data.local_early_items:
+                options_item = get_item_for_options(world, item)
+                if options_item not in world.starting_room_data.selected_loadout.loadout:
+                    world.multiworld.local_early_items[world.player][options_item] = 1
 
 
 def init_starting_beam(world: 'MetroidPrimeWorld'):

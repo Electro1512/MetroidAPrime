@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from enum import Enum
 import math
 from .data.DoorData import get_door_data_by_room_names
-from .data.BlastShieldRegions import get_blast_shield_regions_by_area
+from .data.BlastShieldRegions import get_valid_blast_shield_regions_by_area
 from .data.RoomNames import RoomName
 from .PrimeOptions import BlastShieldAvailableTypes, BlastShieldRandomization
 from .data.AreaNames import MetroidPrimeArea
@@ -79,7 +79,7 @@ def _generate_blast_shield_mapping_for_area(world: 'MetroidPrimeWorld', area: Me
     total_beam_combo_doors = 0
     # TODO: Make this less repetitive
     if world.options.blast_shield_randomization.value == BlastShieldRandomization.option_mix_it_up:
-        blast_shield_regions = get_blast_shield_regions_by_area(area).regions
+        blast_shield_regions = get_valid_blast_shield_regions_by_area(world, area)
         num_shields_to_add = math.ceil(world.options.blast_shield_frequency.value * len(blast_shield_regions) * .1)
         world.random.shuffle(blast_shield_regions)
         for i in range(num_shields_to_add):
@@ -108,7 +108,7 @@ def _generate_blast_shield_mapping_for_area(world: 'MetroidPrimeWorld', area: Me
                         total_beam_combo_doors += 1
 
     if include_locked_door:
-        lockable_regions = [regions for regions in get_blast_shield_regions_by_area(area).regions if regions.can_be_locked]
+        lockable_regions = [regions for regions in get_valid_blast_shield_regions_by_area(world, area) if regions.can_be_locked]
         if lockable_regions:
             region = lockable_regions[0]
             source_room = world.random.choice(list(region.doors.keys()))
