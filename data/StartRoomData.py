@@ -127,10 +127,11 @@ all_start_rooms: Dict[str, StartRoomData] = {
             StartRoomLoadout(
                 starting_beam=SuitUpgrade.Plasma_Beam, loadout=[SuitUpgrade.Missile_Launcher],
                 item_rules=[
-                    {"Phendrana Drifts: Phendrana Shorelines - Behind Ice": [SuitUpgrade.Space_Jump_Boots, SuitUpgrade.Morph_Ball]},
+                    {"Phendrana Drifts: Phendrana Shorelines - Behind Ice": [SuitUpgrade.Space_Jump_Boots]},
                 ],
             )
-        ]
+        ],
+        is_eligible=lambda world: world.options.shuffle_scan_visor.value == False or world.multiworld.players > 1,
     ),
     RoomName.Arbor_Chamber.value: StartRoomData(
         area=MetroidPrimeArea.Tallon_Overworld,
