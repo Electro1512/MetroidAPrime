@@ -40,13 +40,14 @@ def __get_chozo_region():
                 doors={
                     RoomName.Main_Plaza: RoomName.Ruined_Shrine_Access,
                 },
-                invalid_start_rooms=[RoomName.Arboretum, RoomName.Save_Station_1, RoomName.Save_Station_2, RoomName.Burn_Dome, RoomName.Ruined_Fountain]
+                invalid_start_rooms=[RoomName.Arboretum, RoomName.Save_Station_1, RoomName.Save_Station_2, RoomName.Burn_Dome, RoomName.Ruined_Fountain, RoomName.Tower_Chamber]
             ),
             BlastShieldRegion(
                 name=RoomName.Tower_of_Light,
                 doors={
                     RoomName.Ruined_Shrine: RoomName.Tower_of_Light_Access,
-                }
+                },
+                invalid_start_rooms=[RoomName.Tower_Chamber]
             ),
             BlastShieldRegion(
                 name=RoomName.Ruined_Nursery,
@@ -54,7 +55,7 @@ def __get_chozo_region():
                 doors={
                     RoomName.Main_Plaza: RoomName.Nursery_Access,
                 },
-                invalid_start_rooms=[RoomName.Arboretum, RoomName.Save_Station_1, RoomName.Save_Station_2, RoomName.Burn_Dome, RoomName.Ruined_Fountain]
+                invalid_start_rooms=[RoomName.Arboretum, RoomName.Save_Station_1, RoomName.Save_Station_2, RoomName.Burn_Dome, RoomName.Ruined_Fountain, RoomName.Tower_Chamber]
             ),
             BlastShieldRegion(
                 name=RoomName.Hive_Totem,
@@ -64,7 +65,7 @@ def __get_chozo_region():
                     RoomName.Totem_Access: RoomName.Hive_Totem,
                     RoomName.Transport_Access_North: RoomName.Transport_to_Magmoor_Caverns_North
                 },
-                invalid_start_rooms=[RoomName.Save_Station_1]
+                invalid_start_rooms=[RoomName.Save_Station_1, RoomName.Tower_Chamber]
             ),
             BlastShieldRegion(
                 name=RoomName.Vault,
@@ -333,14 +334,17 @@ def __get_magmoor_region():
                 name=RoomName.Pit_Tunnel,
                 doors={
                     RoomName.Lava_Lake: RoomName.Pit_Tunnel
-                }
+                },
+                invalid_start_rooms=[RoomName.Warrior_Shrine]
             ),
             BlastShieldRegion(
                 name=RoomName.Storage_Cavern,
                 doors={
                     RoomName.Triclops_Pit: RoomName.Storage_Cavern
-                }
+                },
+                invalid_start_rooms=[RoomName.Warrior_Shrine]
             ),
+
             BlastShieldRegion(
                 name=RoomName.Transport_to_Phendrana_Drifts_North,
                 doors={
@@ -352,13 +356,15 @@ def __get_magmoor_region():
                 name=RoomName.Warrior_Shrine,
                 doors={
                     RoomName.Monitor_Station: RoomName.Warrior_Shrine
-                }
+                },
+                invalid_start_rooms=[RoomName.Warrior_Shrine]
             ),
             BlastShieldRegion(
                 name=RoomName.Transport_Tunnel_B,
                 doors={
                     RoomName.Fiery_Shores: RoomName.Transport_Tunnel_B
-                }
+                },
+                invalid_start_rooms=[RoomName.Warrior_Shrine]
             ),
             BlastShieldRegion(
                 name=RoomName.Geothermal_Core,

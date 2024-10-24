@@ -1,7 +1,7 @@
 import copy
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import TYPE_CHECKING, Callable, Dict, List, Optional
+from typing import TYPE_CHECKING, Callable, Dict, List, Optional, cast
 
 from ..DoorRando import BEAM_TO_LOCK_MAPPING
 
@@ -103,13 +103,14 @@ all_start_rooms: Dict[str, StartRoomData] = {
             StartRoomLoadout([SuitUpgrade.Varia_Suit], [
                 {
                     "Magmoor Caverns: Warrior Shrine": [SuitUpgrade.Morph_Ball],
-                    "Magmoor Caverns: Storage Cavern": [SuitUpgrade.Morph_Ball_Bomb, SuitUpgrade.Main_Power_Bomb],
+                    "Magmoor Caverns: Storage Cavern": [SuitUpgrade.Morph_Ball_Bomb],
                 }
             ]),
         ],
         allowed_elevators={
             MetroidPrimeArea.Magmoor_Caverns.value: {
-                RoomName.Transport_to_Chozo_Ruins_North.value: [RoomName.Transport_to_Magmoor_Caverns_East.value, RoomName.Transport_to_Chozo_Ruins_West.value, RoomName.Transport_to_Tallon_Overworld_North.value]
+                RoomName.Transport_to_Chozo_Ruins_North.value: [RoomName.Transport_to_Magmoor_Caverns_East.value, RoomName.Transport_to_Chozo_Ruins_West.value, RoomName.Transport_to_Tallon_Overworld_North.value],
+                RoomName.Transport_to_Phendrana_Drifts_South.value: [RoomName.Transport_to_Magmoor_Caverns_East.value, RoomName.Transport_to_Chozo_Ruins_East.value, RoomName.Transport_to_Chozo_Ruins_South.value, RoomName.Transport_to_Phazon_Mines_East.value, RoomName.Transport_to_Tallon_Overworld_North.value, "Phendrana Drifts: " + RoomName.Transport_to_Magmoor_Caverns_South.value]
             }
         }
     ),
@@ -202,15 +203,15 @@ def get_starting_room_by_name(world: 'MetroidPrimeWorld', room_name: str) -> Sta
 
 
 def _has_elevator_rando(world: 'MetroidPrimeWorld') -> bool:
-    return world.options.elevator_randomization.value
+    return cast(bool, world.options.elevator_randomization)
 
 
 def _has_no_pre_scan_elevators_with_shuffle_scan(world: 'MetroidPrimeWorld') -> bool:
-    return world.options.pre_scan_elevators.value == False and world.options.shuffle_scan_visor.value
+    return world.options.pre_scan_elevators.value == False and cast(bool, world.options.shuffle_scan_visor)
 
 
 def _has_options_that_allow_more_landing_site_checks(world: 'MetroidPrimeWorld') -> bool:
-    return world.options.blast_shield_randomization.value != 'None' or world.options.trick_difficulty.value != -1
+    return world.options.blast_shield_randomization != world.options.blast_shield_randomization.option_none or world.options.trick_difficulty.value != -1
 
 
 def init_starting_room_data(world: 'MetroidPrimeWorld'):
