@@ -8,6 +8,7 @@ from .AreaNames import MetroidPrimeArea
 
 @dataclass
 class BlastShieldRegion:
+    name: RoomName
     doors: Dict[RoomName, RoomName]
     can_be_locked: bool = False
 
@@ -24,34 +25,33 @@ def __get_chozo_region():
         area=MetroidPrimeArea.Chozo_Ruins,
         regions=[
             BlastShieldRegion(
+                name=RoomName.Ruins_Entrance,
                 doors={
                     RoomName.Transport_to_Tallon_Overworld_North: RoomName.Ruins_Entrance,
                     RoomName.Ruins_Entrance: RoomName.Main_Plaza
                 }
             ),
             BlastShieldRegion(
-                doors={
-                    RoomName.Transport_to_Tallon_Overworld_North: RoomName.Ruins_Entrance,
-                    RoomName.Ruins_Entrance: RoomName.Main_Plaza
-                }
-            ),
-            BlastShieldRegion(
+                name=RoomName.Ruined_Shrine,
                 doors={
                     RoomName.Main_Plaza: RoomName.Ruined_Shrine_Access,
                 }
             ),
             BlastShieldRegion(
+                name=RoomName.Tower_of_Light,
                 doors={
                     RoomName.Ruined_Shrine: RoomName.Tower_of_Light_Access,
                 }
             ),
             BlastShieldRegion(
+                name=RoomName.Ruined_Nursery,
                 can_be_locked=True,
                 doors={
                     RoomName.Main_Plaza: RoomName.Nursery_Access,
                 }
             ),
             BlastShieldRegion(
+                name=RoomName.Hive_Totem,
                 can_be_locked=True,
                 doors={
                     RoomName.North_Atrium: RoomName.Ruined_Gallery,
@@ -60,12 +60,14 @@ def __get_chozo_region():
                 }
             ),
             BlastShieldRegion(
+                name=RoomName.Vault,
                 doors={
                     RoomName.Transport_to_Magmoor_Caverns_North: RoomName.Vault_Access,
                     RoomName.Vault: RoomName.Plaza_Access,
                 }
             ),
             BlastShieldRegion(
+                name=RoomName.Training_Chamber,
                 doors={
                     RoomName.Main_Plaza: RoomName.Ruined_Fountain_Access,
                     RoomName.Ruined_Fountain: RoomName.Meditation_Fountain,
@@ -75,24 +77,28 @@ def __get_chozo_region():
                 }
             ),
             BlastShieldRegion(
+                name=RoomName.Ruined_Fountain,
                 doors={
                     RoomName.Ruined_Fountain: RoomName.Arboretum_Access,
                     RoomName.Arboretum_Access: RoomName.Arboretum,
                 }
             ),
             BlastShieldRegion(
+                name=RoomName.Arboretum,
                 doors={
                     RoomName.Arboretum: RoomName.Sunchamber_Lobby,
                     RoomName.Arboretum: RoomName.Gathering_Hall_Access,
                 }
             ),
             BlastShieldRegion(
+                name=RoomName.Watery_Hall,
                 doors={
                     RoomName.Gathering_Hall: RoomName.Watery_Hall_Access,
                     RoomName.Watery_Hall: RoomName.Dynamo_Access
                 }
             ),
             BlastShieldRegion(
+                name=RoomName.Energy_Core,
                 can_be_locked=True,
                 doors={
                     RoomName.Gathering_Hall: RoomName.East_Atrium,
@@ -100,32 +106,38 @@ def __get_chozo_region():
                 }
             ),
             BlastShieldRegion(
+                name=RoomName.Burn_Dome,
                 doors={
                     RoomName.Burn_Dome_Access: RoomName.Burn_Dome,
                 }
             ),
             BlastShieldRegion(
+                name=RoomName.Furnace,
                 can_be_locked=True,
                 doors={
                     RoomName.Furnace: RoomName.East_Furnace_Access
                 }
             ),
             BlastShieldRegion(
+                name=RoomName.Crossway,
                 doors={
                     RoomName.Crossway_Access_West: RoomName.Crossway,
                 }
             ),
             BlastShieldRegion(
+                name=RoomName.Elder_Hall_Access,
                 doors={
                     RoomName.Crossway: RoomName.Elder_Hall_Access,
                 }
             ),
             BlastShieldRegion(
+                name=RoomName.Hall_of_the_Elders,
                 doors={
                     RoomName.Hall_of_the_Elders: RoomName.Reflecting_Pool_Access
                 }
             ),
             BlastShieldRegion(
+                name=RoomName.Reflecting_Pool,
                 doors={
                     RoomName.Reflecting_Pool: RoomName.Antechamber,
                     RoomName.Reflecting_Pool: RoomName.Save_Station_3,
@@ -142,28 +154,33 @@ def __get_tallon_region():
         area=MetroidPrimeArea.Tallon_Overworld,
         regions=[
             BlastShieldRegion(
+                name=RoomName.Alcove,
                 doors={
                     RoomName.Landing_Site: RoomName.Alcove,
                 }
             ),
             BlastShieldRegion(
+                name=RoomName.Canyon_Cavern,
                 can_be_locked=True,
                 doors={
                     RoomName.Landing_Site: RoomName.Canyon_Cavern
                 }
             ),
             BlastShieldRegion(
+                name=RoomName.Temple_Hall,
                 doors={
                     RoomName.Landing_Site: RoomName.Temple_Hall
                 }
             ),
             BlastShieldRegion(
+                name=RoomName.Waterfall_Cavern,
                 can_be_locked=True,
                 doors={
                     RoomName.Landing_Site: RoomName.Waterfall_Cavern
                 }
             ),
             BlastShieldRegion(
+                name=RoomName.Transport_Tunnel_B,
                 can_be_locked=True,
                 doors={
                     RoomName.Tallon_Canyon: RoomName.Root_Tunnel,
@@ -171,18 +188,21 @@ def __get_tallon_region():
                 }
             ),
             BlastShieldRegion(
+                name=RoomName.Transport_Tunnel_D,
                 can_be_locked=True,
                 doors={
                     RoomName.Great_Tree_Hall: RoomName.Transport_Tunnel_D,
                 }
             ),
             BlastShieldRegion(
+                name=RoomName.Transport_Tunnel_E,
                 can_be_locked=True,
                 doors={
                     RoomName.Great_Tree_Hall: RoomName.Transport_Tunnel_E,
                 }
             ),
             BlastShieldRegion(
+                name=RoomName.Great_Tree_Chamber,
                 doors={
                     RoomName.Great_Tree_Hall: RoomName.Great_Tree_Chamber
                 }
@@ -196,16 +216,19 @@ def __get_phendrana_region():
         area=MetroidPrimeArea.Phendrana_Drifts,
         regions=[
             BlastShieldRegion(
+                name=RoomName.Shoreline_Entrance,
                 doors={
                     RoomName.Phendrana_Shorelines: RoomName.Shoreline_Entrance
                 }
             ),
             BlastShieldRegion(
+                name=RoomName.Temple_Entryway,
                 doors={
                     RoomName.Phendrana_Shorelines: RoomName.Temple_Entryway
                 }
             ),
             BlastShieldRegion(
+                name=RoomName.Ice_Ruins_East,
                 can_be_locked=True,
                 doors={
                     RoomName.Phendrana_Shorelines: RoomName.Ice_Ruins_Access,
@@ -213,40 +236,47 @@ def __get_phendrana_region():
                 }
             ),
             BlastShieldRegion(
+                name=RoomName.Ice_Ruins_West,
                 doors={
                     RoomName.Phendrana_Shorelines: RoomName.Ruins_Entryway,
                     RoomName.Ruins_Entryway: RoomName.Ice_Ruins_West
                 }
             ),
             BlastShieldRegion(
+                name=RoomName.Phendrana_Canyon,
                 doors={
                     RoomName.Ice_Ruins_West: RoomName.Canyon_Entryway
                 }
             ),
             BlastShieldRegion(
+                name=RoomName.Ruined_Courtyard,
                 doors={
                     RoomName.Ice_Ruins_West: RoomName.Courtyard_Entryway
                 }
             ),
             BlastShieldRegion(
+                name=RoomName.Quarantine_Access,
                 can_be_locked=True,
                 doors={
                     RoomName.Ruined_Courtyard: RoomName.Quarantine_Access
                 }
             ),
             BlastShieldRegion(
+                name=RoomName.Specimen_Storage,
                 can_be_locked=True,
                 doors={
                     RoomName.Ruined_Courtyard: RoomName.Specimen_Storage
                 }
             ),
             BlastShieldRegion(
+                name=RoomName.Quarantine_Cave,
                 can_be_locked=True,
                 doors={
                     RoomName.Quarantine_Cave: RoomName.South_Quarantine_Tunnel
                 }
             ),
             BlastShieldRegion(
+                name=RoomName.Research_Lab_Hydra,
                 can_be_locked=True,
                 doors={
                     RoomName.Research_Lab_Hydra: RoomName.Observatory_Access,
@@ -257,11 +287,13 @@ def __get_phendrana_region():
                 }
             ),
             BlastShieldRegion(
+                name=RoomName.Transport_to_Magmoor_Caverns_South,
                 doors={
                     RoomName.Transport_to_Magmoor_Caverns_South: RoomName.Transport_Access,
                 }
             ),
             BlastShieldRegion(
+                name=RoomName.Frost_Cave,
                 can_be_locked=True,
                 doors={
                     RoomName.Frozen_Pike: RoomName.Frost_Cave_Access,
@@ -279,38 +311,45 @@ def __get_magmoor_region():
         area=MetroidPrimeArea.Magmoor_Caverns,
         regions=[
             BlastShieldRegion(
+                name=RoomName.Lava_Lake,
                 doors={
                     RoomName.Transport_to_Chozo_Ruins_North: RoomName.Burning_Trail,
                     RoomName.Lake_Tunnel: RoomName.Lava_Lake,
                 }
             ),
             BlastShieldRegion(
+                name=RoomName.Pit_Tunnel,
                 doors={
                     RoomName.Lava_Lake: RoomName.Pit_Tunnel
                 }
             ),
             BlastShieldRegion(
+                name=RoomName.Storage_Cavern,
                 doors={
                     RoomName.Triclops_Pit: RoomName.Storage_Cavern
                 }
             ),
             BlastShieldRegion(
+                name=RoomName.Transport_to_Phendrana_Drifts_North,
                 doors={
                     RoomName.Monitor_Station: RoomName.Transport_Tunnel_A,
                     RoomName.Transport_to_Phendrana_Drifts_North: RoomName.Transport_Tunnel_A
                 }
             ),
             BlastShieldRegion(
+                name=RoomName.Warrior_Shrine,
                 doors={
                     RoomName.Monitor_Station: RoomName.Warrior_Shrine
                 }
             ),
             BlastShieldRegion(
+                name=RoomName.Transport_Tunnel_B,
                 doors={
                     RoomName.Fiery_Shores: RoomName.Transport_Tunnel_B
                 }
             ),
             BlastShieldRegion(
+                name=RoomName.Geothermal_Core,
                 doors={
                     RoomName.Transport_to_Tallon_Overworld_West: RoomName.Twin_Fires_Tunnel,
                     RoomName.Twin_Fires_Tunnel: RoomName.Twin_Fires,
@@ -318,16 +357,19 @@ def __get_magmoor_region():
                 }
             ),
             BlastShieldRegion(
+                name=RoomName.Magmoor_Workstation,
                 doors={
                     RoomName.South_Core_Tunnel: RoomName.Magmoor_Workstation,
                 }
             ),
             BlastShieldRegion(
+                name=RoomName.Transport_Tunnel_C,
                 doors={
                     RoomName.Magmoor_Workstation: RoomName.Transport_Tunnel_C
                 }
             ),
             BlastShieldRegion(
+                name=RoomName.Workstation_Tunnel,
                 doors={
                     RoomName.Magmoor_Workstation: RoomName.Workstation_Tunnel
                 }
@@ -342,28 +384,33 @@ def __get_phazon_region():
         area=MetroidPrimeArea.Phazon_Mines,
         regions=[
             BlastShieldRegion(
+                name=RoomName.Quarry_Access,
                 doors={
                     RoomName.Main_Quarry: RoomName.Quarry_Access,
                 }
             ),
             BlastShieldRegion(
+                name=RoomName.Waste_Disposal,
                 doors={
                     RoomName.Main_Quarry: RoomName.Waste_Disposal
                 }
             ),
             BlastShieldRegion(
+                name=RoomName.Elite_Research,
                 doors={
                     RoomName.Main_Quarry: RoomName.Security_Access_A,
                     RoomName.Security_Access_B: RoomName.Elite_Research,
                 }
             ),
             BlastShieldRegion(
+                name=RoomName.Ore_Processing,
                 can_be_locked=True,
                 doors={
                     RoomName.Research_Access: RoomName.Ore_Processing
                 }
             ),
             BlastShieldRegion(
+                name=RoomName.Elevator_A,
                 can_be_locked=True,
                 doors={
                     RoomName.Ore_Processing: RoomName.Elevator_Access_A,
@@ -371,29 +418,34 @@ def __get_phazon_region():
                 }
             ),
             BlastShieldRegion(
+                name=RoomName.Storage_Depot_B,
                 doors={
                     RoomName.Ore_Processing: RoomName.Storage_Depot_B
                 }
             ),
             BlastShieldRegion(
+                name=RoomName.Elite_Control,
                 can_be_locked=True,
                 doors={
                     RoomName.Elite_Control_Access: RoomName.Elite_Control
                 }
             ),
             BlastShieldRegion(
+                name=RoomName.Maintenance_Tunnel,
                 can_be_locked=True,
                 doors={
                     RoomName.Elite_Control: RoomName.Maintenance_Tunnel
                 }
             ),
             BlastShieldRegion(
+                name=RoomName.Ventilation_Shaft,
                 can_be_locked=True,
                 doors={
                     RoomName.Elite_Control: RoomName.Ventilation_Shaft
                 }
             ),
             BlastShieldRegion(
+                name=RoomName.Metroid_Quarantine_A,
                 can_be_locked=True,
                 doors={
                     RoomName.Central_Dynamo: RoomName.Quarantine_Access_A,
@@ -402,6 +454,7 @@ def __get_phazon_region():
                 }
             ),
             BlastShieldRegion(
+                name=RoomName.Metroid_Quarantine_B,
                 can_be_locked=True,
                 doors={
                     RoomName.Fungal_Hall_Access: RoomName.Fungal_Hall_A,
@@ -411,12 +464,14 @@ def __get_phazon_region():
                 }
             ),
             BlastShieldRegion(
+                name=RoomName.Elite_Quarters,
                 can_be_locked=True,
                 doors={
                     RoomName.Elite_Quarters: RoomName.Processing_Center_Access
                 }
             ),
             BlastShieldRegion(
+                name=RoomName.Phazon_Processing_Center,
                 can_be_locked=True,
                 doors={
                     RoomName.Phazon_Processing_Center: RoomName.Maintenance_Tunnel

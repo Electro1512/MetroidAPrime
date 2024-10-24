@@ -8,7 +8,7 @@ if typing.TYPE_CHECKING:
     from . import MetroidPrimeWorld
 
 
-def create_regions(world: 'MetroidPrimeWorld', final_boss_selection):
+def create_regions(world: 'MetroidPrimeWorld', final_boss_selection: int):
     # create all regions and populate with locations
     menu = Region("Menu", world.player, world.multiworld)
     world.multiworld.regions.append(menu)

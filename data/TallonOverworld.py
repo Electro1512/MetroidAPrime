@@ -1,4 +1,3 @@
-from dataclasses import dataclass
 from BaseClasses import CollectionState
 from ..BlastShieldRando import BlastShieldType
 from ..DoorRando import DoorLockType
