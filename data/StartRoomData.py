@@ -56,11 +56,9 @@ all_start_rooms: Dict[str, StartRoomData] = {
         area=MetroidPrimeArea.Chozo_Ruins,
         loadouts=[StartRoomLoadout(
             [SuitUpgrade.Missile_Launcher],
-            item_rules=[{
-                'Chozo Ruins: Watery Hall - Scan Puzzle': [SuitUpgrade.Morph_Ball],
-            }])],
+        )],
         is_eligible=lambda world: world.options.shuffle_scan_visor.value == False,
-        local_early_items=[SuitUpgrade.Morph_Ball, SuitUpgrade.Morph_Ball_Bomb]
+        local_early_items=[SuitUpgrade.Morph_Ball]
     ),
     RoomName.Burn_Dome.value: StartRoomData(
         area=MetroidPrimeArea.Chozo_Ruins,
@@ -76,11 +74,12 @@ all_start_rooms: Dict[str, StartRoomData] = {
     ),
     RoomName.Ruined_Fountain.value: StartRoomData(
         area=MetroidPrimeArea.Chozo_Ruins,
-        loadouts=[StartRoomLoadout([SuitUpgrade.Missile_Launcher]),
-                  StartRoomLoadout([SuitUpgrade.Morph_Ball])],
+        loadouts=[StartRoomLoadout([SuitUpgrade.Missile_Launcher])],
+        local_early_items=[SuitUpgrade.Morph_Ball]
     ),
     RoomName.Save_Station_1.value: StartRoomData(
         area=MetroidPrimeArea.Chozo_Ruins,
+        local_early_items=[SuitUpgrade.Morph_Ball],
         loadouts=[StartRoomLoadout(
             starting_beam=SuitUpgrade.Power_Beam,
             item_rules=[

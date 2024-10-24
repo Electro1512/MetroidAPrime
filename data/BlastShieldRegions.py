@@ -40,7 +40,7 @@ def __get_chozo_region():
                 doors={
                     RoomName.Main_Plaza: RoomName.Ruined_Shrine_Access,
                 },
-                invalid_start_rooms=[RoomName.Arboretum]
+                invalid_start_rooms=[RoomName.Arboretum, RoomName.Save_Station_1, RoomName.Save_Station_2, RoomName.Burn_Dome, RoomName.Ruined_Fountain]
             ),
             BlastShieldRegion(
                 name=RoomName.Tower_of_Light,
@@ -54,7 +54,7 @@ def __get_chozo_region():
                 doors={
                     RoomName.Main_Plaza: RoomName.Nursery_Access,
                 },
-                invalid_start_rooms=[RoomName.Arboretum]
+                invalid_start_rooms=[RoomName.Arboretum, RoomName.Save_Station_1, RoomName.Save_Station_2, RoomName.Burn_Dome, RoomName.Ruined_Fountain]
             ),
             BlastShieldRegion(
                 name=RoomName.Hive_Totem,
@@ -63,14 +63,15 @@ def __get_chozo_region():
                     RoomName.North_Atrium: RoomName.Ruined_Gallery,
                     RoomName.Totem_Access: RoomName.Hive_Totem,
                     RoomName.Transport_Access_North: RoomName.Transport_to_Magmoor_Caverns_North
-                }
+                },
+                invalid_start_rooms=[RoomName.Save_Station_1]
             ),
             BlastShieldRegion(
                 name=RoomName.Vault,
                 doors={
                     RoomName.Transport_to_Magmoor_Caverns_North: RoomName.Vault_Access,
                     RoomName.Vault: RoomName.Plaza_Access,
-                }
+                },
             ),
             BlastShieldRegion(
                 name=RoomName.Training_Chamber,
@@ -88,7 +89,7 @@ def __get_chozo_region():
                     RoomName.Ruined_Fountain: RoomName.Arboretum_Access,
                     RoomName.Arboretum_Access: RoomName.Arboretum,
                 },
-                invalid_start_rooms=[RoomName.Arboretum]
+                invalid_start_rooms=[RoomName.Arboretum, RoomName.Save_Station_1, RoomName.Save_Station_2, RoomName.Burn_Dome, RoomName.Ruined_Fountain]
             ),
             BlastShieldRegion(
                 name=RoomName.Arboretum,
@@ -96,7 +97,7 @@ def __get_chozo_region():
                     RoomName.Arboretum: RoomName.Sunchamber_Lobby,
                     RoomName.Arboretum: RoomName.Gathering_Hall_Access,
                 },
-                invalid_start_rooms=[RoomName.Arboretum]
+                invalid_start_rooms=[RoomName.Arboretum, RoomName.Save_Station_1, RoomName.Save_Station_2, RoomName.Burn_Dome, RoomName.Ruined_Fountain]
             ),
             BlastShieldRegion(
                 name=RoomName.Watery_Hall,
@@ -104,7 +105,7 @@ def __get_chozo_region():
                     RoomName.Gathering_Hall: RoomName.Watery_Hall_Access,
                     RoomName.Watery_Hall: RoomName.Dynamo_Access
                 },
-                invalid_start_rooms=[RoomName.Arboretum]
+                invalid_start_rooms=[RoomName.Arboretum, RoomName.Save_Station_1, RoomName.Save_Station_2, RoomName.Burn_Dome, RoomName.Ruined_Fountain]
             ),
             BlastShieldRegion(
                 name=RoomName.Energy_Core,
@@ -113,7 +114,7 @@ def __get_chozo_region():
                     RoomName.Gathering_Hall: RoomName.East_Atrium,
                     RoomName.Energy_Core_Access: RoomName.Energy_Core,
                 },
-                invalid_start_rooms=[RoomName.Arboretum]
+                invalid_start_rooms=[RoomName.Arboretum, RoomName.Save_Station_1, RoomName.Save_Station_2, RoomName.Burn_Dome, RoomName.Ruined_Fountain]
             ),
             BlastShieldRegion(
                 name=RoomName.Burn_Dome,
@@ -505,6 +506,8 @@ def get_valid_blast_shield_regions_by_area(world: 'MetroidPrimeWorld', area: Met
     elif area == MetroidPrimeArea.Phazon_Mines:
         region = __get_phazon_region()
     if world.starting_room_data is None:
+        return region.regions
+    elif world.starting_room_data.area != area or (world.options.disable_starting_room_bk_prevention.value and world.multiworld.players > 1):
         return region.regions
 
     return [region for region in region.regions if region.invalid_start_rooms is None or RoomName(world.starting_room_data.name) not in region.invalid_start_rooms]
