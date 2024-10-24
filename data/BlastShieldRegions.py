@@ -33,7 +33,8 @@ def __get_chozo_region():
                 doors={
                     RoomName.Transport_to_Tallon_Overworld_North: RoomName.Ruins_Entrance,
                     RoomName.Ruins_Entrance: RoomName.Main_Plaza
-                }
+                },
+                invalid_start_rooms=[RoomName.Warrior_Shrine]
             ),
             BlastShieldRegion(
                 name=RoomName.Ruined_Shrine,
@@ -198,21 +199,24 @@ def __get_tallon_region():
                 doors={
                     RoomName.Tallon_Canyon: RoomName.Root_Tunnel,
                     RoomName.Root_Cave: RoomName.Transport_Tunnel_B,
-                }
+                },
+                invalid_start_rooms=[RoomName.Warrior_Shrine]
             ),
             BlastShieldRegion(
                 name=RoomName.Transport_Tunnel_D,
                 can_be_locked=True,
                 doors={
                     RoomName.Great_Tree_Hall: RoomName.Transport_Tunnel_D,
-                }
+                },
+                invalid_start_rooms=[RoomName.Warrior_Shrine]
             ),
             BlastShieldRegion(
                 name=RoomName.Transport_Tunnel_E,
                 can_be_locked=True,
                 doors={
                     RoomName.Great_Tree_Hall: RoomName.Transport_Tunnel_E,
-                }
+                },
+                invalid_start_rooms=[RoomName.Warrior_Shrine]
             ),
             BlastShieldRegion(
                 name=RoomName.Great_Tree_Chamber,
@@ -328,7 +332,8 @@ def __get_magmoor_region():
                 doors={
                     RoomName.Transport_to_Chozo_Ruins_North: RoomName.Burning_Trail,
                     RoomName.Lake_Tunnel: RoomName.Lava_Lake,
-                }
+                },
+                invalid_start_rooms=[RoomName.Warrior_Shrine]
             ),
             BlastShieldRegion(
                 name=RoomName.Pit_Tunnel,

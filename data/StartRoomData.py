@@ -100,19 +100,12 @@ all_start_rooms: Dict[str, StartRoomData] = {
         is_eligible=lambda world: world.options.disable_starting_room_bk_prevention.value != True,  # Varia suit is definitely required here
         area=MetroidPrimeArea.Magmoor_Caverns,
         loadouts=[
-            StartRoomLoadout([SuitUpgrade.Varia_Suit], [
+            StartRoomLoadout([SuitUpgrade.Varia_Suit, SuitUpgrade.Morph_Ball], [
                 {
-                    "Magmoor Caverns: Warrior Shrine": [SuitUpgrade.Morph_Ball],
                     "Magmoor Caverns: Storage Cavern": [SuitUpgrade.Morph_Ball_Bomb],
                 }
             ]),
         ],
-        allowed_elevators={
-            MetroidPrimeArea.Magmoor_Caverns.value: {
-                RoomName.Transport_to_Chozo_Ruins_North.value: [RoomName.Transport_to_Magmoor_Caverns_East.value, RoomName.Transport_to_Chozo_Ruins_West.value, RoomName.Transport_to_Tallon_Overworld_North.value],
-                RoomName.Transport_to_Phendrana_Drifts_South.value: [RoomName.Transport_to_Magmoor_Caverns_East.value, RoomName.Transport_to_Chozo_Ruins_East.value, RoomName.Transport_to_Chozo_Ruins_South.value, RoomName.Transport_to_Phazon_Mines_East.value, RoomName.Transport_to_Tallon_Overworld_North.value, "Phendrana Drifts: " + RoomName.Transport_to_Magmoor_Caverns_South.value]
-            }
-        }
     ),
     RoomName.East_Tower.value: StartRoomData(area=MetroidPrimeArea.Phendrana_Drifts, loadouts=[StartRoomLoadout(
         starting_beam=SuitUpgrade.Wave_Beam, loadout=[SuitUpgrade.Missile_Launcher],
