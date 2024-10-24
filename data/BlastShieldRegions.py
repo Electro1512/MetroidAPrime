@@ -242,7 +242,8 @@ def __get_phendrana_region():
                 name=RoomName.Temple_Entryway,
                 doors={
                     RoomName.Phendrana_Shorelines: RoomName.Temple_Entryway
-                }
+                },
+                invalid_start_rooms=[RoomName.Save_Station_B, RoomName.East_Tower, RoomName.Quarantine_Monitor]
             ),
             BlastShieldRegion(
                 name=RoomName.Ice_Ruins_East,
@@ -250,47 +251,54 @@ def __get_phendrana_region():
                 doors={
                     RoomName.Phendrana_Shorelines: RoomName.Ice_Ruins_Access,
                     RoomName.Phendrana_Shorelines: RoomName.Plaza_Walkway
-                }
+                },
+                invalid_start_rooms=[RoomName.Save_Station_B, RoomName.East_Tower, RoomName.Quarantine_Monitor]
             ),
             BlastShieldRegion(
                 name=RoomName.Ice_Ruins_West,
                 doors={
                     RoomName.Phendrana_Shorelines: RoomName.Ruins_Entryway,
                     RoomName.Ruins_Entryway: RoomName.Ice_Ruins_West
-                }
+                },
+                invalid_start_rooms=[RoomName.Save_Station_B, RoomName.East_Tower, RoomName.Quarantine_Monitor]
             ),
             BlastShieldRegion(
                 name=RoomName.Phendrana_Canyon,
                 doors={
                     RoomName.Ice_Ruins_West: RoomName.Canyon_Entryway
-                }
+                },
+                invalid_start_rooms=[RoomName.Save_Station_B, RoomName.East_Tower, RoomName.Quarantine_Monitor]
             ),
             BlastShieldRegion(
                 name=RoomName.Ruined_Courtyard,
                 doors={
                     RoomName.Ice_Ruins_West: RoomName.Courtyard_Entryway
-                }
+                },
+                invalid_start_rooms=[RoomName.Save_Station_B, RoomName.East_Tower, RoomName.Quarantine_Monitor]
             ),
             BlastShieldRegion(
                 name=RoomName.Quarantine_Access,
                 can_be_locked=True,
                 doors={
                     RoomName.Ruined_Courtyard: RoomName.Quarantine_Access
-                }
+                },
+                invalid_start_rooms=[RoomName.Save_Station_B, RoomName.East_Tower, RoomName.Quarantine_Monitor]
             ),
             BlastShieldRegion(
                 name=RoomName.Specimen_Storage,
                 can_be_locked=True,
                 doors={
                     RoomName.Ruined_Courtyard: RoomName.Specimen_Storage
-                }
+                },
+                invalid_start_rooms=[RoomName.Save_Station_B, RoomName.East_Tower, RoomName.Quarantine_Monitor]
             ),
             BlastShieldRegion(
                 name=RoomName.Quarantine_Cave,
                 can_be_locked=True,
                 doors={
                     RoomName.Quarantine_Cave: RoomName.South_Quarantine_Tunnel
-                }
+                },
+                invalid_start_rooms=[RoomName.Save_Station_B, RoomName.East_Tower, RoomName.Quarantine_Monitor]
             ),
             BlastShieldRegion(
                 name=RoomName.Research_Lab_Hydra,
@@ -301,7 +309,8 @@ def __get_phendrana_region():
                     RoomName.Control_Tower: RoomName.East_Tower,
                     RoomName.Research_Lab_Aether: RoomName.Research_Core_Access,
                     RoomName.Research_Core: RoomName.Pike_Access
-                }
+                },
+                invalid_start_rooms=[RoomName.Save_Station_B, RoomName.East_Tower, RoomName.Quarantine_Monitor]
             ),
             BlastShieldRegion(
                 name=RoomName.Transport_to_Magmoor_Caverns_South,
