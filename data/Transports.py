@@ -63,6 +63,7 @@ ELEVATOR_USEFUL_NAMES: Dict[str, str] = {
     'Phazon Mines: ' + RoomName.Transport_to_Magmoor_Caverns_South.value: 'Phazon Mines West (Phazon Processing Center)',
 }
 
+
 def temple_dest(boss) -> str:
     if boss == 0 or boss == 2:
         return "Crater Entry Point"

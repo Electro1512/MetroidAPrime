@@ -138,19 +138,29 @@ all_start_rooms: Dict[str, StartRoomData] = {
         loadouts=[StartRoomLoadout([SuitUpgrade.Missile_Launcher])],
         allowed_elevators={
             MetroidPrimeArea.Tallon_Overworld.value: {
-                RoomName.Transport_to_Chozo_Ruins_West.value: [RoomName.Transport_to_Magmoor_Caverns_North.value, "Phendrana Drifts: " + RoomName.Transport_to_Magmoor_Caverns_South.value, RoomName.Transport_to_Magmoor_Caverns_West.value],
-                RoomName.Transport_to_Magmoor_Caverns_East.value: [RoomName.Transport_to_Tallon_Overworld_North.value, "Phendrana Drifts: " + RoomName.Transport_to_Magmoor_Caverns_South.value, RoomName.Transport_to_Magmoor_Caverns_West.value],
+                RoomName.Transport_to_Chozo_Ruins_West.value: [RoomName.Transport_to_Magmoor_Caverns_North.value, RoomName.Transport_to_Magmoor_Caverns_West.value],
+                RoomName.Transport_to_Magmoor_Caverns_East.value: [RoomName.Transport_to_Tallon_Overworld_North.value, RoomName.Transport_to_Magmoor_Caverns_West.value, RoomName.Transport_to_Magmoor_Caverns_North.value],
             }
         }
     ),
-    RoomName.Transport_to_Chozo_Ruins_East.value: StartRoomData(area=MetroidPrimeArea.Tallon_Overworld, loadouts=[StartRoomLoadout(
-        starting_beam=SuitUpgrade.Ice_Beam, loadout=[SuitUpgrade.Morph_Ball],
-        item_rules=[
-            {
-                "Tallon Overworld: Overgrown Cavern": [SuitUpgrade.Missile_Launcher]
+    RoomName.Transport_to_Chozo_Ruins_East.value: StartRoomData(
+        area=MetroidPrimeArea.Tallon_Overworld,
+        loadouts=[StartRoomLoadout(
+            starting_beam=SuitUpgrade.Ice_Beam, loadout=[SuitUpgrade.Morph_Ball],
+            item_rules=[
+                {
+                    "Tallon Overworld: Overgrown Cavern": [SuitUpgrade.Missile_Launcher]
+                }
+            ],
+
+        )],
+        allowed_elevators={
+            MetroidPrimeArea.Tallon_Overworld.value: {
+                RoomName.Transport_to_Chozo_Ruins_West.value: [RoomName.Transport_to_Magmoor_Caverns_North.value, RoomName.Transport_to_Magmoor_Caverns_West.value],
+                RoomName.Transport_to_Magmoor_Caverns_East.value: [RoomName.Transport_to_Tallon_Overworld_North.value, RoomName.Transport_to_Magmoor_Caverns_West.value, RoomName.Transport_to_Magmoor_Caverns_North.value],
             }
-        ]
-    )]),
+        }
+    ),
     RoomName.Quarantine_Monitor.value: StartRoomData(area=MetroidPrimeArea.Phendrana_Drifts, loadouts=[StartRoomLoadout(
         starting_beam=SuitUpgrade.Wave_Beam,
         loadout=[SuitUpgrade.Thermal_Visor],

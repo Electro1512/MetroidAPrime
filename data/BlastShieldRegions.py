@@ -34,7 +34,7 @@ def __get_chozo_region():
                     RoomName.Transport_to_Tallon_Overworld_North: RoomName.Ruins_Entrance,
                     RoomName.Ruins_Entrance: RoomName.Main_Plaza
                 },
-                invalid_start_rooms=[RoomName.Warrior_Shrine]
+                invalid_start_rooms=[RoomName.Warrior_Shrine, RoomName.Transport_to_Chozo_Ruins_East, RoomName.Arbor_Chamber]
             ),
             BlastShieldRegion(
                 name=RoomName.Ruined_Shrine,
@@ -180,21 +180,22 @@ def __get_tallon_region():
                 doors={
                     RoomName.Landing_Site: RoomName.Canyon_Cavern
                 },
-                invalid_start_rooms=[RoomName.Arbor_Chamber]
+                invalid_start_rooms=[RoomName.Arbor_Chamber, RoomName.Transport_to_Chozo_Ruins_East]
             ),
             BlastShieldRegion(
                 name=RoomName.Temple_Hall,
                 doors={
                     RoomName.Landing_Site: RoomName.Temple_Hall
                 },
-                invalid_start_rooms=[RoomName.Arbor_Chamber]
+                invalid_start_rooms=[RoomName.Arbor_Chamber, RoomName.Transport_to_Chozo_Ruins_East]
             ),
             BlastShieldRegion(
                 name=RoomName.Waterfall_Cavern,
                 can_be_locked=True,
                 doors={
                     RoomName.Landing_Site: RoomName.Waterfall_Cavern
-                }
+                },
+                invalid_start_rooms=[RoomName.Transport_to_Chozo_Ruins_East]
             ),
             BlastShieldRegion(
                 name=RoomName.Transport_Tunnel_B,
@@ -203,7 +204,7 @@ def __get_tallon_region():
                     RoomName.Tallon_Canyon: RoomName.Root_Tunnel,
                     RoomName.Root_Cave: RoomName.Transport_Tunnel_B,
                 },
-                invalid_start_rooms=[RoomName.Warrior_Shrine, RoomName.Arbor_Chamber]
+                invalid_start_rooms=[RoomName.Warrior_Shrine, RoomName.Arbor_Chamber, RoomName.Transport_to_Chozo_Ruins_East]
             ),
             BlastShieldRegion(
                 name=RoomName.Transport_Tunnel_D,
