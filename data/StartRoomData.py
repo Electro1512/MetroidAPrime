@@ -136,10 +136,10 @@ all_start_rooms: Dict[str, StartRoomData] = {
     RoomName.Arbor_Chamber.value: StartRoomData(
         area=MetroidPrimeArea.Tallon_Overworld,
         loadouts=[StartRoomLoadout([SuitUpgrade.Missile_Launcher])],
-        denied_elevators={
+        allowed_elevators={
             MetroidPrimeArea.Tallon_Overworld.value: {
-                RoomName.Transport_to_Chozo_Ruins_West.value: ["Phendrana Drifts: " + RoomName.Transport_to_Magmoor_Caverns_South.value, "Phazon Mines: " + RoomName.Transport_to_Magmoor_Caverns_South.value],
-                RoomName.Transport_to_Magmoor_Caverns_East.value: ["Phendrana Drifts: " + RoomName.Transport_to_Magmoor_Caverns_South.value, "Phazon Mines: " + RoomName.Transport_to_Magmoor_Caverns_South.value],
+                RoomName.Transport_to_Chozo_Ruins_West.value: [RoomName.Transport_to_Magmoor_Caverns_North.value, "Phendrana Drifts: " + RoomName.Transport_to_Magmoor_Caverns_South.value, RoomName.Transport_to_Magmoor_Caverns_West.value],
+                RoomName.Transport_to_Magmoor_Caverns_East.value: [RoomName.Transport_to_Tallon_Overworld_North.value, "Phendrana Drifts: " + RoomName.Transport_to_Magmoor_Caverns_South.value, RoomName.Transport_to_Magmoor_Caverns_West.value],
             }
         }
     ),

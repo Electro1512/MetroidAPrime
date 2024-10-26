@@ -171,20 +171,23 @@ def __get_tallon_region():
                 name=RoomName.Alcove,
                 doors={
                     RoomName.Landing_Site: RoomName.Alcove,
-                }
+                },
+                invalid_start_rooms=[RoomName.Arbor_Chamber]
             ),
             BlastShieldRegion(
                 name=RoomName.Canyon_Cavern,
                 can_be_locked=True,
                 doors={
                     RoomName.Landing_Site: RoomName.Canyon_Cavern
-                }
+                },
+                invalid_start_rooms=[RoomName.Arbor_Chamber]
             ),
             BlastShieldRegion(
                 name=RoomName.Temple_Hall,
                 doors={
                     RoomName.Landing_Site: RoomName.Temple_Hall
-                }
+                },
+                invalid_start_rooms=[RoomName.Arbor_Chamber]
             ),
             BlastShieldRegion(
                 name=RoomName.Waterfall_Cavern,
@@ -200,7 +203,7 @@ def __get_tallon_region():
                     RoomName.Tallon_Canyon: RoomName.Root_Tunnel,
                     RoomName.Root_Cave: RoomName.Transport_Tunnel_B,
                 },
-                invalid_start_rooms=[RoomName.Warrior_Shrine]
+                invalid_start_rooms=[RoomName.Warrior_Shrine, RoomName.Arbor_Chamber]
             ),
             BlastShieldRegion(
                 name=RoomName.Transport_Tunnel_D,
