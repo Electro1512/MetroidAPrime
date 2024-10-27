@@ -179,7 +179,6 @@ all_start_rooms: Dict[str, StartRoomData] = {
         area=MetroidPrimeArea.Chozo_Ruins,
         loadouts=[
             StartRoomLoadout([SuitUpgrade.Morph_Ball, SuitUpgrade.Missile_Launcher, SuitUpgrade.Morph_Ball_Bomb]),
-            StartRoomLoadout([SuitUpgrade.Morph_Ball, SuitUpgrade.Missile_Launcher, SuitUpgrade.Main_Power_Bomb])
         ],
         difficulty=StartRoomDifficulty.Buckle_Up
     ),

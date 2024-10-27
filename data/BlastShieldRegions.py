@@ -41,7 +41,7 @@ def __get_chozo_region():
                 doors={
                     RoomName.Main_Plaza: RoomName.Ruined_Shrine_Access,
                 },
-                invalid_start_rooms=[RoomName.Arboretum, RoomName.Save_Station_1, RoomName.Save_Station_2, RoomName.Burn_Dome, RoomName.Ruined_Fountain, RoomName.Tower_Chamber]
+                invalid_start_rooms=[RoomName.Arboretum, RoomName.Sunchamber_Lobby, RoomName.Save_Station_1, RoomName.Save_Station_2, RoomName.Burn_Dome, RoomName.Ruined_Fountain, RoomName.Tower_Chamber]
             ),
             BlastShieldRegion(
                 name=RoomName.Tower_of_Light,
@@ -56,7 +56,7 @@ def __get_chozo_region():
                 doors={
                     RoomName.Main_Plaza: RoomName.Nursery_Access,
                 },
-                invalid_start_rooms=[RoomName.Arboretum, RoomName.Save_Station_1, RoomName.Save_Station_2, RoomName.Burn_Dome, RoomName.Ruined_Fountain, RoomName.Tower_Chamber]
+                invalid_start_rooms=[RoomName.Arboretum, RoomName.Sunchamber_Lobby, RoomName.Save_Station_1, RoomName.Save_Station_2, RoomName.Burn_Dome, RoomName.Ruined_Fountain, RoomName.Tower_Chamber]
             ),
             BlastShieldRegion(
                 name=RoomName.Hive_Totem,
@@ -91,7 +91,7 @@ def __get_chozo_region():
                     RoomName.Ruined_Fountain: RoomName.Arboretum_Access,
                     RoomName.Arboretum_Access: RoomName.Arboretum,
                 },
-                invalid_start_rooms=[RoomName.Arboretum, RoomName.Save_Station_1, RoomName.Save_Station_2, RoomName.Burn_Dome, RoomName.Ruined_Fountain]
+                invalid_start_rooms=[RoomName.Arboretum, RoomName.Sunchamber_Lobby, RoomName.Save_Station_1, RoomName.Save_Station_2, RoomName.Burn_Dome, RoomName.Ruined_Fountain]
             ),
             BlastShieldRegion(
                 name=RoomName.Arboretum,
@@ -99,7 +99,7 @@ def __get_chozo_region():
                     RoomName.Arboretum: RoomName.Sunchamber_Lobby,
                     RoomName.Arboretum: RoomName.Gathering_Hall_Access,
                 },
-                invalid_start_rooms=[RoomName.Arboretum, RoomName.Save_Station_1, RoomName.Save_Station_2, RoomName.Burn_Dome, RoomName.Ruined_Fountain]
+                invalid_start_rooms=[RoomName.Arboretum, RoomName.Sunchamber_Lobby, RoomName.Save_Station_1, RoomName.Save_Station_2, RoomName.Burn_Dome, RoomName.Ruined_Fountain]
             ),
             BlastShieldRegion(
                 name=RoomName.Watery_Hall,
@@ -107,7 +107,7 @@ def __get_chozo_region():
                     RoomName.Gathering_Hall: RoomName.Watery_Hall_Access,
                     RoomName.Watery_Hall: RoomName.Dynamo_Access
                 },
-                invalid_start_rooms=[RoomName.Arboretum, RoomName.Save_Station_1, RoomName.Save_Station_2, RoomName.Burn_Dome, RoomName.Ruined_Fountain]
+                invalid_start_rooms=[RoomName.Arboretum, RoomName.Sunchamber_Lobby, RoomName.Save_Station_1, RoomName.Save_Station_2, RoomName.Burn_Dome, RoomName.Ruined_Fountain]
             ),
             BlastShieldRegion(
                 name=RoomName.Energy_Core,
@@ -116,7 +116,7 @@ def __get_chozo_region():
                     RoomName.Gathering_Hall: RoomName.East_Atrium,
                     RoomName.Energy_Core_Access: RoomName.Energy_Core,
                 },
-                invalid_start_rooms=[RoomName.Arboretum, RoomName.Save_Station_1, RoomName.Save_Station_2, RoomName.Burn_Dome, RoomName.Ruined_Fountain]
+                invalid_start_rooms=[RoomName.Arboretum, RoomName.Sunchamber_Lobby, RoomName.Save_Station_1, RoomName.Save_Station_2, RoomName.Burn_Dome, RoomName.Ruined_Fountain]
             ),
             BlastShieldRegion(
                 name=RoomName.Burn_Dome,
