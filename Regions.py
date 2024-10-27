@@ -3,7 +3,7 @@ import typing
 from .Logic import can_ice_beam, can_missile, can_phazon, can_plasma_beam, can_power_beam, can_scan, can_super_missile, can_thermal, can_wave_beam, can_xray, has_energy_tanks, has_required_artifact_count
 from .LogicCombat import can_combat_prime, can_combat_ridley
 from .data.RoomNames import RoomName
-from BaseClasses import CollectionState, Region
+from BaseClasses import CollectionState, LocationProgressType, Region
 if typing.TYPE_CHECKING:
     from . import MetroidPrimeWorld
 
@@ -61,3 +61,6 @@ def create_regions(world: 'MetroidPrimeWorld', final_boss_selection: int):
         artifact_temple.connect(mission_complete, "Mission Complete", lambda state: (
             can_missile(state, world.player) and
             has_required_artifact_count(state, world.player)))
+
+    # loc = world.get_location('Phazon Mines: Elite Quarters')
+    # loc.progress_type = LocationProgressType.PRIORITY

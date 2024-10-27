@@ -223,7 +223,7 @@ class TestMixItUpBlastShieldRando(MetroidPrimeTestBase):
         world: 'MetroidPrimeWorld' = self.world
         for area, mapping in world.blast_shield_mapping.items():
             blast_shield_count = 0
-            total_available_blast_shield_options = len(get_valid_blast_shield_regions_by_area(MetroidPrimeArea(area)).regions)
+            total_available_blast_shield_options = len(get_valid_blast_shield_regions_by_area(self.world, MetroidPrimeArea(area)))
             for room in mapping.type_mapping.values():
                 blast_shield_count += len(room.values())
                 for shieldType in room.values():
@@ -246,8 +246,8 @@ class TestBlastShieldRegionMapping(MetroidPrimeTestBase):
     def test_each_room_is_paired_to_a_valid_room(self):
         invalid_rooms = []
         for area in MetroidPrimeArea:
-            blast_shield_mapping = get_valid_blast_shield_regions_by_area(area)
-            for region in blast_shield_mapping.regions:
+            blast_shield_mapping = get_valid_blast_shield_regions_by_area(self.world, area)
+            for region in blast_shield_mapping:
                 for source_room, target_room in region.doors.items():
                     door_data = get_door_data_by_room_names(source_room, target_room, area, self.world)
                     if not door_data:

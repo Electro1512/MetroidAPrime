@@ -2,10 +2,12 @@ import copy
 from dataclasses import dataclass
 from enum import Enum
 
+from .data.RoomNames import RoomName
+
 from .Items import SuitUpgrade
 
 from .data.AreaNames import MetroidPrimeArea
-from typing import TYPE_CHECKING, Dict, List
+from typing import TYPE_CHECKING, Callable, Dict, List
 
 if TYPE_CHECKING:
     from . import MetroidPrimeWorld
@@ -60,12 +62,24 @@ class AreaDoorTypeMapping:
 def generate_random_door_color_mapping(world: 'MetroidPrimeWorld', area: MetroidPrimeArea) -> Dict[str, str]:
     shuffled_lock_types = get_available_lock_types(world, area)
 
+    def is_valid_mapping(mapping: Dict[str, str]) -> bool:
+        return all(original != new for original, new in mapping.items())
+
+    # Can't start w/ Ice beam when fighting Thardus
+    def is_valid_mapping_for_quarantine_monitor(mapping: Dict[str, str]) -> bool:
+        return is_valid_mapping(mapping) and mapping[DoorLockType.Wave.value] != DoorLockType.Ice.value
+
+    validate_func: Callable[[Dict[str, str]], bool] = lambda mapping: is_valid_mapping(mapping)
+
+    if world.starting_room_data and world.starting_room_data.name == RoomName.Quarantine_Monitor.value:
+        validate_func = is_valid_mapping_for_quarantine_monitor
+
     while True:
         world.random.shuffle(shuffled_lock_types)
         type_mapping = {original.value: new.value for original, new in zip(COLOR_LOCK_TYPES, shuffled_lock_types)}
 
         # Verify that no color matches its original color
-        if all(original != new for original, new in type_mapping.items()):
+        if validate_func(type_mapping):
             break
 
     return type_mapping

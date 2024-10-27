@@ -36,7 +36,7 @@ def can_combat_mines(state: CollectionState, player: int) -> bool:
 
 
 def can_combat_labs(state: CollectionState, player: int) -> bool:
-    return (_get_options(state, player).starting_room_name.value in [RoomName.East_Tower.value, RoomName.Save_Station_B.value]
+    return (_get_options(state, player).starting_room_name.value in [RoomName.East_Tower.value, RoomName.Save_Station_B.value, RoomName.Quarantine_Monitor.value]
             or _can_combat_generic(state, player, 1, 0, False))
 
 

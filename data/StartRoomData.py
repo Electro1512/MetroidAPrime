@@ -215,7 +215,7 @@ def _has_no_pre_scan_elevators_with_shuffle_scan(world: 'MetroidPrimeWorld') -> 
 
 
 def _has_options_that_allow_more_landing_site_checks(world: 'MetroidPrimeWorld') -> bool:
-    return world.options.blast_shield_randomization != world.options.blast_shield_randomization.option_none or world.options.trick_difficulty.value != -1
+    return cast(str, world.options.blast_shield_randomization.value) != world.options.blast_shield_randomization.option_none or world.options.trick_difficulty.value != -1
 
 
 def init_starting_room_data(world: 'MetroidPrimeWorld'):

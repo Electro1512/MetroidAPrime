@@ -320,7 +320,8 @@ def __get_phendrana_region():
                 name=RoomName.Transport_to_Magmoor_Caverns_South,
                 doors={
                     RoomName.Transport_to_Magmoor_Caverns_South: RoomName.Transport_Access,
-                }
+                },
+                invalid_start_rooms=[RoomName.Quarantine_Monitor]
             ),
             BlastShieldRegion(
                 name=RoomName.Frost_Cave,
@@ -329,7 +330,8 @@ def __get_phendrana_region():
                     RoomName.Frozen_Pike: RoomName.Frost_Cave_Access,
                     RoomName.Frost_Cave: RoomName.Upper_Edge_Tunnel,
                     RoomName.Hunter_Cave: RoomName.Lower_Edge_Tunnel
-                }
+                },
+                invalid_start_rooms=[RoomName.Quarantine_Monitor]
             ),
 
         ]
