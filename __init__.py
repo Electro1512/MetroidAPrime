@@ -7,7 +7,7 @@ from .data.PhendranaDrifts import PhendranaDriftsAreaData
 from .data.MagmoorCaverns import MagmoorCavernsAreaData
 from .data.ChozoRuins import ChozoRuinsAreaData
 from .data.TallonOverworld import TallonOverworldAreaData
-from .BlastShieldRando import AreaBlastShieldMapping, apply_blast_shield_mapping, get_world_blast_shield_mapping
+from .BlastShieldRando import WorldBlastShieldMapping, apply_blast_shield_mapping, get_world_blast_shield_mapping
 from .data.RoomData import AreaData
 from .data.AreaNames import MetroidPrimeArea
 from .DoorRando import WorldDoorColorMapping, get_world_door_mapping, remap_doors_to_power_beam_if_necessary
@@ -100,7 +100,7 @@ class MetroidPrimeWorld(World):
     prefilled_item_map: Dict[str, str] = {}  # Dict of location name to item name
     elevator_mapping: Dict[str, Dict[str, str]] = default_elevator_mappings
     door_color_mapping: Optional[WorldDoorColorMapping] = None
-    blast_shield_mapping: Optional[Dict[str, AreaBlastShieldMapping]] = None
+    blast_shield_mapping: Optional[WorldBlastShieldMapping] = None
     game_region_data: Dict[MetroidPrimeArea, AreaData]
     has_generated_bomb_doors: bool = False
 
@@ -150,7 +150,7 @@ class MetroidPrimeWorld(World):
 
         # Randomize Door Colors
         if self.options.door_color_mapping:
-            self.door_color_mapping = cast(WorldDoorColorMapping, WorldDoorColorMapping.from_option_value(self.options.door_color_mapping.value))
+            self.door_color_mapping = WorldDoorColorMapping.from_option_value(self.options.door_color_mapping.value)
         elif self.options.door_color_randomization != "none":
             self.door_color_mapping = get_world_door_mapping(self)
             self.options.door_color_mapping.value = self.door_color_mapping.to_option_value()
@@ -166,10 +166,10 @@ class MetroidPrimeWorld(World):
         # Randomize Blast Shields
         if self.options.blast_shield_mapping:
           # TODO: Make these conversions happen at a parent object so you don't need to iterate
-            self.blast_shield_mapping = {area: AreaBlastShieldMapping.from_dict(mapping) for area, mapping in self.options.blast_shield_mapping.value.items()}
+            self.blast_shield_mapping = WorldBlastShieldMapping.from_option_value(self.options.blast_shield_mapping.value)
         elif cast(str, self.options.blast_shield_randomization.value) != BlastShieldRandomization.option_none or self.options.locked_door_count > 0:
             self.blast_shield_mapping = get_world_blast_shield_mapping(self)
-            self.options.blast_shield_mapping.value = {area: mapping.to_dict() for area, mapping in self.blast_shield_mapping.items()}
+            self.options.blast_shield_mapping.value = self.blast_shield_mapping.to_option_value()
 
         if self.blast_shield_mapping:
             apply_blast_shield_mapping(self)

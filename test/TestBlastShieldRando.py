@@ -235,7 +235,7 @@ class TestMixItUpBlastShieldRando(MetroidPrimeTestBase):
         distribute_items_restrictive(self.multiworld)
         config = make_config(self.world)
         level_key = config["levelData"]["Chozo Ruins"]["rooms"]
-        self.assertEqual(level_key[RoomName.Dynamo_Access.value]["doors"]["0"]["blastShieldType"], BlastShieldType._None.value)
+        self.assertEqual(level_key[RoomName.Dynamo_Access.value]["doors"]["0"]["blastShieldType"], BlastShieldType.No_Blast_Shield.value)
 
 
 class TestBlastShieldRegionMapping(MetroidPrimeTestBase):

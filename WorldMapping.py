@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Any, Dict, TypeVar, Generic, TypedDict
+from typing import Any, Dict, Type, TypeVar, Generic, TypedDict
 
 T = TypeVar('T')
 
@@ -33,5 +33,5 @@ class WorldMapping(Dict[str, AreaMapping[T]], Generic[T]):
         return {area: mapping.to_dict() for area, mapping in self.items()}
 
     @classmethod
-    def from_option_value(cls, data: Dict[str, Any]) -> 'WorldMapping[T]':
-        return WorldMapping({area: AreaMapping[T].from_dict(mapping) for area, mapping in data.items()})
+    def from_option_value_generic(cls, data: Dict[str, Any], area_cls: Type[AreaMapping[T]]) -> 'WorldMapping[T]':
+        return WorldMapping({area: area_cls.from_dict(mapping) for area, mapping in data.items()})

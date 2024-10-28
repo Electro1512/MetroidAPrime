@@ -51,7 +51,9 @@ class AreaDoorColorMapping(AreaMapping[DoorColorMapping]):
 
 
 class WorldDoorColorMapping(WorldMapping[DoorColorMapping]):
-    pass
+    @classmethod
+    def from_option_value(cls, data: Dict[str, Dict[str, str]]) -> 'WorldDoorColorMapping':
+        return WorldDoorColorMapping(super().from_option_value_generic(data, AreaDoorColorMapping))
 
 
 def generate_random_door_color_mapping(world: 'MetroidPrimeWorld', area: MetroidPrimeArea) -> DoorColorMapping:

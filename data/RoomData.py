@@ -190,10 +190,10 @@ class AreaData:
                     paired_door = target_room_data.get_matching_door(door_data, world)
                     # TODO: Handle pairing door mappings in the apply shield logic, also handle locked doors there
                     shield_applied = False
-                    if paired_door is not None and paired_door.blast_shield is not None and paired_door.blast_shield != BlastShieldType._None:
+                    if paired_door is not None and paired_door.blast_shield is not None and paired_door.blast_shield != BlastShieldType.No_Blast_Shield:
                         door_data.blast_shield = paired_door.blast_shield
                         shield_applied = True
-                    elif door_data.blast_shield is not None and paired_door.blast_shield != BlastShieldType._None:
+                    elif door_data.blast_shield is not None and paired_door.blast_shield != BlastShieldType.No_Blast_Shield:
                         paired_door.blast_shield = door_data.blast_shield
                         shield_applied = True
 
@@ -212,7 +212,9 @@ class AreaData:
                     return rule_func
 
                 def get_connection_name(door_data: DoorData, target_room_name: str = name, target_destination: RoomName = destination) -> str:
-                    blast_shield_text = "" if door_data.blast_shield is None or door_data.blast_shield == BlastShieldType._None else f" {door_data.blast_shield.value}"
+                    if door_data.blast_shield:
+                      pass
+                    blast_shield_text = "" if door_data.blast_shield is None or door_data.blast_shield == BlastShieldType.No_Blast_Shield else f" {door_data.blast_shield.value}"
                     lock = door_data.lock or door_data.defaultLock
                     return lock.value + blast_shield_text + f" Door from {target_room_name} to {target_destination.value}"
 
@@ -296,7 +298,7 @@ def _can_open_door(state: CollectionState, player: int, door_data: DoorData) -> 
             can_blast_shield = can_beam_combo(state, player, SuitUpgrade.Plasma_Beam)
         elif door_data.blast_shield == BlastShieldType.Disabled:
             can_blast_shield = False
-        elif door_data.blast_shield == BlastShieldType._None:
+        elif door_data.blast_shield == BlastShieldType.No_Blast_Shield:
             can_blast_shield = True
     else:
         can_blast_shield = True
