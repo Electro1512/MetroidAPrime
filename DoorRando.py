@@ -7,7 +7,7 @@ from .data.RoomNames import RoomName
 from .Items import SuitUpgrade
 
 from .data.AreaNames import MetroidPrimeArea
-from typing import TYPE_CHECKING, Callable, Dict, List
+from typing import TYPE_CHECKING, Callable, Dict, List, TypedDict
 
 if TYPE_CHECKING:
     from . import MetroidPrimeWorld
@@ -32,7 +32,6 @@ COLOR_LOCK_TYPES = [
 ]
 
 BEAM_TO_LOCK_MAPPING = {
-    # TODO: Standardize enums on snake case or CapitalCase
     SuitUpgrade.Power_Beam: DoorLockType.Power_Beam,
     SuitUpgrade.Wave_Beam: DoorLockType.Wave,
     SuitUpgrade.Ice_Beam: DoorLockType.Ice,
@@ -40,23 +39,37 @@ BEAM_TO_LOCK_MAPPING = {
 }
 
 
+class AreaDoorTypeMappingDict(TypedDict):
+    area: str
+    type_mapping: Dict[str, str]
+
+
 @dataclass
 class AreaDoorTypeMapping:
     area: str
     type_mapping: Dict[str, str]
 
-    def to_dict(self) -> Dict[str, Dict[str, str]]:
+    def to_dict(self) -> AreaDoorTypeMappingDict:
         return {
             "area": self.area,
             "type_mapping": self.type_mapping
         }
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Dict[str, str]]) -> 'AreaDoorTypeMapping':
+    def from_dict(cls, data: AreaDoorTypeMappingDict) -> 'AreaDoorTypeMapping':
         return cls(
             area=data['area'],
             type_mapping=data['type_mapping']
         )
+
+
+class WorldDoorMapping(Dict[str, AreaDoorTypeMapping]):
+    def to_option_value(self) -> Dict[str, AreaDoorTypeMappingDict]:
+        return {area: mapping.to_dict() for area, mapping in self.items()}
+
+    @classmethod
+    def from_option_value(cls, data: Dict[str, AreaDoorTypeMappingDict]) -> 'WorldDoorMapping':
+        return WorldDoorMapping({area: AreaDoorTypeMapping.from_dict(mapping) for area, mapping in data.items()})
 
 
 def generate_random_door_color_mapping(world: 'MetroidPrimeWorld', area: MetroidPrimeArea) -> Dict[str, str]:
@@ -85,8 +98,10 @@ def generate_random_door_color_mapping(world: 'MetroidPrimeWorld', area: Metroid
     return type_mapping
 
 
-def get_world_door_mapping(world: 'MetroidPrimeWorld') -> Dict[str, AreaDoorTypeMapping]:
+def get_world_door_mapping(world: 'MetroidPrimeWorld') -> WorldDoorMapping:
     door_type_mapping: Dict[str, AreaDoorTypeMapping] = {}
+
+    assert world.starting_room_data is not None
 
     if world.options.door_color_randomization == 'global':
         global_mapping = generate_random_door_color_mapping(world, world.starting_room_data.area)
@@ -105,7 +120,7 @@ def get_world_door_mapping(world: 'MetroidPrimeWorld') -> Dict[str, AreaDoorType
         replacement_color = world.random.choice(COLOR_LOCK_TYPES)
         door_type_mapping[bomb_door_area.value].type_mapping[replacement_color.value] = DoorLockType.Bomb.value
 
-    return door_type_mapping
+    return WorldDoorMapping(door_type_mapping)
 
 
 def get_available_lock_types(world: 'MetroidPrimeWorld', area: MetroidPrimeArea) -> List[DoorLockType]:
@@ -119,13 +134,14 @@ def get_available_lock_types(world: 'MetroidPrimeWorld', area: MetroidPrimeArea)
 # This needs to take place after the starting beam is initialized
 def remap_doors_to_power_beam_if_necessary(world: 'MetroidPrimeWorld'):
     if world.options.include_power_beam_doors and world.door_color_mapping:
+        assert world.starting_room_data is not None and world.starting_room_data.selected_loadout is not None
         starting_beam = world.starting_room_data.selected_loadout.starting_beam
-        if starting_beam is not None and starting_beam is not SuitUpgrade.Power_Beam:
+
+        if starting_beam is not SuitUpgrade.Power_Beam:
             for area, mapping in world.door_color_mapping.items():
                 if area == world.starting_room_data.area.value and world.starting_room_data.no_power_beam_door_on_starting_level:
                     continue
                 for original, new in mapping.type_mapping.items():
                     if new == BEAM_TO_LOCK_MAPPING[starting_beam].value:
                         world.door_color_mapping[area].type_mapping[original] = DoorLockType.Power_Beam.value
-                        # TODO: Make these conversions happen at a parent object so you don't need to iterate
-            world.options.door_color_mapping.value = {area: mapping.to_dict() for area, mapping in world.door_color_mapping.items()}
+            world.options.door_color_mapping.value = world.door_color_mapping.to_option_value()

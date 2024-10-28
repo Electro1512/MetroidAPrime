@@ -10,9 +10,9 @@ from .data.TallonOverworld import TallonOverworldAreaData
 from .BlastShieldRando import AreaBlastShieldMapping, apply_blast_shield_mapping, get_world_blast_shield_mapping
 from .data.RoomData import AreaData
 from .data.AreaNames import MetroidPrimeArea
-from .DoorRando import AreaDoorTypeMapping, get_world_door_mapping, remap_doors_to_power_beam_if_necessary
+from .DoorRando import AreaDoorTypeMapping, WorldDoorMapping, get_world_door_mapping, remap_doors_to_power_beam_if_necessary
 
-from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess
+from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess  # type: ignore
 import settings
 from worlds.AutoWorld import World, WebWorld
 from .data.Transports import ELEVATOR_USEFUL_NAMES, default_elevator_mappings, get_random_elevator_mapping
@@ -26,11 +26,15 @@ from .Container import MetroidPrimeContainer
 from BaseClasses import Item, MultiWorld, Tutorial, ItemClassification
 import typing
 import os
-from typing import Any, Dict, List, Optional, TextIO
+from typing import Any, Dict, List, Optional, TextIO, cast
 from logging import info
 
 
-def run_client(url: Optional[str] = None):
+class MultiworldWithPassthrough(MultiWorld):
+    re_gen_passthrough: Dict[str, Dict[str, Any]] = {}
+
+
+def run_client(*args: Any):
     from .MetroidPrimeClient import launch
     launch_subprocess(launch, name="MetroidPrimeClient")
 
@@ -84,18 +88,18 @@ class MetroidPrimeWorld(World):
     web = MetroidPrimeWeb()
     required_client_version = (0, 5, 0)
     options_dataclass = MetroidPrimeOptions
-    options: MetroidPrimeOptions
+    options: MetroidPrimeOptions  # type: ignore
     topology_present = True
     item_name_to_id = {name: data.code for name, data in item_table.items()}
     location_name_to_id = every_location
-    settings: MetroidPrimeSettings
+    settings: MetroidPrimeSettings  # type: ignore
     item_name_groups = {
         "Artifacts": set(artifact_table.keys())
     }
     starting_room_data: Optional[StartRoomData] = None
     prefilled_item_map: Dict[str, str] = {}  # Dict of location name to item name
     elevator_mapping: Dict[str, Dict[str, str]] = default_elevator_mappings
-    door_color_mapping: Optional[Dict[MetroidPrimeArea, AreaDoorTypeMapping]] = None
+    door_color_mapping: Optional[WorldDoorMapping] = None
     blast_shield_mapping: Optional[Dict[str, AreaBlastShieldMapping]] = None
     game_region_data: Dict[MetroidPrimeArea, AreaData]
     has_generated_bomb_doors: bool = False
@@ -115,9 +119,10 @@ class MetroidPrimeWorld(World):
 
     def init_tracker_data(self):
         # Universal tracker stuff, shouldn't do anything in standard gen
-        if self.game in self.multiworld.re_gen_passthrough:
+        tracker_multiworld = cast(MultiworldWithPassthrough, self.multiworld)
+        if self.game in tracker_multiworld.re_gen_passthrough:
             info("Setting data for tracker")
-            passthrough = self.multiworld.re_gen_passthrough[self.game]
+            passthrough = tracker_multiworld.re_gen_passthrough[self.game]
             # Need to re initialize the game region data
             self.game_region_data = {
                 MetroidPrimeArea.Tallon_Overworld: TallonOverworldAreaData(),
@@ -145,11 +150,10 @@ class MetroidPrimeWorld(World):
 
         # Randomize Door Colors
         if self.options.door_color_mapping:
-            self.door_color_mapping = {area: AreaDoorTypeMapping.from_dict(mapping) for area, mapping in self.options.door_color_mapping.value.items()}
+            self.door_color_mapping = WorldDoorMapping.from_option_value(self.options.door_color_mapping.value)
         elif self.options.door_color_randomization != "none":
             self.door_color_mapping = get_world_door_mapping(self)
-            # TODO: Make these conversions happen at a parent object so you don't need to iterate
-            self.options.door_color_mapping.value = {area: mapping.to_dict() for area, mapping in self.door_color_mapping.items()}
+            self.options.door_color_mapping.value = self.door_color_mapping.to_option_value()
 
         init_starting_beam(self)
 
@@ -163,7 +167,7 @@ class MetroidPrimeWorld(World):
         if self.options.blast_shield_mapping:
           # TODO: Make these conversions happen at a parent object so you don't need to iterate
             self.blast_shield_mapping = {area: AreaBlastShieldMapping.from_dict(mapping) for area, mapping in self.options.blast_shield_mapping.value.items()}
-        elif self.options.blast_shield_randomization.value != BlastShieldRandomization.option_none or self.options.locked_door_count > 0:
+        elif cast(str, self.options.blast_shield_randomization.value) != BlastShieldRandomization.option_none or self.options.locked_door_count > 0:
             self.blast_shield_mapping = get_world_blast_shield_mapping(self)
             self.options.blast_shield_mapping.value = {area: mapping.to_dict() for area, mapping in self.blast_shield_mapping.items()}
 

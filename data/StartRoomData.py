@@ -58,7 +58,7 @@ all_start_rooms: Dict[str, StartRoomData] = {
             [SuitUpgrade.Missile_Launcher],
         )],
         is_eligible=lambda world: world.options.shuffle_scan_visor.value == False,
-        local_early_items=[SuitUpgrade.Morph_Ball]
+        local_early_items=[SuitUpgrade.Morph_Ball, SuitUpgrade.Scan_Visor]
     ),
     RoomName.Burn_Dome.value: StartRoomData(
         area=MetroidPrimeArea.Chozo_Ruins,
