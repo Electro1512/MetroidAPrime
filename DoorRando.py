@@ -1,13 +1,16 @@
 import copy
-from dataclasses import dataclass
 from enum import Enum
+
+from .WorldMapping import AreaMapping
 
 from .data.RoomNames import RoomName
 
 from .Items import SuitUpgrade
 
 from .data.AreaNames import MetroidPrimeArea
-from typing import TYPE_CHECKING, Callable, Dict, List, TypedDict
+from typing import TYPE_CHECKING, Callable, Dict, List
+
+from worlds.metroidprime.WorldMapping import WorldMapping
 
 if TYPE_CHECKING:
     from . import MetroidPrimeWorld
@@ -39,40 +42,19 @@ BEAM_TO_LOCK_MAPPING = {
 }
 
 
-class AreaDoorTypeMappingDict(TypedDict):
-    area: str
-    type_mapping: Dict[str, str]
+class DoorColorMapping(Dict[str, str]):
+    pass
 
 
-@dataclass
-class AreaDoorTypeMapping:
-    area: str
-    type_mapping: Dict[str, str]
-
-    def to_dict(self) -> AreaDoorTypeMappingDict:
-        return {
-            "area": self.area,
-            "type_mapping": self.type_mapping
-        }
-
-    @classmethod
-    def from_dict(cls, data: AreaDoorTypeMappingDict) -> 'AreaDoorTypeMapping':
-        return cls(
-            area=data['area'],
-            type_mapping=data['type_mapping']
-        )
+class AreaDoorColorMapping(AreaMapping[DoorColorMapping]):
+    pass
 
 
-class WorldDoorMapping(Dict[str, AreaDoorTypeMapping]):
-    def to_option_value(self) -> Dict[str, AreaDoorTypeMappingDict]:
-        return {area: mapping.to_dict() for area, mapping in self.items()}
-
-    @classmethod
-    def from_option_value(cls, data: Dict[str, AreaDoorTypeMappingDict]) -> 'WorldDoorMapping':
-        return WorldDoorMapping({area: AreaDoorTypeMapping.from_dict(mapping) for area, mapping in data.items()})
+class WorldDoorColorMapping(WorldMapping[DoorColorMapping]):
+    pass
 
 
-def generate_random_door_color_mapping(world: 'MetroidPrimeWorld', area: MetroidPrimeArea) -> Dict[str, str]:
+def generate_random_door_color_mapping(world: 'MetroidPrimeWorld', area: MetroidPrimeArea) -> DoorColorMapping:
     shuffled_lock_types = get_available_lock_types(world, area)
 
     def is_valid_mapping(mapping: Dict[str, str]) -> bool:
@@ -89,7 +71,7 @@ def generate_random_door_color_mapping(world: 'MetroidPrimeWorld', area: Metroid
 
     while True:
         world.random.shuffle(shuffled_lock_types)
-        type_mapping = {original.value: new.value for original, new in zip(COLOR_LOCK_TYPES, shuffled_lock_types)}
+        type_mapping = DoorColorMapping({original.value: new.value for original, new in zip(COLOR_LOCK_TYPES, shuffled_lock_types)})
 
         # Verify that no color matches its original color
         if validate_func(type_mapping):
@@ -98,8 +80,8 @@ def generate_random_door_color_mapping(world: 'MetroidPrimeWorld', area: Metroid
     return type_mapping
 
 
-def get_world_door_mapping(world: 'MetroidPrimeWorld') -> WorldDoorMapping:
-    door_type_mapping: Dict[str, AreaDoorTypeMapping] = {}
+def get_world_door_mapping(world: 'MetroidPrimeWorld') -> WorldDoorColorMapping:
+    door_type_mapping: Dict[str, AreaDoorColorMapping] = {}
 
     assert world.starting_room_data is not None
 
@@ -107,12 +89,12 @@ def get_world_door_mapping(world: 'MetroidPrimeWorld') -> WorldDoorMapping:
         global_mapping = generate_random_door_color_mapping(world, world.starting_room_data.area)
 
         for area in MetroidPrimeArea:
-            door_type_mapping[area.value] = AreaDoorTypeMapping(area.value, copy.deepcopy(global_mapping))
+            door_type_mapping[area.value] = AreaDoorColorMapping(area.value, copy.deepcopy(global_mapping))
 
     else:
         for area in MetroidPrimeArea:
             mapping = generate_random_door_color_mapping(world, area)
-            door_type_mapping[area.value] = AreaDoorTypeMapping(area.value, mapping)
+            door_type_mapping[area.value] = AreaDoorColorMapping(area.value, mapping)
 
     # Add Bomb doors to a random area if they are enabled
     if world.options.include_morph_ball_bomb_doors:
@@ -120,7 +102,7 @@ def get_world_door_mapping(world: 'MetroidPrimeWorld') -> WorldDoorMapping:
         replacement_color = world.random.choice(COLOR_LOCK_TYPES)
         door_type_mapping[bomb_door_area.value].type_mapping[replacement_color.value] = DoorLockType.Bomb.value
 
-    return WorldDoorMapping(door_type_mapping)
+    return WorldDoorColorMapping(door_type_mapping)
 
 
 def get_available_lock_types(world: 'MetroidPrimeWorld', area: MetroidPrimeArea) -> List[DoorLockType]:

@@ -232,9 +232,8 @@ class TestMixItUpBlastShieldRando(MetroidPrimeTestBase):
             self.assertEqual(blast_shield_count, math.ceil(total_available_blast_shield_options * world.options.blast_shield_frequency * .1), f"Invalid number of blast shields in {area}, {blast_shield_count} found")
 
     def test_vanilla_blast_shields_are_not_included(self):
-        world: 'MetroidPrimeWorld' = self.world
         distribute_items_restrictive(self.multiworld)
-        config = make_config(world)
+        config = make_config(self.world)
         level_key = config["levelData"]["Chozo Ruins"]["rooms"]
         self.assertEqual(level_key[RoomName.Dynamo_Access.value]["doors"]["0"]["blastShieldType"], BlastShieldType._None.value)
 
