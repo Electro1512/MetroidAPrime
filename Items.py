@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Dict, List, TYPE_CHECKING
+from typing import Dict, List, TYPE_CHECKING, Optional
 from BaseClasses import Item, ItemClassification
 if TYPE_CHECKING:
     from . import MetroidPrimeWorld
@@ -120,7 +120,7 @@ def get_vanilla_item_for_progressive_upgrade(upgrade: ProgressiveUpgrade, count:
         return PROGRESSIVE_ITEM_MAPPING[upgrade][index]
 
 
-def get_progressive_upgrade_for_item(item: SuitUpgrade) -> ProgressiveUpgrade:
+def get_progressive_upgrade_for_item(item: SuitUpgrade) -> Optional[ProgressiveUpgrade]:
     if item == SuitUpgrade.Charge_Beam:
         return ProgressiveUpgrade.Progressive_Power_Beam  # Using this just so consumers know there is a progressive upgrade associated with this
     for upgrade, items in PROGRESSIVE_ITEM_MAPPING.items():

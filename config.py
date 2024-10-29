@@ -135,9 +135,9 @@ def make_version_specific_changes(config_json: Dict[str, Any], version: str) -> 
     return config_json
 
 
-def make_config(world: 'MetroidPrimeWorld'):
+def make_config(world: 'MetroidPrimeWorld') -> Dict[str, Any]:
     options: MetroidPrimeOptions = world.options
-    config = {
+    config: Dict[str, Any] = {
         "$schema": "https://randovania.org/randomprime/randomprime.schema.json",
         "inputIso": "prime.iso",
         "outputIso": "prime_out.iso",
