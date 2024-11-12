@@ -49,9 +49,10 @@ class StartRoomData:
 
 
 all_start_rooms: Dict[str, StartRoomData] = {
-    RoomName.Landing_Site.value: StartRoomData(difficulty=StartRoomDifficulty.Normal, area=MetroidPrimeArea.Tallon_Overworld, loadouts=[StartRoomLoadout(item_rules=[
-        {"Chozo Ruins: Hive Totem": [SuitUpgrade.Missile_Launcher]}
-    ], starting_beam=SuitUpgrade.Power_Beam)]),
+    RoomName.Landing_Site.value: StartRoomData(difficulty=StartRoomDifficulty.Normal, area=MetroidPrimeArea.Tallon_Overworld, loadouts=[
+        StartRoomLoadout(item_rules=[], starting_beam=SuitUpgrade.Power_Beam)],
+        local_early_items=[SuitUpgrade.Missile_Launcher]
+    ),
     RoomName.Arboretum.value: StartRoomData(
         area=MetroidPrimeArea.Chozo_Ruins,
         loadouts=[StartRoomLoadout(
@@ -214,7 +215,7 @@ def _has_no_pre_scan_elevators_with_shuffle_scan(world: 'MetroidPrimeWorld') -> 
 
 
 def _has_options_that_allow_more_landing_site_checks(world: 'MetroidPrimeWorld') -> bool:
-    return cast(str, world.options.blast_shield_randomization.value) != world.options.blast_shield_randomization.option_none or world.options.trick_difficulty.value != -1
+    return (cast(str, world.options.blast_shield_randomization.value) != world.options.blast_shield_randomization.option_none or world.options.trick_difficulty.value != -1) and not world.options.elevator_randomization
 
 
 def init_starting_room_data(world: 'MetroidPrimeWorld'):

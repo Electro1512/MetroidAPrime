@@ -166,7 +166,6 @@ class MetroidPrimeWorld(World):
 
         # Randomize Blast Shields
         if self.options.blast_shield_mapping:
-          # TODO: Make these conversions happen at a parent object so you don't need to iterate
             self.blast_shield_mapping = WorldBlastShieldMapping.from_option_value(self.options.blast_shield_mapping.value)
         elif cast(str, self.options.blast_shield_randomization.value) != BlastShieldRandomization.option_none or self.options.locked_door_count > 0:
             self.blast_shield_mapping = get_world_blast_shield_mapping(self)
@@ -214,8 +213,7 @@ class MetroidPrimeWorld(World):
 
         excluded = self.options.exclude_items
 
-
-# Create initial inventory from yaml and starting room
+        # Create initial inventory from yaml and starting room
         assert self.starting_room_data is not None and self.starting_room_data.selected_loadout is not None
         start_inventory = (
             ALWAYS_START_INVENTORY +
@@ -376,9 +374,7 @@ class MetroidPrimeWorld(World):
                 for source, target in mapping.items():
                     spoiler_handle.write(f'    {ELEVATOR_USEFUL_NAMES[source]} -> {ELEVATOR_USEFUL_NAMES[target]}\n')
 
-        # TODO: go through and replace strings with option_value for consistency
         assert self.door_color_mapping is not None
-        assert self.blast_shield_mapping is not None
         if self.options.door_color_randomization == "regional":
             spoiler_handle.write(f'\n\nDoor Color Mapping({player_name}):\n')
 
@@ -393,6 +389,7 @@ class MetroidPrimeWorld(World):
                 spoiler_handle.write(f'    {door} -> {color}\n')
 
         if cast(str, self.options.blast_shield_randomization.value) != BlastShieldRandomization.option_none or self.options.locked_door_count > 0:
+            assert self.blast_shield_mapping is not None
             spoiler_handle.write(f'\n\nBlast Shield Mapping({player_name}):\n')
             written_mappings: List[List[str]] = []
 
