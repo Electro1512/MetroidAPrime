@@ -15,7 +15,12 @@ if TYPE_CHECKING:
 
 
 def can_exit_ruined_shrine(state: CollectionState, player: int) -> bool:
-    return can_morph_ball(state, player) or can_space_jump(state, player)
+    item1 = state.multiworld.get_location('Chozo Ruins: Ruined Shrine - Plated Beetle', player).item
+    if can_morph_ball(state, player) or can_space_jump(state, player):
+        return True
+    elif (item1 != None and item1.name in ["Morph Ball", "Space Jump Boots"] and item1.player == player):
+        return True
+    return False
 
 
 def can_climb_sun_tower(state: CollectionState, player: int) -> bool:

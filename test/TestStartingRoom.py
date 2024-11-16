@@ -117,5 +117,5 @@ class TestNormalStartingRoomWithBlastShieldRandoMixItUp(MetroidPrimeTestBase):
         "elevator_randomization": True
     }
 
-    def test_starting_room_is_landing_site_when_elevator_rando_is_enabled_and_mix_it_up(self):
-        self.assertTrue(self.world.options.starting_room_name.value == RoomName.Landing_Site.value)
+    def test_starting_room_is_not_landing_site_when_elevator_rando_is_enabled_and_mix_it_up(self):
+        self.assertTrue(self.world.options.starting_room_name.value != RoomName.Landing_Site.value)

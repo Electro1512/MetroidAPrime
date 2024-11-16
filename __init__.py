@@ -374,8 +374,8 @@ class MetroidPrimeWorld(World):
                 for source, target in mapping.items():
                     spoiler_handle.write(f'    {ELEVATOR_USEFUL_NAMES[source]} -> {ELEVATOR_USEFUL_NAMES[target]}\n')
 
-        assert self.door_color_mapping is not None
         if self.options.door_color_randomization == "regional":
+            assert self.door_color_mapping is not None
             spoiler_handle.write(f'\n\nDoor Color Mapping({player_name}):\n')
 
             for area, mapping in self.door_color_mapping.items():
@@ -384,6 +384,7 @@ class MetroidPrimeWorld(World):
                     spoiler_handle.write(f'    {door} -> {color}\n')
 
         elif self.options.door_color_randomization == "global":
+            assert self.door_color_mapping is not None
             spoiler_handle.write(f'\n\nDoor Color Mapping({player_name}):\n')
             for door, color in self.door_color_mapping[MetroidPrimeArea.Tallon_Overworld.value].type_mapping.items():
                 spoiler_handle.write(f'    {door} -> {color}\n')

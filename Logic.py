@@ -1,13 +1,13 @@
 from BaseClasses import CollectionState
 from .data.RoomNames import RoomName
 from .Items import ProgressiveUpgrade, SuitUpgrade, get_progressive_upgrade_for_item
-import typing
-if typing.TYPE_CHECKING:
+from typing import TYPE_CHECKING, Optional, cast
+if TYPE_CHECKING:
     from .PrimeOptions import MetroidPrimeOptions
 
 
 def _get_options(state: CollectionState, player: int) -> 'MetroidPrimeOptions':
-    return state.multiworld.worlds[player].options
+    return cast('MetroidPrimeOptions', state.multiworld.worlds[player].options)
 
 
 def has_required_artifact_count(state: CollectionState, player: int) -> bool:
@@ -87,7 +87,7 @@ def can_xray(state: CollectionState, player: int, usually_required: bool = False
         return True
     if usually_required:
         return state.has(SuitUpgrade.X_Ray_Visor.value, player)
-    return _get_options(state, player).remove_xray_requirements.value or state.has(SuitUpgrade.X_Ray_Visor.value, player)
+    return bool(_get_options(state, player).remove_xray_requirements.value) or state.has(SuitUpgrade.X_Ray_Visor.value, player)
 
 
 def can_thermal(state: CollectionState, player: int, usually_required: bool = False, hard_required: bool = False) -> bool:
@@ -97,16 +97,17 @@ def can_thermal(state: CollectionState, player: int, usually_required: bool = Fa
         return True
     if usually_required:
         return state.has(SuitUpgrade.Thermal_Visor.value, player)
-    return _get_options(state, player).remove_thermal_requirements.value or state.has(SuitUpgrade.Thermal_Visor.value, player)
+    return bool(_get_options(state, player).remove_thermal_requirements.value) or state.has(SuitUpgrade.Thermal_Visor.value, player)
 
 
 def can_move_underwater(state: CollectionState, player: int) -> bool:
     return state.has(SuitUpgrade.Gravity_Suit.value, player)
 
 
-def can_charge_beam(state: CollectionState, player: int, required_beam: typing.Optional[SuitUpgrade] = None) -> bool:
+def can_charge_beam(state: CollectionState, player: int, required_beam: Optional[SuitUpgrade] = None) -> bool:
     if required_beam is not None:
         progressive_item = get_progressive_upgrade_for_item(required_beam)
+        assert progressive_item is not None
         return state.has_all([SuitUpgrade.Charge_Beam.value, required_beam.value], player) or state.has(progressive_item.value, player, 2)
 
     # If no beam is required, just check for Charge Beam or 2 of any progressive beam upgrade
@@ -123,6 +124,8 @@ def can_beam_combo(state: CollectionState, player: int, required_beam: SuitUpgra
         return state.has(SuitUpgrade.Ice_Spreader.value, player) or state.has(ProgressiveUpgrade.Progressive_Ice_Beam.value, player, 3)
     elif required_beam == SuitUpgrade.Plasma_Beam:
         return can_missile(state, player, 3) and (state.has(SuitUpgrade.Flamethrower.value, player) or state.has(ProgressiveUpgrade.Progressive_Plasma_Beam.value, player, 3))
+    else:
+        raise ValueError(f"Invalid required beam: {required_beam}")
 
 
 def can_scan(state: CollectionState, player: int) -> bool:
@@ -152,7 +155,7 @@ def can_defeat_sheegoth(state: CollectionState, player: int) -> bool:
     return can_bomb(state, player) or can_missile(state, player) or can_power_bomb(state, player) or can_plasma_beam(state, player)
 
 
-def can_backwards_lower_mines(state, player) -> bool:
+def can_backwards_lower_mines(state: CollectionState, player: int) -> bool:
     return bool(_get_options(state, player).backwards_lower_mines.value)
 
 
