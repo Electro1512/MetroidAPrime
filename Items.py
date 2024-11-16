@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Dict, List, TYPE_CHECKING, Optional
+from typing import Dict, List, TYPE_CHECKING, Optional, Union
 from BaseClasses import Item, ItemClassification
 if TYPE_CHECKING:
     from . import MetroidPrimeWorld
@@ -69,7 +69,7 @@ class SuitUpgrade(Enum):
         for suit in SuitUpgrade:
             if suit.value == value:
                 return suit
-        return None
+        raise ValueError(f"Invalid suit upgrade value: {value}")
 
 
 class ProgressiveUpgrade(Enum):
@@ -80,11 +80,11 @@ class ProgressiveUpgrade(Enum):
 
 # TODO: Same as above
     @staticmethod
-    def get_by_value(value: str) -> 'SuitUpgrade':
+    def get_by_value(value: str) -> 'ProgressiveUpgrade':
         for upgrade in ProgressiveUpgrade:
             if upgrade.value == value:
                 return upgrade
-        return None
+        raise ValueError(f"Invalid progressive upgrade value: {value}")
 
     def __str__(self):
         return self.value
@@ -110,7 +110,7 @@ PROGRESSIVE_ITEM_EXCLUSION_LIST: List[SuitUpgrade] = [
 ]
 
 
-def get_vanilla_item_for_progressive_upgrade(upgrade: ProgressiveUpgrade, count: int) -> SuitUpgrade:
+def get_vanilla_item_for_progressive_upgrade(upgrade: ProgressiveUpgrade, count: int) -> Optional[SuitUpgrade]:
     max_count = 3
     if count > max_count:
         count = max_count
@@ -118,6 +118,7 @@ def get_vanilla_item_for_progressive_upgrade(upgrade: ProgressiveUpgrade, count:
     index = count - 1  # 0-indexed
     if upgrade in PROGRESSIVE_ITEM_MAPPING:
         return PROGRESSIVE_ITEM_MAPPING[upgrade][index]
+    return None
 
 
 def get_progressive_upgrade_for_item(item: SuitUpgrade) -> Optional[ProgressiveUpgrade]:
@@ -141,7 +142,7 @@ def __get_power_bomb_item(world: 'MetroidPrimeWorld') -> SuitUpgrade:
     return SuitUpgrade.Power_Bomb_Expansion
 
 
-def get_item_for_options(world: 'MetroidPrimeWorld', item: SuitUpgrade) -> SuitUpgrade:
+def get_item_for_options(world: 'MetroidPrimeWorld', item: SuitUpgrade) -> Union[SuitUpgrade, ProgressiveUpgrade]:
     if item == SuitUpgrade.Missile_Launcher:
         return __get_missile_item(world)
     if item == SuitUpgrade.Main_Power_Bomb:

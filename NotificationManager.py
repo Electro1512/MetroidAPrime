@@ -1,18 +1,19 @@
 import time
+from typing import Callable, List
 
 
 class NotificationManager:
-    notification_queue = []
-    time_since_last_message: int = 0
-    last_message_time: int = 0
-    message_duration: int = None
-    send_notification_func = None
+    notification_queue: List[str] = []
+    time_since_last_message: float = 0
+    last_message_time: float = 0
+    message_duration: float
+    send_notification_func: Callable[[str], None]
 
-    def __init__(self, message_duration, send_notification_func):
+    def __init__(self, message_duration: float, send_notification_func: Callable[[str], None]):
         self.message_duration = message_duration / 2  # If there are multiple messages, the duration is shorter
         self.send_notification_func = send_notification_func
 
-    def queue_notification(self, message):
+    def queue_notification(self, message: str):
         self.notification_queue.append(message)
 
     def handle_notifications(self):

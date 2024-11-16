@@ -1,11 +1,10 @@
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Dict, List
 
-from CommonClient import logger
 from NetUtils import NetworkItem
 
-from .Items import PROGRESSIVE_ITEM_MAPPING, ProgressiveUpgrade, SuitUpgrade, custom_suit_upgrade_table, suit_upgrade_table
-from .MetroidPrimeInterface import ITEMS_USED_FOR_LOCATION_TRACKING, InventoryItemData, MetroidPrimeSuit
+from .Items import PROGRESSIVE_ITEM_MAPPING, ProgressiveUpgrade, SuitUpgrade, custom_suit_upgrade_table
+from .MetroidPrimeInterface import ITEMS_USED_FOR_LOCATION_TRACKING, InventoryItemData
 
 if TYPE_CHECKING:
     from .MetroidPrimeClient import MetroidPrimeContext
@@ -23,7 +22,7 @@ async def handle_receive_items(ctx: 'MetroidPrimeContext', current_items: dict[s
             continue
         elif item_data.name == SuitUpgrade.Main_Power_Bomb.value:
             continue
-        elif item_data.name in PROGRESSIVE_ITEM_MAPPING:
+        elif item_data.name in [key.value for key in PROGRESSIVE_ITEM_MAPPING.keys()]:
             continue
         elif item_data.name == SuitUpgrade.Gravity_Suit.value and not ctx.gravity_suit_enabled:
             continue
@@ -81,7 +80,7 @@ async def handle_disable_gravity_suit(ctx: 'MetroidPrimeContext', current_items:
 
 async def handle_receive_missiles(ctx: 'MetroidPrimeContext', current_items: dict[str, InventoryItemData]):
     # Slot data is required for missiles + Power Bombs so we can check if launcher / main pb are enabled
-    if ctx.slot_data is not None and "Missile Expansion" in current_items:
+    if ctx.slot_data and "Missile Expansion" in current_items:
         # Handle Missile Expansions
         amount_per_expansion = 5
         missile_item = current_items["Missile Expansion"]
@@ -127,7 +126,7 @@ async def handle_receive_missiles(ctx: 'MetroidPrimeContext', current_items: dic
 
 async def handle_receive_power_bombs(ctx: 'MetroidPrimeContext', current_items: dict[str, InventoryItemData]):
     # Handle Power Bomb Expansions
-    if ctx.slot_data is not None and "Power Bomb Expansion" in current_items:
+    if ctx.slot_data and "Power Bomb Expansion" in current_items:
         # Handle Missile Expansions
         amount_per_expansion = 1
         pb_item = current_items["Power Bomb Expansion"]
@@ -200,7 +199,7 @@ async def handle_receive_energy_tanks(ctx: 'MetroidPrimeContext', current_items:
                 energy_tank_item.id, new_capacity, new_capacity)
 
             if energy_tank_sender != ctx.slot and diff > 0:
-                message = f"Energy Tank capacity increased by {diff}" if diff > 5 else f"Energy Tank capacity increased by {diff} ({ctx.player_names[energy_tank_sender]})"
+                message = f"Energy Tank capacity increased by {diff}" if diff > 5 else f"Energy Tank capacity increased by {diff} ({ctx.player_names[energy_tank_sender] if energy_tank_sender else 'unknown'})"
                 ctx.notification_manager.queue_notification(message)
 
             # Heal player when they receive a new energy tank
@@ -210,7 +209,7 @@ async def handle_receive_energy_tanks(ctx: 'MetroidPrimeContext', current_items:
 
 async def handle_receive_progressive_items(ctx: 'MetroidPrimeContext', current_items: dict[str, InventoryItemData]):
     counts = {upgrade.value: 0 for upgrade in PROGRESSIVE_ITEM_MAPPING}
-    network_items = {upgrade.value: [] for upgrade in PROGRESSIVE_ITEM_MAPPING}
+    network_items: Dict[str, List[NetworkItem]] = {upgrade.value: [] for upgrade in PROGRESSIVE_ITEM_MAPPING}
     for network_item in ctx.items_received:
         item_data = inventory_item_by_network_id(
             network_item.item, current_items)
@@ -238,7 +237,7 @@ def inventory_item_by_network_id(network_id: int, current_inventory: dict[str, I
             return item
 
     # Handle custom items like missile launcher and main power bomb
-    for key, value in custom_suit_upgrade_table.items():
+    for value in custom_suit_upgrade_table.values():
         if value.code == network_id:
             return InventoryItemData(value, 0, 0)
     return None

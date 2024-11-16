@@ -8,18 +8,18 @@ from .data.StartRoomData import StartRoomDifficulty
 
 class HudColor(Enum):
     DEFAULT = [102 / 255, 174 / 255, 225 / 255]
-    RED = [1, 0, 0]
-    GREEN = [0, 1, 0]
-    BLUE = [0, 0, 1]
-    VIOLET = [1, 0, 1]
-    YELLOW = [1, 1, 0]
-    CYAN = [0, 1, 1]
-    WHITE = [1, 1, 1]
-    ORANGE = [1, 0.5, 0]
-    PINK = [1, 0.5, 1]
-    LIME = [0.5, 1, 0]
-    TEAL = [0.5, 1, 1]
-    PURPLE = [0.5, 0, 1]
+    RED = [1.0, 0.0, 0.0]
+    GREEN = [0.0, 1.0, 0.0]
+    BLUE = [0.0, 0.0, 1.0]
+    VIOLET = [1.0, 0.0, 1.0]
+    YELLOW = [1.0, 1.0, 0.0]
+    CYAN = [0.0, 1.0, 1.0]
+    WHITE = [1.0, 1.0, 1.0]
+    ORANGE = [1.0, 0.5, 0.0]
+    PINK = [1.0, 0.5, 1.0]
+    LIME = [0.5, 1.0, 0.0]
+    TEAL = [0.5, 1.0, 1.0]
+    PURPLE = [0.5, 0.0, 1.0]
 
 
 class SpringBall(Toggle):

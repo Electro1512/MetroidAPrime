@@ -1,6 +1,5 @@
 from dataclasses import dataclass, field
-from enum import Enum
-from typing import Callable, Dict, List, Optional
+from typing import Any, Callable, Dict, List, Optional
 import typing
 
 from BaseClasses import CollectionState, ItemClassification, LocationProgressType, Region
@@ -19,16 +18,20 @@ if typing.TYPE_CHECKING:
     from .. import MetroidPrimeWorld
 
 
-def get_config_item_text(world: 'MetroidPrimeWorld', location) -> str:
+def get_config_item_text(world: 'MetroidPrimeWorld', location: str) -> str:
     loc = world.multiworld.get_location(location, world.player)
+    assert loc.item
+    if not loc.item.player:
+        return "Nothing"
     player_name = f"{world.multiworld.player_name[loc.item.player]}'s " if loc.item.player != world.player else ""
     player_name = player_name.replace("&", "[and]")
     item_name = loc.item.name.replace("&", "[and]")
     return f"{player_name}{item_name}"
 
 
-def get_config_item_model(world: 'MetroidPrimeWorld', location) -> str:
+def get_config_item_model(world: 'MetroidPrimeWorld', location: str) -> str:
     loc = world.multiworld.get_location(location, world.player)
+    assert loc.item
     if loc.native_item:
         name = loc.item.name
         if name == SuitUpgrade.Missile_Expansion.value:
@@ -65,7 +68,7 @@ class PickupData:
     exclude_from_config: bool = False  # Used when items need to be treated differently for logic with odd room connections
     exclude_from_logic: bool = False  # Used when items need to be treated differently for logic with odd room connections
 
-    def get_config_data(self, world: 'MetroidPrimeWorld'):
+    def get_config_data(self, world: 'MetroidPrimeWorld') -> Dict[str, Any]:
         return {
             "type": "Unknown Item 1",
             "scanText": get_config_item_text(world, self.name),
@@ -84,8 +87,8 @@ class RoomData:
     area: Optional[MetroidPrimeArea] = None
     room_name: Optional[RoomName] = None
 
-    def get_config_data(self, world: 'MetroidPrimeWorld', parent_area: str):
-        config = {
+    def get_config_data(self, world: 'MetroidPrimeWorld', parent_area: str) -> Dict[str, List[Any]]:
+        config: Dict[str, Any] = {
             "pickups": [pickup.get_config_data(world) for pickup in self.pickups if not pickup.exclude_from_config],
         }
         config["doors"] = self.get_door_config_data(world, parent_area)
@@ -94,21 +97,21 @@ class RoomData:
 
 # TODO: Reduce duplication here w/ if/else. Make a single loop and operate on each door individually
 # TODO: Make a test that verifies door rando output config so this will fail if it is not correct
-    def get_door_config_data(self, world: 'MetroidPrimeWorld', parent_area: str):
-        door_data = {}
+    def get_door_config_data(self, world: 'MetroidPrimeWorld', parent_area: str) -> Dict[str, Any]:
+        door_data: Dict[str, Any] = {}
         if world.door_color_mapping is not None:
             color_mapping: Dict[str, str] = world.door_color_mapping[parent_area].type_mapping
             for door_id, door in self.doors.items():
                 if door.defaultLock.value not in color_mapping or not door.lock:
                     continue
                 door_data[f"{door_id}"] = {
-                    "shieldType": door.lock.value if door.lock is not None else door.defaultLock.value,
+                    "shieldType": door.lock.value if door.lock else door.defaultLock.value,
                 }
         else:
             for door_id, door in self.doors.items():
-                if door.lock is not door.defaultLock and door.lock is not None:
+                if door.lock is not door.defaultLock and door.lock:
                     door_data[f"{door_id}"] = {
-                        "shieldType": door.lock.value if door.lock is not None else door.defaultLock.value,
+                        "shieldType": door.lock.value if door.lock else door.defaultLock.value,
                     }
 
         for door_id, door in self.doors.items():
@@ -126,14 +129,19 @@ class RoomData:
     def get_region_name(self, name: str):
         """Returns the name of the region, used primarily for rooms with duplicate names"""
         if self.include_area_in_name:
+            assert self.area
             return f"{self.area.value}: {name}"
         return name
 
     def get_matching_door(self, source_door: DoorData, world: 'MetroidPrimeWorld') -> Optional[DoorData]:
-        target_room = world.game_region_data.get(self.area).rooms.get(source_door.default_destination)
-        for door_data in target_room.doors.values():
-            if door_data.default_destination == self.room_name:
-                return door_data
+        assert self.area
+        area = world.game_region_data.get(self.area)
+        if area and source_door.default_destination:
+            target_room = area.rooms.get(source_door.default_destination)
+            if target_room:
+                for door_data in target_room.doors.values():
+                    if door_data.default_destination == self.room_name:
+                        return door_data
         return None
 
 
@@ -147,7 +155,7 @@ class AreaData:
             room_data.room_name = room_name
             room_data.area = MetroidPrimeArea(self.area_name)
 
-    def get_config_data(self, world: 'MetroidPrimeWorld'):
+    def get_config_data(self, world: 'MetroidPrimeWorld') -> Dict[str, Any]:
         return {
             name.value: data.get_config_data(world, self.area_name) for name, data in self.rooms.items()
         }
@@ -164,7 +172,7 @@ class AreaData:
                 if pickup.exclude_from_logic:
                     continue
 
-                def generate_access_rule(pickup) -> Callable[[CollectionState], bool]:
+                def generate_access_rule(pickup: PickupData) -> Callable[[CollectionState], bool]:
                     def access_rule(state: CollectionState):
                         return _can_reach_pickup(state, world.player, pickup)
                     return access_rule
@@ -213,7 +221,7 @@ class AreaData:
 
                 def get_connection_name(door_data: DoorData, target_room_name: str = name, target_destination: RoomName = destination) -> str:
                     if door_data.blast_shield:
-                      pass
+                        pass
                     blast_shield_text = "" if door_data.blast_shield is None or door_data.blast_shield == BlastShieldType.No_Blast_Shield else f" {door_data.blast_shield.value}"
                     lock = door_data.lock or door_data.defaultLock
                     return lock.value + blast_shield_text + f" Door from {target_room_name} to {target_destination.value}"

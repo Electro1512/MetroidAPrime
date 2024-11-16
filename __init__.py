@@ -97,7 +97,7 @@ class MetroidPrimeWorld(World):
     item_name_groups = {
         "Artifacts": set(artifact_table.keys())
     }
-    starting_room_data: Optional[StartRoomData] = None
+    starting_room_data: StartRoomData
     prefilled_item_map: Dict[str, str] = {}  # Dict of location name to item name
     elevator_mapping: Dict[str, Dict[str, str]] = default_elevator_mappings
     door_color_mapping: Optional[WorldDoorColorMapping] = None
@@ -207,8 +207,8 @@ class MetroidPrimeWorld(World):
             and cast(str, self.options.blast_shield_randomization.value)
             != BlastShieldRandomization.option_none
         )
-        for start_item in artifact_table:
-            local_itempool += [self.create_item(start_item)]
+        for suit_upgrade in artifact_table:
+            local_itempool += [self.create_item(suit_upgrade)]
             items_added += 1
 
         # Create initial inventory from yaml and starting room
@@ -222,36 +222,40 @@ class MetroidPrimeWorld(World):
         if not self.options.shuffle_scan_visor.value:
             start_inventory += [SuitUpgrade.Scan_Visor.value]
 
-        for start_item in start_inventory:
+        for suit_upgrade in start_inventory:
             # Pre collect the ones that start room loadout adds in
-            item = self.create_item(start_item)
+            item = self.create_item(suit_upgrade)
             if item not in self.multiworld.precollected_items[self.player]:
                 self.multiworld.push_precollected(item)
 
-# TODO: Find a less complicated way to do this (maybe explicitly rather than implicitly)
         items_with_multiple = [SuitUpgrade.Missile_Expansion.value, SuitUpgrade.Power_Bomb_Expansion.value, SuitUpgrade.Energy_Tank.value]
-        for start_item in {*suit_upgrade_table}:
-            if self.options.progressive_beam_upgrades.value and get_progressive_upgrade_for_item(SuitUpgrade.get_by_value(start_item)) is not None:
+
+        for suit_upgrade in {*suit_upgrade_table}:
+            if self.options.progressive_beam_upgrades.value and get_progressive_upgrade_for_item(SuitUpgrade.get_by_value(suit_upgrade)) is not None:
                 continue
 
-            if start_item in self.prefilled_item_map.values() and start_item in items_with_multiple:
+            if suit_upgrade in self.prefilled_item_map.values() and suit_upgrade in items_with_multiple:
                 for prefilled_item in self.prefilled_item_map.values():
-                    if prefilled_item == start_item:
+                    if prefilled_item == suit_upgrade:
                         items_added += 1
 
             # Don't add items that are already placed locally via start room logic or starting loadout to the multiworld pool.
             # Missile expansions, PB expansions, and energy tanks are added still since there are multiple of them.
-            if start_item in self.prefilled_item_map.values() and start_item not in items_with_multiple:
+            if suit_upgrade in self.prefilled_item_map.values() and suit_upgrade not in items_with_multiple:
                 items_added += 1
                 continue
-            if start_item in start_inventory and start_item not in items_with_multiple:
+            if suit_upgrade in start_inventory and suit_upgrade not in items_with_multiple:
                 continue
-            if start_item == "Missile Expansion":
+
+            # Handle Missile Expansions
+            if suit_upgrade == "Missile Expansion":
                 PROGRESSIVE_EXPANSIONS = 8
                 for _ in range(0, PROGRESSIVE_EXPANSIONS):  # This is the number of missile expansions that are required
                     local_itempool += [self.create_item('Missile Expansion', ItemClassification.progression)]
                     items_added += 1
-            elif start_item == "Energy Tank":
+
+            # Handle Energy Tanks
+            elif suit_upgrade == "Energy Tank":
                 max_tanks = 14
                 progression_tanks = 8
                 for _ in range(0, progression_tanks):
@@ -259,17 +263,19 @@ class MetroidPrimeWorld(World):
                 for _ in range(0, max_tanks - progression_tanks):
                     local_itempool += [self.create_item("Energy Tank")]
                 items_added += max_tanks
-            elif start_item == "Power Bomb Expansion":
+
+            # Handle Power Bombs
+            elif suit_upgrade == "Power Bomb Expansion":
                 local_itempool += [self.create_item('Power Bomb Expansion', ItemClassification.progression)]
                 for _ in range(0, 4):
                     local_itempool += [self.create_item("Power Bomb Expansion")]
                 items_added += 5
 
             else:
-                if has_blast_shield_rando_with_combos and start_item in [SuitUpgrade.Wavebuster.value, SuitUpgrade.Ice_Spreader.value, SuitUpgrade.Flamethrower.value]:
-                    local_itempool += [self.create_item(start_item, ItemClassification.progression)]
+                if has_blast_shield_rando_with_combos and suit_upgrade in [SuitUpgrade.Wavebuster.value, SuitUpgrade.Ice_Spreader.value, SuitUpgrade.Flamethrower.value]:
+                    local_itempool += [self.create_item(suit_upgrade, ItemClassification.progression)]
                 else:
-                    local_itempool += [self.create_item(start_item)]
+                    local_itempool += [self.create_item(suit_upgrade)]
                 items_added += 1
 
         if self.options.missile_launcher.value:
@@ -305,7 +311,7 @@ class MetroidPrimeWorld(World):
 
         # add missiles in whatever slots we have left
         remain = 100 - items_added
-        for start_item in range(0, remain):
+        for suit_upgrade in range(0, remain):
             local_itempool += [self.create_item("Missile Expansion")]
 
         self.multiworld.itempool += local_itempool

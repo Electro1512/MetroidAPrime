@@ -19,10 +19,6 @@ def starting_inventory(world: 'MetroidPrimeWorld', item: str) -> bool:
     return item in items
 
 
-def spring_check(spring) -> bool:
-    return spring == 1
-
-
 def skip_ridley(boss: int) -> bool:
     return boss not in [0, 1]
 
@@ -47,7 +43,7 @@ def color_options_to_value(world: 'MetroidPrimeWorld') -> List[float]:
         return [options.hud_color_red.value / 255, options.hud_color_green.value / 255, options.hud_color_blue.value / 255]
 
     # get the key in hudcolor enum that matches all caps color
-    color: str = world.options.hud_color.value
+    color: str = str(world.options.hud_color.value)
     color = color.upper()
     for key in HudColor.__members__.keys():
         if key == color:
@@ -55,8 +51,8 @@ def color_options_to_value(world: 'MetroidPrimeWorld') -> List[float]:
     return HudColor.DEFAULT.value
 
 
-def make_artifact_hints(world: 'MetroidPrimeWorld') -> str:
-    def make_artifact_hint(item) -> str:
+def make_artifact_hints(world: 'MetroidPrimeWorld') -> Dict[str, str]:
+    def make_artifact_hint(item: str) -> str:
         try:
             if world.options.artifact_hints.value:
                 location = world.multiworld.find_item(item, world.player)
@@ -84,7 +80,7 @@ def make_artifact_hints(world: 'MetroidPrimeWorld') -> str:
     }
 
 
-def get_tweaks(world: 'MetroidPrimeWorld') -> Dict[str, List[int]]:
+def get_tweaks(world: 'MetroidPrimeWorld') -> Dict[str, List[float]]:
     color = color_options_to_value(world)
     if color != HudColor.DEFAULT.value:
         return {
@@ -168,7 +164,7 @@ def make_config(world: 'MetroidPrimeWorld') -> Dict[str, Any]:
         "gameConfig": {
             "mainMenuMessage": "Archipelago Metroid Prime",
             "startingRoom": f"{world.starting_room_data.area.value}:{world.starting_room_data.name}",
-            "springBall": spring_check(options.spring_ball.value),
+            "springBall": 1 if options.spring_ball.value else 0,
             "warpToStart": True,
             "multiworldDolPatches": True,
             "nonvariaHeatDamage": bool(options.non_varia_heat_damage.value),

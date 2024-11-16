@@ -1,7 +1,7 @@
 import copy
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import TYPE_CHECKING, Callable, Dict, List, Optional
+from typing import TYPE_CHECKING, Callable, Dict, List, Optional, cast
 
 from ..DoorRando import BEAM_TO_LOCK_MAPPING
 
@@ -32,7 +32,7 @@ class StartRoomLoadout:
 
 @dataclass
 class StartRoomData:
-    area: Optional[MetroidPrimeArea]
+    area: MetroidPrimeArea
     loadouts: List[StartRoomLoadout] = field(default_factory=list)
     difficulty: StartRoomDifficulty = StartRoomDifficulty.Safe
     selected_loadout: Optional[StartRoomLoadout] = None
@@ -259,7 +259,7 @@ def init_starting_loadout(world: 'MetroidPrimeWorld'):
     # Update the loadout with the correct items based on options (progressive upgrades, missile launcher, etc.)
     updated_loadout: List[SuitUpgrade] = []
     for item in world.starting_room_data.selected_loadout.loadout:
-        updated_loadout.append(get_item_for_options(world, item))
+        updated_loadout.append(cast(SuitUpgrade, get_item_for_options(world, item)))
     world.starting_room_data.selected_loadout.loadout = updated_loadout
 
     # If we are preventing bk then set a few items for prefill if available

@@ -62,6 +62,7 @@ def get_world_blast_shield_mapping(world: 'MetroidPrimeWorld') -> WorldBlastShie
     if cast(str, world.options.blast_shield_randomization.value) != BlastShieldRandomization.option_none:
         for area in MetroidPrimeArea:
             mapping[area.value] = AreaBlastShieldMapping(area.value, _generate_blast_shield_mapping_for_area(world, area, area in areas_with_locks))
+
     # Still generate mapping for areas with locks even if blast shields are disabled
     elif areas_with_locks:
         for area in areas_with_locks:
@@ -72,7 +73,7 @@ def get_world_blast_shield_mapping(world: 'MetroidPrimeWorld') -> WorldBlastShie
 def _generate_blast_shield_mapping_for_area(world: 'MetroidPrimeWorld', area: MetroidPrimeArea, include_locked_door: bool) -> BlastShieldMapping:
     area_mapping: BlastShieldMapping = BlastShieldMapping({})
     total_beam_combo_doors = 0
-    # TODO: Make this less repetitive
+
     if cast(str, world.options.blast_shield_randomization.value) == BlastShieldRandomization.option_mix_it_up:
         blast_shield_regions = get_valid_blast_shield_regions_by_area(world, area)
         num_shields_to_add = math.ceil(world.options.blast_shield_frequency.value * len(blast_shield_regions) * .1)
