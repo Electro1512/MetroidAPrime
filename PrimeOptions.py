@@ -36,13 +36,6 @@ class RequiredArtifacts(Range):
     default = 12
 
 
-class ExcludeItems(ItemDict):
-    """Replaces the following items with filler. INPUT AT YOUR OWN RISK. I cannot promise that removing
-    progression items will not break logic. (for now please leave the default starting items in)"""
-    verify_item_name = True
-    display_name = "Exclude Items"
-
-
 class FinalBosses(Choice):
     """Determines the final bosses required to beat the seed. Choose from Meta Ridley, Metroid Prime,
     both, or neither."""
@@ -421,7 +414,6 @@ class HudColorOverrideBlue(Range):
 class MetroidPrimeOptions(PerGameCommonOptions):
     start_inventory_from_pool: StartInventoryPool
     required_artifacts: RequiredArtifacts
-    exclude_items: ExcludeItems
     final_bosses: FinalBosses
     artifact_hints: ArtifactHints
     missile_launcher: MissileLauncher

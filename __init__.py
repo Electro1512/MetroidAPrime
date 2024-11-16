@@ -211,8 +211,6 @@ class MetroidPrimeWorld(World):
             local_itempool += [self.create_item(start_item)]
             items_added += 1
 
-        excluded = self.options.exclude_items
-
         # Create initial inventory from yaml and starting room
         assert self.starting_room_data is not None and self.starting_room_data.selected_loadout is not None
         start_inventory = (
@@ -247,8 +245,6 @@ class MetroidPrimeWorld(World):
                 items_added += 1
                 continue
             if start_item in start_inventory and start_item not in items_with_multiple:
-                continue
-            if start_item in excluded:
                 continue
             if start_item == "Missile Expansion":
                 PROGRESSIVE_EXPANSIONS = 8
