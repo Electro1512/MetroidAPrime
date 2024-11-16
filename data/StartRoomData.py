@@ -81,10 +81,14 @@ all_start_rooms: Dict[str, StartRoomData] = {
     ),
     RoomName.Save_Station_1.value: StartRoomData(
         area=MetroidPrimeArea.Chozo_Ruins,
-        local_early_items=[SuitUpgrade.Morph_Ball],
         loadouts=[
-            StartRoomLoadout(item_rules=[{'Chozo Ruins: Hive Totem': [SuitUpgrade.Missile_Launcher], 'Chozo Ruins: Ruined Shrine - Plated Beetle': [SuitUpgrade.Morph_Ball, SuitUpgrade.Space_Jump_Boots]}], starting_beam=SuitUpgrade.Power_Beam),
-            StartRoomLoadout(item_rules=[{'Chozo Ruins: Hive Totem': [SuitUpgrade.Missile_Launcher], 'Chozo Ruins: Ruined Gallery - Missile Wall': [SuitUpgrade.Morph_Ball, SuitUpgrade.Space_Jump_Boots]}], starting_beam=SuitUpgrade.Power_Beam)],
+            StartRoomLoadout(item_rules=[{'Chozo Ruins: Hive Totem': [SuitUpgrade.Missile_Launcher], 'Chozo Ruins: Ruined Shrine - Plated Beetle': [SuitUpgrade.Morph_Ball]}], starting_beam=SuitUpgrade.Power_Beam),
+        ],
+        allowed_elevators={
+            MetroidPrimeArea.Chozo_Ruins.value: {
+                RoomName.Transport_to_Tallon_Overworld_North.value: [RoomName.Transport_to_Chozo_Ruins_East.value, RoomName.Transport_to_Magmoor_Caverns_West.value, RoomName.Transport_to_Chozo_Ruins_West.value],
+            }
+        }
     ),
     RoomName.Save_Station_2.value: StartRoomData(area=MetroidPrimeArea.Chozo_Ruins, loadouts=[StartRoomLoadout([SuitUpgrade.Missile_Launcher])]),
     RoomName.Tower_Chamber.value: StartRoomData(area=MetroidPrimeArea.Chozo_Ruins, loadouts=[StartRoomLoadout(
@@ -269,6 +273,10 @@ def init_starting_loadout(world: 'MetroidPrimeWorld'):
                 options_item = get_item_for_options(world, item)
                 if options_item not in world.starting_room_data.selected_loadout.loadout:
                     world.multiworld.local_early_items[world.player][options_item.value] = 1
+
+    # Generator has a difficult time when elevators are locked behind a shuffled scan visor
+    if world.options.shuffle_scan_visor and not world.options.pre_scan_elevators:
+        world.multiworld.early_items[world.player][SuitUpgrade.Scan_Visor.value] = 1
 
 
 def init_starting_beam(world: 'MetroidPrimeWorld'):
