@@ -61,7 +61,7 @@ def get_config_item_model(world: 'MetroidPrimeWorld', location: str) -> str:
 @ dataclass
 class PickupData:
     name: str
-    rule_func: Optional[Callable[['MetroidPrimeWorld', CollectionState, int], bool]] = None
+    rule_func: Optional[Callable[['MetroidPrimeWorld', CollectionState], bool]] = None
     tricks: List[TrickInfo] = field(default_factory=list)
     priority: LocationProgressType = LocationProgressType.DEFAULT
     exclude_from_config: bool = False  # Used when items need to be treated differently for logic with odd room connections
@@ -205,7 +205,7 @@ class AreaData:
                         door_data.lock = DoorLockType.Blue
 
                 def sub_region_access_rule_func(state: CollectionState, world: 'MetroidPrimeWorld', origin_door_data: DoorData, target_door_data: DoorData):
-                    meets_origin_door_requirements = origin_door_data.sub_region_access_override(world, state, world.player) and _can_open_door(world, state, world.player, origin_door_data) if origin_door_data.sub_region_access_override is not None else _can_access_door(world, state, world.player, origin_door_data)  # Use override if any, otherwise use default access rule
+                    meets_origin_door_requirements = origin_door_data.sub_region_access_override(world, state) and _can_open_door(world, state, world.player, origin_door_data) if origin_door_data.sub_region_access_override is not None else _can_access_door(world, state, world.player, origin_door_data)  # Use override if any, otherwise use default access rule
                     return meets_origin_door_requirements and _can_open_door(world, state, world.player, target_door_data)
 
                 def get_connection_name(door_data: DoorData, target_room_name: str = name, target_destination: RoomName = destination) -> str:
@@ -242,12 +242,12 @@ def _can_reach_pickup(world: 'MetroidPrimeWorld', state: CollectionState, pickup
     for trick in pickup_data.tricks:
         if trick.name not in allow_list and (trick.difficulty.value > max_difficulty or trick.name in deny_list):
             continue
-        elif trick.rule_func(world, state, world.player):
+        elif trick.rule_func(world, state):
             return True
 
     if pickup_data.rule_func is None:
         return True
-    elif pickup_data.rule_func(world, state, world.player):
+    elif pickup_data.rule_func(world, state):
         return True
     return False
 
@@ -262,37 +262,37 @@ def _can_open_door(world: 'MetroidPrimeWorld', state: CollectionState, player: i
         elif lock == DoorLockType.Blue:
             can_color = True
         elif lock == DoorLockType.Wave:
-            can_color = can_wave_beam(world, state, player)
+            can_color = can_wave_beam(world, state)
         elif lock == DoorLockType.Ice:
-            can_color = can_ice_beam(world, state, player)
+            can_color = can_ice_beam(world, state)
         elif lock == DoorLockType.Plasma:
-            can_color = can_plasma_beam(world, state, player)
+            can_color = can_plasma_beam(world, state)
         elif lock == DoorLockType.Power_Beam:
-            can_color = can_power_beam(world, state, player)
+            can_color = can_power_beam(world, state)
         elif lock == DoorLockType.Missile:
-            can_color = can_missile(world, state, player)
+            can_color = can_missile(world, state)
         elif lock == DoorLockType.Bomb:
-            can_color = can_bomb(world, state, player)
+            can_color = can_bomb(world, state)
     else:
         can_color = True
 
     if door_data.blast_shield is not None:
         if door_data.blast_shield == BlastShieldType.Bomb:
-            can_blast_shield = can_bomb(world, state, player)
+            can_blast_shield = can_bomb(world, state)
         elif door_data.blast_shield == BlastShieldType.Missile:
-            can_blast_shield = can_missile(world, state, player)
+            can_blast_shield = can_missile(world, state)
         elif door_data.blast_shield == BlastShieldType.Power_Bomb:
-            can_blast_shield = can_power_bomb(world, state, player)
+            can_blast_shield = can_power_bomb(world, state)
         elif door_data.blast_shield == BlastShieldType.Charge_Beam:
-            can_blast_shield = can_charge_beam(world, state, player)
+            can_blast_shield = can_charge_beam(world, state)
         elif door_data.blast_shield == BlastShieldType.Super_Missile:
-            can_blast_shield = can_super_missile(world, state, player)
+            can_blast_shield = can_super_missile(world, state)
         elif door_data.blast_shield == BlastShieldType.Wavebuster:
-            can_blast_shield = can_beam_combo(world, state, player, SuitUpgrade.Wave_Beam)
+            can_blast_shield = can_beam_combo(world, state, SuitUpgrade.Wave_Beam)
         elif door_data.blast_shield == BlastShieldType.Ice_Spreader:
-            can_blast_shield = can_beam_combo(world, state, player, SuitUpgrade.Ice_Beam)
+            can_blast_shield = can_beam_combo(world, state, SuitUpgrade.Ice_Beam)
         elif door_data.blast_shield == BlastShieldType.Flamethrower:
-            can_blast_shield = can_beam_combo(world, state, player, SuitUpgrade.Plasma_Beam)
+            can_blast_shield = can_beam_combo(world, state, SuitUpgrade.Plasma_Beam)
         elif door_data.blast_shield == BlastShieldType.Disabled:
             can_blast_shield = False
         elif door_data.blast_shield == BlastShieldType.No_Blast_Shield:
@@ -317,11 +317,11 @@ def _can_access_door(world: 'MetroidPrimeWorld', state: CollectionState, player:
             pass
         if trick.name not in allow_list and (trick.difficulty.value > max_difficulty or trick.name in deny_list):
             continue
-        elif trick.rule_func(world, state, player):
+        elif trick.rule_func(world, state):
             return True
     if door_data.rule_func is None:
         return True
-    elif door_data.rule_func(world, state, player):
+    elif door_data.rule_func(world, state):
         return True
 
     return False

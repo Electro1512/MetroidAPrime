@@ -14,12 +14,12 @@ if TYPE_CHECKING:
     from .. import MetroidPrimeWorld
 
 
-def can_crashed_frigate(world: 'MetroidPrimeWorld', state: CollectionState, player: int) -> bool:
-    return can_bomb(world, state, player) and can_space_jump(world, state, player) and can_wave_beam(world, state, player) and can_move_underwater(world, state, player) and can_thermal(world, state, player)
+def can_crashed_frigate(world: 'MetroidPrimeWorld', state: CollectionState) -> bool:
+    return can_bomb(world, state) and can_space_jump(world, state) and can_wave_beam(world, state) and can_move_underwater(world, state) and can_thermal(world, state)
 
 
-def can_crashed_frigate_backwards(world: 'MetroidPrimeWorld', state: CollectionState, player: int) -> bool:
-    return can_space_jump(world, state, player) and can_move_underwater(world, state, player) and can_bomb(world, state, player)
+def can_crashed_frigate_backwards(world: 'MetroidPrimeWorld', state: CollectionState) -> bool:
+    return can_space_jump(world, state) and can_move_underwater(world, state) and can_bomb(world, state)
 
 
 class TallonOverworldAreaData(AreaData):
@@ -84,7 +84,7 @@ class TallonOverworldAreaData(AreaData):
                                 tricks=[Tricks.frigate_no_gravity]),
                 },
                 pickups=[
-                    PickupData('Tallon Overworld: Cargo Freight Lift to Deck Gamma', rule_func=lambda world, state, player: (can_missile(world, state, player) or can_charge_beam(world, state, player)) and (can_crashed_frigate(world, state, player) or can_crashed_frigate_backwards(world, state, player))),
+                    PickupData('Tallon Overworld: Cargo Freight Lift to Deck Gamma', rule_func=lambda world, state: (can_missile(world, state) or can_charge_beam(world, state)) and (can_crashed_frigate(world, state) or can_crashed_frigate_backwards(world, state))),
                 ]),
 
             # RoomName.Connection_Elevator_to_Deck_Beta: RoomData(
@@ -116,13 +116,13 @@ class TallonOverworldAreaData(AreaData):
                     0: DoorData(RoomName.Waterfall_Cavern, blast_shield=BlastShieldType.Missile, rule_func=can_missile),
                     1: DoorData(RoomName.Frigate_Access_Tunnel, defaultLock=DoorLockType.Ice),
                     2: DoorData(RoomName.Overgrown_Cavern, defaultLock=DoorLockType.Ice,
-                                rule_func=lambda world, state, player: False,  # Can't reach unless a trick is used
+                                rule_func=lambda world, state: False,  # Can't reach unless a trick is used
                                 tricks=[Tricks.frigate_crash_site_climb_to_overgrown_cavern]
                                 ),
                 },
                 pickups=[
                     PickupData('Tallon Overworld: Frigate Crash Site',
-                               rule_func=lambda world, state, player: can_space_jump(world, state, player) and can_move_underwater(world, state, player),
+                               rule_func=lambda world, state: can_space_jump(world, state) and can_move_underwater(world, state),
                                tricks=[
                                    Tricks.frigate_crash_site_scan_dash,
                                    Tricks.frigate_crash_site_slope_jump
@@ -140,37 +140,37 @@ class TallonOverworldAreaData(AreaData):
 
             RoomName.Great_Tree_Hall: RoomData(
                 doors={
-                    0: DoorData(RoomName.Hydro_Access_Tunnel, rule_func=lambda world, state, player: False, tricks=[Tricks.great_tree_hall_skip_bars], exclude_from_rando=True),  # Can't reach from other doors unless you use a trick until after you go through frigate
-                    1: DoorData(RoomName.Great_Tree_Chamber, rule_func=lambda world, state, player: can_xray(world, state, player) and can_space_jump(world, state, player), tricks=[Tricks.great_tree_chamber_no_xray, Tricks.great_tree_chamber_nsj_no_xray]),
+                    0: DoorData(RoomName.Hydro_Access_Tunnel, rule_func=lambda world, state: False, tricks=[Tricks.great_tree_hall_skip_bars], exclude_from_rando=True),  # Can't reach from other doors unless you use a trick until after you go through frigate
+                    1: DoorData(RoomName.Great_Tree_Chamber, rule_func=lambda world, state: can_xray(world, state) and can_space_jump(world, state), tricks=[Tricks.great_tree_chamber_no_xray, Tricks.great_tree_chamber_nsj_no_xray]),
                     2: DoorData(RoomName.Transport_Tunnel_D, defaultLock=DoorLockType.Ice, destination_area=MetroidPrimeArea.Tallon_Overworld),  # Can't reach from other doors unless you use a trick until after you go through frigate
                     3: DoorData(RoomName.Life_Grove_Tunnel, defaultLock=DoorLockType.Ice,
                                 rule_func=can_spider,
                                 tricks=[Tricks.great_tree_hall_no_spider_ball]
                                 ),
-                    4: DoorData(RoomName.Transport_Tunnel_E, defaultLock=DoorLockType.Ice, destination_area=MetroidPrimeArea.Tallon_Overworld, rule_func=lambda world, state, player: False, tricks=[Tricks.great_tree_hall_skip_bars]),  # Can't reach from other doors unless you use a trick until after you go through frigate
+                    4: DoorData(RoomName.Transport_Tunnel_E, defaultLock=DoorLockType.Ice, destination_area=MetroidPrimeArea.Tallon_Overworld, rule_func=lambda world, state: False, tricks=[Tricks.great_tree_hall_skip_bars]),  # Can't reach from other doors unless you use a trick until after you go through frigate
                 },
             ),
 
             RoomName.Gully: RoomData(
                 doors={
-                    0: DoorData(RoomName.Tallon_Canyon, defaultLock=DoorLockType.Blue, rule_func=lambda world, state, player: can_bomb(world, state, player) and can_space_jump(world, state, player)),
+                    0: DoorData(RoomName.Tallon_Canyon, defaultLock=DoorLockType.Blue, rule_func=lambda world, state: can_bomb(world, state) and can_space_jump(world, state)),
                     1: DoorData(RoomName.Landing_Site, sub_region_door_index=3),
                 },
             ),
 
             RoomName.Hydro_Access_Tunnel: RoomData(
                 doors={
-                    0: DoorData(RoomName.Great_Tree_Hall, rule_func=lambda world, state, player: can_crashed_frigate(world, state, player) and can_boost(world, state, player), tricks=[Tricks.hydro_access_tunnel_no_gravity], sub_region_door_index=4, sub_region_access_override=can_crashed_frigate),  # Boost is needed to open way in great tree hall
-                    1: DoorData(RoomName.Biohazard_Containment, rule_func=lambda world, state, player: can_bomb(world, state, player) and can_move_underwater(world, state, player) and can_space_jump(world, state, player),
+                    0: DoorData(RoomName.Great_Tree_Hall, rule_func=lambda world, state: can_crashed_frigate(world, state) and can_boost(world, state), tricks=[Tricks.hydro_access_tunnel_no_gravity], sub_region_door_index=4, sub_region_access_override=can_crashed_frigate),  # Boost is needed to open way in great tree hall
+                    1: DoorData(RoomName.Biohazard_Containment, rule_func=lambda world, state: can_bomb(world, state) and can_move_underwater(world, state) and can_space_jump(world, state),
                                 tricks=[Tricks.hydro_access_tunnel_no_gravity]),
                 },
                 pickups=[
-                    PickupData('Tallon Overworld: Hydro Access Tunnel', rule_func=lambda world, state, player: can_bomb(world, state, player) and can_move_underwater(world, state, player), tricks=[Tricks.hydro_access_tunnel_no_gravity]),
+                    PickupData('Tallon Overworld: Hydro Access Tunnel', rule_func=lambda world, state: can_bomb(world, state) and can_move_underwater(world, state), tricks=[Tricks.hydro_access_tunnel_no_gravity]),
                 ]),
 
             RoomName.Landing_Site: RoomData(
                 doors={
-                    0: DoorData(RoomName.Gully, rule_func=lambda world, state, player: can_space_jump(world, state, player), tricks=[Tricks.landing_site_scan_dash]),
+                    0: DoorData(RoomName.Gully, rule_func=lambda world, state: can_space_jump(world, state), tricks=[Tricks.landing_site_scan_dash]),
                     1: DoorData(RoomName.Canyon_Cavern),
                     2: DoorData(RoomName.Temple_Hall),
                     3: DoorData(RoomName.Alcove, rule_func=can_space_jump, tricks=[Tricks.landing_site_scan_dash]),
@@ -182,21 +182,21 @@ class TallonOverworldAreaData(AreaData):
 
             RoomName.Life_Grove_Tunnel: RoomData(
                 doors={
-                    0: DoorData(RoomName.Great_Tree_Hall, defaultLock=DoorLockType.Ice, rule_func=lambda world, state, player: can_power_bomb(world, state, player) and can_boost(world, state, player) and can_bomb(world, state, player)),
-                    1: DoorData(RoomName.Life_Grove, defaultLock=DoorLockType.None_, rule_func=lambda world, state, player: can_power_beam(world, state, player) and can_combat_ghosts(world, state, player) and can_power_bomb(world, state, player) and can_boost(world, state, player) and can_bomb(world, state, player), exclude_from_rando=True)
+                    0: DoorData(RoomName.Great_Tree_Hall, defaultLock=DoorLockType.Ice, rule_func=lambda world, state: can_power_bomb(world, state) and can_boost(world, state) and can_bomb(world, state)),
+                    1: DoorData(RoomName.Life_Grove, defaultLock=DoorLockType.None_, rule_func=lambda world, state: can_power_beam(world, state) and can_combat_ghosts(world, state) and can_power_bomb(world, state) and can_boost(world, state) and can_bomb(world, state), exclude_from_rando=True)
                 },
                 pickups=[
-                    PickupData('Tallon Overworld: Life Grove Tunnel', rule_func=lambda world, state, player: can_power_bomb(world, state, player) and can_bomb(world, state, player) and can_boost(world, state, player)),
+                    PickupData('Tallon Overworld: Life Grove Tunnel', rule_func=lambda world, state: can_power_bomb(world, state) and can_bomb(world, state) and can_boost(world, state)),
                 ]),
 
             RoomName.Life_Grove: RoomData(
                 doors={
                     0: DoorData(RoomName.Life_Grove_Tunnel, defaultLock=DoorLockType.None_,
-                                rule_func=lambda world, state, player: can_power_bomb(world, state, player) and can_space_jump(world, state, player) and can_morph_ball(world, state, player) and can_power_beam(world, state, player),
+                                rule_func=lambda world, state: can_power_bomb(world, state) and can_space_jump(world, state) and can_morph_ball(world, state) and can_power_beam(world, state),
                                 tricks=[],
                                 exclude_from_rando=True)},
                 pickups=[
-                    PickupData('Tallon Overworld: Life Grove - Start'), PickupData('Tallon Overworld: Life Grove - Underwater Spinner', rule_func=lambda world, state, player: can_boost(world, state, player) and can_bomb(world, state, player)),
+                    PickupData('Tallon Overworld: Life Grove - Start'), PickupData('Tallon Overworld: Life Grove - Underwater Spinner', rule_func=lambda world, state: can_boost(world, state) and can_bomb(world, state)),
                 ]),
 
             # These have door types not in room data and no pickups
@@ -229,13 +229,13 @@ class TallonOverworldAreaData(AreaData):
                     0: DoorData(RoomName.Transport_Tunnel_B, destination_area=MetroidPrimeArea.Tallon_Overworld),
                     1: DoorData(RoomName.Root_Tunnel, blast_shield=BlastShieldType.Missile),
                     2: DoorData(RoomName.Arbor_Chamber, defaultLock=DoorLockType.Plasma,
-                                rule_func=lambda world, state, player: can_grapple(world, state, player) and can_xray(world, state, player) and can_space_jump(world, state, player),
+                                rule_func=lambda world, state: can_grapple(world, state) and can_xray(world, state) and can_space_jump(world, state),
                                 tricks=[Tricks.root_cave_arbor_chamber_no_grapple_xray]
                                 ),
 
                 },
                 pickups=[
-                    PickupData('Tallon Overworld: Root Cave', rule_func=lambda world, state, player: can_space_jump(world, state, player) and can_grapple(world, state, player) and can_xray(world, state, player), tricks=[Tricks.root_cave_arbor_chamber_no_grapple_xray]),
+                    PickupData('Tallon Overworld: Root Cave', rule_func=lambda world, state: can_space_jump(world, state) and can_grapple(world, state) and can_xray(world, state), tricks=[Tricks.root_cave_arbor_chamber_no_grapple_xray]),
                 ]),
 
             RoomName.Root_Tunnel: RoomData(
@@ -252,7 +252,7 @@ class TallonOverworldAreaData(AreaData):
                 doors={
                     0: DoorData(RoomName.Canyon_Cavern),
                     1: DoorData(RoomName.Transport_Tunnel_A, destination_area=MetroidPrimeArea.Tallon_Overworld),
-                    2: DoorData(RoomName.Gully, defaultLock=DoorLockType.Blue, rule_func=lambda world, state, player: can_boost(world, state, player) and can_bomb(world, state, player)),
+                    2: DoorData(RoomName.Gully, defaultLock=DoorLockType.Blue, rule_func=lambda world, state: can_boost(world, state) and can_bomb(world, state)),
                     3: DoorData(RoomName.Root_Tunnel)
                 }
             ),
@@ -346,7 +346,7 @@ class TallonOverworldAreaData(AreaData):
                 include_area_in_name=True,
                 doors={
                     0: DoorData(RoomName.Transport_to_Phazon_Mines_East, defaultLock=DoorLockType.Ice),
-                    1: DoorData(RoomName.Great_Tree_Hall, defaultLock=DoorLockType.Ice, rule_func=can_boost, sub_region_door_index=0, sub_region_access_override=lambda world, state, player: True),
+                    1: DoorData(RoomName.Great_Tree_Hall, defaultLock=DoorLockType.Ice, rule_func=can_boost, sub_region_door_index=0, sub_region_access_override=lambda world, state: True),
                 },
             ),
 

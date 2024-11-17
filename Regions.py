@@ -29,7 +29,7 @@ def create_regions(world: 'MetroidPrimeWorld', final_boss_selection: int):
     def can_access_elevator(world: 'MetroidPrimeWorld', state: CollectionState) -> bool:
         if world.options.pre_scan_elevators.value:
             return True
-        return can_scan(world, state, world.player)
+        return can_scan(world, state)
 
     for mappings in world.elevator_mapping.values():
         for elevator, target in mappings.items():
@@ -41,22 +41,22 @@ def create_regions(world: 'MetroidPrimeWorld', final_boss_selection: int):
 
     if final_boss_selection == 0 or final_boss_selection == 2:
         artifact_temple.connect(impact_crater, "Crater Access", lambda state: (
-            can_missile(world, state, world.player) and
-            has_required_artifact_count(world, state, world.player) and
-            can_combat_prime(world, state, world.player) and
-            can_combat_ridley(world, state, world.player) and
-            can_phazon(world, state, world.player) and
-            can_plasma_beam(world, state, world.player) and can_wave_beam(world, state, world.player) and can_ice_beam(world, state, world.player) and can_power_beam(world, state, world.player) and
-            can_xray(world, state, world.player, True) and can_thermal(world, state, world.player, True)))
+            can_missile(world, state) and
+            has_required_artifact_count(world, state) and
+            can_combat_prime(world, state) and
+            can_combat_ridley(world, state) and
+            can_phazon(world, state) and
+            can_plasma_beam(world, state) and can_wave_beam(world, state) and can_ice_beam(world, state) and can_power_beam(world, state) and
+            can_xray(world, state, True) and can_thermal(world, state, True)))
         impact_crater.connect(mission_complete, "Mission Complete")
 
     elif final_boss_selection == 1:
         artifact_temple.connect(mission_complete, "Mission Complete", lambda state:
-                                can_missile(world, state, world.player) and
-                                has_required_artifact_count(world, state, world.player) and (can_plasma_beam(world, state, world.player) or can_super_missile(world, state, world.player)) and
-                                can_combat_ridley(world, state, world.player)
+                                can_missile(world, state) and
+                                has_required_artifact_count(world, state) and (can_plasma_beam(world, state) or can_super_missile(world, state)) and
+                                can_combat_ridley(world, state)
                                 )
     elif final_boss_selection == 3:
         artifact_temple.connect(mission_complete, "Mission Complete", lambda state: (
-            can_missile(world, state, world.player) and
-            has_required_artifact_count(world, state, world.player)))
+            can_missile(world, state) and
+            has_required_artifact_count(world, state)))
