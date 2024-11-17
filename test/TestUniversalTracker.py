@@ -2,11 +2,12 @@
 from ..data.StartRoomData import StartRoomDifficulty
 from ..Items import SuitUpgrade
 from ..data.RoomNames import RoomName
-import typing
-if typing.TYPE_CHECKING:
-    from .. import MetroidPrimeWorld
+from typing import Any, TYPE_CHECKING, Dict
 from . import MetroidPrimeTestBase
-options = {
+
+if TYPE_CHECKING:
+    from .. import MetroidPrimeWorld
+options: Dict[str, Any] = {
     "door_color_randomization": "regional",
     "starting_room": StartRoomDifficulty.Safe.value,
     "include_power_beam_doors": True,
@@ -99,33 +100,36 @@ options = {
 
 class TestUniversalTracker(MetroidPrimeTestBase):
     auto_construct = False
-    run_default_tests = False
+    run_default_tests = False  # type: ignore
     options = options
 
     def test_door_randomization_is_preserved(self):
-        self.world_setup()
+        self.world_setup()  # type: ignore
         world: 'MetroidPrimeWorld' = self.world
         self.world.generate_early()
+        assert world.door_color_mapping
         for area in world.door_color_mapping.keys():
             self.assertEqual(world.door_color_mapping[area].type_mapping, self.options["door_color_mapping"][area]["type_mapping"])
 
     def test_starting_room_info_is_preserved(self):
-        self.world_setup()
+        self.world_setup()  # type: ignore
         world: 'MetroidPrimeWorld' = self.world
+        assert world.starting_room_data.selected_loadout
         self.world.generate_early()
         self.assertEqual(world.starting_room_data.name, self.options["starting_room_name"])
         self.assertEqual(SuitUpgrade.get_by_value(self.options["starting_beam"]), world.starting_room_data.selected_loadout.starting_beam)
 
     def test_starting_room_info_is_preserved_with_progressive_beams(self):
         self.options["progressive_beam_upgrades"] = 1
-        self.world_setup()
+        self.world_setup()  # type: ignore
         world: 'MetroidPrimeWorld' = self.world
+        assert world.starting_room_data.selected_loadout
         self.world.generate_early()
         self.assertEqual(world.starting_room_data.name, self.options["starting_room_name"])
         self.assertEqual(SuitUpgrade.get_by_value(self.options["starting_beam"]), world.starting_room_data.selected_loadout.starting_beam)
 
     def test_elevator_mapping_is_preserved(self):
-        self.world_setup()
+        self.world_setup()  # type: ignore
         world: 'MetroidPrimeWorld' = self.world
         self.world.generate_early()
         self.assertEqual(world.elevator_mapping, self.options["elevator_mapping"])

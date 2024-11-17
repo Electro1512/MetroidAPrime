@@ -5,7 +5,7 @@ from . import MetroidPrimeTestBase
 
 
 class TestNonVariaHeatDamageFalse(MetroidPrimeTestBase):
-    run_default_tests = False
+    run_default_tests = False  # type: ignore
     options = {
         "non_varia_heat_damage": False
     }
@@ -22,7 +22,7 @@ class TestNonVariaHeatDamageFalse(MetroidPrimeTestBase):
 
 
 class TestNonVariaHeatDamageTrue(MetroidPrimeTestBase):
-    run_default_tests = False
+    run_default_tests = False  # type: ignore
     options = {
         "non_varia_heat_damage": True
     }

@@ -1,6 +1,6 @@
 import json
 import os
-from BaseClasses import ItemClassification
+from typing import Any, Dict
 from Fill import distribute_items_restrictive
 from ..config import make_config
 from . import MetroidPrimeTestBase
@@ -8,7 +8,7 @@ from . import MetroidPrimeTestBase
 OUTPUT_DIR = os.path.join(os.path.dirname(__file__), 'test_output')
 
 
-def dict_diff(d1, d2, path=""):
+def dict_diff(d1: Any, d2: Any, path: str = ""):
     """Prints out the differences between two dictionaries recursively, will show up if the test fails"""
     for k in d1:
         if k not in d2:
@@ -29,7 +29,7 @@ class TestDefaultOutputGeneration(MetroidPrimeTestBase):
     }
 
     def test_output_generates_correctly(self) -> None:
-        self.world_setup()
+        self.world_setup()  # type: ignore
         distribute_items_restrictive(self.multiworld)
         output = make_config(self.world)
         expected_output = {}
@@ -49,7 +49,7 @@ class TestMainPBAndMissileLauncherOutputGeneration(MetroidPrimeTestBase):
     }
 
     def test_output_generates_correctly_with_main_pb_and_missile_launcher(self) -> None:
-        self.world_setup()
+        self.world_setup()  # type: ignore
         distribute_items_restrictive(self.multiworld)
         output = make_config(self.world)
         expected_output = {}
@@ -61,7 +61,7 @@ class TestMainPBAndMissileLauncherOutputGeneration(MetroidPrimeTestBase):
         dump_output_if_test_fails(self, output, expected_output)
 
 
-def dump_output_if_test_fails(test: MetroidPrimeTestBase, output, expected_output):
+def dump_output_if_test_fails(test: MetroidPrimeTestBase, output: Dict[str, Any], expected_output: Dict[str, Any]):
     try:
         test.assertDictEqual(output, expected_output)
     except AssertionError:

@@ -1,14 +1,6 @@
-import typing
 
 from ..Items import PROGRESSIVE_ITEM_MAPPING, ProgressiveUpgrade, SuitUpgrade
-from ..data.AreaNames import MetroidPrimeArea
-from ..data.RoomNames import RoomName
-from ..data.StartRoomData import StartRoomData, StartRoomDifficulty
-from ..data.Transports import get_random_elevator_mapping, transport_names_to_room_names
 from . import MetroidPrimeTestBase
-
-if typing.TYPE_CHECKING:
-    from .. import MetroidPrimeWorld
 
 
 class TestProgressiveBeamUpgradesNormalStart(MetroidPrimeTestBase):

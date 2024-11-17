@@ -1,33 +1,33 @@
 import math
-import typing
-
 from Fill import distribute_items_restrictive
 from ..data.DoorData import get_door_data_by_room_names
 from ..data.BlastShieldRegions import get_valid_blast_shield_regions_by_area
 from ..data.RoomData import AreaData
 from ..data.AreaNames import MetroidPrimeArea
-from ..BlastShieldRando import MAX_BEAM_COMBO_DOORS_PER_AREA, AreaBlastShieldMapping, BlastShieldType, apply_blast_shield_mapping, remove_vanilla_blast_shields
+from ..BlastShieldRando import MAX_BEAM_COMBO_DOORS_PER_AREA, AreaBlastShieldMapping, BlastShieldType
 from ..DoorRando import DoorLockType
 from ..config import make_config
 from ..data.RoomNames import RoomName
 from ..Items import ProgressiveUpgrade, SuitUpgrade
 from . import MetroidPrimeTestBase
-if typing.TYPE_CHECKING:
-    from .. import MetroidPrimeWorld
+from typing import Any, Dict, TYPE_CHECKING, List, Tuple
 from ..data.PhazonMines import PhazonMinesAreaData
 from ..data.PhendranaDrifts import PhendranaDriftsAreaData
 from ..data.MagmoorCaverns import MagmoorCavernsAreaData
 from ..data.ChozoRuins import ChozoRuinsAreaData
 from ..data.TallonOverworld import TallonOverworldAreaData
 
+if TYPE_CHECKING:
+    from .. import MetroidPrimeWorld
+
 
 def _get_default_area_data(area: MetroidPrimeArea) -> AreaData:
-    mapping = {MetroidPrimeArea.Tallon_Overworld: TallonOverworldAreaData,
-               MetroidPrimeArea.Chozo_Ruins: ChozoRuinsAreaData,
-               MetroidPrimeArea.Magmoor_Caverns: MagmoorCavernsAreaData,
-               MetroidPrimeArea.Phendrana_Drifts: PhendranaDriftsAreaData,
-               MetroidPrimeArea.Phazon_Mines: PhazonMinesAreaData
-               }
+    mapping: Dict[MetroidPrimeArea, Any] = {MetroidPrimeArea.Tallon_Overworld: TallonOverworldAreaData,
+                                            MetroidPrimeArea.Chozo_Ruins: ChozoRuinsAreaData,
+                                            MetroidPrimeArea.Magmoor_Caverns: MagmoorCavernsAreaData,
+                                            MetroidPrimeArea.Phendrana_Drifts: PhendranaDriftsAreaData,
+                                            MetroidPrimeArea.Phazon_Mines: PhazonMinesAreaData
+                                            }
 
     return mapping[area]()
 
@@ -67,6 +67,7 @@ class TestReplaceBlastShieldRando(MetroidPrimeTestBase):
 
     def test_blast_shield_mapping_is_generated_for_each_vanilla_door(self):
         world: 'MetroidPrimeWorld' = self.world
+        assert world.blast_shield_mapping
         for area, mapping in world.blast_shield_mapping.items():
             blast_shield_doors = [door_id for room in _get_default_area_data(MetroidPrimeArea(area)).rooms.values() for door_id, door_data in room.doors.items() if door_data.blast_shield]
             mapped_doors = [door for room in mapping.type_mapping.values() for door in room.keys()]
@@ -89,6 +90,7 @@ class TestReplaceBlastShieldRando(MetroidPrimeTestBase):
 
     def test_beam_combos_are_not_included_in_mapping_by_default(self):
         world: 'MetroidPrimeWorld' = self.world
+        assert world.blast_shield_mapping
         for mapping in world.blast_shield_mapping.values():
             for room in mapping.type_mapping.values():
                 for door in room.values():
@@ -96,7 +98,7 @@ class TestReplaceBlastShieldRando(MetroidPrimeTestBase):
 
 
 class TestBlastShieldMapping(MetroidPrimeTestBase):
-    run_default_tests = False
+    run_default_tests = False  # type: ignore
     options = {
         "blast_shield_randomization": "replace_existing",
         "blast_shield_available_types": "all",
@@ -116,9 +118,10 @@ class TestBlastShieldMapping(MetroidPrimeTestBase):
     def test_blast_shield_mapping_passed_as_option_applies_to_logic(self):
         test_region = RoomName.Canyon_Cavern.value
         world: 'MetroidPrimeWorld' = self.world
+        assert world.blast_shield_mapping
         self.assertEqual(
             world.blast_shield_mapping[MetroidPrimeArea.Tallon_Overworld.value],
-            AreaBlastShieldMapping(MetroidPrimeArea.Tallon_Overworld.value, {"Landing Site": {1: BlastShieldType.Bomb, 2: BlastShieldType.Flamethrower}})
+            AreaBlastShieldMapping(MetroidPrimeArea.Tallon_Overworld.value, {"Landing Site": {1: BlastShieldType.Bomb, 2: BlastShieldType.Flamethrower}})  # type: ignore
         )
         self.assertFalse(self.can_reach_region(test_region))
         self.collect_by_name([SuitUpgrade.Morph_Ball_Bomb.value, SuitUpgrade.Morph_Ball.value])
@@ -150,7 +153,7 @@ class TestBlastShieldMapping(MetroidPrimeTestBase):
 
 
 class TestBlastShieldMappingWithProgressiveBeams(MetroidPrimeTestBase):
-    run_default_tests = False
+    run_default_tests = False  # type: ignore
     options = {
         "blast_shield_randomization": "replace_existing",
         "blast_shield_available_types": "all",
@@ -202,6 +205,7 @@ class TestIncludeBeamCombos(MetroidPrimeTestBase):
 
     def test_beam_combos_are_included_within_limits(self):
         world: 'MetroidPrimeWorld' = self.world
+        assert world.blast_shield_mapping
         for area, mapping in world.blast_shield_mapping.items():
             beam_combo_count = 0
             for room in mapping.type_mapping.values():
@@ -220,6 +224,7 @@ class TestMixItUpBlastShieldRando(MetroidPrimeTestBase):
 
     def test_blast_shields_are_placed_in_regions_with_appropriate_quantities(self):
         world: 'MetroidPrimeWorld' = self.world
+        assert world.blast_shield_mapping
         for area, mapping in world.blast_shield_mapping.items():
             blast_shield_count = 0
             total_available_blast_shield_options = len(get_valid_blast_shield_regions_by_area(self.world, MetroidPrimeArea(area)))
@@ -239,10 +244,10 @@ class TestMixItUpBlastShieldRando(MetroidPrimeTestBase):
 
 class TestBlastShieldRegionMapping(MetroidPrimeTestBase):
     """These mappings are manually entered, so we need to verify that they are valid"""
-    run_default_tests = False
+    run_default_tests = False  # type: ignore
 
     def test_each_room_is_paired_to_a_valid_room(self):
-        invalid_rooms = []
+        invalid_rooms: List[Tuple[RoomName, RoomName, MetroidPrimeArea]] = []
         for area in MetroidPrimeArea:
             blast_shield_mapping = get_valid_blast_shield_regions_by_area(self.world, area)
             for region in blast_shield_mapping:
@@ -262,6 +267,7 @@ class TestLockedDoorsNoBlastShieldOrDoorColorRando(MetroidPrimeTestBase):
     def test_locked_doors_are_added_to_blast_shield_mapping_when_no_other_door_rando_is_enabled(self):
         world: 'MetroidPrimeWorld' = self.world
         total_locked_doors = 0
+        assert world.blast_shield_mapping
         for area, mapping in world.blast_shield_mapping.items():
             area_locked_doors = 0
             for room in mapping.type_mapping.values():
@@ -290,6 +296,7 @@ class TestLockedDoorsInBlastShieldMapping(MetroidPrimeTestBase):
 
     def test_locked_doors_are_added_to_blast_shield_mapping(self):
         world: 'MetroidPrimeWorld' = self.world
+        assert world.blast_shield_mapping
         mapped_value = world.blast_shield_mapping[MetroidPrimeArea.Tallon_Overworld.value].type_mapping["Landing Site"][0]
         self.assertEqual(mapped_value, BlastShieldType.Disabled, "Locked door not added to mapping")
 
@@ -317,6 +324,7 @@ class TestLockedDoorsWithDoorColorRandoAndBlastShieldRandomization(MetroidPrimeT
     def test_locked_doors_are_not_overwritten(self):
         world: 'MetroidPrimeWorld' = self.world
         total_locked_doors = 0
+        assert world.blast_shield_mapping
         for _, mapping in world.blast_shield_mapping.items():
             for room in mapping.type_mapping.values():
                 for door in room.values():
@@ -326,7 +334,7 @@ class TestLockedDoorsWithDoorColorRandoAndBlastShieldRandomization(MetroidPrimeT
 
 
 class TestSubRegionUsesBlastShields(MetroidPrimeTestBase):
-    run_default_tests = False
+    run_default_tests = False # type: ignore
     options = {
         "blast_shield_randomization": "mix_it_up",
         "blast_shield_frequency": "low",
@@ -427,7 +435,7 @@ class TestSubRegionUsesBlastShields(MetroidPrimeTestBase):
 
 
 class TestBlastShieldsAndDoorColorRando(MetroidPrimeTestBase):
-    run_default_tests = False
+    run_default_tests = False # type: ignore
     options = {
         "blast_shield_randomization": "mix_it_up",
         "blast_shield_frequency": "low",

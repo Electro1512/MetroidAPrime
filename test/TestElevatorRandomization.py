@@ -1,17 +1,18 @@
-import typing
 
 from ..data.AreaNames import MetroidPrimeArea
 from ..data.RoomNames import RoomName
 from ..data.StartRoomData import StartRoomData, StartRoomDifficulty
-from ..data.Transports import get_random_elevator_mapping, transport_names_to_room_names
+from ..data.Transports import get_random_elevator_mapping
 from . import MetroidPrimeTestBase
 
-if typing.TYPE_CHECKING:
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
     from .. import MetroidPrimeWorld
 
 
 class TestNonRandomStartingRoomWithElevatorRando(MetroidPrimeTestBase):
-    run_default_tests = False
+    run_default_tests = False # type: ignore
     options = {
         "elevator_randomization": True,
         "starting_room": 'normal'
@@ -25,7 +26,7 @@ class TestNonRandomStartingRoomWithElevatorRando(MetroidPrimeTestBase):
 
 
 class TestRandomStartingRoomWithElevatorRando(MetroidPrimeTestBase):
-    run_default_tests = False
+    run_default_tests = False # type: ignore
     options = {
         "elevator_randomization": True,
         "starting_room": 'safe'
@@ -39,7 +40,7 @@ class TestRandomStartingRoomWithElevatorRando(MetroidPrimeTestBase):
 
 
 class AllowListElevatorRando(MetroidPrimeTestBase):
-    run_default_tests = False
+    run_default_tests = False # type: ignore
     options = {
         "elevator_randomization": True,
         "starting_room_name": 'Save Station B',

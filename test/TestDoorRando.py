@@ -1,4 +1,3 @@
-import typing
 
 from Fill import distribute_items_restrictive
 from ..Items import SuitUpgrade
@@ -8,8 +7,9 @@ from ..config import make_config
 from ..data.AreaNames import MetroidPrimeArea
 from ..data.RoomNames import RoomName
 from . import MetroidPrimeTestBase
+from typing import List, TYPE_CHECKING
 
-if typing.TYPE_CHECKING:
+if TYPE_CHECKING:
     from .. import MetroidPrimeWorld
 
 
@@ -49,6 +49,7 @@ class TestGlobalDoorRando(MetroidPrimeTestBase):
         self.world.generate_early()
         world: 'MetroidPrimeWorld' = self.world
         first_mapping = None
+        assert world.door_color_mapping
         self.assertTrue(len(world.door_color_mapping) > 0, "Door color mapping should not be empty")
         for area in MetroidPrimeArea:
             if world.door_color_mapping[area.value].type_mapping is None:
@@ -77,8 +78,9 @@ class TestRegionalDoorRando(MetroidPrimeTestBase):
         self.world.generate_early()
         world: 'MetroidPrimeWorld' = self.world
         first_mapping = None
+        assert world.door_color_mapping
         self.assertTrue(len(world.door_color_mapping) > 0, "Door color mapping should not be empty")
-        same_areas = []
+        same_areas: List[MetroidPrimeArea] = []
         for area in MetroidPrimeArea:
             if world.door_color_mapping[area.value].type_mapping is None:
                 continue
@@ -179,9 +181,10 @@ class TestDoorPlando(MetroidPrimeTestBase):
     def test_door_mapping_gets_set_from_plando(self):
         self.world.generate_early()
         world: 'MetroidPrimeWorld' = self.world
+        assert world.door_color_mapping
         self.assertTrue(len(world.door_color_mapping) > 0, "Door color mapping should not be empty")
         for area in MetroidPrimeArea:
-            self.assertEqual(world.door_color_mapping[area.value].type_mapping, world.options.door_color_mapping.get(area.value).get("type_mapping"), "Door color mapping should be set from plando")
+            self.assertEqual(world.door_color_mapping[area.value].type_mapping, world.options.door_color_mapping.get(area.value).get("type_mapping"), "Door color mapping should be set from plando")  # type: ignore
 
 
 class TestGlobalDoorRandoWithBombAndPowerDoors(MetroidPrimeTestBase):
@@ -193,10 +196,11 @@ class TestGlobalDoorRandoWithBombAndPowerDoors(MetroidPrimeTestBase):
 
     def test_bomb_doors_are_applied_to_single_region_that_is_not_start(self):
         world: 'MetroidPrimeWorld' = self.world
-        world.options.door_color_mapping.value = None
+        world.options.door_color_mapping.value = None  # type: ignore
         world.generate_early()
         bomb_door_region = None
 
+        assert world.door_color_mapping
         for area, mapping in world.door_color_mapping.items():
             if DoorLockType.Bomb.value in mapping.type_mapping.values():
                 if bomb_door_region is None:
@@ -212,7 +216,8 @@ class TestGlobalDoorRandoWithBombAndPowerDoors(MetroidPrimeTestBase):
         world: 'MetroidPrimeWorld' = self.world
         power_beam_door_found = False
 
-        for area, mapping in world.door_color_mapping.items():
+        assert world.door_color_mapping
+        for mapping in world.door_color_mapping.values():
             if DoorLockType.Power_Beam.value in mapping.type_mapping.values():
                 power_beam_door_found = True
                 break
@@ -232,6 +237,7 @@ class TestRegionalobalDoorRandoWithBombAndPowerDoors(MetroidPrimeTestBase):
         world.generate_early()
         bomb_door_region = None
 
+        assert world.door_color_mapping
         for area, mapping in world.door_color_mapping.items():
             if DoorLockType.Bomb.value in mapping.type_mapping.values():
                 if bomb_door_region is None:
@@ -252,15 +258,17 @@ class TestBeamRandoWithDoorRando(MetroidPrimeTestBase):
 
     def test_when_power_beam_is_not_starting_beam_and_power_beam_doors_are_included_the_new_starting_beam_doors_are_not_included(self):
         world: 'MetroidPrimeWorld' = self.world
-        world.options.door_color_mapping.value = None
+        world.options.door_color_mapping.value = None  # type: ignore
         world.generate_early()
 
+        assert world.starting_room_data.selected_loadout
         # Check if the starting beam is not the power beam
         starting_beam = world.starting_room_data.selected_loadout.starting_beam
         self.assertNotEqual(starting_beam, SuitUpgrade.Power_Beam.value, "Starting beam should not be the power beam")
 
         new_starting_beam_doors_found = False
 
+        assert world.door_color_mapping
         for _, mapping in world.door_color_mapping.items():
             if starting_beam.value in mapping.type_mapping.values():
                 new_starting_beam_doors_found = True

@@ -6,7 +6,7 @@ from . import MetroidPrimeTestBase
 
 
 class TestScanVisorShuffled(MetroidPrimeTestBase):
-    run_default_tests = False
+    run_default_tests = False # type: ignore
     options = {
         "trick_difficulty": TrickDifficulty.Easy.value,
         "shuffle_scan_visor": True
@@ -23,7 +23,7 @@ class TestScanVisorShuffled(MetroidPrimeTestBase):
 
 
 class TestScanVisorNotShuffled(MetroidPrimeTestBase):
-    run_default_tests = False
+    run_default_tests = False # type: ignore
     options = {
         "trick_difficulty": TrickDifficulty.Easy.value,
         "shuffle_scan_visor": False

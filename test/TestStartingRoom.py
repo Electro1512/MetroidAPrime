@@ -1,5 +1,4 @@
-import os
-
+from typing import List
 from Fill import distribute_items_restrictive
 from ..Items import SuitUpgrade
 from ..data.RoomNames import RoomName
@@ -20,12 +19,10 @@ class TestStartingRoomsGenerate(MetroidPrimeTestBase):
                     "missile_launcher": 1,
                 }
                 try:
-                    self.world_setup()
+                    self.world_setup()  # type: ignore
                     distribute_items_restrictive(self.multiworld)
                     self.assertBeatable(True)
-                    self.multiworld = None
-                    self.world = None
-                except Exception as e:
+                except Exception:
                     self.fail(f"Failed to generate beatable game with start room: {room_name}. ")
 
 
@@ -33,7 +30,7 @@ class TestStartingRoomsGenerateWithElevatorRando(MetroidPrimeTestBase):
     auto_construct = False
 
     def test_starting_room_rando_with_elevator_rando(self):
-        failures = []
+        failures: List[str] = []
         for room_name in all_start_rooms:
             # Landing site is not viable for elevator randomization w/o tricks
             if room_name == RoomName.Landing_Site.value:
@@ -45,19 +42,19 @@ class TestStartingRoomsGenerateWithElevatorRando(MetroidPrimeTestBase):
                     "missile_launcher": 1
                 }
                 try:
-                    self.world_setup()
+                    self.world_setup()  # type: ignore
                     distribute_items_restrictive(self.multiworld)
                     self.assertBeatable(True)
-                    self.multiworld = None
-                    self.world = None
-                except Exception as e:
+                    self.multiworld = None  # type: ignore
+                    self.world = None  # type: ignore
+                except Exception:
                     failures.append(room_name)
         if len(failures):
             self.fail("Failed to generate beatable game with start rooms: " + ", ".join(failures))
 
 
 class TestStartRoomBKPreventionDisabled(MetroidPrimeTestBase):
-    run_default_tests = False
+    run_default_tests = False  # type: ignore
     options = {
         "starting_room_name": RoomName.Save_Station_B.value,
         "elevator_randomization": False,
@@ -67,13 +64,14 @@ class TestStartRoomBKPreventionDisabled(MetroidPrimeTestBase):
     def test_disabling_bk_prevention_does_not_give_items_or_pre_fill(self):
         self.world.generate_early()
         world: MetroidPrimeWorld = self.world
+        assert world.starting_room_data.selected_loadout
         self.assertTrue(SuitUpgrade.Missile_Expansion not in world.starting_room_data.selected_loadout.loadout)
         self.assertEqual(len(world.prefilled_item_map.keys()), 0)
         self.assertEqual(world.starting_room_data.selected_loadout.starting_beam, SuitUpgrade.Plasma_Beam)
 
 
 class TestStartRoomBKPreventionEnabled(MetroidPrimeTestBase):
-    run_default_tests = False
+    run_default_tests = False  # type: ignore
     options = {
         "starting_room_name": RoomName.Save_Station_B.value,
         "elevator_randomization": False,
@@ -83,13 +81,14 @@ class TestStartRoomBKPreventionEnabled(MetroidPrimeTestBase):
     def test_enabling_bk_prevention_gives_items_and_pre_fills_locations(self):
         self.world.generate_early()
         world: MetroidPrimeWorld = self.world
+        assert world.starting_room_data.selected_loadout
         self.assertIn(SuitUpgrade.Missile_Expansion, world.starting_room_data.selected_loadout.loadout)
         self.assertEqual(len(world.prefilled_item_map.keys()), 1)
         self.assertEqual(world.starting_room_data.selected_loadout.starting_beam, SuitUpgrade.Plasma_Beam)
 
 
 class TestBuckleUpStartingRoom(MetroidPrimeTestBase):
-    run_default_tests = False
+    run_default_tests = False  # type: ignore
     options = {
         "starting_room": StartRoomDifficulty.Buckle_Up.value
     }
@@ -100,7 +99,7 @@ class TestBuckleUpStartingRoom(MetroidPrimeTestBase):
 
 
 class TestNormalStartingRoom(MetroidPrimeTestBase):
-    run_default_tests = False
+    run_default_tests = False  # type: ignore
     options = {
         "starting_room": StartRoomDifficulty.Normal.value
     }
@@ -110,7 +109,7 @@ class TestNormalStartingRoom(MetroidPrimeTestBase):
 
 
 class TestNormalStartingRoomWithBlastShieldRandoMixItUp(MetroidPrimeTestBase):
-    run_default_tests = False
+    run_default_tests = False  # type: ignore
     options = {
         "starting_room": StartRoomDifficulty.Normal.value,
         "blast_shield_randomization": 'mix_it_up',
