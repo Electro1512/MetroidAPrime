@@ -1,8 +1,8 @@
 import os
 
 from Fill import distribute_items_restrictive
-from worlds.metroidprime.Items import SuitUpgrade
-from worlds.metroidprime.data.RoomNames import RoomName
+from ..Items import SuitUpgrade
+from ..data.RoomNames import RoomName
 from ..data.StartRoomData import StartRoomDifficulty, all_start_rooms
 from . import MetroidPrimeTestBase
 from .. import MetroidPrimeWorld

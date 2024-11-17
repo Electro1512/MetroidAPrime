@@ -1,5 +1,5 @@
 import copy
-from typing import TYPE_CHECKING, Dict
+from typing import TYPE_CHECKING, Dict, List
 
 from .RoomNames import RoomName
 from .RoomData import MetroidPrimeArea
@@ -64,7 +64,7 @@ ELEVATOR_USEFUL_NAMES: Dict[str, str] = {
 }
 
 
-def temple_dest(boss) -> str:
+def temple_dest(boss: int) -> str:
     if boss == 0 or boss == 2:
         return "Crater Entry Point"
     else:
@@ -107,13 +107,13 @@ def get_room_name_by_transport_name(transport_name: str) -> str:
 
 def get_transport_data(world: 'MetroidPrimeWorld') -> Dict[str, Dict[str, str]]:
     mapping = world.elevator_mapping
-    data = {}
+    data: Dict[str, Dict[str, str]] = {}
     for area in world.elevator_mapping.keys():
         data[area] = {}
         for source, dest in mapping[area].items():
             data[area][get_transport_name_by_room_name(source)] = get_transport_name_by_room_name(dest)
 
-    data[MetroidPrimeArea.Tallon_Overworld.value]["Artifact Temple"] = temple_dest(world.options.final_bosses)
+    data[MetroidPrimeArea.Tallon_Overworld.value]["Artifact Temple"] = temple_dest(world.options.final_bosses.value)
     return data
 
 
@@ -121,15 +121,15 @@ def get_region_by_elavator_name(elevator_name: str) -> str:
     for region, elevators in default_elevator_mappings.items():
         if elevator_name in elevators:
             return region
-    return None
+    raise ValueError(f"Could not find region for elevator {elevator_name}")
 
 
 def get_random_elevator_mapping(world: 'MetroidPrimeWorld') -> Dict[str, Dict[str, str]]:
-    mapped_elevators = {area: {} for area in world.elevator_mapping.keys()}
+    mapped_elevators: Dict[str, Dict[str, str]] = {area: {} for area in world.elevator_mapping.keys()}
     available_elevators_by_region = copy.deepcopy(default_elevator_mappings)
     denied_elevators = world.starting_room_data.denied_elevators or {}
 
-    def get_region_with_most_unshuffled_elevators():
+    def get_region_with_most_unshuffled_elevators() -> str:
         max_elevators = 0
         region = None
         for area, elevators in available_elevators_by_region.items():
@@ -137,28 +137,30 @@ def get_random_elevator_mapping(world: 'MetroidPrimeWorld') -> Dict[str, Dict[st
             if num_elevators > max_elevators:
                 max_elevators = num_elevators
                 region = area
+        if region is None:
+            raise ValueError("No region with elevators found")
         return region
 
     def get_flat_list_of_available_elevators():
-        elevators = []
-        for area, area_elevators in available_elevators_by_region.items():
+        elevators: List[str] = []
+        for area_elevators in available_elevators_by_region.values():
             elevators.extend(area_elevators.keys())
         return elevators
 
-    def get_random_target_region(source_region):
+    def get_random_target_region(source_region: str) -> str:
         target_regions = list(available_elevators_by_region.keys())
         target_regions.remove(source_region)
         return world.random.choice(target_regions)
 
-    def delete_region_if_empty(region):
+    def delete_region_if_empty(region: str):
         if len(available_elevators_by_region[region]) == 0:
             del available_elevators_by_region[region]
 
-    def two_way_map_elevators(source_region, source_elevator, target_region, target_elevator):
+    def two_way_map_elevators(source_region: str, source_elevator: str, target_region: str, target_elevator: str):
         one_way_map_elevator(source_region, source_elevator, target_elevator)
         one_way_map_elevator(target_region, target_elevator, source_elevator)
 
-    def one_way_map_elevator(source_region, source_elevator, target_elevator):
+    def one_way_map_elevator(source_region: str, source_elevator: str, target_elevator: str):
         mapped_elevators[source_region][source_elevator] = target_elevator
         del available_elevators_by_region[source_region][source_elevator]
         delete_region_if_empty(source_region)

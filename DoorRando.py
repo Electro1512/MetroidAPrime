@@ -1,7 +1,7 @@
 import copy
 from enum import Enum
 
-from .WorldMapping import AreaMapping
+from .WorldMapping import AreaMapping, WorldMapping
 
 from .data.RoomNames import RoomName
 
@@ -10,7 +10,6 @@ from .Items import SuitUpgrade
 from .data.AreaNames import MetroidPrimeArea
 from typing import TYPE_CHECKING, Callable, Dict, List
 
-from worlds.metroidprime.WorldMapping import WorldMapping
 
 if TYPE_CHECKING:
     from . import MetroidPrimeWorld

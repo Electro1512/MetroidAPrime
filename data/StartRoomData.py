@@ -222,6 +222,13 @@ def _has_options_that_allow_more_landing_site_checks(world: 'MetroidPrimeWorld')
     return (str(world.options.blast_shield_randomization.value) != world.options.blast_shield_randomization.option_none or world.options.trick_difficulty.value != -1) and not world.options.elevator_randomization
 
 
+def get_area_by_room_name(world: 'MetroidPrimeWorld', room_name: str) -> MetroidPrimeArea:
+    for area, data in world.game_region_data.items():
+        if RoomName(room_name) in data.rooms:
+            return area
+    raise ValueError(f"Could not find area for room {room_name}")
+
+
 def init_starting_room_data(world: 'MetroidPrimeWorld'):
     difficulty = world.options.starting_room.value
     yaml_name = world.options.starting_room_name.value
@@ -230,7 +237,7 @@ def init_starting_room_data(world: 'MetroidPrimeWorld'):
         if yaml_name in all_start_rooms:
             world.starting_room_data = get_starting_room_by_name(world, yaml_name)
         else:
-            world.starting_room_data = StartRoomData(name=str(world.options.starting_room_name.value), area=None)
+            world.starting_room_data = StartRoomData(name=str(world.options.starting_room_name.value), area=get_area_by_room_name(world, str(world.options.starting_room_name.value)))
             world.starting_room_data.loadouts = [StartRoomLoadout(loadout=[SuitUpgrade.Power_Beam])]
     else:
         if world.options.starting_room.value == StartRoomDifficulty.Normal.value:
@@ -299,6 +306,7 @@ def init_starting_beam(world: 'MetroidPrimeWorld'):
     elif world.options.door_color_randomization != "none" and loadout_beam and loadout_beam != SuitUpgrade.Power_Beam and not world.starting_room_data.force_starting_beam:
         # replace the beam with whatever the new one should be mapped to
         original_door_color = BEAM_TO_LOCK_MAPPING[loadout_beam].value
+        assert world.door_color_mapping
         # Select new beam based off of what the original color is now mapped to
         new_beam = None
         for original, new in world.door_color_mapping[world.starting_room_data.area.value].type_mapping.items():

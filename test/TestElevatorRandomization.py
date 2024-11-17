@@ -1,7 +1,7 @@
 import typing
 
-from worlds.metroidprime.data.AreaNames import MetroidPrimeArea
-from worlds.metroidprime.data.RoomNames import RoomName
+from ..data.AreaNames import MetroidPrimeArea
+from ..data.RoomNames import RoomName
 from ..data.StartRoomData import StartRoomData, StartRoomDifficulty
 from ..data.Transports import get_random_elevator_mapping, transport_names_to_room_names
 from . import MetroidPrimeTestBase

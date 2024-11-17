@@ -3,12 +3,12 @@ import json
 import os
 
 import yaml
-from worlds.metroidprime.Items import SuitUpgrade
-from worlds.metroidprime.data.AreaNames import MetroidPrimeArea
-from worlds.metroidprime.data.Transports import default_elevator_mappings
-from worlds.metroidprime.data.RoomNames import RoomName
+from ..Items import SuitUpgrade
+from ..data.AreaNames import MetroidPrimeArea
+from ..data.Transports import default_elevator_mappings
+from ..data.RoomNames import RoomName
 from Generate import main
-from worlds.metroidprime.data.StartRoomData import all_start_rooms
+from ..data.StartRoomData import all_start_rooms
 fail = []
 
 # all_rooms = ["Arbor Chamber", "Transport to Chozo Ruins East", "Quarantine Monitor", "Sunchamber Lobby"]

@@ -275,7 +275,7 @@ def make_config(world: 'MetroidPrimeWorld') -> Dict[str, Any]:
 
 def make_level_data(world: 'MetroidPrimeWorld') -> Dict[str, Any]:
     transport_data = get_transport_data(world)
-    level_data = {
+    level_data: Dict[str, Any] = {
         MetroidPrimeArea.Tallon_Overworld.value: {
             "transports": transport_data[MetroidPrimeArea.Tallon_Overworld.value],
             "rooms": world.game_region_data[MetroidPrimeArea.Tallon_Overworld].get_config_data(world)

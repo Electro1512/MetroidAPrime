@@ -5,8 +5,8 @@ from ..Items import SuitUpgrade
 from ..DoorRando import DoorLockType
 
 from ..config import make_config
-from worlds.metroidprime.data.AreaNames import MetroidPrimeArea
-from worlds.metroidprime.data.RoomNames import RoomName
+from ..data.AreaNames import MetroidPrimeArea
+from ..data.RoomNames import RoomName
 from . import MetroidPrimeTestBase
 
 if typing.TYPE_CHECKING:
