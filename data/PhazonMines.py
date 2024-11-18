@@ -117,8 +117,8 @@ class PhazonMinesAreaData(AreaData):
                 },
                 pickups=[PickupData('Phazon Mines: Metroid Quarantine B', rule_func=lambda world, state: can_combat_mines(world, state) and can_combat_beam_pirates(world, state, SuitUpgrade.Plasma_Beam) and state.can_reach(RoomName.Elite_Quarters_Access.value, None, world.player) and can_super_missile(world, state), tricks=[]), ]),
             RoomName.Mine_Security_Station: RoomData(doors={
-                0: DoorData(RoomName.Security_Access_A, defaultLock=DoorLockType.Ice),
-                1: DoorData(RoomName.Security_Access_B, defaultLock=DoorLockType.Wave),
+                0: DoorData(RoomName.Security_Access_A, defaultLock=DoorLockType.Ice, rule_func=can_wave_beam),
+                1: DoorData(RoomName.Security_Access_B, defaultLock=DoorLockType.Wave, rule_func=can_wave_beam),
                 2: DoorData(RoomName.Storage_Depot_A, defaultLock=DoorLockType.Plasma, rule_func=lambda world, state: can_power_bomb(world, state) and can_plasma_beam(world, state) and can_scan(world, state)),
             }),
             RoomName.Missile_Station_Mines: RoomData(doors={
