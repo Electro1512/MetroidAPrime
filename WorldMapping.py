@@ -1,3 +1,4 @@
+from copy import deepcopy
 from dataclasses import dataclass
 from typing import Any, Dict, Type, TypeVar, Generic, TypedDict
 
@@ -17,7 +18,7 @@ class AreaMapping(Generic[T]):
     def to_dict(self) -> AreaMappingDict:
         return {
             "area": self.area,
-            "type_mapping": self.type_mapping
+            "type_mapping": dict(self.type_mapping) # type: ignore
         }
 
     @classmethod
@@ -30,7 +31,7 @@ class AreaMapping(Generic[T]):
 
 class WorldMapping(Dict[str, AreaMapping[T]], Generic[T]):
     def to_option_value(self) -> Dict[str, AreaMappingDict]:
-        return {area: mapping.to_dict() for area, mapping in self.items()}
+        return deepcopy({area: mapping.to_dict() for area, mapping in self.items()})
 
     @classmethod
     def from_option_value_generic(cls, data: Dict[str, Any], area_cls: Type[AreaMapping[T]]) -> 'WorldMapping[T]':

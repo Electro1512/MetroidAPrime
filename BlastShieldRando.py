@@ -34,7 +34,7 @@ class AreaBlastShieldMapping(AreaMapping[BlastShieldMapping]):
     @classmethod
     def from_dict(cls, data: AreaMappingDict) -> AreaMapping[BlastShieldMapping]:
         mapping = super().from_dict(data)
-        # Need to conver the string values to the actual enum values when loading from options
+        # Need to convert the string values to the actual enum values when loading from options
         for door_mapping in mapping.type_mapping.values():
             for door_id, shield_type in door_mapping.items():
                 door_mapping[door_id] = BlastShieldType(shield_type)
@@ -45,6 +45,19 @@ class WorldBlastShieldMapping(WorldMapping[BlastShieldMapping]):
     @classmethod
     def from_option_value(cls, data: Dict[str, Any]) -> 'WorldBlastShieldMapping':
         return WorldBlastShieldMapping(super().from_option_value_generic(data, AreaBlastShieldMapping))
+
+    def to_option_value(self) -> Dict[str, AreaMappingDict]:
+        """ This needs to convert these to raw dictionaries otherwise the AP server interprets the slot data as a class and fails"""
+        value = super().to_option_value()
+        for mapping in value.values():
+            new_type_mapping: Dict[str, Dict[int, str]] = dict()
+            for key, door_mapping in mapping['type_mapping'].items():
+                new_door_mapping: Dict[int, str] = dict()
+                for door_id, shield_type in door_mapping.items():
+                    new_door_mapping[door_id] = shield_type.value
+                new_type_mapping[key] = new_door_mapping
+            mapping['type_mapping'] = new_type_mapping
+        return value
 
 
 MAX_BEAM_COMBO_DOORS_PER_AREA = 1

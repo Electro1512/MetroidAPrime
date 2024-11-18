@@ -1,5 +1,6 @@
 from logging import Logger
-import dolphin_memory_engine
+from typing import Any
+import dolphin_memory_engine  # type: ignore
 import subprocess
 import Utils
 
@@ -11,10 +12,10 @@ class DolphinException(Exception):
 
 
 class DolphinClient:
-    dolphin: dolphin_memory_engine
+    dolphin: dolphin_memory_engine  # type: ignore
     logger: Logger
 
-    def __init__(self, logger):
+    def __init__(self, logger: Logger):
         self.dolphin = dolphin_memory_engine
         self.logger = logger
 
@@ -53,7 +54,7 @@ class DolphinClient:
                 f"{target_address:x} -> {target_address + read_size:x} is not a valid for GC memory"
             )
 
-    def read_pointer(self, pointer, offset, byte_count):
+    def read_pointer(self, pointer: int, offset: int, byte_count: int) -> Any:
         self.__assert_connected()
 
         address = None
@@ -68,13 +69,13 @@ class DolphinClient:
         address += offset
         return self.read_address(address, byte_count)
 
-    def read_address(self, address, bytes_to_read):
+    def read_address(self, address: int, bytes_to_read: int) -> Any:
         self.__assert_connected()
         self.verify_target_address(address, bytes_to_read)
         result = self.dolphin.read_bytes(address, bytes_to_read)
         return result
 
-    def write_pointer(self, pointer, offset, data):
+    def write_pointer(self, pointer: int, offset: int, data: Any):
         self.__assert_connected()
         address = None
         try:
@@ -88,7 +89,7 @@ class DolphinClient:
         address += offset
         return self.write_address(address, data)
 
-    def write_address(self, address, data):
+    def write_address(self, address: int, data: Any):
         self.__assert_connected()
         result = self.dolphin.write_bytes(address, data)
         return result

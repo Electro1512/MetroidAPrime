@@ -164,7 +164,7 @@ def make_config(world: 'MetroidPrimeWorld') -> Dict[str, Any]:
         "gameConfig": {
             "mainMenuMessage": "Archipelago Metroid Prime",
             "startingRoom": f"{world.starting_room_data.area.value}:{world.starting_room_data.name}",
-            "springBall": 1 if options.spring_ball.value else 0,
+            "springBall": bool(options.spring_ball.value),
             "warpToStart": True,
             "multiworldDolPatches": True,
             "nonvariaHeatDamage": bool(options.non_varia_heat_damage.value),
@@ -179,6 +179,7 @@ def make_config(world: 'MetroidPrimeWorld') -> Dict[str, Any]:
             "multiworldDolPatches": False,
             "startingItems": {
                 "combatVisor": True,  # starting_inventory(world, "Combat Visor"),
+                "powerSuit": True,
                 "powerBeam": starting_inventory(world, SuitUpgrade.Power_Beam.value) or starting_inventory(world, ProgressiveUpgrade.Progressive_Power_Beam.value),
                 "scanVisor": starting_inventory(world, SuitUpgrade.Scan_Visor.value),
                 # These are handled by the client

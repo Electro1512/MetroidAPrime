@@ -1,15 +1,15 @@
 from logging import Logger
 import struct
-from typing import Any
+from typing import Any, Dict, Optional
 
-from .DolphinClient import GC_GAME_ID_ADDRESS, DolphinClient, DolphinException, get_num_dolphin_instances
+from .DolphinClient import GC_GAME_ID_ADDRESS, DolphinClient, DolphinException
 from enum import Enum
-import py_randomprime
+import py_randomprime  # type: ignore
 from .Items import ItemData, SuitUpgrade, item_table, custom_suit_upgrade_table, suit_upgrade_table
 
 _SUPPORTED_VERSIONS = ["0-00", "0-01", "0-02", "jpn", "kor", "pal"]
-_SYMBOLS = {version: py_randomprime.symbols_for_version(version) for version in _SUPPORTED_VERSIONS}
-GAMES = {
+_SYMBOLS: Dict[str, Any] = {version: py_randomprime.symbols_for_version(version) for version in _SUPPORTED_VERSIONS}  # type: ignore
+GAMES: Dict[str, Any] = {
     "0-00": {
         "game_id": b"GM8E01",
         "game_rev": 0,
@@ -67,7 +67,7 @@ GAMES = {
 }
 
 
-def calculate_item_offset(item_id):
+def calculate_item_offset(item_id: int) -> int:
     return (0x24 + RTSL_VECTOR_OFFSET) + (item_id * ITEM_SIZE)
 
 
@@ -98,7 +98,7 @@ class MetroidPrimeSuit(Enum):
     FusionPhazon = 7
 
     @staticmethod
-    def get_by_key(key):
+    def get_by_key(key: str):
         for suit in MetroidPrimeSuit:
             if suit.name == key:
                 return suit
@@ -117,7 +117,7 @@ class MetroidPrimeLevel(Enum):
     End_of_Game = 332894565
 
 
-def world_by_id(id) -> MetroidPrimeLevel:
+def world_by_id(id: int) -> Optional[MetroidPrimeLevel]:
     for world in MetroidPrimeLevel:
         if world.value == id:
             return world
@@ -130,7 +130,7 @@ class Area:
     layerBitsLo: int
     layerBitsHi: int
 
-    def __init__(self, startNameIdx, layerCount, layerBitsHi, layerBitsLo):
+    def __init__(self, startNameIdx: int, layerCount: int, layerBitsHi: int, layerBitsLo: int) -> None:
         self.layerCount = layerCount
         self.startNameIdx = startNameIdx
         self.layerBitsHi = layerBitsHi
@@ -168,12 +168,12 @@ class MetroidPrimeInterface:
     connection_status: str
     logger: Logger
     _previous_message_size: int = 0
-    game_id_error: str = None
-    game_rev_error: int = None
-    current_game: str = None
-    relay_trackers: dict[int, dict[str, Any]] = None
+    game_id_error: str
+    game_rev_error: int
+    current_game: Optional[str]
+    relay_trackers: Optional[Dict[Any, Any]]
 
-    def __init__(self, logger) -> None:
+    def __init__(self, logger: Logger) -> None:
         self.logger = logger
         self.dolphin_client = DolphinClient(logger)
 
@@ -248,7 +248,8 @@ class MetroidPrimeInterface:
 
     def get_highest_owned_suit(self) -> SuitUpgrade:
         for suit in [SuitUpgrade.Phazon_Suit, SuitUpgrade.Gravity_Suit, SuitUpgrade.Varia_Suit]:
-            if self.get_item(suit_upgrade_table[suit.value]).current_amount > 0:
+            item = self.get_item(suit_upgrade_table[suit.value])
+            if item and item.current_amount > 0:
                 return suit
         return SuitUpgrade.Power_Suit
 
@@ -274,8 +275,10 @@ class MetroidPrimeInterface:
         self.dolphin_client.write_pointer(
             player_state_pointer, 0, struct.pack(">I", value))
 
-    def get_current_level(self) -> MetroidPrimeLevel:
+    def get_current_level(self) -> Optional[MetroidPrimeLevel]:
         """Returns the world that the player is currently in"""
+        if self.current_game is None:
+            return None
         world_bytes = self.dolphin_client.read_pointer(
             GAMES[self.current_game]["game_state_pointer"], 0x84, struct.calcsize(">I"))
         if world_bytes is not None:
@@ -286,8 +289,6 @@ class MetroidPrimeInterface:
     def get_current_health(self) -> float:
         result = self.dolphin_client.read_pointer(
             self.__get_player_state_pointer(), 0xC, 4)
-        if result is None:
-            return None
         return struct.unpack(">f", result)[0]
 
     def set_current_health(self, new_health_amount: float):
@@ -295,10 +296,12 @@ class MetroidPrimeInterface:
             self.__get_player_state_pointer(), 0xC, struct.pack(">f", new_health_amount))
         return self.get_current_health()
 
-    def get_last_received_index(self) -> int:
+    def get_last_received_index(self) -> Optional[int]:
         """Gets the index of the last item received. This is stored as the current amount for the power suit"""
         inventory_item = self.get_item(item_table[SuitUpgrade.Power_Suit.value])
-        return inventory_item.current_amount
+        if inventory_item is not None:
+            return inventory_item.current_amount
+        return None
 
     def set_last_received_index(self, index: int):
         """Sets the received index to the index of the last item received. This is stored as the max amount for the power suit"""
@@ -313,7 +316,7 @@ class MetroidPrimeInterface:
             self.dolphin_client.connect()
             game_id = self.dolphin_client.read_address(GC_GAME_ID_ADDRESS, 6)
             try:
-                game_rev = self.dolphin_client.read_address(GC_GAME_ID_ADDRESS + 7, 1)[0]
+                game_rev: Optional[int] = self.dolphin_client.read_address(GC_GAME_ID_ADDRESS + 7, 1)[0]
             except:
                 game_rev = None
             # The first read of the address will be null if the client is faster than the emulator
@@ -323,13 +326,14 @@ class MetroidPrimeInterface:
                     self.current_game = version
                     break
             if self.current_game is None and self.game_id_error != game_id and game_id != b'\x00\x00\x00\x00\x00\x00':
-                self.logger.warn(
+                self.logger.info(
                     f"Connected to the wrong game ({game_id}, rev {game_rev}), please connect to Metroid Prime GC (Game ID starts with a GM8)")
                 self.game_id_error = game_id
-                self.game_rev_error = game_rev
+                if game_rev:
+                    self.game_rev_error = game_rev
             if self.current_game:
                 self.logger.info("Metroid Prime Disc Version: " + self.current_game)
-        except DolphinException as e:
+        except DolphinException:
             pass
 
     def disconnect_from_game(self):
@@ -354,6 +358,9 @@ class MetroidPrimeInterface:
 
     def send_hud_message(self, message: str) -> bool:
         message = f"&just=center;{message}"
+        if not self.current_game:
+            return False
+
         if self.current_game == "jpn":
             message = f"&push;&font=C29C51F1;{message}&pop;"
         current_value = self.dolphin_client.read_address(GAMES[self.current_game]["HUD_TRIGGER_ADDRESS"], 1)
@@ -380,6 +387,7 @@ class MetroidPrimeInterface:
                 len(encoded_message) + 1
             encoded_message += b"\x00" * num_to_align
 
+        assert self.current_game
         self.dolphin_client.write_address(GAMES[self.current_game]["HUD_MESSAGE_ADDRESS"], encoded_message)
 
     def __progressive_beam_to_beam(self, charge_beam: SuitUpgrade) -> SuitUpgrade | None:
@@ -392,7 +400,8 @@ class MetroidPrimeInterface:
                 return SuitUpgrade.Ice_Beam
             case SuitUpgrade.Plasma_Charge_Beam:
                 return SuitUpgrade.Plasma_Beam
-        return None
+            case _:
+                return None
 
     def set_progressive_beam_charge_state(self, charge_beam: SuitUpgrade, state: bool):
         cplayer_state = self.__get_player_state_pointer()
@@ -423,6 +432,7 @@ class MetroidPrimeInterface:
 
     def __is_player_table_ready(self) -> bool:
         """Check if the player table is ready to be read from memory, indicating the game is in a playable state"""
+        assert self.current_game
         player_table_bytes = self.dolphin_client.read_pointer(
             GAMES[self.current_game]["cstate_manager_global"] + 0x84C, 0, 4)
         if player_table_bytes is None:
@@ -434,9 +444,11 @@ class MetroidPrimeInterface:
             return False
 
     def __get_player_state_pointer(self):
+        assert self.current_game
         return int.from_bytes(self.dolphin_client.read_address(GAMES[self.current_game]["cstate_manager_global"] + 0x8B8, 4), "big")
 
     def __get_world_layer_state_pointer(self):
+        assert self.current_game
         return int.from_bytes(self.dolphin_client.read_address(GAMES[self.current_game]["cstate_manager_global"] + 0x8c8, 4), "big")
 
     def __get_vector_item_offset(self):
@@ -478,7 +490,7 @@ class MetroidPrimeInterface:
         self.dolphin_client.write_address(
             self.__get_area_address(area_index), new_bytes)
 
-    def get_artifact_layer(self, item_id):
+    def get_artifact_layer(self, item_id: int):
         # Artifact of truth is handled differently since it is the first thing you interact with in the room
         return item_id - 28 if item_id > 29 else 23
 
@@ -486,7 +498,7 @@ class MetroidPrimeInterface:
         area = self.__get_area(area_index)
         return area.layerBitsLo & (1 << layer_id) != 0
 
-    def sync_artifact_layers(self) -> bool:
+    def sync_artifact_layers(self):
         """Looks at the artifacts the player currently has and updates the layers in the artifact temple to match, only works if the player is in Tallon Overworld"""
         if self.get_current_level() == MetroidPrimeLevel.Tallon_Overworld:
             current_inventory = self.get_current_inventory()
@@ -499,7 +511,6 @@ class MetroidPrimeInterface:
                     if active != (item.current_amount > 0):
                         self.set_layer_active(
                             ARTIFACT_TEMPLE_ROOM_INDEX, layer_id, item.current_amount > 0)
-                        changed = True
 
     def reset_relay_tracker_cache(self):
         self.relay_trackers = None
@@ -508,6 +519,7 @@ class MetroidPrimeInterface:
         if self.relay_trackers is None:
             self.relay_trackers = {}
             # getting vector<g_GameState.x88_worldStates>
+            assert self.current_game
             world_state_array = struct.unpack(">I", self.dolphin_client.read_pointer(GAMES[self.current_game]["game_state_pointer"], 0x94, struct.calcsize(">I")))[0]
             world_states = [world_state_array + i * WORLD_STATE_SIZE for i in range(7)]
             for world_state in world_states:
@@ -524,7 +536,7 @@ class MetroidPrimeInterface:
             # getting WorldState.x8_mailbox.x0_relays.size()
             relay_tracker["count"] = struct.unpack(">I", self.dolphin_client.read_address(relay_tracker["address"], struct.calcsize(">I")))[0]
             # getting WorldState.x8_mailbox.x0_relays content
-            relay_tracker["memory_relays"] = struct.unpack(">"+("I" * relay_tracker["count"]), self.dolphin_client.read_address(relay_tracker["address"] + 4, relay_tracker["count"] * struct.calcsize(">I")))
+            relay_tracker["memory_relays"] = struct.unpack(">" + ("I" * relay_tracker["count"]), self.dolphin_client.read_address(relay_tracker["address"] + 4, relay_tracker["count"] * struct.calcsize(">I")))
             # remove layer specific stuff from object id
             relay_tracker["memory_relays"] = [mr & 0x00FFFFFF for mr in relay_tracker["memory_relays"]]
 

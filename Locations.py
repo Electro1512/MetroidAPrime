@@ -1,4 +1,5 @@
-from BaseClasses import Location, MultiWorld
+from typing import Dict, List, Tuple
+from BaseClasses import Location
 
 from .MetroidPrimeInterface import MetroidPrimeLevel
 
@@ -124,7 +125,7 @@ magmoor_location_table = {
     'Magmoor Caverns: Magmoor Workstation': 5031199
 }
 
-every_location: dict[str, int] = {
+every_location: Dict[str, int] = {
     **chozo_location_table,
     **phen_location_table,
     **tallon_location_table,
@@ -132,7 +133,7 @@ every_location: dict[str, int] = {
     **magmoor_location_table
 }
 
-PICKUP_LOCATIONS: list[(int, int)] = [
+PICKUP_LOCATIONS: List[Tuple[MetroidPrimeLevel, int]] = [
     (MetroidPrimeLevel.Chozo_Ruins, 0x0002012d),
     (MetroidPrimeLevel.Chozo_Ruins, 0x00020132),
     (MetroidPrimeLevel.Chozo_Ruins, 0x0002006b),
