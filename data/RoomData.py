@@ -129,38 +129,29 @@ class RoomData:
 
         return config
 
-    # TODO: Reduce duplication here w/ if/else. Make a single loop and operate on each door individually
-    # TODO: Make a test that verifies door rando output config so this will fail if it is not correct
     def get_door_config_data(
         self, world: "MetroidPrimeWorld", parent_area: str
     ) -> Dict[str, Any]:
         door_data: Dict[str, Any] = {}
-        if world.door_color_mapping is not None:
-            color_mapping: Dict[str, str] = world.door_color_mapping[
-                parent_area
-            ].type_mapping
-            for door_id, door in self.doors.items():
-                if door.defaultLock.value not in color_mapping or not door.lock:
-                    continue
-                door_data[f"{door_id}"] = {
-                    "shieldType": (
-                        door.lock.value if door.lock else door.defaultLock.value
-                    ),
-                }
-        else:
-            for door_id, door in self.doors.items():
-                if door.lock is not door.defaultLock and door.lock:
-                    door_data[f"{door_id}"] = {
-                        "shieldType": (
-                            door.lock.value if door.lock else door.defaultLock.value
-                        ),
-                    }
+        color_mapping: Dict[str, str] = (
+            world.door_color_mapping[parent_area].type_mapping
+            if world.door_color_mapping is not None
+            else {}
+        )
 
         for door_id, door in self.doors.items():
+            if door.lock is not door.defaultLock and door.lock:
+                door_data[f"{door_id}"] = {
+                    "shieldType": door.lock.value
+                }
+            elif door.defaultLock.value in color_mapping:
+                door_data[f"{door_id}"] = {
+                    "shieldType": color_mapping[door.defaultLock.value]
+                }
+
             if door.blast_shield is not None:
                 if f"{door_id}" not in door_data:
                     door_data[f"{door_id}"] = {}
-                # We store locked doors under the blast shield mapping but randomprime expects them under the shield type
                 if door.blast_shield == BlastShieldType.Disabled:
                     door_data[f"{door_id}"]["shieldType"] = door.blast_shield.value
                 else:
