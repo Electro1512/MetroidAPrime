@@ -59,6 +59,29 @@ class TestMainPBAndMissileLauncherOutputGeneration(MetroidPrimeTestBase):
         dump_output_if_test_fails(self, output, expected_output)
 
 
+class TestAllRandomizedOutput(MetroidPrimeTestBase):
+    auto_construct = False
+    options = {
+        "elevator_randomization": True,
+        "door_randomization": "regional",
+        "blast_shield_randomization": "mix_it_up",
+    }
+
+    def test_output_generates_correctly_with_all_randomized(self) -> None:
+        self.world_setup()  # type: ignore
+        distribute_items_restrictive(self.multiworld)
+        output = make_config(self.world)
+        expected_output = {}
+        path = os.path.join(
+            os.path.dirname(__file__), "data", "all_randomized.json"
+        )
+        with open(path, "r") as f:
+            expected_output = json.load(f)
+
+        dict_diff(expected_output, output)
+        dump_output_if_test_fails(self, output, expected_output)
+
+
 def dump_output_if_test_fails(
     test: MetroidPrimeTestBase, output: Dict[str, Any], expected_output: Dict[str, Any]
 ):

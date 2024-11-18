@@ -164,14 +164,12 @@ class PhazonMinesAreaData(AreaData):
             ),
             RoomName.Elite_Quarters: RoomData(
                 doors={
-                    # TODO: Move xray requirements to omega pirate reqs
                     0: DoorData(
                         RoomName.Elite_Quarters_Access,
                         defaultLock=DoorLockType.Plasma,
                         rule_func=lambda world, state: can_combat_omega_pirate(
                             world, state
                         )
-                        and can_xray(world, state, hard_required=True),
                     ),
                     1: DoorData(
                         RoomName.Processing_Center_Access,
@@ -179,7 +177,6 @@ class PhazonMinesAreaData(AreaData):
                         rule_func=lambda world, state: can_combat_omega_pirate(
                             world, state
                         )
-                        and can_xray(world, state, hard_required=True)
                         and can_scan(world, state),
                     ),
                 },
@@ -189,7 +186,6 @@ class PhazonMinesAreaData(AreaData):
                         rule_func=lambda world, state: can_combat_omega_pirate(
                             world, state
                         )
-                        and can_xray(world, state, hard_required=True),
                     ),
                 ],
             ),

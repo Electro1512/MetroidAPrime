@@ -464,7 +464,7 @@ def init_starting_beam(world: "MetroidPrimeWorld"):
         world.options.starting_beam.value
         and world.options.starting_beam.value != "none"
     ):
-        new_beam = SuitUpgrade.get_by_value(str(world.options.starting_beam.value))
+        new_beam = SuitUpgrade(str(world.options.starting_beam.value))
         if new_beam:
             replace_starting_beam(new_beam)
 

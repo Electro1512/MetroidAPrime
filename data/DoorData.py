@@ -17,8 +17,6 @@ class DoorData:
     defaultLock: DoorLockType = DoorLockType.Blue
     blast_shield: Optional["BlastShieldType"] = None
     lock: Optional[DoorLockType] = None
-    # TODO: Remove destination, not going to pursue room rando
-    destination: Optional[RoomName] = None
     destination_area: Optional[MetroidPrimeArea] = (
         None  # Used for rooms that have the same name in different areas like Transport Tunnel A
     )
@@ -34,16 +32,11 @@ class DoorData:
         Callable[["MetroidPrimeWorld", CollectionState], bool]
     ] = None  # Used to override the access check for reaching this door, if necessary when connecting it to a sub region
 
-    def get_destination_region_name(self):
+    def get_destination_region_name(self) -> str:
         assert self.default_destination is not None
-        destination = (
-            self.destination.value
-            if self.destination is not None
-            else self.default_destination.value
-        )
         if self.destination_area is not None:
-            return f"{self.destination_area.value}: {destination}"
-        return destination
+            return f"{self.destination_area.value}: { self.default_destination.value}"
+        return self.default_destination.value
 
 
 def get_door_data_by_room_names(

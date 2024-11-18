@@ -307,7 +307,7 @@ class MetroidPrimeWorld(World):
             if (
                 self.options.progressive_beam_upgrades.value
                 and get_progressive_upgrade_for_item(
-                    SuitUpgrade.get_by_value(suit_upgrade)
+                    SuitUpgrade(suit_upgrade)
                 )
                 is not None
             ):

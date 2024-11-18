@@ -85,7 +85,7 @@ def can_combat_thardus(world: "MetroidPrimeWorld", state: CollectionState) -> bo
 
 
 def can_combat_omega_pirate(world: "MetroidPrimeWorld", state: CollectionState) -> bool:
-    return _can_combat_generic(world, state, 6, 3)
+    return _can_combat_generic(world, state, 6, 3) and can_xray(world, state, True)
 
 
 def can_combat_flaaghra(world: "MetroidPrimeWorld", state: CollectionState) -> bool:

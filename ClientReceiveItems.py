@@ -276,12 +276,12 @@ async def handle_receive_progressive_items(
         if count > 0:
             for i in range(count):
                 mapping = PROGRESSIVE_ITEM_MAPPING[
-                    ProgressiveUpgrade.get_by_value(progressive_upgrade)
+                    ProgressiveUpgrade(progressive_upgrade)
                 ]
                 if i >= len(mapping):
                     continue
                 item = PROGRESSIVE_ITEM_MAPPING[
-                    ProgressiveUpgrade.get_by_value(progressive_upgrade)
+                    ProgressiveUpgrade(progressive_upgrade)
                 ][i]
                 inventory_item = current_items[item.value]
                 network_item = network_items[progressive_upgrade][i]

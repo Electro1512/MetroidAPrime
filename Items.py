@@ -66,28 +66,12 @@ class SuitUpgrade(Enum):
     def __str__(self):
         return self.value
 
-    # TODO: pretty sure I can remove this and just do SuitUpgrade(value)
-    @staticmethod
-    def get_by_value(value: str) -> "SuitUpgrade":
-        for suit in SuitUpgrade:
-            if suit.value == value:
-                return suit
-        raise ValueError(f"Invalid suit upgrade value: {value}")
-
 
 class ProgressiveUpgrade(Enum):
     Progressive_Power_Beam = "Progressive Power Beam"
     Progressive_Ice_Beam = "Progressive Ice Beam"
     Progressive_Wave_Beam = "Progressive Wave Beam"
     Progressive_Plasma_Beam = "Progressive Plasma Beam"
-
-    # TODO: Same as above
-    @staticmethod
-    def get_by_value(value: str) -> "ProgressiveUpgrade":
-        for upgrade in ProgressiveUpgrade:
-            if upgrade.value == value:
-                return upgrade
-        raise ValueError(f"Invalid progressive upgrade value: {value}")
 
     def __str__(self):
         return self.value

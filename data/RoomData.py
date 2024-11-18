@@ -217,8 +217,6 @@ class AreaData:
                 if pickup.exclude_from_logic:
                     continue
 
-                # TODO: Remove the generator
-
                 region.add_locations(
                     {pickup.name: every_location[pickup.name]}, MetroidPrimeLocation
                 )
@@ -240,7 +238,7 @@ class AreaData:
             name = room_data.get_region_name(room_name.value)
             region = world.multiworld.get_region(name, world.player)
             for door_data in room_data.doors.values():
-                destination = door_data.destination or door_data.default_destination
+                destination = door_data.default_destination
                 if destination is None:
                     continue
 
@@ -257,7 +255,6 @@ class AreaData:
                     door_data: DoorData, target_room_data: RoomData = room_data
                 ):
                     paired_door = target_room_data.get_matching_door(door_data, world)
-                    # TODO: Handle pairing door mappings in the apply shield logic, also handle locked doors there
                     shield_applied = False
                     if (
                         paired_door

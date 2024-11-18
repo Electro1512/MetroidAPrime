@@ -167,7 +167,6 @@ class TestDoorRandoWithDifferentStartRoomWithRequiredBeam(MetroidPrimeTestBase):
 
 
 class TestDoorPlando(MetroidPrimeTestBase):
-    # TODO: rework the data structure here so you don't have to do area and type_mapping
     options = {
         "door_color_randomization": "regional",
         "door_color_mapping": {
