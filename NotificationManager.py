@@ -9,8 +9,12 @@ class NotificationManager:
     message_duration: float
     send_notification_func: Callable[[str], bool]
 
-    def __init__(self, message_duration: float, send_notification_func: Callable[[str], bool]):
-        self.message_duration = message_duration / 2  # If there are multiple messages, the duration is shorter
+    def __init__(
+        self, message_duration: float, send_notification_func: Callable[[str], bool]
+    ):
+        self.message_duration = (
+            message_duration / 2
+        )  # If there are multiple messages, the duration is shorter
         self.send_notification_func = send_notification_func
 
     def queue_notification(self, message: str):
@@ -18,7 +22,10 @@ class NotificationManager:
 
     def handle_notifications(self):
         self.time_since_last_message = time.time() - self.last_message_time
-        if len(self.notification_queue) > 0 and self.time_since_last_message >= self.message_duration:
+        if (
+            len(self.notification_queue) > 0
+            and self.time_since_last_message >= self.message_duration
+        ):
             notification = self.notification_queue[0]
             result = self.send_notification_func(notification)
             if result:

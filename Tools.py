@@ -4,7 +4,7 @@ import json
 consolidated_dict = {}
 data = {}
 # Open and read the JSON fil e
-with open('./data/RoomLoadouts.json', 'r') as f:
+with open("./data/RoomLoadouts.json", "r") as f:
     data = json.load(f)
 
 # Iterate over each row in the data
@@ -19,5 +19,5 @@ for item in data:
     consolidated_dict[name] += [items]
     print(name, items)
 
-with open('./data/ConsolidatedRoomLoadouts.json', 'w') as f:
+with open("./data/ConsolidatedRoomLoadouts.json", "w") as f:
     json.dump(consolidated_dict, f, indent=4)

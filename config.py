@@ -8,13 +8,13 @@ from .PrimeOptions import HudColor, MetroidPrimeOptions
 from .data.RoomData import MetroidPrimeArea
 from .data.Transports import get_transport_data
 
-MAX_32_BIT_INT = 0x7fffffff
+MAX_32_BIT_INT = 0x7FFFFFFF
 
 if TYPE_CHECKING:
     from . import MetroidPrimeWorld
 
 
-def starting_inventory(world: 'MetroidPrimeWorld', item: str) -> bool:
+def starting_inventory(world: "MetroidPrimeWorld", item: str) -> bool:
     items = [item.name for item in world.multiworld.precollected_items[world.player]]
     return item in items
 
@@ -23,24 +23,43 @@ def skip_ridley(boss: int) -> bool:
     return boss not in [0, 1]
 
 
-def get_starting_beam(world: 'MetroidPrimeWorld') -> str:
-    starting_items = [item.name for item in world.multiworld.precollected_items[world.player]]
+def get_starting_beam(world: "MetroidPrimeWorld") -> str:
+    starting_items = [
+        item.name for item in world.multiworld.precollected_items[world.player]
+    ]
     starting_beam = "Power"
     for item in starting_items:
-        if item in [SuitUpgrade.Wave_Beam.value, SuitUpgrade.Ice_Beam.value, SuitUpgrade.Plasma_Beam.value]:
+        if item in [
+            SuitUpgrade.Wave_Beam.value,
+            SuitUpgrade.Ice_Beam.value,
+            SuitUpgrade.Plasma_Beam.value,
+        ]:
             starting_beam = item.split(" ")[0]
             break
-        if item in [ProgressiveUpgrade.Progressive_Wave_Beam.value, ProgressiveUpgrade.Progressive_Ice_Beam.value, ProgressiveUpgrade.Progressive_Plasma_Beam.value, ProgressiveUpgrade.Progressive_Power_Beam.value]:
+        if item in [
+            ProgressiveUpgrade.Progressive_Wave_Beam.value,
+            ProgressiveUpgrade.Progressive_Ice_Beam.value,
+            ProgressiveUpgrade.Progressive_Plasma_Beam.value,
+            ProgressiveUpgrade.Progressive_Power_Beam.value,
+        ]:
             starting_beam = item.split(" ")[1]
             break
     return starting_beam
 
 
-def color_options_to_value(world: 'MetroidPrimeWorld') -> List[float]:
+def color_options_to_value(world: "MetroidPrimeWorld") -> List[float]:
     options = world.options
     # If any overrides are set, use that instead
-    if options.hud_color_red.value or options.hud_color_green.value or options.hud_color_blue.value:
-        return [options.hud_color_red.value / 255, options.hud_color_green.value / 255, options.hud_color_blue.value / 255]
+    if (
+        options.hud_color_red.value
+        or options.hud_color_green.value
+        or options.hud_color_blue.value
+    ):
+        return [
+            options.hud_color_red.value / 255,
+            options.hud_color_green.value / 255,
+            options.hud_color_blue.value / 255,
+        ]
 
     # get the key in hudcolor enum that matches all caps color
     color: str = str(world.options.hud_color.value)
@@ -51,15 +70,21 @@ def color_options_to_value(world: 'MetroidPrimeWorld') -> List[float]:
     return HudColor.DEFAULT.value
 
 
-def make_artifact_hints(world: 'MetroidPrimeWorld') -> Dict[str, str]:
+def make_artifact_hints(world: "MetroidPrimeWorld") -> Dict[str, str]:
     def make_artifact_hint(item: str) -> str:
         try:
             if world.options.artifact_hints.value:
                 location = world.multiworld.find_item(item, world.player)
-                player_string = f"{world.multiworld.player_name[location.player]}'s" if location.player != world.player else "your"
+                player_string = (
+                    f"{world.multiworld.player_name[location.player]}'s"
+                    if location.player != world.player
+                    else "your"
+                )
                 return f"The &push;&main-color=#c300ff;{item}&pop; can be found in &push;&main-color=#d4cc33;{player_string}&pop; &push;&main-color=#89a1ff;{location.name}&pop;."
             else:
-                return f"The &push;&main-color=#c300ff;{item}&pop; has not been collected."
+                return (
+                    f"The &push;&main-color=#c300ff;{item}&pop; has not been collected."
+                )
             # This will error when trying to find an artifact that does not have a location since was pre collected
         except:
             return f"The &push;&main-color=#c300ff;{item}&pop; does not need to be collected."
@@ -76,21 +101,19 @@ def make_artifact_hints(world: 'MetroidPrimeWorld') -> Dict[str, str]:
         "Artifact of Elder": make_artifact_hint("Artifact of Elder"),
         "Artifact of Wild": make_artifact_hint("Artifact of Wild"),
         "Artifact of Lifegiver": make_artifact_hint("Artifact of Lifegiver"),
-        "Artifact of Warrior": make_artifact_hint("Artifact of Warrior")
+        "Artifact of Warrior": make_artifact_hint("Artifact of Warrior"),
     }
 
 
-def get_tweaks(world: 'MetroidPrimeWorld') -> Dict[str, List[float]]:
+def get_tweaks(world: "MetroidPrimeWorld") -> Dict[str, List[float]]:
     color = color_options_to_value(world)
     if color != HudColor.DEFAULT.value:
-        return {
-            "hudColor": color
-        }
+        return {"hudColor": color}
     else:
         return {}
 
 
-def get_strg(world: 'MetroidPrimeWorld') -> Dict[str, List[str]]:
+def get_strg(world: "MetroidPrimeWorld") -> Dict[str, List[str]]:
     strg = {**OBJECTIVE_STRG}
     # Set objective text in temple security station
     objective_text = f"Current Mission: Retrieve {world.options.required_artifacts} Chozo Artifact{'s' if world.options.required_artifacts != 1 else ''}"
@@ -109,29 +132,42 @@ def get_strg(world: 'MetroidPrimeWorld') -> Dict[str, List[str]]:
         "Power Suit": world.options.power_suit_color.value,
         "Varia Suit": world.options.varia_suit_color.value,
         "Gravity Suit": world.options.gravity_suit_color.value,
-        "Phazon Suit": world.options.phazon_suit_color.value
+        "Phazon Suit": world.options.phazon_suit_color.value,
     }
     # Update the name to include the color index if it is set
     for item in strg[PAUSE_MENU_STRG_KEY]:
         if item in pause_menu_overrides and pause_menu_overrides[item] != 0:
             index = strg[PAUSE_MENU_STRG_KEY].index(item)
-            strg[PAUSE_MENU_STRG_KEY][index] = f"{item} (Color: {pause_menu_overrides[item]})"
+            strg[PAUSE_MENU_STRG_KEY][
+                index
+            ] = f"{item} (Color: {pause_menu_overrides[item]})"
     return strg
 
 
-def make_version_specific_changes(config_json: Dict[str, Any], version: str) -> Dict[str, Any]:
-    if DEFAULT_OBJECTIVE_STRG_KEY in config_json["strg"] and version not in ['0-00', '0-01', '0-02', 'kor']:
+def make_version_specific_changes(
+    config_json: Dict[str, Any], version: str
+) -> Dict[str, Any]:
+    if DEFAULT_OBJECTIVE_STRG_KEY in config_json["strg"] and version not in [
+        "0-00",
+        "0-01",
+        "0-02",
+        "kor",
+    ]:
         value = config_json["strg"][DEFAULT_OBJECTIVE_STRG_KEY]
         del config_json["strg"][DEFAULT_OBJECTIVE_STRG_KEY]
         config_json["strg"][get_objective_strg_key(version)] = value
 
     # Pause Menu does not have correct id for non US versions right now
-    if PAUSE_MENU_STRG_KEY in config_json["strg"] and version not in ["0-00", "0-01", "0-02"]:
+    if PAUSE_MENU_STRG_KEY in config_json["strg"] and version not in [
+        "0-00",
+        "0-01",
+        "0-02",
+    ]:
         del config_json["strg"][PAUSE_MENU_STRG_KEY]
     return config_json
 
 
-def make_config(world: 'MetroidPrimeWorld') -> Dict[str, Any]:
+def make_config(world: "MetroidPrimeWorld") -> Dict[str, Any]:
     options: MetroidPrimeOptions = world.options
     config: Dict[str, Any] = {
         "$schema": "https://randovania.org/randomprime/randomprime.schema.json",
@@ -157,8 +193,8 @@ def make_config(world: 'MetroidPrimeWorld') -> Dict[str, Any]:
                 "gravityDeg": world.options.gravity_suit_color.value or 0,
                 "phazonDeg": world.options.phazon_suit_color.value or 0,
                 "powerDeg": world.options.power_suit_color.value or 0,
-                "variaDeg": world.options.varia_suit_color.value or 0
-            }
+                "variaDeg": world.options.varia_suit_color.value or 0,
+            },
         },
         "tweaks": get_tweaks(world),
         "gameConfig": {
@@ -180,31 +216,60 @@ def make_config(world: 'MetroidPrimeWorld') -> Dict[str, Any]:
             "startingItems": {
                 "combatVisor": True,  # starting_inventory(world, "Combat Visor"),
                 "powerSuit": True,
-                "powerBeam": starting_inventory(world, SuitUpgrade.Power_Beam.value) or starting_inventory(world, ProgressiveUpgrade.Progressive_Power_Beam.value),
+                "powerBeam": starting_inventory(world, SuitUpgrade.Power_Beam.value)
+                or starting_inventory(
+                    world, ProgressiveUpgrade.Progressive_Power_Beam.value
+                ),
                 "scanVisor": starting_inventory(world, SuitUpgrade.Scan_Visor.value),
                 # These are handled by the client
-                "missiles": 5 if starting_inventory(world, SuitUpgrade.Missile_Launcher.value) or starting_inventory(world, SuitUpgrade.Missile_Expansion.value) else 0,
+                "missiles": (
+                    5
+                    if starting_inventory(world, SuitUpgrade.Missile_Launcher.value)
+                    or starting_inventory(world, SuitUpgrade.Missile_Expansion.value)
+                    else 0
+                ),
                 "energyTanks": 0,
                 "powerBombs": 0,
-                "wave": starting_inventory(world, SuitUpgrade.Wave_Beam.value) or starting_inventory(world, ProgressiveUpgrade.Progressive_Wave_Beam.value),
-                "ice": starting_inventory(world, SuitUpgrade.Ice_Beam.value) or starting_inventory(world, ProgressiveUpgrade.Progressive_Ice_Beam.value),
-                "plasma": starting_inventory(world, SuitUpgrade.Plasma_Beam.value) or starting_inventory(world, ProgressiveUpgrade.Progressive_Plasma_Beam.value),
+                "wave": starting_inventory(world, SuitUpgrade.Wave_Beam.value)
+                or starting_inventory(
+                    world, ProgressiveUpgrade.Progressive_Wave_Beam.value
+                ),
+                "ice": starting_inventory(world, SuitUpgrade.Ice_Beam.value)
+                or starting_inventory(
+                    world, ProgressiveUpgrade.Progressive_Ice_Beam.value
+                ),
+                "plasma": starting_inventory(world, SuitUpgrade.Plasma_Beam.value)
+                or starting_inventory(
+                    world, ProgressiveUpgrade.Progressive_Plasma_Beam.value
+                ),
                 "charge": starting_inventory(world, SuitUpgrade.Charge_Beam.value),
                 "morphBall": starting_inventory(world, SuitUpgrade.Morph_Ball.value),
                 "bombs": starting_inventory(world, SuitUpgrade.Morph_Ball_Bomb.value),
                 "spiderBall": starting_inventory(world, SuitUpgrade.Spider_Ball.value),
                 "boostBall": starting_inventory(world, SuitUpgrade.Boost_Ball.value),
                 "variaSuit": starting_inventory(world, SuitUpgrade.Varia_Suit.value),
-                "gravitySuit": starting_inventory(world, SuitUpgrade.Gravity_Suit.value),
+                "gravitySuit": starting_inventory(
+                    world, SuitUpgrade.Gravity_Suit.value
+                ),
                 "phazonSuit": starting_inventory(world, SuitUpgrade.Phazon_Suit.value),
-                "thermalVisor": starting_inventory(world, SuitUpgrade.Thermal_Visor.value),
+                "thermalVisor": starting_inventory(
+                    world, SuitUpgrade.Thermal_Visor.value
+                ),
                 "xray": starting_inventory(world, SuitUpgrade.X_Ray_Visor.value),
-                "spaceJump": starting_inventory(world, SuitUpgrade.Space_Jump_Boots.value),
+                "spaceJump": starting_inventory(
+                    world, SuitUpgrade.Space_Jump_Boots.value
+                ),
                 "grapple": starting_inventory(world, SuitUpgrade.Grapple_Beam.value),
-                "superMissile": starting_inventory(world, SuitUpgrade.Super_Missile.value),
+                "superMissile": starting_inventory(
+                    world, SuitUpgrade.Super_Missile.value
+                ),
                 "wavebuster": starting_inventory(world, SuitUpgrade.Wavebuster.value),
-                "iceSpreader": starting_inventory(world, SuitUpgrade.Ice_Spreader.value),
-                "flamethrower": starting_inventory(world, SuitUpgrade.Flamethrower.value)
+                "iceSpreader": starting_inventory(
+                    world, SuitUpgrade.Ice_Spreader.value
+                ),
+                "flamethrower": starting_inventory(
+                    world, SuitUpgrade.Flamethrower.value
+                ),
             },
             "disableItemLoss": True,
             "startingVisor": "Combat",
@@ -214,10 +279,18 @@ def make_config(world: 'MetroidPrimeWorld') -> Dict[str, Any]:
             "doorOpenMode": "Original",
             "etankCapacity": 100,
             "itemMaxCapacity": {
-                "Power Beam": 2 if bool(world.options.progressive_beam_upgrades.value) else 1,
-                "Ice Beam": 2 if bool(world.options.progressive_beam_upgrades.value) else 1,
-                "Wave Beam": 2 if bool(world.options.progressive_beam_upgrades.value) else 1,
-                "Plasma Beam": 2 if bool(world.options.progressive_beam_upgrades.value) else 1,
+                "Power Beam": (
+                    2 if bool(world.options.progressive_beam_upgrades.value) else 1
+                ),
+                "Ice Beam": (
+                    2 if bool(world.options.progressive_beam_upgrades.value) else 1
+                ),
+                "Wave Beam": (
+                    2 if bool(world.options.progressive_beam_upgrades.value) else 1
+                ),
+                "Plasma Beam": (
+                    2 if bool(world.options.progressive_beam_upgrades.value) else 1
+                ),
                 "Missile": 999,
                 "Scan Visor": 1,
                 "Morph Ball Bomb": 1,
@@ -254,7 +327,7 @@ def make_config(world: 'MetroidPrimeWorld') -> Dict[str, Any]:
                 "Artifact Of Sun": 1,
                 "Artifact Of World": 1,
                 "Artifact Of Spirit": 1,
-                "Artifact Of Newborn": 1
+                "Artifact Of Newborn": 1,
             },
             "phazonEliteWithoutDynamo": True,
             "mainPlazaDoor": True,
@@ -266,38 +339,47 @@ def make_config(world: 'MetroidPrimeWorld') -> Dict[str, Any]:
             "removeMineSecurityStationLocks": False,
             "powerBombArboretumSandstone": bool(world.options.flaahgra_power_bombs),
             "artifactHints": make_artifact_hints(world),
-            "requiredArtifactCount": world.options.required_artifacts.value
+            "requiredArtifactCount": world.options.required_artifacts.value,
         },
-        "levelData": make_level_data(world)
+        "levelData": make_level_data(world),
     }
 
     return config
 
 
-def make_level_data(world: 'MetroidPrimeWorld') -> Dict[str, Any]:
+def make_level_data(world: "MetroidPrimeWorld") -> Dict[str, Any]:
     transport_data = get_transport_data(world)
     level_data: Dict[str, Any] = {
         MetroidPrimeArea.Tallon_Overworld.value: {
             "transports": transport_data[MetroidPrimeArea.Tallon_Overworld.value],
-            "rooms": world.game_region_data[MetroidPrimeArea.Tallon_Overworld].get_config_data(world)
+            "rooms": world.game_region_data[
+                MetroidPrimeArea.Tallon_Overworld
+            ].get_config_data(world),
         },
         MetroidPrimeArea.Chozo_Ruins.value: {
             "transports": transport_data[MetroidPrimeArea.Chozo_Ruins.value],
-            "rooms": world.game_region_data[MetroidPrimeArea.Chozo_Ruins].get_config_data(world)
+            "rooms": world.game_region_data[
+                MetroidPrimeArea.Chozo_Ruins
+            ].get_config_data(world),
         },
         MetroidPrimeArea.Magmoor_Caverns.value: {
             "transports": transport_data[MetroidPrimeArea.Magmoor_Caverns.value],
-            "rooms": world.game_region_data[MetroidPrimeArea.Magmoor_Caverns].get_config_data(world)
+            "rooms": world.game_region_data[
+                MetroidPrimeArea.Magmoor_Caverns
+            ].get_config_data(world),
         },
         MetroidPrimeArea.Phendrana_Drifts.value: {
             "transports": transport_data[MetroidPrimeArea.Phendrana_Drifts.value],
-            "rooms": world.game_region_data[MetroidPrimeArea.Phendrana_Drifts].get_config_data(world)
+            "rooms": world.game_region_data[
+                MetroidPrimeArea.Phendrana_Drifts
+            ].get_config_data(world),
         },
         MetroidPrimeArea.Phazon_Mines.value: {
             "transports": transport_data[MetroidPrimeArea.Phazon_Mines.value],
-            "rooms": world.game_region_data[MetroidPrimeArea.Phazon_Mines].get_config_data(world)
-
-        }
+            "rooms": world.game_region_data[
+                MetroidPrimeArea.Phazon_Mines
+            ].get_config_data(world),
+        },
     }
 
     return level_data
@@ -312,11 +394,7 @@ def get_objective_strg_key(version: str) -> str:
 
 DEFAULT_OBJECTIVE_STRG_KEY = "3012146902"
 OBJECTIVE_STRG = {
-    DEFAULT_OBJECTIVE_STRG_KEY: [
-        "Objective data decoded\n",
-        "Mission Objectives",
-        ""
-    ]
+    DEFAULT_OBJECTIVE_STRG_KEY: ["Objective data decoded\n", "Mission Objectives", ""]
 }
 PAUSE_MENU_STRG_KEY = "1343145632"
 PAUSE_STRG = {
@@ -420,6 +498,6 @@ PAUSE_STRG = {
         "Mono",
         "Stereo",
         "Dolby",
-        "Zoom"
+        "Zoom",
     ]
 }

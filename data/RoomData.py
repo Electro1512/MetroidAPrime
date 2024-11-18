@@ -2,11 +2,27 @@ from dataclasses import dataclass, field
 from typing import Any, Callable, Dict, List, Optional
 import typing
 
-from BaseClasses import CollectionState, ItemClassification, LocationProgressType, Region
+from BaseClasses import (
+    CollectionState,
+    ItemClassification,
+    LocationProgressType,
+    Region,
+)
 from ..BlastShieldRando import BlastShieldType
 from ..DoorRando import DoorLockType
 from ..Items import ProgressiveUpgrade, SuitUpgrade
-from ..Logic import can_beam_combo, can_bomb, can_charge_beam, can_ice_beam, can_missile, can_plasma_beam, can_power_beam, can_power_bomb, can_super_missile, can_wave_beam
+from ..Logic import (
+    can_beam_combo,
+    can_bomb,
+    can_charge_beam,
+    can_ice_beam,
+    can_missile,
+    can_plasma_beam,
+    can_power_beam,
+    can_power_bomb,
+    can_super_missile,
+    can_wave_beam,
+)
 from ..data.AreaNames import MetroidPrimeArea
 from ..Locations import MetroidPrimeLocation, every_location
 from .RoomNames import RoomName
@@ -17,18 +33,22 @@ if typing.TYPE_CHECKING:
     from .. import MetroidPrimeWorld
 
 
-def get_config_item_text(world: 'MetroidPrimeWorld', location: str) -> str:
+def get_config_item_text(world: "MetroidPrimeWorld", location: str) -> str:
     loc = world.multiworld.get_location(location, world.player)
     assert loc.item
     if not loc.item.player:
         return "Nothing"
-    player_name = f"{world.multiworld.player_name[loc.item.player]}'s " if loc.item.player != world.player else ""
+    player_name = (
+        f"{world.multiworld.player_name[loc.item.player]}'s "
+        if loc.item.player != world.player
+        else ""
+    )
     player_name = player_name.replace("&", "[and]")
     item_name = loc.item.name.replace("&", "[and]")
     return f"{player_name}{item_name}"
 
 
-def get_config_item_model(world: 'MetroidPrimeWorld', location: str) -> str:
+def get_config_item_model(world: "MetroidPrimeWorld", location: str) -> str:
     loc = world.multiworld.get_location(location, world.player)
     assert loc.item
     if loc.native_item:
@@ -39,7 +59,10 @@ def get_config_item_model(world: 'MetroidPrimeWorld', location: str) -> str:
             return "Shiny Missile"
         elif name == SuitUpgrade.Main_Power_Bomb.value:
             return "Power Bomb"
-        elif name == ProgressiveUpgrade.Progressive_Power_Beam.value or name == SuitUpgrade.Power_Beam.value:
+        elif (
+            name == ProgressiveUpgrade.Progressive_Power_Beam.value
+            or name == SuitUpgrade.Power_Beam.value
+        ):
             return "Super Missile"
         elif name == ProgressiveUpgrade.Progressive_Wave_Beam.value:
             return "Wave Beam"
@@ -58,59 +81,79 @@ def get_config_item_model(world: 'MetroidPrimeWorld', location: str) -> str:
             return "Cog"
 
 
-@ dataclass
+@dataclass
 class PickupData:
     name: str
-    rule_func: Optional[Callable[['MetroidPrimeWorld', CollectionState], bool]] = None
+    rule_func: Optional[Callable[["MetroidPrimeWorld", CollectionState], bool]] = None
     tricks: List[TrickInfo] = field(default_factory=list)
     priority: LocationProgressType = LocationProgressType.DEFAULT
-    exclude_from_config: bool = False  # Used when items need to be treated differently for logic with odd room connections
-    exclude_from_logic: bool = False  # Used when items need to be treated differently for logic with odd room connections
+    exclude_from_config: bool = (
+        False  # Used when items need to be treated differently for logic with odd room connections
+    )
+    exclude_from_logic: bool = (
+        False  # Used when items need to be treated differently for logic with odd room connections
+    )
 
-    def get_config_data(self, world: 'MetroidPrimeWorld') -> Dict[str, Any]:
+    def get_config_data(self, world: "MetroidPrimeWorld") -> Dict[str, Any]:
         return {
             "type": "Unknown Item 1",
             "scanText": get_config_item_text(world, self.name),
             "hudmemoText": get_config_item_text(world, self.name) + " Acquired!",
             "currIncrease": 0,
             "model": get_config_item_model(world, self.name),
-            "showIcon": True
+            "showIcon": True,
         }
 
 
-@ dataclass
+@dataclass
 class RoomData:
     doors: dict[int, DoorData] = field(default_factory=dict)
     pickups: list[PickupData] = field(default_factory=list)
-    include_area_in_name: bool = False  # Used for rooms that have duplicate names in different areas
+    include_area_in_name: bool = (
+        False  # Used for rooms that have duplicate names in different areas
+    )
     area: Optional[MetroidPrimeArea] = None
     room_name: Optional[RoomName] = None
 
-    def get_config_data(self, world: 'MetroidPrimeWorld', parent_area: str) -> Dict[str, List[Any]]:
+    def get_config_data(
+        self, world: "MetroidPrimeWorld", parent_area: str
+    ) -> Dict[str, List[Any]]:
         config: Dict[str, Any] = {
-            "pickups": [pickup.get_config_data(world) for pickup in self.pickups if not pickup.exclude_from_config],
+            "pickups": [
+                pickup.get_config_data(world)
+                for pickup in self.pickups
+                if not pickup.exclude_from_config
+            ],
         }
         config["doors"] = self.get_door_config_data(world, parent_area)
 
         return config
 
-# TODO: Reduce duplication here w/ if/else. Make a single loop and operate on each door individually
-# TODO: Make a test that verifies door rando output config so this will fail if it is not correct
-    def get_door_config_data(self, world: 'MetroidPrimeWorld', parent_area: str) -> Dict[str, Any]:
+    # TODO: Reduce duplication here w/ if/else. Make a single loop and operate on each door individually
+    # TODO: Make a test that verifies door rando output config so this will fail if it is not correct
+    def get_door_config_data(
+        self, world: "MetroidPrimeWorld", parent_area: str
+    ) -> Dict[str, Any]:
         door_data: Dict[str, Any] = {}
         if world.door_color_mapping is not None:
-            color_mapping: Dict[str, str] = world.door_color_mapping[parent_area].type_mapping
+            color_mapping: Dict[str, str] = world.door_color_mapping[
+                parent_area
+            ].type_mapping
             for door_id, door in self.doors.items():
                 if door.defaultLock.value not in color_mapping or not door.lock:
                     continue
                 door_data[f"{door_id}"] = {
-                    "shieldType": door.lock.value if door.lock else door.defaultLock.value,
+                    "shieldType": (
+                        door.lock.value if door.lock else door.defaultLock.value
+                    ),
                 }
         else:
             for door_id, door in self.doors.items():
                 if door.lock is not door.defaultLock and door.lock:
                     door_data[f"{door_id}"] = {
-                        "shieldType": door.lock.value if door.lock else door.defaultLock.value,
+                        "shieldType": (
+                            door.lock.value if door.lock else door.defaultLock.value
+                        ),
                     }
 
         for door_id, door in self.doors.items():
@@ -132,7 +175,9 @@ class RoomData:
             return f"{self.area.value}: {name}"
         return name
 
-    def get_matching_door(self, source_door: DoorData, world: 'MetroidPrimeWorld') -> Optional[DoorData]:
+    def get_matching_door(
+        self, source_door: DoorData, world: "MetroidPrimeWorld"
+    ) -> Optional[DoorData]:
         assert self.area
         area = world.game_region_data.get(self.area)
         if area and source_door.default_destination:
@@ -154,12 +199,13 @@ class AreaData:
             room_data.room_name = room_name
             room_data.area = MetroidPrimeArea(self.area_name)
 
-    def get_config_data(self, world: 'MetroidPrimeWorld') -> Dict[str, Any]:
+    def get_config_data(self, world: "MetroidPrimeWorld") -> Dict[str, Any]:
         return {
-            name.value: data.get_config_data(world, self.area_name) for name, data in self.rooms.items()
+            name.value: data.get_config_data(world, self.area_name)
+            for name, data in self.rooms.items()
         }
 
-    def create_world_region(self, world: 'MetroidPrimeWorld'):
+    def create_world_region(self, world: "MetroidPrimeWorld"):
         # Create each room as a region
         for room_name, room_data in self.rooms.items():
             region_name = room_data.get_region_name(room_name.value)
@@ -173,12 +219,23 @@ class AreaData:
 
                 # TODO: Remove the generator
 
-                region.add_locations({pickup.name: every_location[pickup.name]}, MetroidPrimeLocation)
+                region.add_locations(
+                    {pickup.name: every_location[pickup.name]}, MetroidPrimeLocation
+                )
                 location = world.multiworld.get_location(pickup.name, world.player)
-                location.access_rule = lambda state, world=world, pickup=pickup: _can_reach_pickup(world, state, pickup)
+                location.access_rule = (
+                    lambda state, world=world, pickup=pickup: _can_reach_pickup(
+                        world, state, pickup
+                    )
+                )
 
         # Once each region is created, connect the doors and assign their locks
-        color_mapping: Dict[str, str] = world.door_color_mapping[self.area_name].type_mapping if world.door_color_mapping and world.options.door_color_randomization != "none" else {}
+        color_mapping: Dict[str, str] = (
+            world.door_color_mapping[self.area_name].type_mapping
+            if world.door_color_mapping
+            and world.options.door_color_randomization != "none"
+            else {}
+        )
         for room_name, room_data in self.rooms.items():
             name = room_data.get_region_name(room_name.value)
             region = world.multiworld.get_region(name, world.player)
@@ -187,60 +244,145 @@ class AreaData:
                 if destination is None:
                     continue
 
-                if world.options.door_color_randomization != "none" and door_data.exclude_from_rando is False and door_data.defaultLock.value in color_mapping:
-                    door_data.lock = DoorLockType(color_mapping[door_data.defaultLock.value])
+                if (
+                    world.options.door_color_randomization != "none"
+                    and door_data.exclude_from_rando is False
+                    and door_data.defaultLock.value in color_mapping
+                ):
+                    door_data.lock = DoorLockType(
+                        color_mapping[door_data.defaultLock.value]
+                    )
 
-                def apply_blast_shield_to_both_sides_of_door(door_data: DoorData, target_room_data: RoomData = room_data):
+                def apply_blast_shield_to_both_sides_of_door(
+                    door_data: DoorData, target_room_data: RoomData = room_data
+                ):
                     paired_door = target_room_data.get_matching_door(door_data, world)
                     # TODO: Handle pairing door mappings in the apply shield logic, also handle locked doors there
                     shield_applied = False
-                    if paired_door and paired_door.blast_shield and paired_door.blast_shield != BlastShieldType.No_Blast_Shield:
+                    if (
+                        paired_door
+                        and paired_door.blast_shield
+                        and paired_door.blast_shield != BlastShieldType.No_Blast_Shield
+                    ):
                         door_data.blast_shield = paired_door.blast_shield
                         shield_applied = True
-                    elif paired_door and door_data.blast_shield and paired_door.blast_shield != BlastShieldType.No_Blast_Shield:
+                    elif (
+                        paired_door
+                        and door_data.blast_shield
+                        and paired_door.blast_shield != BlastShieldType.No_Blast_Shield
+                    ):
                         paired_door.blast_shield = door_data.blast_shield
                         shield_applied = True
 
                     if shield_applied:
                         door_data.lock = DoorLockType.Blue
 
-                def sub_region_access_rule_func(state: CollectionState, world: 'MetroidPrimeWorld', origin_door_data: DoorData, target_door_data: DoorData):
-                    meets_origin_door_requirements = origin_door_data.sub_region_access_override(world, state) and _can_open_door(world, state, world.player, origin_door_data) if origin_door_data.sub_region_access_override is not None else _can_access_door(world, state, world.player, origin_door_data)  # Use override if any, otherwise use default access rule
-                    return meets_origin_door_requirements and _can_open_door(world, state, world.player, target_door_data)
+                def sub_region_access_rule_func(
+                    state: CollectionState,
+                    world: "MetroidPrimeWorld",
+                    origin_door_data: DoorData,
+                    target_door_data: DoorData,
+                ):
+                    meets_origin_door_requirements = (
+                        origin_door_data.sub_region_access_override(world, state)
+                        and _can_open_door(world, state, world.player, origin_door_data)
+                        if origin_door_data.sub_region_access_override is not None
+                        else _can_access_door(
+                            world, state, world.player, origin_door_data
+                        )
+                    )  # Use override if any, otherwise use default access rule
+                    return meets_origin_door_requirements and _can_open_door(
+                        world, state, world.player, target_door_data
+                    )
 
-                def get_connection_name(door_data: DoorData, target_room_name: str = name, target_destination: RoomName = destination) -> str:
+                def get_connection_name(
+                    door_data: DoorData,
+                    target_room_name: str = name,
+                    target_destination: RoomName = destination,
+                ) -> str:
                     if door_data.blast_shield:
                         pass
-                    blast_shield_text = "" if door_data.blast_shield is None or door_data.blast_shield == BlastShieldType.No_Blast_Shield else f" {door_data.blast_shield.value}"
+                    blast_shield_text = (
+                        ""
+                        if door_data.blast_shield is None
+                        or door_data.blast_shield == BlastShieldType.No_Blast_Shield
+                        else f" {door_data.blast_shield.value}"
+                    )
                     lock = door_data.lock or door_data.defaultLock
-                    return lock.value + blast_shield_text + f" Door from {target_room_name} to {target_destination.value}"
+                    return (
+                        lock.value
+                        + blast_shield_text
+                        + f" Door from {target_room_name} to {target_destination.value}"
+                    )
 
                 apply_blast_shield_to_both_sides_of_door(door_data)
 
-                target_region = world.multiworld.get_region(door_data.get_destination_region_name(), world.player)
-                region.connect(target_region, get_connection_name(door_data), lambda state, world=world, door_data=door_data: _can_access_door(world, state, world.player, door_data))
+                target_region = world.multiworld.get_region(
+                    door_data.get_destination_region_name(), world.player
+                )
+                region.connect(
+                    target_region,
+                    get_connection_name(door_data),
+                    lambda state, world=world, door_data=door_data: _can_access_door(
+                        world, state, world.player, door_data
+                    ),
+                )
 
                 if door_data.sub_region_door_index is not None:
                     assert room_data.area
                     assert door_data.default_destination
-                    target_room = world.game_region_data[room_data.area].rooms[door_data.default_destination]
+                    target_room = world.game_region_data[room_data.area].rooms[
+                        door_data.default_destination
+                    ]
                     target_door = target_room.doors[door_data.sub_region_door_index]
-                    apply_blast_shield_to_both_sides_of_door(target_door, target_room_data=target_room)
+                    apply_blast_shield_to_both_sides_of_door(
+                        target_door, target_room_data=target_room
+                    )
 
-                    target_sub_region = world.multiworld.get_region(target_door.get_destination_region_name(), world.player)
+                    target_sub_region = world.multiworld.get_region(
+                        target_door.get_destination_region_name(), world.player
+                    )
 
                     assert target_door.default_destination and target_room.room_name
-                    region.connect(target_sub_region, get_connection_name(door_data) + " then " + get_connection_name(target_door, target_destination=target_door.default_destination, target_room_name=target_room.room_name.value), lambda state, world=world, origin_door_data=door_data, target_door_data=target_door: sub_region_access_rule_func(state, world, origin_door_data, target_door_data))
-                    target_sub_region.connect(region, get_connection_name(target_door, target_destination=target_door.default_destination, target_room_name=target_room.room_name.value) + " then " + get_connection_name(door_data), lambda state, world=world, origin_door_data=target_door, target_door_data=door_data: sub_region_access_rule_func(state, world, origin_door_data, target_door_data))
+                    region.connect(
+                        target_sub_region,
+                        get_connection_name(door_data)
+                        + " then "
+                        + get_connection_name(
+                            target_door,
+                            target_destination=target_door.default_destination,
+                            target_room_name=target_room.room_name.value,
+                        ),
+                        lambda state, world=world, origin_door_data=door_data, target_door_data=target_door: sub_region_access_rule_func(
+                            state, world, origin_door_data, target_door_data
+                        ),
+                    )
+                    target_sub_region.connect(
+                        region,
+                        get_connection_name(
+                            target_door,
+                            target_destination=target_door.default_destination,
+                            target_room_name=target_room.room_name.value,
+                        )
+                        + " then "
+                        + get_connection_name(door_data),
+                        lambda state, world=world, origin_door_data=target_door, target_door_data=door_data: sub_region_access_rule_func(
+                            state, world, origin_door_data, target_door_data
+                        ),
+                    )
 
 
-def _can_reach_pickup(world: 'MetroidPrimeWorld', state: CollectionState, pickup_data: PickupData) -> bool:
+def _can_reach_pickup(
+    world: "MetroidPrimeWorld", state: CollectionState, pickup_data: PickupData
+) -> bool:
     """Determines if the player is able to reach the pickup based on their items and selected trick difficulty"""
     max_difficulty = world.options.trick_difficulty.value
     allow_list = world.options.trick_allow_list
     deny_list = world.options.trick_deny_list
     for trick in pickup_data.tricks:
-        if trick.name not in allow_list and (trick.difficulty.value > max_difficulty or trick.name in deny_list):
+        if trick.name not in allow_list and (
+            trick.difficulty.value > max_difficulty or trick.name in deny_list
+        ):
             continue
         elif trick.rule_func(world, state):
             return True
@@ -252,7 +394,9 @@ def _can_reach_pickup(world: 'MetroidPrimeWorld', state: CollectionState, pickup
     return False
 
 
-def _can_open_door(world: 'MetroidPrimeWorld', state: CollectionState, player: int, door_data: DoorData) -> bool:
+def _can_open_door(
+    world: "MetroidPrimeWorld", state: CollectionState, player: int, door_data: DoorData
+) -> bool:
     can_color = False
     can_blast_shield = False
     lock = door_data.lock or door_data.defaultLock
@@ -303,7 +447,9 @@ def _can_open_door(world: 'MetroidPrimeWorld', state: CollectionState, player: i
     return can_color and can_blast_shield
 
 
-def _can_access_door(world: 'MetroidPrimeWorld', state: CollectionState, player: int, door_data: DoorData) -> bool:
+def _can_access_door(
+    world: "MetroidPrimeWorld", state: CollectionState, player: int, door_data: DoorData
+) -> bool:
     """Determines if the player can open the door based on the lock type as well as whether they can reach it or not"""
     max_difficulty = world.options.trick_difficulty.value
     allow_list = world.options.trick_allow_list
@@ -315,7 +461,9 @@ def _can_access_door(world: 'MetroidPrimeWorld', state: CollectionState, player:
     for trick in door_data.tricks:
         if trick.name in allow_list:
             pass
-        if trick.name not in allow_list and (trick.difficulty.value > max_difficulty or trick.name in deny_list):
+        if trick.name not in allow_list and (
+            trick.difficulty.value > max_difficulty or trick.name in deny_list
+        ):
             continue
         elif trick.rule_func(world, state):
             return True

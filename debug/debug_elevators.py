@@ -9,6 +9,7 @@ from ..data.Transports import default_elevator_mappings
 from ..data.RoomNames import RoomName
 from Generate import main
 from ..data.StartRoomData import all_start_rooms
+
 fail = []
 
 # all_rooms = ["Arbor Chamber", "Transport to Chozo Ruins East", "Quarantine Monitor", "Sunchamber Lobby"]
@@ -21,7 +22,7 @@ areas_by_room = {
     "Arbor Chamber": MetroidPrimeArea.Tallon_Overworld.value,
     "Transport to Chozo Ruins East": MetroidPrimeArea.Tallon_Overworld.value,
     "Quarantine Monitor": MetroidPrimeArea.Phendrana_Drifts.value,
-    "Sunchamber Lobby": MetroidPrimeArea.Chozo_Ruins.value
+    "Sunchamber Lobby": MetroidPrimeArea.Chozo_Ruins.value,
 }
 
 # for room in all_start_rooms:
@@ -38,18 +39,22 @@ for room in all_rooms:
                 if target_elevator == source_elevators[source_elevator]:
                     continue
                 config = None
-                with open('Players/Hesto2.yaml', 'r') as file:
+                with open("Players/Hesto2.yaml", "r") as file:
                     config = yaml.safe_load(file)
 
                 config["Metroid Prime"]["elevator_mapping"] = {}
                 config["Metroid Prime"]["elevator_mapping"][source_area] = {}
-                config["Metroid Prime"]["elevator_mapping"][source_area][source_elevator] = target_elevator
+                config["Metroid Prime"]["elevator_mapping"][source_area][
+                    source_elevator
+                ] = target_elevator
 
                 config["Metroid Prime"]["elevator_mapping"][target_area] = {}
-                config["Metroid Prime"]["elevator_mapping"][target_area][target_elevator] = source_elevator
+                config["Metroid Prime"]["elevator_mapping"][target_area][
+                    target_elevator
+                ] = source_elevator
                 config["Metroid Prime"]["starting_room"] = room
 
-                with open('Players/Hesto2.yaml', 'w') as file:
+                with open("Players/Hesto2.yaml", "w") as file:
                     yaml.safe_dump(config, file, default_flow_style=False)
 
                 for time in range(times_to_try):

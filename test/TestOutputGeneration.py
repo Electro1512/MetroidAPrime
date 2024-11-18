@@ -5,7 +5,7 @@ from Fill import distribute_items_restrictive
 from ..config import make_config
 from . import MetroidPrimeTestBase
 
-OUTPUT_DIR = os.path.join(os.path.dirname(__file__), 'test_output')
+OUTPUT_DIR = os.path.join(os.path.dirname(__file__), "test_output")
 
 
 def dict_diff(d1: Any, d2: Any, path: str = ""):
@@ -25,8 +25,7 @@ def dict_diff(d1: Any, d2: Any, path: str = ""):
 
 class TestDefaultOutputGeneration(MetroidPrimeTestBase):
     auto_construct = False
-    options = {
-    }
+    options = {}
 
     def test_output_generates_correctly(self) -> None:
         self.world_setup()  # type: ignore
@@ -43,17 +42,16 @@ class TestDefaultOutputGeneration(MetroidPrimeTestBase):
 
 class TestMainPBAndMissileLauncherOutputGeneration(MetroidPrimeTestBase):
     auto_construct = False
-    options = {
-        "missile_launcher": 1,
-        "main_power_bomb": 1
-    }
+    options = {"missile_launcher": 1, "main_power_bomb": 1}
 
     def test_output_generates_correctly_with_main_pb_and_missile_launcher(self) -> None:
         self.world_setup()  # type: ignore
         distribute_items_restrictive(self.multiworld)
         output = make_config(self.world)
         expected_output = {}
-        path = os.path.join(os.path.dirname(__file__), "data", "missile_launcher_main_pb_config.json")
+        path = os.path.join(
+            os.path.dirname(__file__), "data", "missile_launcher_main_pb_config.json"
+        )
         with open(path, "r") as f:
             expected_output = json.load(f)
 
@@ -61,12 +59,16 @@ class TestMainPBAndMissileLauncherOutputGeneration(MetroidPrimeTestBase):
         dump_output_if_test_fails(self, output, expected_output)
 
 
-def dump_output_if_test_fails(test: MetroidPrimeTestBase, output: Dict[str, Any], expected_output: Dict[str, Any]):
+def dump_output_if_test_fails(
+    test: MetroidPrimeTestBase, output: Dict[str, Any], expected_output: Dict[str, Any]
+):
     try:
         test.assertDictEqual(output, expected_output)
     except AssertionError:
         # If the test fails, write the expected output to a file
-        os.makedirs(OUTPUT_DIR, exist_ok=True)  # Create the directory if it does not exist
-        with open(f'{OUTPUT_DIR}/{test._testMethodName}.json', 'w') as f:
+        os.makedirs(
+            OUTPUT_DIR, exist_ok=True
+        )  # Create the directory if it does not exist
+        with open(f"{OUTPUT_DIR}/{test._testMethodName}.json", "w") as f:
             json.dump(output, f, indent=4)
         raise  # Re-raise the exception to fail the test

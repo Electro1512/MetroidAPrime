@@ -1,4 +1,5 @@
 from .PrimeUtils import setup_lib_path
+
 setup_lib_path()  # NOTE: This MUST be called before importing any other metroidprime modules (other than PrimeUtils)
 # Setup local dependencies if running in an apworld
 import typing
@@ -12,21 +13,53 @@ from .data.PhendranaDrifts import PhendranaDriftsAreaData
 from .data.MagmoorCaverns import MagmoorCavernsAreaData
 from .data.ChozoRuins import ChozoRuinsAreaData
 from .data.TallonOverworld import TallonOverworldAreaData
-from .BlastShieldRando import WorldBlastShieldMapping, apply_blast_shield_mapping, get_world_blast_shield_mapping
+from .BlastShieldRando import (
+    WorldBlastShieldMapping,
+    apply_blast_shield_mapping,
+    get_world_blast_shield_mapping,
+)
 from .data.RoomData import AreaData
 from .data.AreaNames import MetroidPrimeArea
-from .DoorRando import WorldDoorColorMapping, get_world_door_mapping, remap_doors_to_power_beam_if_necessary
+from .DoorRando import (
+    WorldDoorColorMapping,
+    get_world_door_mapping,
+    remap_doors_to_power_beam_if_necessary,
+)
 
 from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess  # type: ignore
 import settings
 from worlds.AutoWorld import World, WebWorld
-from .data.Transports import ELEVATOR_USEFUL_NAMES, default_elevator_mappings, get_random_elevator_mapping
+from .data.Transports import (
+    ELEVATOR_USEFUL_NAMES,
+    default_elevator_mappings,
+    get_random_elevator_mapping,
+)
 from .config import make_config
 from .Regions import create_regions
 from .Locations import every_location
-from .PrimeOptions import BlastShieldAvailableTypes, BlastShieldRandomization, MetroidPrimeOptions, prime_option_groups
-from .Items import PROGRESSIVE_ITEM_MAPPING, MetroidPrimeItem, ProgressiveUpgrade, SuitUpgrade, get_item_for_options, get_progressive_upgrade_for_item, suit_upgrade_table, artifact_table, item_table
-from .data.StartRoomData import StartRoomData, init_starting_beam, init_starting_loadout, init_starting_room_data
+from .PrimeOptions import (
+    BlastShieldAvailableTypes,
+    BlastShieldRandomization,
+    MetroidPrimeOptions,
+    prime_option_groups,
+)
+from .Items import (
+    PROGRESSIVE_ITEM_MAPPING,
+    MetroidPrimeItem,
+    ProgressiveUpgrade,
+    SuitUpgrade,
+    get_item_for_options,
+    get_progressive_upgrade_for_item,
+    suit_upgrade_table,
+    artifact_table,
+    item_table,
+)
+from .data.StartRoomData import (
+    StartRoomData,
+    init_starting_beam,
+    init_starting_loadout,
+    init_starting_room_data,
+)
 from .Container import MetroidPrimeContainer
 from BaseClasses import Item, MultiWorld, Tutorial, ItemClassification
 
@@ -37,18 +70,24 @@ class MultiworldWithPassthrough(MultiWorld):
 
 def run_client(*args: Any):
     from .MetroidPrimeClient import launch
+
     launch_subprocess(launch, name="MetroidPrimeClient")
 
 
 components.append(
-    Component("Metroid Prime Client", func=run_client, component_type=Type.CLIENT,
-              file_identifier=SuffixIdentifier(".apmp1"))
+    Component(
+        "Metroid Prime Client",
+        func=run_client,
+        component_type=Type.CLIENT,
+        file_identifier=SuffixIdentifier(".apmp1"),
+    )
 )
 
 
 class MetroidPrimeSettings(settings.Group):
     class RomFile(settings.UserFilePath):
         """File name of the Metroid Prime ISO"""
+
         description = "Metroid Prime GC ISO file"
         copy_to = "Metroid_Prime.iso"
 
@@ -64,14 +103,16 @@ class MetroidPrimeSettings(settings.Group):
 
 
 class MetroidPrimeWeb(WebWorld):
-    tutorials = [Tutorial(
-        "Multiworld Setup Guide",
-        "A guide to setting up Metroid Prime for Archipelago",
-        "English",
-        "setup.md",
-        "setup/en",
-        ["Electro15", "hesto2"]
-    )]
+    tutorials = [
+        Tutorial(
+            "Multiworld Setup Guide",
+            "A guide to setting up Metroid Prime for Archipelago",
+            "English",
+            "setup.md",
+            "setup/en",
+            ["Electro15", "hesto2"],
+        )
+    ]
     option_groups = prime_option_groups
 
 
@@ -85,6 +126,7 @@ class MetroidPrimeWorld(World):
     the bounty hunter Samus Aran as she traverses the planet Tallon IV and uncovers the plans
     of the Space Pirates.
     """
+
     game = "Metroid Prime"
     web = MetroidPrimeWeb()
     required_client_version = (0, 5, 0)
@@ -94,9 +136,7 @@ class MetroidPrimeWorld(World):
     item_name_to_id = {name: data.code for name, data in item_table.items()}
     location_name_to_id = every_location
     settings: MetroidPrimeSettings  # type: ignore
-    item_name_groups = {
-        "Artifacts": set(artifact_table.keys())
-    }
+    item_name_groups = {"Artifacts": set(artifact_table.keys())}
     starting_room_data: StartRoomData
     prefilled_item_map: Dict[str, str] = {}  # Dict of location name to item name
     elevator_mapping: Dict[str, Dict[str, str]] = default_elevator_mappings
@@ -112,7 +152,7 @@ class MetroidPrimeWorld(World):
             MetroidPrimeArea.Chozo_Ruins: ChozoRuinsAreaData(),
             MetroidPrimeArea.Magmoor_Caverns: MagmoorCavernsAreaData(),
             MetroidPrimeArea.Phendrana_Drifts: PhendranaDriftsAreaData(),
-            MetroidPrimeArea.Phazon_Mines: PhazonMinesAreaData()
+            MetroidPrimeArea.Phazon_Mines: PhazonMinesAreaData(),
         }
 
     def get_filler_item_name(self) -> str:
@@ -130,14 +170,20 @@ class MetroidPrimeWorld(World):
                 MetroidPrimeArea.Chozo_Ruins: ChozoRuinsAreaData(),
                 MetroidPrimeArea.Magmoor_Caverns: MagmoorCavernsAreaData(),
                 MetroidPrimeArea.Phendrana_Drifts: PhendranaDriftsAreaData(),
-                MetroidPrimeArea.Phazon_Mines: PhazonMinesAreaData()
+                MetroidPrimeArea.Phazon_Mines: PhazonMinesAreaData(),
             }
 
             for key, value in passthrough.items():
                 option = getattr(self.options, key, None)
                 if option is not None:
                     # These get interpreted as lists but the tracker expects them to be sets
-                    if key in ["non_local_items", "local_items", "local_early_items", "priority_locations", "exclude_locations"]:
+                    if key in [
+                        "non_local_items",
+                        "local_items",
+                        "local_early_items",
+                        "priority_locations",
+                        "exclude_locations",
+                    ]:
                         option.value = set(value)
                     else:
                         option.value = value
@@ -151,10 +197,14 @@ class MetroidPrimeWorld(World):
 
         # Randomize Door Colors
         if self.options.door_color_mapping:
-            self.door_color_mapping = WorldDoorColorMapping.from_option_value(self.options.door_color_mapping.value)
+            self.door_color_mapping = WorldDoorColorMapping.from_option_value(
+                self.options.door_color_mapping.value
+            )
         elif self.options.door_color_randomization != "none":
             self.door_color_mapping = get_world_door_mapping(self)
-            self.options.door_color_mapping.value = self.door_color_mapping.to_option_value()
+            self.options.door_color_mapping.value = (
+                self.door_color_mapping.to_option_value()
+            )
 
         init_starting_beam(self)
 
@@ -166,10 +216,18 @@ class MetroidPrimeWorld(World):
 
         # Randomize Blast Shields
         if self.options.blast_shield_mapping:
-            self.blast_shield_mapping = WorldBlastShieldMapping.from_option_value(self.options.blast_shield_mapping.value)
-        elif cast(str, self.options.blast_shield_randomization.value) != BlastShieldRandomization.option_none or self.options.locked_door_count > 0:
+            self.blast_shield_mapping = WorldBlastShieldMapping.from_option_value(
+                self.options.blast_shield_mapping.value
+            )
+        elif (
+            cast(str, self.options.blast_shield_randomization.value)
+            != BlastShieldRandomization.option_none
+            or self.options.locked_door_count > 0
+        ):
             self.blast_shield_mapping = get_world_blast_shield_mapping(self)
-            self.options.blast_shield_mapping.value = self.blast_shield_mapping.to_option_value()
+            self.options.blast_shield_mapping.value = (
+                self.blast_shield_mapping.to_option_value()
+            )
 
         if self.blast_shield_mapping:
             apply_blast_shield_mapping(self)
@@ -185,11 +243,15 @@ class MetroidPrimeWorld(World):
         boss_selection = int(self.options.final_bosses)
         create_regions(self, boss_selection)
 
-    def create_item(self, name: str, override: Optional[ItemClassification] = None) -> "Item":
+    def create_item(
+        self, name: str, override: Optional[ItemClassification] = None
+    ) -> "Item":
         createdthing = item_table[name]
         if override:
             return MetroidPrimeItem(name, override, createdthing.code, self.player)
-        return MetroidPrimeItem(name, createdthing.classification, createdthing.code, self.player)
+        return MetroidPrimeItem(
+            name, createdthing.classification, createdthing.code, self.player
+        )
 
     def pre_fill(self) -> None:
         for location_name, item_name in self.prefilled_item_map.items():
@@ -212,11 +274,18 @@ class MetroidPrimeWorld(World):
             items_added += 1
 
         # Create initial inventory from yaml and starting room
-        assert self.starting_room_data is not None and self.starting_room_data.selected_loadout is not None
+        assert (
+            self.starting_room_data is not None
+            and self.starting_room_data.selected_loadout is not None
+        )
         start_inventory = (
-            ALWAYS_START_INVENTORY +
-            [item.value for item in self.starting_room_data.selected_loadout.loadout] +
-            [get_item_for_options(self, self.starting_room_data.selected_loadout.starting_beam).value]
+            ALWAYS_START_INVENTORY
+            + [item.value for item in self.starting_room_data.selected_loadout.loadout]
+            + [
+                get_item_for_options(
+                    self, self.starting_room_data.selected_loadout.starting_beam
+                ).value
+            ]
         )
 
         if not self.options.shuffle_scan_visor.value:
@@ -228,30 +297,55 @@ class MetroidPrimeWorld(World):
             if item not in self.multiworld.precollected_items[self.player]:
                 self.multiworld.push_precollected(item)
 
-        items_with_multiple = [SuitUpgrade.Missile_Expansion.value, SuitUpgrade.Power_Bomb_Expansion.value, SuitUpgrade.Energy_Tank.value]
+        items_with_multiple = [
+            SuitUpgrade.Missile_Expansion.value,
+            SuitUpgrade.Power_Bomb_Expansion.value,
+            SuitUpgrade.Energy_Tank.value,
+        ]
 
         for suit_upgrade in {*suit_upgrade_table}:
-            if self.options.progressive_beam_upgrades.value and get_progressive_upgrade_for_item(SuitUpgrade.get_by_value(suit_upgrade)) is not None:
+            if (
+                self.options.progressive_beam_upgrades.value
+                and get_progressive_upgrade_for_item(
+                    SuitUpgrade.get_by_value(suit_upgrade)
+                )
+                is not None
+            ):
                 continue
 
-            if suit_upgrade in self.prefilled_item_map.values() and suit_upgrade in items_with_multiple:
+            if (
+                suit_upgrade in self.prefilled_item_map.values()
+                and suit_upgrade in items_with_multiple
+            ):
                 for prefilled_item in self.prefilled_item_map.values():
                     if prefilled_item == suit_upgrade:
                         items_added += 1
 
             # Don't add items that are already placed locally via start room logic or starting loadout to the multiworld pool.
             # Missile expansions, PB expansions, and energy tanks are added still since there are multiple of them.
-            if suit_upgrade in self.prefilled_item_map.values() and suit_upgrade not in items_with_multiple:
+            if (
+                suit_upgrade in self.prefilled_item_map.values()
+                and suit_upgrade not in items_with_multiple
+            ):
                 items_added += 1
                 continue
-            if suit_upgrade in start_inventory and suit_upgrade not in items_with_multiple:
+            if (
+                suit_upgrade in start_inventory
+                and suit_upgrade not in items_with_multiple
+            ):
                 continue
 
             # Handle Missile Expansions
             if suit_upgrade == "Missile Expansion":
                 PROGRESSIVE_EXPANSIONS = 8
-                for _ in range(0, PROGRESSIVE_EXPANSIONS):  # This is the number of missile expansions that are required
-                    local_itempool += [self.create_item('Missile Expansion', ItemClassification.progression)]
+                for _ in range(
+                    0, PROGRESSIVE_EXPANSIONS
+                ):  # This is the number of missile expansions that are required
+                    local_itempool += [
+                        self.create_item(
+                            "Missile Expansion", ItemClassification.progression
+                        )
+                    ]
                     items_added += 1
 
             # Handle Energy Tanks
@@ -259,21 +353,33 @@ class MetroidPrimeWorld(World):
                 max_tanks = 14
                 progression_tanks = 8
                 for _ in range(0, progression_tanks):
-                    local_itempool += [self.create_item("Energy Tank", ItemClassification.progression)]
+                    local_itempool += [
+                        self.create_item("Energy Tank", ItemClassification.progression)
+                    ]
                 for _ in range(0, max_tanks - progression_tanks):
                     local_itempool += [self.create_item("Energy Tank")]
                 items_added += max_tanks
 
             # Handle Power Bombs
             elif suit_upgrade == "Power Bomb Expansion":
-                local_itempool += [self.create_item('Power Bomb Expansion', ItemClassification.progression)]
+                local_itempool += [
+                    self.create_item(
+                        "Power Bomb Expansion", ItemClassification.progression
+                    )
+                ]
                 for _ in range(0, 4):
                     local_itempool += [self.create_item("Power Bomb Expansion")]
                 items_added += 5
 
             else:
-                if has_blast_shield_rando_with_combos and suit_upgrade in [SuitUpgrade.Wavebuster.value, SuitUpgrade.Ice_Spreader.value, SuitUpgrade.Flamethrower.value]:
-                    local_itempool += [self.create_item(suit_upgrade, ItemClassification.progression)]
+                if has_blast_shield_rando_with_combos and suit_upgrade in [
+                    SuitUpgrade.Wavebuster.value,
+                    SuitUpgrade.Ice_Spreader.value,
+                    SuitUpgrade.Flamethrower.value,
+                ]:
+                    local_itempool += [
+                        self.create_item(suit_upgrade, ItemClassification.progression)
+                    ]
                 else:
                     local_itempool += [self.create_item(suit_upgrade)]
                 items_added += 1
@@ -281,17 +387,28 @@ class MetroidPrimeWorld(World):
         if self.options.missile_launcher.value:
             if SuitUpgrade.Missile_Launcher.value not in start_inventory:
                 items_added += 1
-                if SuitUpgrade.Missile_Launcher.value not in self.prefilled_item_map.values():
-                    local_itempool += [self.create_item(SuitUpgrade.Missile_Launcher.value)]
+                if (
+                    SuitUpgrade.Missile_Launcher.value
+                    not in self.prefilled_item_map.values()
+                ):
+                    local_itempool += [
+                        self.create_item(SuitUpgrade.Missile_Launcher.value)
+                    ]
 
         if self.options.main_power_bomb.value:
             if SuitUpgrade.Main_Power_Bomb.value not in start_inventory:
                 items_added += 1
-                if SuitUpgrade.Main_Power_Bomb.value not in self.prefilled_item_map.values():
-                    local_itempool += [self.create_item(SuitUpgrade.Main_Power_Bomb.value)]
+                if (
+                    SuitUpgrade.Main_Power_Bomb.value
+                    not in self.prefilled_item_map.values()
+                ):
+                    local_itempool += [
+                        self.create_item(SuitUpgrade.Main_Power_Bomb.value)
+                    ]
 
         # Add progressive items if enabled
         if self.options.progressive_beam_upgrades.value:
+
             def quantity_in_start_inventory(item: ProgressiveUpgrade) -> int:
                 return start_inventory.count(item.value)
 
@@ -300,13 +417,26 @@ class MetroidPrimeWorld(World):
 
             for progressive_item in PROGRESSIVE_ITEM_MAPPING:
                 progression_per_item = 3
-                to_make = progression_per_item - quantity_in_start_inventory(progressive_item) - quantity_in_prefill(progressive_item)
+                to_make = (
+                    progression_per_item
+                    - quantity_in_start_inventory(progressive_item)
+                    - quantity_in_prefill(progressive_item)
+                )
                 for i in range(to_make):
                     # Last item in the progression is useful (except power beam/super missile), the rest are progression (unless all are available in blast shield rando)
-                    classification = ItemClassification.progression if i < to_make - 1 else ItemClassification.useful
-                    if progressive_item == ProgressiveUpgrade.Progressive_Power_Beam or has_blast_shield_rando_with_combos:  # Super missile is always required
+                    classification = (
+                        ItemClassification.progression
+                        if i < to_make - 1
+                        else ItemClassification.useful
+                    )
+                    if (
+                        progressive_item == ProgressiveUpgrade.Progressive_Power_Beam
+                        or has_blast_shield_rando_with_combos
+                    ):  # Super missile is always required
                         classification = ItemClassification.progression
-                    local_itempool += [self.create_item(progressive_item.value, classification)]
+                    local_itempool += [
+                        self.create_item(progressive_item.value, classification)
+                    ]
                     items_added += 1
 
         # add missiles in whatever slots we have left
@@ -318,7 +448,8 @@ class MetroidPrimeWorld(World):
 
     def set_rules(self) -> None:
         self.multiworld.completion_condition[self.player] = lambda state: (
-            state.can_reach("Mission Complete", "Region", self.player))
+            state.can_reach("Mission Complete", "Region", self.player)
+        )
 
     def post_fill(self) -> None:
         if self.options.artifact_hints.value:
@@ -328,16 +459,22 @@ class MetroidPrimeWorld(World):
 
     def generate_output(self, output_directory: str) -> None:
         if self.options.randomize_suit_colors:
-            options: List[NumericOption] = [self.options.power_suit_color, self.options.varia_suit_color, self.options.gravity_suit_color, self.options.phazon_suit_color]
+            options: List[NumericOption] = [
+                self.options.power_suit_color,
+                self.options.varia_suit_color,
+                self.options.gravity_suit_color,
+                self.options.phazon_suit_color,
+            ]
             for option in options:
                 if option.value == 0:
                     option.value = self.random.randint(1, 35) * 10
 
         import json
+
         configjson = make_config(self)
         configjsons = json.dumps(configjson, indent=4)
         # Check if the environment variable 'DEBUG' is set to 'True'
-        if os.environ.get('DEBUG') == 'True':
+        if os.environ.get("DEBUG") == "True":
             with open("test_config.json", "w") as f:
                 f.write(configjsons)
 
@@ -349,17 +486,37 @@ class MetroidPrimeWorld(World):
         options_json = json.dumps(options_dict, indent=4)
 
         outfile_name = self.multiworld.get_out_file_name_base(self.player)
-        apmp1 = MetroidPrimeContainer(configjsons, options_json, outfile_name, output_directory, player=self.player, player_name=self.multiworld.get_player_name(self.player))
+        apmp1 = MetroidPrimeContainer(
+            configjsons,
+            options_json,
+            outfile_name,
+            output_directory,
+            player=self.player,
+            player_name=self.multiworld.get_player_name(self.player),
+        )
         apmp1.write()
 
     def fill_slot_data(self) -> Dict[str, Any]:
-        exclude_options = ["fusion_suit", "as_dict", "artifact_hints", "staggered_suit_damage", "start_hints"]
-        non_cosmetic_options = [o for o in dir(self.options) if "suit_color" not in o and o not in exclude_options and not o.startswith("__")]
+        exclude_options = [
+            "fusion_suit",
+            "as_dict",
+            "artifact_hints",
+            "staggered_suit_damage",
+            "start_hints",
+        ]
+        non_cosmetic_options = [
+            o
+            for o in dir(self.options)
+            if "suit_color" not in o
+            and o not in exclude_options
+            and not o.startswith("__")
+        ]
         slot_data: Dict[str, Any] = self.options.as_dict(*non_cosmetic_options)
 
         return slot_data
 
         # for the universal tracker, doesn't get called in standard gen
+
     @staticmethod
     def interpret_slot_data(slot_data: Dict[str, Any]) -> Dict[str, Any]:
         # returning slot_data so it regens, giving it back in multiworld.re_gen_passthrough
@@ -370,39 +527,49 @@ class MetroidPrimeWorld(World):
         player_name = self.multiworld.get_player_name(self.player)
 
         if self.options.elevator_randomization:
-            spoiler_handle.write(f'\n\nElevator Mapping({player_name}):\n')
+            spoiler_handle.write(f"\n\nElevator Mapping({player_name}):\n")
             for area, mapping in self.elevator_mapping.items():
-                spoiler_handle.write(f'{area}:\n')
+                spoiler_handle.write(f"{area}:\n")
                 for source, target in mapping.items():
-                    spoiler_handle.write(f'    {ELEVATOR_USEFUL_NAMES[source]} -> {ELEVATOR_USEFUL_NAMES[target]}\n')
+                    spoiler_handle.write(
+                        f"    {ELEVATOR_USEFUL_NAMES[source]} -> {ELEVATOR_USEFUL_NAMES[target]}\n"
+                    )
 
         if self.options.door_color_randomization == "regional":
             assert self.door_color_mapping is not None
-            spoiler_handle.write(f'\n\nDoor Color Mapping({player_name}):\n')
+            spoiler_handle.write(f"\n\nDoor Color Mapping({player_name}):\n")
 
             for area, mapping in self.door_color_mapping.items():
-                spoiler_handle.write(f'{area}:\n')
+                spoiler_handle.write(f"{area}:\n")
                 for door, color in mapping.type_mapping.items():
-                    spoiler_handle.write(f'    {door} -> {color}\n')
+                    spoiler_handle.write(f"    {door} -> {color}\n")
 
         elif self.options.door_color_randomization == "global":
             assert self.door_color_mapping is not None
-            spoiler_handle.write(f'\n\nDoor Color Mapping({player_name}):\n')
-            for door, color in self.door_color_mapping[MetroidPrimeArea.Tallon_Overworld.value].type_mapping.items():
-                spoiler_handle.write(f'    {door} -> {color}\n')
+            spoiler_handle.write(f"\n\nDoor Color Mapping({player_name}):\n")
+            for door, color in self.door_color_mapping[
+                MetroidPrimeArea.Tallon_Overworld.value
+            ].type_mapping.items():
+                spoiler_handle.write(f"    {door} -> {color}\n")
 
-        if cast(str, self.options.blast_shield_randomization.value) != BlastShieldRandomization.option_none or self.options.locked_door_count > 0:
+        if (
+            cast(str, self.options.blast_shield_randomization.value)
+            != BlastShieldRandomization.option_none
+            or self.options.locked_door_count > 0
+        ):
             assert self.blast_shield_mapping is not None
-            spoiler_handle.write(f'\n\nBlast Shield Mapping({player_name}):\n')
+            spoiler_handle.write(f"\n\nBlast Shield Mapping({player_name}):\n")
             written_mappings: List[List[str]] = []
 
             for area, mapping in self.blast_shield_mapping.items():
-                spoiler_handle.write(f'{area}:\n')
+                spoiler_handle.write(f"{area}:\n")
                 if len(mapping.type_mapping) == 0:
-                    spoiler_handle.write(f'    None\n')
+                    spoiler_handle.write(f"    None\n")
                 for room, doors in mapping.type_mapping.items():
                     for door in doors.keys():
-                        source_room = self.game_region_data[MetroidPrimeArea(area)].rooms[RoomName(room)]
+                        source_room = self.game_region_data[
+                            MetroidPrimeArea(area)
+                        ].rooms[RoomName(room)]
                         # Use the door_data blast shield since it may have been overridden by the door on the other side
                         door_data = source_room.doors[door]
 
@@ -415,5 +582,7 @@ class MetroidPrimeWorld(World):
                         if [destination, room] in written_mappings:
                             continue
 
-                        spoiler_handle.write(f'    {room} <--> {destination}: {door_data.blast_shield.value}\n')
+                        spoiler_handle.write(
+                            f"    {room} <--> {destination}: {door_data.blast_shield.value}\n"
+                        )
                         written_mappings.append([room, destination])

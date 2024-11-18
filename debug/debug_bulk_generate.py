@@ -1,6 +1,7 @@
 import os
 
 from Generate import main
+
 fail = 0
 times_to_try = 30
 

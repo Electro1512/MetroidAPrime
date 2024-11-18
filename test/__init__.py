@@ -10,7 +10,7 @@ DEFAULT_TEST_SEED = get_seed(1)
 class MetroidPrimeTestBase(WorldTestBase):
     game = "Metroid Prime"
     player: ClassVar[int] = 1
-    world: 'MetroidPrimeWorld'
+    world: "MetroidPrimeWorld"
 
     seed = DEFAULT_TEST_SEED
 
