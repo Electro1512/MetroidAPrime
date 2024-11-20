@@ -134,7 +134,7 @@ class TestDoorRandoWithDifferentStartRoomNonRequiredBeam(MetroidPrimeTestBase):
         "starting_room_name": RoomName.Tower_Chamber.value,
     }
 
-    def test_starting_beam_is_not_wave(self):
+    def test_starting_beam_is_not_wave_for_non_required_beam(self):
         self.world.generate_early()
         world: "MetroidPrimeWorld" = self.world
         distribute_items_restrictive(world.multiworld)
@@ -153,7 +153,7 @@ class TestDoorRandoWithDifferentStartRoomWithRequiredBeam(MetroidPrimeTestBase):
         "starting_room_name": RoomName.Save_Station_B.value,
     }
 
-    def test_starting_beam_is_not_wave(self):
+    def test_starting_beam_is_not_wave_for_required_start_beam(self):
         self.world.generate_early()
         world: "MetroidPrimeWorld" = self.world
         distribute_items_restrictive(world.multiworld)
@@ -162,7 +162,7 @@ class TestDoorRandoWithDifferentStartRoomWithRequiredBeam(MetroidPrimeTestBase):
         self.assertEqual(
             config["gameConfig"]["startingBeam"],
             "Plasma",
-            "Starting beam should be Plasm",
+            "Starting beam should be Plasma",
         )
 
 
