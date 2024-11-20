@@ -605,11 +605,9 @@ class ChozoRuinsAreaData(AreaData):
                 pickups=[
                     PickupData(
                         "Chozo Ruins: Ruined Fountain",
-                        rule_func=lambda world, state: state.can_reach(
-                            world.get_location("Chozo Ruins: Sunchamber - Flaaghra"),
-                            None,
-                            world.player,
-                        )
+                        rule_func=lambda world, state: world.get_location(
+                            "Chozo Ruins: Sunchamber - Flaaghra"
+                        ).can_reach(state)
                         and can_spider(world, state),
                     )
                 ],
