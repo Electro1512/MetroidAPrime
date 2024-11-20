@@ -253,15 +253,15 @@ class MetroidPrimeWorld(World):
             name, createdthing.classification, createdthing.code, self.player
         )
 
+    def create_items(self) -> None:
+        item_pool = generate_item_pool(self)
+        self.multiworld.itempool += item_pool
+
     def pre_fill(self) -> None:
         for location_name, item_name in self.prefilled_item_map.items():
             location = self.get_location(location_name)
             item = self.create_item(item_name, ItemClassification.progression)
             location.place_locked_item(item)
-
-    def create_items(self) -> None:
-        item_pool = generate_item_pool(self)
-        self.multiworld.itempool += item_pool
 
     def set_rules(self) -> None:
         self.multiworld.completion_condition[self.player] = lambda state: (
