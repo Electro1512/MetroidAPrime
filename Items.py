@@ -284,6 +284,7 @@ custom_suit_upgrade_table: dict[str, ItemData] = {
         ItemClassification.progression,
         3,
     ),
+
     # These aren't used in item generation but are referenced in the client
     SuitUpgrade.Power_Charge_Beam.value: ItemData(
         SuitUpgrade.Power_Charge_Beam.value, 47, ItemClassification.progression, 1

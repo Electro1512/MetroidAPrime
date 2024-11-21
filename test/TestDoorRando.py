@@ -2,7 +2,7 @@ from Fill import distribute_items_restrictive
 from ..Items import SuitUpgrade
 from ..DoorRando import DoorLockType
 
-from ..config import make_config
+from ..Config import make_config
 from ..data.AreaNames import MetroidPrimeArea
 from ..data.RoomNames import RoomName
 from . import MetroidPrimeTestBase

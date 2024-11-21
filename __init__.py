@@ -35,7 +35,7 @@ from .data.Transports import (
     default_elevator_mappings,
     get_random_elevator_mapping,
 )
-from .config import make_config
+from .Config import make_config
 from .Regions import create_regions
 from .Locations import every_location
 from .PrimeOptions import (

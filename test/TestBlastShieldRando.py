@@ -10,7 +10,7 @@ from ..BlastShieldRando import (
     BlastShieldType,
 )
 from ..DoorRando import DoorLockType
-from ..config import make_config
+from ..Config import make_config
 from ..data.RoomNames import RoomName
 from ..Items import ProgressiveUpgrade, SuitUpgrade
 from . import MetroidPrimeTestBase

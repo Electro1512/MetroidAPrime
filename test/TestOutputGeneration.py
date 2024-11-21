@@ -2,7 +2,7 @@ import json
 import os
 from typing import Any, Dict
 from Fill import distribute_items_restrictive
-from ..config import make_config
+from ..Config import make_config
 from . import MetroidPrimeTestBase
 
 OUTPUT_DIR = os.path.join(os.path.dirname(__file__), "test_output")

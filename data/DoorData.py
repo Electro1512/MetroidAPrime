@@ -47,7 +47,7 @@ def get_door_data_by_room_names(
 ) -> Optional[tuple[DoorData, int]]:
     region_data = world.game_region_data.get(area)
 
-    assert region_data is not None
+    assert region_data
 
     source_room_data = region_data.rooms.get(source_room)
     if not source_room_data:

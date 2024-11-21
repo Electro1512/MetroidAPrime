@@ -1,5 +1,5 @@
 import typing
-from ..config import make_config
+from ..Config import make_config
 from Fill import distribute_items_restrictive
 from ..Items import SuitUpgrade
 from .. import MetroidPrimeWorld
