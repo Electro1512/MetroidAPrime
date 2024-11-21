@@ -177,7 +177,7 @@ function main() {
   # Create the release bundle.
   *)
     local tag="${TAG:-$(date '+%Y-%m-%d_%H%M')}"
-    local py_version = "${PY_VERSION}"
+    local py_version="${PY_VERSION}"
     local project="$(realpath ${CWD}/..)"
     local bundle="${bundle_base}-${tag}-${py_version}"
     local destdir="${target_path}/${bundle}"
