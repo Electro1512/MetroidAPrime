@@ -54,7 +54,7 @@ def generate_item_pool(world: "MetroidPrimeWorld") -> List[MetroidPrimeItem]:
     progressive_missiles = 8
     for _ in range(progressive_missiles):
         items.append(
-            world.create_item("Missile Expansion", ItemClassification.progression)
+            world.create_item(SuitUpgrade.Missile_Expansion.value, ItemClassification.progression)
         )
     items.append(
         world.create_item(

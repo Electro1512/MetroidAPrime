@@ -237,7 +237,9 @@ class MetroidPrimeWorld(World):
         # Init starting inventory
         starting_items = generate_start_inventory(self)
         for item in starting_items:
-            self.multiworld.push_precollected(self.create_item(item))
+            self.multiworld.push_precollected(
+                self.create_item(item, ItemClassification.progression)
+            )
 
     def create_regions(self) -> None:
         boss_selection = int(self.options.final_bosses)

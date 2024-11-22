@@ -143,3 +143,19 @@ class TestNormalStartingRoomWithBlastShieldRandoMixItUp(MetroidPrimeTestBase):
         self.assertTrue(
             self.world.options.starting_room_name.value != RoomName.Landing_Site.value
         )
+
+
+class TestStartRoomArboretum(MetroidPrimeTestBase):
+    run_default_tests = False  # type: ignore
+    options = {
+        "starting_room_name": RoomName.Arboretum.value,
+        "elevator_randomization": True,
+    }
+
+    def test_starting_in_arboretum(self):
+        self.world.generate_early()
+        distribute_items_restrictive(self.multiworld)
+        self.assertBeatable(True)
+        self.assertTrue(
+            self.can_reach_location("Chozo Ruins: Watery Hall - Scan Puzzle")
+        )
