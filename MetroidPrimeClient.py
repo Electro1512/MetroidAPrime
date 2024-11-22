@@ -18,7 +18,7 @@ from CommonClient import (
 )
 from NetUtils import ClientStatus
 import Utils
-from .config import make_version_specific_changes
+from .Config import make_version_specific_changes
 from .PrimeUtils import get_apworld_version
 from .Items import suit_upgrade_table
 from .ClientReceiveItems import handle_receive_items
