@@ -105,14 +105,10 @@ class MetroidPrimeWeb(WebWorld):
             "English",
             "setup.md",
             "setup/en",
-            ["Electro15", "hesto2"],
+            ["hesto2", "Electro15"],
         )
     ]
     option_groups = prime_option_groups
-
-
-# These items will always be given at start
-ALWAYS_START_INVENTORY = [SuitUpgrade.Power_Suit.value, SuitUpgrade.Combat_Visor.value]
 
 
 class MetroidPrimeWorld(World):
@@ -284,6 +280,8 @@ class MetroidPrimeWorld(World):
                 self.options.gravity_suit_color,
                 self.options.phazon_suit_color,
             ]
+
+            # Select a random valid suit color index
             for option in options:
                 if option.value == 0:
                     option.value = self.random.randint(1, 35) * 10
@@ -293,7 +291,6 @@ class MetroidPrimeWorld(World):
         configjson = make_config(self)
         configjsons = json.dumps(configjson, indent=4)
 
-        # Check if the environment variable 'DEBUG' is set to 'True'
         if os.environ.get("DEBUG") == "True":
             with open("test_config.json", "w") as f:
                 f.write(configjsons)

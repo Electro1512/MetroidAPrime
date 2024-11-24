@@ -147,6 +147,7 @@ class MetroidPrimeContext(CommonContext):
         if password_requested and not self.password:
             await super(MetroidPrimeContext, self).server_auth(password_requested)
         await self.get_username()
+        self.tags = set()
         await self.send_connect()
 
     def on_package(self, cmd: str, args: Dict[str, Any]) -> None:
