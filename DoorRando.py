@@ -156,6 +156,7 @@ def remap_doors_to_power_beam_if_necessary(world: "MetroidPrimeWorld"):
         starting_beam = world.starting_room_data.selected_loadout.starting_beam
 
         if starting_beam is not SuitUpgrade.Power_Beam:
+            assert world.starting_room_data
             for area, mapping in world.door_color_mapping.items():
                 if (
                     area == world.starting_room_data.area.value

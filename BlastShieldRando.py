@@ -213,8 +213,8 @@ def _get_available_blast_shields(
 
 def apply_blast_shield_mapping(world: "MetroidPrimeWorld"):
     remove_vanilla_blast_shields(world)
+    assert world.blast_shield_mapping is not None
     mapping = world.blast_shield_mapping
-    assert mapping is not None
     for area, area_mapping in mapping.items():
         for room_name, door_mapping in area_mapping.type_mapping.items():
             for door_id, shield_type in door_mapping.items():
