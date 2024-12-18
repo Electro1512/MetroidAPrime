@@ -34,11 +34,8 @@ Multiworld items appear as one of the following:
 
 ## What versions of the Metroid Prime are supported?
 
-Only the GameCube versions of the game are supported.
-
-- `DOL-GM8E-0-00 USA` version recommended
-  Other GameCube regions/versions will also work!
-  The Wii and Switch version of the game are _not_ supported.
+Only the GameCube versions of the game are supported.  
+The Wii and Switch version of the game are _not_ supported.  
 
 ## When the player receives an item, what happens?
 
@@ -54,17 +51,13 @@ To warp to the starting location,
 2. When prompted to Save, choose No
 3. While choosing No, simultaenously hold down the L and R buttons.
 
-### When fighting Ridley my screen keeps changing width, what's going on?
-
-This is an issue with having aspect ration set to `auto`. Forcing it to `4:3` should resolve the issue.
-
 ### What Metroid Prime mods/tools does this work with?
 
 It is recommended to use a vanilla ISO with the latest release of [Dolphin](https://dolphin-emu.org/download/#).
 
-- Not thoroughly tested; but some users report that these work
+- Not thoroughly tested; but some users report that these tools and mods work
   - [PrimeHack](https://forums.dolphin-emu.org/Thread-fork-primehack-fps-controls-and-more-for-metroid-prime)
-  - [Widescreen HUD Mod](<https://wiki.dolphin-emu.org/index.php?title=Metroid_Prime_(GC)#16:9_HUD_Mod>) (0-00 USA only)
+  - [Widescreen HUD Mod](<https://wiki.dolphin-emu.org/index.php?title=Metroid_Prime_(GC)#16:9_HUD_Mod>) (Revision 0 "0-00" only)
   - [MPItemTracker](https://github.com/UltiNaruto/MPItemTracker)
 - Not compatible
   - Practice Mod (The AP client is unable to connect to the game with this mod present.)
@@ -86,5 +79,4 @@ Some of the changes include:
     In Main Quarry, the barrier is automatically disabled when entering from Mine Security Station.
   - In Elite Research, Phazon Mines, the fight with Phazon Elite can now be started without needing to collect the item in Central Dynamo.
 - QOL Changes:
-  - When Morph Ball Bomb is acquired, Spring Ball can be used.
-    To use Spring Ball, tilt the C-Stick Up.
+  - Spring Ball has been implemented! When Morph Ball Bomb is acquired, Spring Ball can be used. To use Spring Ball, tilt the C-Stick Up.
