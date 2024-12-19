@@ -22,7 +22,7 @@ The following are required in order to play _Metroid Prime_ in Archipelago:
 
 >[!NOTE]
 > Because Archipelago 5.1 on Windows transitioned to using Python 3.12, [Metroid Prime AP version 0.4.8](https://github.com/Electro1512/MetroidAPrime/releases/tag/v0.4.8) has two versions:
-> | Archipelao Version (Windows) |                                              |
+> | Archipelago Version (Windows) |                                              |
 > |------------------------------|----------------------------------------------|
 > | Archipelago 5.0 or earlier   | Download APWorld file ending with `3.11.zip`.|
 > | Archipelago 5.1 or later     | Download APWorld file ending with `3.12.zip`.|
