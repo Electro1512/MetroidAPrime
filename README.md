@@ -6,11 +6,12 @@ An Archipelago implementation of Metroid Prime multiworld randomizer using [rand
 
 To get started or for troubleshooting, see [the Setup Guide](./docs/setup_en.md).
 
-## What does randomization do to this game?
+## Info
+### What does randomization do to this game?
 
 In Metroid Prime, all suit upgrade and expansion items are shuffled into the multiworld, giving the game a greater variety in routing to complete the end goal.
 
-## What is the goal of Metroid Prime when randomized?
+### What is the goal of Metroid Prime when randomized?
 
 The end goal of the randomizer game can consist of:
 
@@ -20,11 +21,11 @@ The end goal of the randomizer game can consist of:
 
 If randomized, the end goal can be scanned in the Temple Security station.
 
-## Which items can be in another player's world?
+### Which items can be in another player's world?
 
 All suit upgrades and expansion items can be shuffled in other players' worlds, excluding Power Suit and Combat Visor.
 
-## What does another world's item look like in Metroid Prime?
+### What does another world's item look like in Metroid Prime?
 
 Multiworld items appear as one of the following:
 
@@ -32,16 +33,14 @@ Multiworld items appear as one of the following:
 - Useful Item: Metroid Model with a random texture
 - Filler Item: Zoomer Model with a random texture
 
-## What versions of the Metroid Prime are supported?
+### What versions of the Metroid Prime are supported?
 
 Only the GameCube versions of the game are supported.  
 The Wii and Switch version of the game are _not_ supported.  
 
-## When the player receives an item, what happens?
+### When the player receives an item, what happens?
 
 The player will immediately have their suit inventory updated and receive a notification in the Client and a HUD message in-game.
-
-## FAQs
 
 ### Can I teleport to the starting room?
 
@@ -50,6 +49,10 @@ To warp to the starting location,
 1. Enter a Save Station
 2. When prompted to Save, choose No
 3. While choosing No, simultaenously hold down the L and R buttons.
+
+### What happens to my own collected items at Game Over or if the game is reset without saving?
+As long as the game is connected to the Client and the Client is connected to the server, items you collected before the Game Over or reset will be kept and returned to you when you re-enter the game, even if you did not save.  
+(The item dot indicators on the map will still show the item location as not collected, even if the Client gives the items back to you.)
 
 ### What Metroid Prime mods/tools does this work with?
 
