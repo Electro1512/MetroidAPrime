@@ -6,11 +6,12 @@ An Archipelago implementation of Metroid Prime multiworld randomizer using [rand
 
 To get started or for troubleshooting, see [the Setup Guide](./docs/setup_en.md).
 
-## What does randomization do to this game?
+## Info
+### What does randomization do to this game?
 
 In Metroid Prime, all suit upgrade and expansion items are shuffled into the multiworld, giving the game a greater variety in routing to complete the end goal.
 
-## What is the goal of Metroid Prime when randomized?
+### What is the goal of Metroid Prime when randomized?
 
 The end goal of the randomizer game can consist of:
 
@@ -20,11 +21,11 @@ The end goal of the randomizer game can consist of:
 
 If randomized, the end goal can be scanned in the Temple Security station.
 
-## Which items can be in another player's world?
+### Which items can be in another player's world?
 
 All suit upgrades and expansion items can be shuffled in other players' worlds, excluding Power Suit and Combat Visor.
 
-## What does another world's item look like in Metroid Prime?
+### What does another world's item look like in Metroid Prime?
 
 Multiworld items appear as one of the following:
 
@@ -32,19 +33,14 @@ Multiworld items appear as one of the following:
 - Useful Item: Metroid Model with a random texture
 - Filler Item: Zoomer Model with a random texture
 
-## What versions of the Metroid Prime are supported?
+### What versions of the Metroid Prime are supported?
 
-Only the GameCube versions of the game are supported.
+Only the GameCube versions of the game are supported.  
+The Wii and Switch version of the game are _not_ supported.  
 
-- `DOL-GM8E-0-00 USA` version recommended
-  Other GameCube regions/versions will also work!
-  The Wii and Switch version of the game are _not_ supported.
-
-## When the player receives an item, what happens?
+### When the player receives an item, what happens?
 
 The player will immediately have their suit inventory updated and receive a notification in the Client and a HUD message in-game.
-
-## FAQs
 
 ### Can I teleport to the starting room?
 
@@ -54,17 +50,17 @@ To warp to the starting location,
 2. When prompted to Save, choose No
 3. While choosing No, simultaenously hold down the L and R buttons.
 
-### When fighting Ridley my screen keeps changing width, what's going on?
-
-This is an issue with having aspect ration set to `auto`. Forcing it to `4:3` should resolve the issue.
+### What happens to my own collected items at Game Over or if the game is reset without saving?
+As long as the game is connected to the Client and the Client is connected to the server, items you collected before the Game Over or reset will be kept and returned to you when you re-enter the game, even if you did not save.  
+(The item dot indicators on the map will still show the item location as not collected, even if the Client gives the items back to you.)
 
 ### What Metroid Prime mods/tools does this work with?
 
 It is recommended to use a vanilla ISO with the latest release of [Dolphin](https://dolphin-emu.org/download/#).
 
-- Not thoroughly tested; but some users report that these work
+- Not thoroughly tested; but some users report that these tools and mods work
   - [PrimeHack](https://forums.dolphin-emu.org/Thread-fork-primehack-fps-controls-and-more-for-metroid-prime)
-  - [Widescreen HUD Mod](<https://wiki.dolphin-emu.org/index.php?title=Metroid_Prime_(GC)#16:9_HUD_Mod>) (0-00 USA only)
+  - [Widescreen HUD Mod](<https://wiki.dolphin-emu.org/index.php?title=Metroid_Prime_(GC)#16:9_HUD_Mod>) (Revision 0 "0-00" only)
   - [MPItemTracker](https://github.com/UltiNaruto/MPItemTracker)
 - Not compatible
   - Practice Mod (The AP client is unable to connect to the game with this mod present.)
@@ -86,5 +82,4 @@ Some of the changes include:
     In Main Quarry, the barrier is automatically disabled when entering from Mine Security Station.
   - In Elite Research, Phazon Mines, the fight with Phazon Elite can now be started without needing to collect the item in Central Dynamo.
 - QOL Changes:
-  - When Morph Ball Bomb is acquired, Spring Ball can be used.
-    To use Spring Ball, tilt the C-Stick Up.
+  - Spring Ball has been implemented! When Morph Ball Bomb is acquired, Spring Ball can be used. To use Spring Ball, tilt the C-Stick Up.
