@@ -1,9 +1,8 @@
-from .ItemPool import generate_item_pool, generate_start_inventory
 from .PrimeUtils import setup_lib_path
-
 setup_lib_path()  # NOTE: This MUST be called before importing any other metroidprime modules (other than PrimeUtils)
-# Setup local dependencies if running in an apworld
+# Setup local dependencies if running in an apworldimport typing
 import typing
+from .ItemPool import generate_item_pool
 import os
 from Options import NumericOption
 from typing import Any, Dict, List, Optional, TextIO, Union, cast
@@ -38,8 +37,10 @@ from .data.Transports import (
 from .Config import make_config
 from .Regions import create_regions
 from .Locations import every_location
+from .ItemPool import generate_item_pool, generate_base_start_inventory
 from .PrimeOptions import (
     BlastShieldRandomization,
+    DoorColorRandomization,
     MetroidPrimeOptions,
     prime_option_groups,
 )
@@ -135,6 +136,8 @@ class MetroidPrimeWorld(World):
     blast_shield_mapping: Optional[WorldBlastShieldMapping] = None
     game_region_data: Dict[MetroidPrimeArea, AreaData]
     has_generated_bomb_doors: bool = False
+    starting_room_name: Optional[str] = None
+    starting_beam: Optional[str] = None
 
     def __init__(self, multiworld: MultiWorld, player: int):
         super().__init__(multiworld, player)
@@ -174,10 +177,28 @@ class MetroidPrimeWorld(World):
                         "local_early_items",
                         "priority_locations",
                         "exclude_locations",
+                        "elevator_mapping",
+                        "door_color_mapping",
                     ]:
                         option.value = set(value)
                     else:
                         option.value = value
+
+                if key == "elevator_mapping":
+                    self.elevator_mapping = value
+
+                if key == "door_color_mapping":
+                    self.door_color_mapping = WorldDoorColorMapping.from_option_value(
+                        value
+                    )
+                if key == "blast_shield_mapping":
+                    self.blast_shield_mapping = (
+                        WorldBlastShieldMapping.from_option_value(value)
+                    )
+                if key == "starting_room_name":
+                    self.starting_room_name = value
+                if key == "starting_beam":
+                    self.starting_beam = value
 
     def generate_early(self) -> None:
         if hasattr(self.multiworld, "re_gen_passthrough"):
@@ -187,15 +208,11 @@ class MetroidPrimeWorld(World):
         init_starting_room_data(self)
 
         # Randomize Door Colors
-        if self.options.door_color_mapping:
-            self.door_color_mapping = WorldDoorColorMapping.from_option_value(
-                self.options.door_color_mapping.value
-            )
-        elif self.options.door_color_randomization != "none":
+        if (
+            self.options.door_color_randomization != DoorColorRandomization.option_none
+            and not self.door_color_mapping
+        ):
             self.door_color_mapping = get_world_door_mapping(self)
-            self.options.door_color_mapping.value = (
-                self.door_color_mapping.to_option_value()
-            )
 
         init_starting_beam(self)
 
@@ -206,33 +223,30 @@ class MetroidPrimeWorld(World):
         init_starting_loadout(self)
 
         # Randomize Blast Shields
-        if self.options.blast_shield_mapping:
-            self.blast_shield_mapping = WorldBlastShieldMapping.from_option_value(
-                self.options.blast_shield_mapping.value
-            )
-        elif (
-            cast(str, self.options.blast_shield_randomization.value)
+        if (
+            self.options.blast_shield_randomization.value
             != BlastShieldRandomization.option_none
             or self.options.locked_door_count > 0
-        ):
+        ) and not self.blast_shield_mapping:
             self.blast_shield_mapping = get_world_blast_shield_mapping(self)
-            self.options.blast_shield_mapping.value = (
-                self.blast_shield_mapping.to_option_value()
-            )
 
         if self.blast_shield_mapping:
             apply_blast_shield_mapping(self)
 
         # Randomize Elevators
-        if self.options.elevator_mapping:
-            self.elevator_mapping = self.options.elevator_mapping.value
-        elif self.options.elevator_randomization.value:
+        if self.options.elevator_randomization and not self.elevator_mapping:
             self.elevator_mapping = get_random_elevator_mapping(self)
-            self.options.elevator_mapping.value = self.elevator_mapping
 
         # Init starting inventory
-        starting_items = generate_start_inventory(self)
-        for item in starting_items:
+        starting_items = generate_base_start_inventory(self)
+        option_filled_items = [
+            *[item for item in self.options.start_inventory.value.keys()],
+            *[item for item in self.options.start_inventory_from_pool.value.keys()],
+        ]
+
+        for item in [
+            item for item in starting_items if item not in option_filled_items
+        ]:
             self.multiworld.push_precollected(
                 self.create_item(item, ItemClassification.progression)
             )
@@ -245,6 +259,10 @@ class MetroidPrimeWorld(World):
         self, name: str, override: Optional[ItemClassification] = None
     ) -> "MetroidPrimeItem":
         createdthing = item_table[name]
+
+        if hasattr(self.multiworld, "generation_is_fake"):
+            # All items should be progression for the Universal Tracker
+            override = ItemClassification.progression
         if override:
             return MetroidPrimeItem(name, override, createdthing.code, self.player)
         return MetroidPrimeItem(
@@ -252,6 +270,18 @@ class MetroidPrimeWorld(World):
         )
 
     def create_items(self) -> None:
+        precollected_item_names = [
+            item.name for item in self.multiworld.precollected_items[self.player]
+        ]
+        new_map: Dict[str, str] = {}
+
+        for location, item in self.prefilled_item_map.items():
+            if item not in precollected_item_names:
+                # Prefilled items affect what goes into the item pool. If we already have collected something, we won't need to prefill it
+                new_map[location] = item
+
+        self.prefilled_item_map = new_map
+
         item_pool = generate_item_pool(self)
         self.multiworld.itempool += item_pool
 
@@ -267,7 +297,7 @@ class MetroidPrimeWorld(World):
         )
 
     def post_fill(self) -> None:
-        if self.options.artifact_hints.value:
+        if self.options.artifact_hints:
             start_hints: typing.Set[str] = self.options.start_hints.value
             for i in artifact_table:
                 start_hints.add(i)
@@ -309,7 +339,7 @@ class MetroidPrimeWorld(World):
             outfile_name,
             output_directory,
             player=self.player,
-            player_name=self.multiworld.get_player_name(self.player),
+            player_name=self.player_name,
         )
         apmp1.write()
 
@@ -329,6 +359,17 @@ class MetroidPrimeWorld(World):
             and not o.startswith("__")
         ]
         slot_data: Dict[str, Any] = self.options.as_dict(*non_cosmetic_options)
+        slot_data["elevator_mapping"] = self.elevator_mapping
+        if self.door_color_mapping:
+            slot_data["door_color_mapping"] = self.door_color_mapping.to_option_value()
+        if self.blast_shield_mapping:
+            slot_data["blast_shield_mapping"] = (
+                self.blast_shield_mapping.to_option_value()
+            )
+        if self.starting_room_name:
+            slot_data["starting_room_name"] = self.starting_room_name
+        if self.starting_beam:
+            slot_data["starting_beam"] = self.starting_beam
 
         return slot_data
 
@@ -341,7 +382,16 @@ class MetroidPrimeWorld(World):
         return slot_data
 
     def write_spoiler(self, spoiler_handle: TextIO):
-        player_name = self.multiworld.get_player_name(self.player)
+        player_name = self.player_name
+
+        spoiler_handle.write(
+            f"Starting Room({player_name}): {self.starting_room_name}\n"
+        )
+
+        if self.options.randomize_starting_beam:
+            spoiler_handle.write(
+                f"Starting Beam({player_name}): {self.starting_beam}\n"
+            )
 
         if self.options.elevator_randomization:
             spoiler_handle.write(f"\n\nElevator Mapping({player_name}):\n")
@@ -352,7 +402,10 @@ class MetroidPrimeWorld(World):
                         f"    {ELEVATOR_USEFUL_NAMES[source]} -> {ELEVATOR_USEFUL_NAMES[target]}\n"
                     )
 
-        if self.options.door_color_randomization == "regional":
+        if (
+            self.options.door_color_randomization
+            == DoorColorRandomization.option_regional
+        ):
             assert self.door_color_mapping is not None
             spoiler_handle.write(f"\n\nDoor Color Mapping({player_name}):\n")
 
@@ -361,7 +414,10 @@ class MetroidPrimeWorld(World):
                 for door, color in mapping.type_mapping.items():
                     spoiler_handle.write(f"    {door} -> {color}\n")
 
-        elif self.options.door_color_randomization == "global":
+        elif (
+            self.options.door_color_randomization
+            == DoorColorRandomization.option_global
+        ):
             assert self.door_color_mapping is not None
             spoiler_handle.write(f"\n\nDoor Color Mapping({player_name}):\n")
             for door, color in self.door_color_mapping[
@@ -370,7 +426,7 @@ class MetroidPrimeWorld(World):
                 spoiler_handle.write(f"    {door} -> {color}\n")
 
         if (
-            cast(str, self.options.blast_shield_randomization.value)
+            self.options.blast_shield_randomization.value
             != BlastShieldRandomization.option_none
             or self.options.locked_door_count > 0
         ):

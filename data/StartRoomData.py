@@ -1,7 +1,10 @@
 import copy
 from dataclasses import dataclass, field
-from enum import Enum
 from typing import TYPE_CHECKING, Callable, Dict, List, Optional, cast
+
+from ..Enum import StartRoomDifficulty
+
+from ..PrimeOptions import BlastShieldRandomization, DoorColorRandomization
 
 from ..DoorRando import BEAM_TO_LOCK_MAPPING
 
@@ -18,13 +21,6 @@ BEAM_ITEMS = [
     SuitUpgrade.Wave_Beam,
     SuitUpgrade.Plasma_Beam,
 ]
-
-
-class StartRoomDifficulty(Enum):
-    Normal = -1
-    Safe = 0
-    Dangerous = 1
-    Buckle_Up = 2
 
 
 @dataclass
@@ -65,7 +61,19 @@ all_start_rooms: Dict[str, StartRoomData] = {
                         "Chozo Ruins: Ruined Shrine - Plated Beetle": [
                             SuitUpgrade.Morph_Ball
                         ],
-                    }
+                        "Chozo Ruins: Ruined Gallery - Missile Wall": [
+                            SuitUpgrade.Morph_Ball_Bomb
+                        ],
+                    },
+                    {
+                        "Chozo Ruins: Hive Totem": [SuitUpgrade.Missile_Launcher],
+                        "Chozo Ruins: Ruined Shrine - Plated Beetle": [
+                            SuitUpgrade.Morph_Ball_Bomb
+                        ],
+                        "Chozo Ruins: Ruined Gallery - Missile Wall": [
+                            SuitUpgrade.Morph_Ball
+                        ],
+                    },
                 ],
                 starting_beam=SuitUpgrade.Power_Beam,
             ),
@@ -90,7 +98,7 @@ all_start_rooms: Dict[str, StartRoomData] = {
                 [SuitUpgrade.Missile_Launcher],
             )
         ],
-        is_eligible=lambda world: world.options.shuffle_scan_visor.value == False,
+        is_eligible=lambda world: not world.options.shuffle_scan_visor.value,
         local_early_items=[SuitUpgrade.Morph_Ball, SuitUpgrade.Scan_Visor],
     ),
     RoomName.Burn_Dome.value: StartRoomData(
@@ -127,7 +135,19 @@ all_start_rooms: Dict[str, StartRoomData] = {
                         "Chozo Ruins: Ruined Shrine - Plated Beetle": [
                             SuitUpgrade.Morph_Ball
                         ],
-                    }
+                        "Chozo Ruins: Ruined Gallery - Missile Wall": [
+                            SuitUpgrade.Morph_Ball_Bomb
+                        ],
+                    },
+                    {
+                        "Chozo Ruins: Hive Totem": [SuitUpgrade.Missile_Launcher],
+                        "Chozo Ruins: Ruined Shrine - Plated Beetle": [
+                            SuitUpgrade.Morph_Ball_Bomb
+                        ],
+                        "Chozo Ruins: Ruined Gallery - Missile Wall": [
+                            SuitUpgrade.Morph_Ball
+                        ],
+                    },
                 ],
                 starting_beam=SuitUpgrade.Power_Beam,
             ),
@@ -167,8 +187,8 @@ all_start_rooms: Dict[str, StartRoomData] = {
         ],
     ),
     RoomName.Warrior_Shrine.value: StartRoomData(
-        is_eligible=lambda world: world.options.disable_starting_room_bk_prevention.value
-        != True,  # Varia suit is definitely required here
+        is_eligible=lambda world: not world.options.disable_starting_room_bk_prevention.value,
+        # Varia suit is definitely required here
         area=MetroidPrimeArea.Magmoor_Caverns,
         loadouts=[
             StartRoomLoadout(
@@ -201,7 +221,7 @@ all_start_rooms: Dict[str, StartRoomData] = {
                 ],
             )
         ],
-        is_eligible=lambda world: world.options.shuffle_scan_visor.value == False
+        is_eligible=lambda world: not world.options.shuffle_scan_visor.value
         or world.multiworld.players > 1,
         no_power_beam_door_on_starting_level=True,
         difficulty=StartRoomDifficulty.Buckle_Up,
@@ -222,7 +242,7 @@ all_start_rooms: Dict[str, StartRoomData] = {
                 ],
             )
         ],
-        is_eligible=lambda world: world.options.shuffle_scan_visor.value == False
+        is_eligible=lambda world: not world.options.shuffle_scan_visor.value
         or world.multiworld.players > 1,
     ),
     RoomName.Arbor_Chamber.value: StartRoomData(
@@ -292,7 +312,7 @@ all_start_rooms: Dict[str, StartRoomData] = {
             )
         ],
         difficulty=StartRoomDifficulty.Buckle_Up,
-        is_eligible=lambda world: world.options.shuffle_scan_visor.value == False
+        is_eligible=lambda world: not world.options.shuffle_scan_visor.value
         or world.multiworld.players > 1,
     ),
     RoomName.Sunchamber_Lobby.value: StartRoomData(
@@ -311,16 +331,40 @@ all_start_rooms: Dict[str, StartRoomData] = {
 }
 
 
+def get_available_start_rooms(world: "MetroidPrimeWorld", difficulty: int) -> List[str]:
+    """Returns a list of start rooms that are eligible for the current world"""
+
+    def meets_starting_beam_requirements(
+        world: "MetroidPrimeWorld",
+        room: StartRoomData,
+    ) -> bool:
+        """Rooms with a different starting beam are ineligible if door color randomization is not on"""
+        if (
+            world.options.door_color_randomization.value
+            != DoorColorRandomization.option_none
+            or not world.options.randomize_starting_beam
+        ):
+            return True
+        return (
+            world.options.randomize_starting_beam
+            and room.loadouts[0].starting_beam == SuitUpgrade.Power_Beam
+        ) == True
+
+    return [
+        name
+        for name, room in all_start_rooms.items()
+        if room.difficulty.value == difficulty
+        and room.is_eligible(world)
+        and meets_starting_beam_requirements(world, room)
+    ]
+
+
 def get_random_start_room_by_difficulty(
     world: "MetroidPrimeWorld", difficulty: int
 ) -> StartRoomData:
     """Returns a random start room based on difficulty as well as a random loadout from that room"""
-    available_room_names = [
-        name
-        for name, room in all_start_rooms.items()
-        if room.difficulty.value == difficulty and room.is_eligible(world)
-    ]
-    room_name = world.random.choice(available_room_names)
+
+    room_name = world.random.choice(get_available_start_rooms(world, difficulty))
     return get_starting_room_by_name(world, room_name)
 
 
@@ -343,8 +387,9 @@ def _has_elevator_rando(world: "MetroidPrimeWorld") -> bool:
 
 
 def _has_no_pre_scan_elevators_with_shuffle_scan(world: "MetroidPrimeWorld") -> bool:
-    return world.options.pre_scan_elevators.value == False and bool(
-        world.options.shuffle_scan_visor
+    return bool(
+        not world.options.pre_scan_elevators.value
+        and world.options.shuffle_scan_visor.value
     )
 
 
@@ -352,9 +397,8 @@ def _has_options_that_allow_more_landing_site_checks(
     world: "MetroidPrimeWorld",
 ) -> bool:
     return (
-        str(world.options.blast_shield_randomization.value)
-        != world.options.blast_shield_randomization.option_none
-        or world.options.trick_difficulty.value != -1
+        world.options.blast_shield_randomization != BlastShieldRandomization.option_none
+        or world.options.trick_difficulty != "no_tricks"
     ) and not world.options.elevator_randomization
 
 
@@ -369,17 +413,16 @@ def get_area_by_room_name(
 
 def init_starting_room_data(world: "MetroidPrimeWorld"):
     difficulty = world.options.starting_room.value
-    yaml_name = world.options.starting_room_name.value
     world.prefilled_item_map = {}
-    if yaml_name:
-        if yaml_name in all_start_rooms:
-            world.starting_room_data = get_starting_room_by_name(world, yaml_name)
+    if world.starting_room_name:
+        if world.starting_room_name in all_start_rooms:
+            world.starting_room_data = get_starting_room_by_name(
+                world, world.starting_room_name
+            )
         else:
             world.starting_room_data = StartRoomData(
-                name=str(world.options.starting_room_name.value),
-                area=get_area_by_room_name(
-                    world, str(world.options.starting_room_name.value)
-                ),
+                name=world.starting_room_name,
+                area=get_area_by_room_name(world, world.starting_room_name),
             )
             world.starting_room_data.loadouts = [
                 StartRoomLoadout(loadout=[SuitUpgrade.Power_Beam])
@@ -407,12 +450,20 @@ def init_starting_room_data(world: "MetroidPrimeWorld"):
                 world, difficulty
             )
         assert world.starting_room_data and world.starting_room_data.name
-        world.options.starting_room_name.value = world.starting_room_data.name
+        world.starting_room_name = world.starting_room_data.name
 
 
 def init_starting_loadout(world: "MetroidPrimeWorld"):
     disable_bk_prevention = world.options.disable_starting_room_bk_prevention.value
     assert world.starting_room_data and world.starting_room_data.selected_loadout
+
+    option_collected_items = [item for item in world.options.start_inventory_from_pool]
+
+    if len(option_collected_items) and world.starting_room_data.local_early_items:
+        for item in world.starting_room_data.local_early_items:
+            if item.value in option_collected_items:
+                world.starting_room_data.local_early_items.remove(item)
+
     # Clear non starting beam upgrades out of loadout
     if disable_bk_prevention:
         world.starting_room_data.selected_loadout.loadout = []
@@ -425,12 +476,17 @@ def init_starting_loadout(world: "MetroidPrimeWorld"):
 
     # If we are preventing bk then set a few items for prefill if available
     if not disable_bk_prevention:
-        for mapping in world.starting_room_data.selected_loadout.item_rules:
+        if len(world.starting_room_data.selected_loadout.item_rules):
+            mapping = world.random.choice(
+                world.starting_room_data.selected_loadout.item_rules
+            )
+
             for location_name, potential_items in mapping.items():
                 required_item = get_item_for_options(
                     world, world.random.choice(potential_items)
                 )
                 world.prefilled_item_map[location_name] = required_item.value
+
         if world.starting_room_data.local_early_items:
             for item in world.starting_room_data.local_early_items:
                 options_item = get_item_for_options(world, item)
@@ -457,20 +513,17 @@ def init_starting_beam(world: "MetroidPrimeWorld"):
                 world.starting_room_data and world.starting_room_data.selected_loadout
             )
             world.starting_room_data.selected_loadout.starting_beam = new_beam
-        world.options.starting_beam.value = new_beam.value
+        world.starting_beam = new_beam.value
 
     # Use the starting beam if it was set in the options (or for UT)
-    if (
-        world.options.starting_beam.value
-        and world.options.starting_beam.value != "none"
-    ):
-        new_beam = SuitUpgrade(str(world.options.starting_beam.value))
+    if world.starting_beam:
+        new_beam = SuitUpgrade(str(world.starting_beam))
         if new_beam:
             replace_starting_beam(new_beam)
 
     # Remap beam to a new color based on door randomization
     elif (
-        world.options.door_color_randomization != "none"
+        world.options.door_color_randomization != DoorColorRandomization.option_none
         and loadout_beam
         and loadout_beam != SuitUpgrade.Power_Beam
         and not world.starting_room_data.force_starting_beam

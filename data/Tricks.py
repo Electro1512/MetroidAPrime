@@ -43,7 +43,7 @@ class TrickDifficulty(Enum):
     Hard = 2
 
 
-class Trick_Type(Enum):
+class TrickType(Enum):
     L_Jump = "L Jump"
     L_Jump_Space_Jump = "L-Jump Space Jump"
     R_Jump = "R-Jump"
@@ -318,10 +318,9 @@ class Tricks:
     )
     watery_hall_no_gravity_no_space_jump: TrickInfo = TrickInfo(
         "Watery Hall No Gravity No Space Jump",
-        "Reach the Watery Hall Underwater Item without Gravity Suit or Space Jump by using a slope jump",
+        "Reach the Watery Hall Underwater Item without Gravity Suit or Space Jump by using a slope jump or bomb jump",
         TrickDifficulty.Medium,
-        lambda world, state: can_move_underwater(world, state) == False
-        or can_bomb(world, state),
+        lambda world, state: True,
     )
 
     furnace_no_spider_ball = TrickInfo(
@@ -429,18 +428,15 @@ class Tricks:
         lambda world, state: can_missile(world, state)
         and can_space_jump(world, state)
         and has_energy_tanks(world, state, 4)
-        and state.can_reach(
-            "Magmoor Caverns: " + RoomName.Lake_Tunnel.value, None, world.player
-        ),
+        and can_heat(world, state)
+        and state.can_reach(RoomName.Burning_Trail.value, None, world.player),
     )
     lava_lake_item_missiles_only = TrickInfo(
         "Lava Lake Item Missiles Only",
         "Reach lava lake item without space jump by jumping on base of column",
         TrickDifficulty.Easy,
         lambda world, state: can_missile(world, state)
-        and state.can_reach(
-            "Magmoor Caverns: " + RoomName.Lake_Tunnel.value, None, world.player
-        ),
+        and state.can_reach(RoomName.Burning_Trail.value, None, world.player),
     )
 
     triclops_pit_item_no_sj = TrickInfo(

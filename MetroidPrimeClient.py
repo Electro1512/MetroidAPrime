@@ -120,7 +120,7 @@ class MetroidPrimeContext(CommonContext):
     items_handling = 0b111
     dolphin_sync_task: Optional[asyncio.Task[Any]] = None
     connection_state = ConnectionState.DISCONNECTED
-    slot_data: dict[str, Utils.Any] = {}
+    slot_data: Dict[str, Utils.Any] = {}
     death_link_enabled = False
     gravity_suit_enabled: bool = True
     previous_location_str: str = ""
@@ -306,41 +306,33 @@ def get_version_from_iso(path: str) -> str:
         game_rev = f.read(1)[0]
         if game_id[:3] != "GM8":
             raise Exception("This is not Metroid Prime GC")
-        match game_id[3]:
-            case "E":
-                match game_rev:
-                    case 0:
-                        return "0-00"
-                    case 1:
-                        return "0-01"
-                    case 2:
-                        return "0-02"
-                    case 48:
-                        return "kor"
-                    case _rev:
-                        raise Exception(
-                            f"Unknown revision of Metroid Prime GC US (game_rev : {_rev})"
-                        )
-            case "J":
-                match game_rev:
-                    case 0:
-                        return "jpn"
-                    case _rev:
-                        raise Exception(
-                            f"Unknown revision of Metroid Prime GC JPN (game_rev : {_rev})"
-                        )
-            case "P":
-                match game_rev:
-                    case 0:
-                        return "pal"
-                    case _rev:
-                        raise Exception(
-                            f"Unknown revision of Metroid Prime GC PAL (game_rev : {_rev})"
-                        )
-            case _id:
-                raise Exception(
-                    f"Unknown version of Metroid Prime GC (game_id : {game_id} | game_rev : {game_rev})"
-                )
+        if game_id[3] == "E":
+            if game_rev == 0:
+                return "0-00"
+            if game_rev == 1:
+                return "0-01"
+            if game_rev == 2:
+                return "0-02"
+            if game_rev == 48:
+                return "kor"
+            raise Exception(
+                f"Unknown revision of Metroid Prime GC US (game_rev : {game_rev})"
+            )
+        if game_id[3] == "J":
+            if game_rev == 0:
+                return "jpn"
+            raise Exception(
+                f"Unknown revision of Metroid Prime GC JPN (game_rev : {game_rev})"
+            )
+        if game_id[3] == "P":
+            if game_rev == 0:
+                return "pal"
+            raise Exception(
+                f"Unknown revision of Metroid Prime GC PAL (game_rev : {game_rev})"
+            )
+        raise Exception(
+            f"Unknown version of Metroid Prime GC (game_id : {game_id} | game_rev : {game_rev})"
+        )
 
 
 def get_options_from_apmp1(apmp1_file: str) -> Dict[str, Any]:
@@ -382,8 +374,8 @@ async def patch_and_run_game(apmp1_file: str):
                 construct_hook_patch(game_version, build_progressive_beam_patch)
             )
 
-            notifier = py_randomprime.ProgressNotifier(
-                lambda progress, message: print("Generating ISO: ", progress, message)
+            notifier = py_randomprime.ProgressNotifier(  # type: ignore
+                lambda progress, message: print("Generating ISO: ", progress, message)  # type: ignore
             )
             logger.info("--------------")
             logger.info(f"Input ISO Path: {input_iso_path}")

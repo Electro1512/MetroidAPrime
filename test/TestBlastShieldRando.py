@@ -1,5 +1,6 @@
 import math
 from Fill import distribute_items_restrictive
+from ..PrimeOptions import BlastShieldRandomization, DoorColorRandomization
 from ..data.DoorData import get_door_data_by_room_names
 from ..data.BlastShieldRegions import get_valid_blast_shield_regions_by_area
 from ..data.RoomData import AreaData
@@ -8,12 +9,13 @@ from ..BlastShieldRando import (
     MAX_BEAM_COMBO_DOORS_PER_AREA,
     AreaBlastShieldMapping,
     BlastShieldType,
+    WorldBlastShieldMapping,
 )
-from ..DoorRando import DoorLockType
+from ..DoorRando import DoorLockType, WorldDoorColorMapping
 from ..Config import make_config
 from ..data.RoomNames import RoomName
 from ..Items import ProgressiveUpgrade, SuitUpgrade
-from . import MetroidPrimeTestBase
+from . import MetroidPrimeTestBase, MetroidPrimeWithOverridesTestBase
 from typing import Any, Dict, TYPE_CHECKING, List, Tuple
 from ..data.PhazonMines import PhazonMinesAreaData
 from ..data.PhendranaDrifts import PhendranaDriftsAreaData
@@ -45,9 +47,7 @@ beam_combo_items = [
 
 
 class TestNoBlastShieldRando(MetroidPrimeTestBase):
-    options = {
-        "blast_shield_randomization": "none",
-    }
+    options = {"blast_shield_randomization": BlastShieldRandomization.option_none}
 
     def test_all_blast_shields_are_not_randomized(self):
         """Verify that the blast shield to ruined shrine access is still there and not randomized"""
@@ -89,7 +89,9 @@ class TestNoBlastShieldRando(MetroidPrimeTestBase):
 
 
 class TestReplaceBlastShieldRando(MetroidPrimeTestBase):
-    options = {"blast_shield_randomization": "replace_existing"}
+    options = {
+        "blast_shield_randomization": BlastShieldRandomization.option_replace_existing
+    }
 
     def test_blast_shield_mapping_is_generated_for_each_vanilla_door(self):
         world: "MetroidPrimeWorld" = self.world
@@ -153,20 +155,29 @@ class TestReplaceBlastShieldRando(MetroidPrimeTestBase):
                     self.assertNotIn(door, beam_combo_items)
 
 
-class TestBlastShieldMapping(MetroidPrimeTestBase):
+class TestBlastShieldMapping(MetroidPrimeWithOverridesTestBase):
     run_default_tests = False  # type: ignore
     options = {
-        "blast_shield_randomization": "replace_existing",
+        "blast_shield_randomization": BlastShieldRandomization.option_replace_existing,
         "blast_shield_available_types": "all",
-        "blast_shield_mapping": {
-            "Tallon Overworld": {
-                "area": "Tallon Overworld",
-                "type_mapping": {"Landing Site": {1: "Bomb", 2: "Flamethrower"}},
+    }
+    overrides = {
+        "blast_shield_mapping": WorldBlastShieldMapping.from_option_value(
+            {
+                "Tallon Overworld": {
+                    "area": "Tallon Overworld",
+                    "type_mapping": {
+                        "Landing Site": {
+                            1: "Bomb",
+                            2: "Flamethrower",
+                        }
+                    },
+                }
             }
-        },
+        )
     }
 
-    def test_blast_shield_mapping_passed_as_option_applies_to_logic(self):
+    def test_blast_shield_mapping_applies_to_logic(self):
         test_region = RoomName.Canyon_Cavern.value
         world: "MetroidPrimeWorld" = self.world
         assert world.blast_shield_mapping
@@ -207,19 +218,31 @@ class TestBlastShieldMapping(MetroidPrimeTestBase):
         self.assertTrue(self.can_reach_region(test_region))
 
 
-class TestBlastShieldMappingWithProgressiveBeams(MetroidPrimeTestBase):
+class TestBlastShieldMappingWithProgressiveBeams(MetroidPrimeWithOverridesTestBase):
     run_default_tests = False  # type: ignore
     options = {
-        "blast_shield_randomization": "replace_existing",
+        "blast_shield_randomization": BlastShieldRandomization.option_replace_existing,
         "blast_shield_available_types": "all",
         "missile_launcher": 1,
         "progressive_beam_upgrades": True,
-        "blast_shield_mapping": {
-            "Tallon Overworld": {
-                "area": "Tallon Overworld",
-                "type_mapping": {"Landing Site": {1: "Bomb", 2: "Flamethrower"}},
+    }
+    overrides = {
+        "blast_shield_mapping": WorldBlastShieldMapping.from_option_value(
+            {
+                "Tallon Overworld": {
+                    "area": "Tallon Overworld",
+                    "type_mapping": {
+                        "Landing Site": {
+                            0: "Ice Spreader",
+                            1: "Ice Spreader",
+                            2: "Flamethrower",
+                            3: "Ice Spreader",
+                            4: "Ice Spreader",
+                        }
+                    },
+                }
             }
-        },
+        )
     }
 
     def test_beam_combos_are_included_in_logic_with_progressive_beams(self):
@@ -254,7 +277,7 @@ class TestBlastShieldMappingWithProgressiveBeams(MetroidPrimeTestBase):
 
 class TestIncludeBeamCombos(MetroidPrimeTestBase):
     options = {
-        "blast_shield_randomization": "replace_existing",
+        "blast_shield_randomization": BlastShieldRandomization.option_replace_existing,
         "blast_shield_available_types": "all",
         "trick_difficulty": "easy",
     }
@@ -277,7 +300,7 @@ class TestIncludeBeamCombos(MetroidPrimeTestBase):
 
 class TestMixItUpBlastShieldRando(MetroidPrimeTestBase):
     options = {
-        "blast_shield_randomization": "mix_it_up",
+        "blast_shield_randomization": BlastShieldRandomization.option_mix_it_up,
         "blast_shield_frequency": "low",
         "trick_difficulty": "easy",
     }
@@ -370,19 +393,23 @@ class TestLockedDoorsNoBlastShieldOrDoorColorRando(MetroidPrimeTestBase):
         )
 
 
-class TestLockedDoorsInBlastShieldMapping(MetroidPrimeTestBase):
+class TestLockedDoorsInBlastShieldMapping(MetroidPrimeWithOverridesTestBase):
     options = {
-        "blast_shield_mapping": {
-            "Tallon Overworld": {
-                "area": "Tallon Overworld",
-                "type_mapping": {
-                    "Landing Site": {
-                        0: "Disabled",
-                    }
-                },
-            }
-        },
         "trick_difficulty": "medium",
+    }
+    overrides = {
+        "blast_shield_mapping": WorldBlastShieldMapping.from_option_value(
+            {
+                "Tallon Overworld": {
+                    "area": "Tallon Overworld",
+                    "type_mapping": {
+                        "Landing Site": {
+                            0: "Disabled",
+                        }
+                    },
+                }
+            }
+        ),
     }
 
     def test_locked_doors_are_added_to_blast_shield_mapping(self):
@@ -416,8 +443,8 @@ class TestLockedDoorsWithDoorColorRandoAndBlastShieldRandomization(
     options = {
         "locked_door_count": 1,
         "blast_shield_frequency": "low",
-        "blast_shield_randomization": "mix_it_up",
-        "door_color_randomization": "global",
+        "blast_shield_randomization": BlastShieldRandomization.option_mix_it_up,
+        "door_color_randomization": DoorColorRandomization.option_global,
         "trick_difficulty": "medium",
     }
 
@@ -437,30 +464,34 @@ class TestLockedDoorsWithDoorColorRandoAndBlastShieldRandomization(
         )
 
 
-class TestSubRegionUsesBlastShields(MetroidPrimeTestBase):
+class TestSubRegionUsesBlastShields(MetroidPrimeWithOverridesTestBase):
     run_default_tests = False  # type: ignore
     options = {
-        "blast_shield_randomization": "mix_it_up",
+        "blast_shield_randomization": BlastShieldRandomization.option_mix_it_up,
         "blast_shield_frequency": "low",
         "blast_shield_available_types": "all",
-        "blast_shield_mapping": {
-            "Tallon Overworld": {
-                "area": "Tallon Overworld",
-                "type_mapping": {
-                    "Landing Site": {
-                        3: "Bomb",
+    }
+    overrides = {
+        "blast_shield_mapping": WorldBlastShieldMapping.from_option_value(
+            {
+                "Tallon Overworld": {
+                    "area": "Tallon Overworld",
+                    "type_mapping": {
+                        "Landing Site": {
+                            3: "Bomb",
+                        },
+                        "Gully": {1: "Missile"},
+                        "Transport Tunnel E": {1: "Missile"},
                     },
-                    "Gully": {1: "Missile"},
-                    "Transport Tunnel E": {1: "Missile"},
                 },
-            },
-            "Phendrana Drifts": {
-                "area": "Phendrana Drifts",
-                "type_mapping": {
-                    "Phendrana Shorelines": {3: "Power Bomb", 5: "Missile"}
+                "Phendrana Drifts": {
+                    "area": "Phendrana Drifts",
+                    "type_mapping": {
+                        "Phendrana Shorelines": {3: "Power Bomb", 5: "Missile"}
+                    },
                 },
-            },
-        },
+            }
+        )
     }
 
     def test_cannot_reach_alcove_sub_region_that_has_blast_shield(self):
@@ -546,65 +577,72 @@ class TestSubRegionUsesBlastShields(MetroidPrimeTestBase):
 # Blast shields open the door when destroyed when set via randomprime. Setting them to blue ensures no one way locks
 
 
-class TestBlastShieldsAndDoorColorRando(MetroidPrimeTestBase):
+class TestBlastShieldsAndDoorColorRando(MetroidPrimeWithOverridesTestBase):
     run_default_tests = False  # type: ignore
     options = {
-        "blast_shield_randomization": "mix_it_up",
+        "blast_shield_randomization": BlastShieldRandomization.option_mix_it_up,
         "blast_shield_frequency": "low",
         "blast_shield_available_types": "all",
-        "blast_shield_mapping": {
-            "Phendrana Drifts": {
-                "area": "Phendrana Drifts",
-                "type_mapping": {
-                    "Ice Ruins West": {
-                        1: "Missile",
-                    }
+        "door_color_randomization": DoorColorRandomization.option_regional,
+    }
+
+    overrides = {
+        "blast_shield_mapping": WorldBlastShieldMapping.from_option_value(
+            {
+                "Phendrana Drifts": {
+                    "area": "Phendrana Drifts",
+                    "type_mapping": {
+                        "Ice Ruins West": {
+                            1: "Missile",
+                        }
+                    },
+                }
+            },
+        ),
+        "door_color_mapping": WorldDoorColorMapping.from_option_value(
+            {
+                "Chozo Ruins": {
+                    "area": "Chozo Ruins",
+                    "type_mapping": {
+                        "Wave Beam": "Ice Beam",
+                        "Ice Beam": "Plasma Beam",
+                        "Plasma Beam": "Wave Beam",
+                    },
+                },
+                "Magmoor Caverns": {
+                    "area": "Magmoor Caverns",
+                    "type_mapping": {
+                        "Wave Beam": "Plasma Beam",
+                        "Ice Beam": "Wave Beam",
+                        "Plasma Beam": "Ice Beam",
+                    },
+                },
+                "Phendrana Drifts": {
+                    "area": "Phendrana Drifts",
+                    "type_mapping": {
+                        "Wave Beam": "Plasma Beam",
+                        "Ice Beam": "Wave Beam",
+                        "Plasma Beam": "Ice Beam",
+                    },
+                },
+                "Tallon Overworld": {
+                    "area": "Tallon Overworld",
+                    "type_mapping": {
+                        "Wave Beam": "Plasma Beam",
+                        "Ice Beam": "Wave Beam",
+                        "Plasma Beam": "Ice Beam",
+                    },
+                },
+                "Phazon Mines": {
+                    "area": "Phazon Mines",
+                    "type_mapping": {
+                        "Wave Beam": "Plasma Beam",
+                        "Ice Beam": "Wave Beam",
+                        "Plasma Beam": "Ice Beam",
+                    },
                 },
             }
-        },
-        "door_color_randomization": "regional",
-        "door_color_mapping": {
-            "Chozo Ruins": {
-                "area": "Chozo Ruins",
-                "type_mapping": {
-                    "Wave Beam": "Ice Beam",
-                    "Ice Beam": "Plasma Beam",
-                    "Plasma Beam": "Wave Beam",
-                },
-            },
-            "Magmoor Caverns": {
-                "area": "Magmoor Caverns",
-                "type_mapping": {
-                    "Wave Beam": "Plasma Beam",
-                    "Ice Beam": "Wave Beam",
-                    "Plasma Beam": "Ice Beam",
-                },
-            },
-            "Phendrana Drifts": {
-                "area": "Phendrana Drifts",
-                "type_mapping": {
-                    "Wave Beam": "Plasma Beam",
-                    "Ice Beam": "Wave Beam",
-                    "Plasma Beam": "Ice Beam",
-                },
-            },
-            "Tallon Overworld": {
-                "area": "Tallon Overworld",
-                "type_mapping": {
-                    "Wave Beam": "Plasma Beam",
-                    "Ice Beam": "Wave Beam",
-                    "Plasma Beam": "Ice Beam",
-                },
-            },
-            "Phazon Mines": {
-                "area": "Phazon Mines",
-                "type_mapping": {
-                    "Wave Beam": "Plasma Beam",
-                    "Ice Beam": "Wave Beam",
-                    "Plasma Beam": "Ice Beam",
-                },
-            },
-        },
+        ),
     }
 
     def test_color_is_set_to_blue_when_door_has_blast_shield(self):

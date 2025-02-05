@@ -2,6 +2,7 @@ import json
 import os
 from typing import Any, Dict
 from Fill import distribute_items_restrictive
+from ..PrimeOptions import BlastShieldRandomization, DoorColorRandomization
 from ..Config import make_config
 from . import MetroidPrimeTestBase
 
@@ -63,8 +64,8 @@ class TestAllRandomizedOutput(MetroidPrimeTestBase):
     auto_construct = False
     options = {
         "elevator_randomization": True,
-        "door_randomization": "regional",
-        "blast_shield_randomization": "mix_it_up",
+        "door_color_randomization": DoorColorRandomization.option_regional,
+        "blast_shield_randomization": BlastShieldRandomization.option_mix_it_up,
     }
 
     def test_output_generates_correctly_with_all_randomized(self) -> None:
@@ -72,9 +73,7 @@ class TestAllRandomizedOutput(MetroidPrimeTestBase):
         distribute_items_restrictive(self.multiworld)
         output = make_config(self.world)
         expected_output = {}
-        path = os.path.join(
-            os.path.dirname(__file__), "data", "all_randomized.json"
-        )
+        path = os.path.join(os.path.dirname(__file__), "data", "all_randomized.json")
         with open(path, "r") as f:
             expected_output = json.load(f)
 

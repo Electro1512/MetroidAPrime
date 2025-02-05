@@ -1,22 +1,26 @@
 from typing import List
 from Fill import distribute_items_restrictive
+from ..Enum import StartRoomDifficulty
+from ..PrimeOptions import BlastShieldRandomization
 from ..Items import SuitUpgrade
 from ..data.RoomNames import RoomName
-from ..data.StartRoomData import StartRoomDifficulty, all_start_rooms
-from . import MetroidPrimeTestBase
+from ..data.StartRoomData import all_start_rooms
+from . import MetroidPrimeTestBase, MetroidPrimeWithOverridesTestBase
 from .. import MetroidPrimeWorld
 
 
-class TestStartingRoomsGenerate(MetroidPrimeTestBase):
+class TestStartingRoomsGenerate(MetroidPrimeWithOverridesTestBase):
     auto_construct = False
 
-    def test_starting_room_rando(self):
+    def test_starting_room_rando_bulk(self):
         for room_name in all_start_rooms:
             with self.subTest(f"Starting Room: {room_name}", room_name=room_name):
                 self.options = {
-                    "starting_room_name": room_name,
                     "elevator_randomization": False,
                     "missile_launcher": 1,
+                }
+                self.overrides = {
+                    "starting_room_name": room_name,
                 }
                 try:
                     self.world_setup()  # type: ignore
@@ -28,7 +32,7 @@ class TestStartingRoomsGenerate(MetroidPrimeTestBase):
                     )
 
 
-class TestStartingRoomsGenerateWithElevatorRando(MetroidPrimeTestBase):
+class TestStartingRoomsGenerateWithElevatorRando(MetroidPrimeWithOverridesTestBase):
     auto_construct = False
 
     def test_starting_room_rando_with_elevator_rando(self):
@@ -39,16 +43,16 @@ class TestStartingRoomsGenerateWithElevatorRando(MetroidPrimeTestBase):
                 continue
             with self.subTest(f"Starting Room: {room_name}", room_name=room_name):
                 self.options = {
-                    "starting_room_name": room_name,
                     "elevator_randomization": True,
                     "missile_launcher": 1,
+                }
+                self.overrides = {
+                    "starting_room_name": room_name,
                 }
                 try:
                     self.world_setup()  # type: ignore
                     distribute_items_restrictive(self.multiworld)
                     self.assertBeatable(True)
-                    self.multiworld = None  # type: ignore
-                    self.world = None  # type: ignore
                 except Exception:
                     failures.append(room_name)
         if len(failures):
@@ -58,13 +62,14 @@ class TestStartingRoomsGenerateWithElevatorRando(MetroidPrimeTestBase):
             )
 
 
-class TestStartRoomBKPreventionDisabled(MetroidPrimeTestBase):
+class TestStartRoomBKPreventionDisabled(MetroidPrimeWithOverridesTestBase):
     run_default_tests = False  # type: ignore
     options = {
         "starting_room_name": RoomName.Save_Station_B.value,
         "elevator_randomization": False,
         "disable_starting_room_bk_prevention": True,
     }
+    overrides = {"starting_room_name": RoomName.Save_Station_B.value}
 
     def test_disabling_bk_prevention_does_not_give_items_or_pre_fill(self):
         self.world.generate_early()
@@ -81,13 +86,64 @@ class TestStartRoomBKPreventionDisabled(MetroidPrimeTestBase):
         )
 
 
-class TestStartRoomBKPreventionEnabled(MetroidPrimeTestBase):
+class TestPrePlacedItemsWithStartFromPool(MetroidPrimeWithOverridesTestBase):
+    options = {"start_inventory_from_pool": {SuitUpgrade.Morph_Ball.value: 1}}
+    overrides = {"starting_room_name": RoomName.Save_Station_1.value}
+
+    def test_bk_prevention_should_not_add_items_when_in_start_inventory(
+        self,
+    ):
+        self.assertNotIn(
+            SuitUpgrade.Morph_Ball.value,
+            self.world.prefilled_item_map.values(),
+        )
+
+
+class TestPreCollectedItemsWithStartInventoryFromPool(
+    MetroidPrimeWithOverridesTestBase
+):
+    run_default_tests = False  # type: ignore
+    options = {"start_inventory": {SuitUpgrade.Missile_Expansion.value: 1}}
+    overrides = {"starting_room_name": RoomName.Arboretum.value}
+
+    def test_should_not_double_collect_items_when_using_start_items(
+        self,
+    ):
+        count = len(
+            [
+                item
+                for item in self.multiworld.precollected_items[self.player]
+                if item.name == SuitUpgrade.Missile_Expansion.value
+            ]
+        )
+        self.assertEqual(count, 1, "Should only be one missile in precolelcted items")
+
+
+class TestPreCollectedItemsWithStartInventory(MetroidPrimeWithOverridesTestBase):
+    run_default_tests = False  # type: ignore
+    options = {"start_inventory": {SuitUpgrade.Missile_Expansion.value: 1}}
+    overrides = {"starting_room_name": RoomName.Arboretum.value}
+
+    def test_should_not_double_collect_items_when_using_start_items(
+        self,
+    ):
+        count = len(
+            [
+                item
+                for item in self.multiworld.precollected_items[self.player]
+                if item.name == SuitUpgrade.Missile_Expansion.value
+            ]
+        )
+        self.assertEqual(count, 1, "Should only be one missile in precolelcted items")
+
+
+class TestStartRoomBKPreventionEnabled(MetroidPrimeWithOverridesTestBase):
     run_default_tests = False  # type: ignore
     options = {
-        "starting_room_name": RoomName.Save_Station_B.value,
         "elevator_randomization": False,
         "disable_starting_room_bk_prevention": False,
     }
+    overrides = {"starting_room_name": RoomName.Save_Station_B.value}
 
     def test_enabling_bk_prevention_gives_items_and_pre_fills_locations(self):
         self.world.generate_early()
@@ -114,9 +170,7 @@ class TestBuckleUpStartingRoom(MetroidPrimeTestBase):
             for name, room in all_start_rooms.items()
             if room.difficulty.value == StartRoomDifficulty.Buckle_Up.value
         ]
-        self.assertTrue(
-            self.world.options.starting_room_name.value in available_room_names
-        )
+        self.assertTrue(self.world.starting_room_name in available_room_names)
 
 
 class TestNormalStartingRoom(MetroidPrimeTestBase):
@@ -124,32 +178,30 @@ class TestNormalStartingRoom(MetroidPrimeTestBase):
     options = {"starting_room": StartRoomDifficulty.Normal.value}
 
     def test_normal(self):
-        self.assertTrue(
-            self.world.options.starting_room_name.value == RoomName.Landing_Site.value
-        )
+        self.assertTrue(self.world.starting_room_name == RoomName.Landing_Site.value)
 
 
 class TestNormalStartingRoomWithBlastShieldRandoMixItUp(MetroidPrimeTestBase):
     run_default_tests = False  # type: ignore
     options = {
         "starting_room": StartRoomDifficulty.Normal.value,
-        "blast_shield_randomization": "mix_it_up",
+        "blast_shield_randomization": BlastShieldRandomization.option_mix_it_up,
         "elevator_randomization": True,
     }
 
     def test_starting_room_is_not_landing_site_when_elevator_rando_is_enabled_and_mix_it_up(
         self,
     ):
-        self.assertTrue(
-            self.world.options.starting_room_name.value != RoomName.Landing_Site.value
-        )
+        self.assertTrue(self.world.starting_room_name != RoomName.Landing_Site.value)
 
 
-class TestStartRoomArboretum(MetroidPrimeTestBase):
+class TestStartRoomArboretum(MetroidPrimeWithOverridesTestBase):
     run_default_tests = False  # type: ignore
     options = {
-        "starting_room_name": RoomName.Arboretum.value,
         "elevator_randomization": True,
+    }
+    overrides = {
+        "starting_room_name": RoomName.Arboretum.value,
     }
 
     def test_starting_in_arboretum(self):
@@ -158,4 +210,22 @@ class TestStartRoomArboretum(MetroidPrimeTestBase):
         self.assertBeatable(True)
         self.assertTrue(
             self.can_reach_location("Chozo Ruins: Watery Hall - Scan Puzzle")
+        )
+
+
+class TestPrefilledItemsNotPlaced(MetroidPrimeWithOverridesTestBase):
+    run_default_tests = False  # type: ignore
+    options = {"start_inventory_from_pool": {SuitUpgrade.Morph_Ball.value: 1}}
+    overrides = {"starting_room_name": RoomName.Save_Station_1.value}
+
+    def test_prefilled_items_should_not_be_placed_when_in_start_inventory(
+        self,
+    ):
+        self.assertNotIn(
+            SuitUpgrade.Morph_Ball.value,
+            self.world.prefilled_item_map.values(),
+        )
+        self.assertIn(
+            SuitUpgrade.Missile_Expansion.value,
+            self.world.prefilled_item_map.values(),
         )

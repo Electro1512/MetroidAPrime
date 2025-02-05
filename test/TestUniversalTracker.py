@@ -1,13 +1,15 @@
-from ..data.StartRoomData import StartRoomDifficulty
+from ..BlastShieldRando import WorldBlastShieldMapping
+from ..Enum import StartRoomDifficulty
+from ..PrimeOptions import DoorColorRandomization
 from ..Items import SuitUpgrade
 from ..data.RoomNames import RoomName
 from typing import Any, TYPE_CHECKING, Dict
-from . import MetroidPrimeTestBase
+from . import MetroidPrimeTestBase, MetroidPrimeUniversalTrackerTestBase
 
 if TYPE_CHECKING:
     from .. import MetroidPrimeWorld
-options: Dict[str, Any] = {
-    "door_color_randomization": "regional",
+slot_data: Dict[str, Any] = {
+    "door_color_randomization": DoorColorRandomization.option_regional,
     "starting_room": StartRoomDifficulty.Safe.value,
     "include_power_beam_doors": True,
     "include_bomb_doors": True,
@@ -94,54 +96,78 @@ options: Dict[str, Any] = {
             "Phazon Mines: Transport to Tallon Overworld South": "Transport to Phazon Mines West",
         },
     },
+    "blast_shield_mapping": {
+        "Tallon Overworld": {
+            "area": "Tallon Overworld",
+            "type_mapping": {
+                "Landing Site": {
+                    1: "Bomb",
+                    2: "Flamethrower",
+                }
+            },
+        }
+    },
 }
 
 
-class TestUniversalTracker(MetroidPrimeTestBase):
+class TestUniversalTracker(MetroidPrimeUniversalTrackerTestBase):
     auto_construct = False
     run_default_tests = False  # type: ignore
-    options = options
+    options = slot_data
 
     def test_door_randomization_is_preserved(self):
         self.world_setup()  # type: ignore
         world: "MetroidPrimeWorld" = self.world
+        self.init_passhthrough(slot_data)
         self.world.generate_early()
         assert world.door_color_mapping
         for area in world.door_color_mapping.keys():
             self.assertEqual(
                 world.door_color_mapping[area].type_mapping,
-                self.options["door_color_mapping"][area]["type_mapping"],
+                slot_data["door_color_mapping"][area]["type_mapping"],
             )
 
     def test_starting_room_info_is_preserved(self):
         self.world_setup()  # type: ignore
+        self.init_passhthrough(slot_data)
         world: "MetroidPrimeWorld" = self.world
-        assert world.starting_room_data.selected_loadout
         self.world.generate_early()
+        assert world.starting_room_data.selected_loadout
+        self.assertEqual(world.starting_room_data.name, slot_data["starting_room_name"])
         self.assertEqual(
-            world.starting_room_data.name, self.options["starting_room_name"]
-        )
-        self.assertEqual(
-            SuitUpgrade(self.options["starting_beam"]),
+            SuitUpgrade(self.world.starting_beam),
             world.starting_room_data.selected_loadout.starting_beam,
         )
 
     def test_starting_room_info_is_preserved_with_progressive_beams(self):
         self.options["progressive_beam_upgrades"] = 1
         self.world_setup()  # type: ignore
+        self.init_passhthrough(slot_data)
         world: "MetroidPrimeWorld" = self.world
-        assert world.starting_room_data.selected_loadout
         self.world.generate_early()
+        assert world.starting_room_data.selected_loadout
+        self.assertEqual(world.starting_room_data.name, slot_data["starting_room_name"])
         self.assertEqual(
-            world.starting_room_data.name, self.options["starting_room_name"]
-        )
-        self.assertEqual(
-            SuitUpgrade(self.options["starting_beam"]),
+            SuitUpgrade(self.world.starting_beam),
             world.starting_room_data.selected_loadout.starting_beam,
         )
 
     def test_elevator_mapping_is_preserved(self):
         self.world_setup()  # type: ignore
         world: "MetroidPrimeWorld" = self.world
+        self.init_passhthrough(slot_data)
         self.world.generate_early()
-        self.assertEqual(world.elevator_mapping, self.options["elevator_mapping"])
+        self.assertEqual(world.elevator_mapping, slot_data["elevator_mapping"])
+
+    def test_blast_shield_mapping_is_preserved(self):
+        self.world_setup()  # type: ignore
+        world: "MetroidPrimeWorld" = self.world
+        self.init_passhthrough(slot_data)
+        self.world.generate_early()
+        assert world.blast_shield_mapping
+        self.assertEqual(
+            world.blast_shield_mapping,
+            WorldBlastShieldMapping.from_option_value(
+                slot_data["blast_shield_mapping"]
+            ),
+        )
