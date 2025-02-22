@@ -2,6 +2,7 @@ from .PrimeUtils import setup_lib_path
 setup_lib_path()  # NOTE: This MUST be called before importing any other metroidprime modules (other than PrimeUtils)
 # Setup local dependencies if running in an apworldimport typing
 import typing
+from collections import defaultdict
 from .ItemPool import generate_item_pool
 import os
 from Options import NumericOption
@@ -131,7 +132,7 @@ class MetroidPrimeWorld(World):
     item_name_groups = {"Artifacts": set(artifact_table.keys())}
     starting_room_data: StartRoomData
     prefilled_item_map: Dict[str, str] = {}  # Dict of location name to item name
-    elevator_mapping: Dict[str, Dict[str, str]] = default_elevator_mappings
+    elevator_mapping: Dict[str, Dict[str, str]] = defaultdict(dict)
     door_color_mapping: Optional[WorldDoorColorMapping] = None
     blast_shield_mapping: Optional[WorldBlastShieldMapping] = None
     game_region_data: Dict[MetroidPrimeArea, AreaData]
@@ -234,8 +235,11 @@ class MetroidPrimeWorld(World):
             apply_blast_shield_mapping(self)
 
         # Randomize Elevators
-        if self.options.elevator_randomization and not self.elevator_mapping:
-            self.elevator_mapping = get_random_elevator_mapping(self)
+        if self.options.elevator_randomization:
+            if not len(self.elevator_mapping):
+                self.elevator_mapping = get_random_elevator_mapping(self)
+        else:
+            self.elevator_mapping = default_elevator_mappings
 
         # Init starting inventory
         starting_items = generate_base_start_inventory(self)
