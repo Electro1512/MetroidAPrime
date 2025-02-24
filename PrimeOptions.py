@@ -380,24 +380,24 @@ class ProgressiveBeamUpgrades(Toggle):
 
 # COSMETIC OPTIONS
 
-class FillerItemModel(Choice):
-    """Set a pickup model for Filler items"""
+class FillerPickupModel(Choice):
+    """Choose a model for Filler item pickups"""
     default = "Metroid"
     option_metroid = "Metroid"
     option_zoomer= "Zoomer"
     option_cog = "Cog"
     option_gamecube = "GameCube"
 
-class UsefulItemModel(Choice):
-    """Set a pickup model for Useful items"""
+class UsefulPickupModel(Choice):
+    """Choose a model for Useful or Trap item pickups"""
     default = "Zoomer"
     option_metroid = "Metroid"
     option_zoomer= "Zoomer"
     option_cog = "Cog"
     option_gamecube = "GameCube"
 
-class ProgressionItemModel(Choice):
-    """Set a pickup model for Progression items"""
+class AdvancementPickupModel(Choice):
+    """Choose a model for Advancement progression item pickups"""
     default = "Cog"
     option_metroid = "Metroid"
     option_zoomer= "Zoomer"
@@ -536,9 +536,9 @@ class MetroidPrimeOptions(PerGameCommonOptions):
     spring_ball: SpringBall
 
     # Cosmetic options
-    filler_item_model: FillerItemModel
-    useful_item_model: UsefulItemModel
-    progression_item_model: ProgressionItemModel
+    filler_pickup_model: FillerPickupModel
+    useful_pickup_model: UsefulPickupModel
+    advancement_pickup_model: AdvancementPickupModel
     fusion_suit: FusionSuit
     hud_color: HudColorOption
     hud_color_red: HudColorOverrideRed
@@ -608,9 +608,9 @@ prime_option_groups = [
     OptionGroup(
         "Cosmetic",
         [
-            FillerItemModel,
-            UsefulItemModel,
-            ProgressionItemModel,
+            FillerPickupModel,
+            UsefulPickupModel,
+            AdvancementPickupModel,
             FusionSuit,
             HudColorOption,
             HudColorOverrideRed,

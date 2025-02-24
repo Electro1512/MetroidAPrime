@@ -79,11 +79,11 @@ def get_config_item_model(world: "MetroidPrimeWorld", location: str) -> str:
             "GameCube": "RandovaniaGamecube"
         }
         if loc.item.classification == ItemClassification.filler:
-            return model_patcher_names[world.options.filler_item_model.value]
+            return model_patcher_names[world.options.filler_pickup_model.value]
         elif loc.item.classification == ItemClassification.useful:
-            return model_patcher_names[world.options.useful_item_model.value]
+            return model_patcher_names[world.options.useful_pickup_model.value]
         else:
-            return model_patcher_names[world.options.progression_item_model.value]
+            return model_patcher_names[world.options.advancement_pickup_model.value]
 
 
 @dataclass
