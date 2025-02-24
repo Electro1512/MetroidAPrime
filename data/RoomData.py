@@ -32,7 +32,6 @@ from .DoorData import DoorData
 if typing.TYPE_CHECKING:
     from .. import MetroidPrimeWorld
 
-
 def get_config_item_text(world: "MetroidPrimeWorld", location: str) -> str:
     loc = world.multiworld.get_location(location, world.player)
     assert loc.item
@@ -73,12 +72,18 @@ def get_config_item_model(world: "MetroidPrimeWorld", location: str) -> str:
         else:
             return name
     else:
+        model_patcher_names = {
+            "Metroid": "Nothing",
+            "Zoomer": "Zoomer",
+            "Cog": "Cog",
+            "GameCube": "RandovaniaGamecube"
+        }
         if loc.item.classification == ItemClassification.filler:
-            return "Zoomer"
+            return model_patcher_names[world.options.filler_item_model.value]
         elif loc.item.classification == ItemClassification.useful:
-            return "Nothing"
+            return model_patcher_names[world.options.useful_item_model.value]
         else:
-            return "Cog"
+            return model_patcher_names[world.options.progression_item_model.value]
 
 
 @dataclass
