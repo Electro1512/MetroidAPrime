@@ -1,6 +1,8 @@
 import copy
 from enum import Enum
 
+from .PrimeOptions import DoorColorRandomization
+
 from .WorldMapping import AreaMapping, WorldMapping
 
 from .data.RoomNames import RoomName
@@ -8,7 +10,7 @@ from .data.RoomNames import RoomName
 from .Items import SuitUpgrade
 
 from .data.AreaNames import MetroidPrimeArea
-from typing import TYPE_CHECKING, Callable, Dict, List
+from typing import TYPE_CHECKING, Any, Callable, Dict, List
 
 
 if TYPE_CHECKING:
@@ -51,9 +53,7 @@ class AreaDoorColorMapping(AreaMapping[DoorColorMapping]):
 
 class WorldDoorColorMapping(WorldMapping[DoorColorMapping]):
     @classmethod
-    def from_option_value(
-        cls, data: Dict[str, Dict[str, str]]
-    ) -> "WorldDoorColorMapping":
+    def from_option_value(cls, data: Dict[str, Any]) -> "WorldDoorColorMapping":
         return WorldDoorColorMapping(
             super().from_option_value_generic(data, AreaDoorColorMapping)
         )
@@ -105,7 +105,7 @@ def get_world_door_mapping(world: "MetroidPrimeWorld") -> WorldDoorColorMapping:
 
     assert world.starting_room_data is not None
 
-    if world.options.door_color_randomization == "global":
+    if world.options.door_color_randomization == DoorColorRandomization.option_global:
         global_mapping = generate_random_door_color_mapping(
             world, world.starting_room_data.area
         )
@@ -168,6 +168,3 @@ def remap_doors_to_power_beam_if_necessary(world: "MetroidPrimeWorld"):
                         world.door_color_mapping[area].type_mapping[
                             original
                         ] = DoorLockType.Power_Beam.value
-            world.options.door_color_mapping.value = (
-                world.door_color_mapping.to_option_value()
-            )

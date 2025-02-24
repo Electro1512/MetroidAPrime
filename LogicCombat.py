@@ -30,14 +30,14 @@ def _can_combat_generic(
     minimal_tanks: int,
     requires_charge_beam: bool = True,
 ) -> bool:
-    difficulty = world.options.combat_logic_difficulty.value
-    if difficulty == CombatLogicDifficulty.NO_LOGIC.value:
+    difficulty = CombatLogicDifficulty(world.options.combat_logic_difficulty)
+    if difficulty == CombatLogicDifficulty.NO_LOGIC:
         return True
-    elif difficulty == CombatLogicDifficulty.NORMAL.value:
+    elif difficulty == CombatLogicDifficulty.NORMAL:
         return has_energy_tanks(world, state, normal_tanks) and (
             can_charge_beam(world, state) or not requires_charge_beam
         )
-    elif difficulty == CombatLogicDifficulty.MINIMAL.value:
+    elif difficulty == CombatLogicDifficulty.MINIMAL:
         return has_energy_tanks(world, state, minimal_tanks) and (
             can_charge_beam(world, state) or not requires_charge_beam
         )
@@ -49,7 +49,7 @@ def can_combat_mines(world: "MetroidPrimeWorld", state: CollectionState) -> bool
 
 
 def can_combat_labs(world: "MetroidPrimeWorld", state: CollectionState) -> bool:
-    return world.options.starting_room_name.value in [
+    return world.starting_room_name in [
         RoomName.East_Tower.value,
         RoomName.Save_Station_B.value,
         RoomName.Quarantine_Monitor.value,
@@ -58,7 +58,7 @@ def can_combat_labs(world: "MetroidPrimeWorld", state: CollectionState) -> bool:
 
 def can_combat_thardus(world: "MetroidPrimeWorld", state: CollectionState) -> bool:
     """Require charge and plasma or power for thardus on normal"""
-    if world.options.starting_room_name.value in [
+    if world.starting_room_name in [
         RoomName.Quarantine_Monitor.value,
         RoomName.Save_Station_B.value,
     ]:
@@ -88,9 +88,9 @@ def can_combat_omega_pirate(world: "MetroidPrimeWorld", state: CollectionState) 
     return _can_combat_generic(world, state, 6, 3) and can_xray(world, state, True)
 
 
-def can_combat_flaaghra(world: "MetroidPrimeWorld", state: CollectionState) -> bool:
+def can_combat_flaahgra(world: "MetroidPrimeWorld", state: CollectionState) -> bool:
     return (
-        world.options.starting_room_name == RoomName.Sunchamber_Lobby.value
+        world.starting_room_name == RoomName.Sunchamber_Lobby.value
         or _can_combat_generic(world, state, 2, 1, False)
     )
 

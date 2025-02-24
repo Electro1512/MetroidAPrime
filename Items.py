@@ -138,13 +138,13 @@ def get_progressive_upgrade_for_item(item: SuitUpgrade) -> Optional[ProgressiveU
 
 
 def __get_missile_item(world: "MetroidPrimeWorld") -> SuitUpgrade:
-    if world.options.missile_launcher.value:
+    if world.options.missile_launcher:
         return SuitUpgrade.Missile_Launcher
     return SuitUpgrade.Missile_Expansion
 
 
 def __get_power_bomb_item(world: "MetroidPrimeWorld") -> SuitUpgrade:
-    if world.options.main_power_bomb.value:
+    if world.options.main_power_bomb:
         return SuitUpgrade.Main_Power_Bomb
     return SuitUpgrade.Power_Bomb_Expansion
 
@@ -156,14 +156,14 @@ def get_item_for_options(
         return __get_missile_item(world)
     if item == SuitUpgrade.Main_Power_Bomb:
         return __get_power_bomb_item(world)
-    if world.options.progressive_beam_upgrades.value:
+    if world.options.progressive_beam_upgrades:
         progressive_upgrade = get_progressive_upgrade_for_item(item)
         if progressive_upgrade is not None:
             return progressive_upgrade
     return item
 
 
-suit_upgrade_table: dict[str, ItemData] = {
+suit_upgrade_table: Dict[str, ItemData] = {
     SuitUpgrade.Power_Beam.value: ItemData(
         SuitUpgrade.Power_Beam.value, 0, ItemClassification.progression
     ),
@@ -244,7 +244,7 @@ suit_upgrade_table: dict[str, ItemData] = {
     ),
 }
 
-misc_item_table: dict[str, ItemData] = {
+misc_item_table: Dict[str, ItemData] = {
     "UnknownItem1": ItemData("UnknownItem1", 25, ItemClassification.useful),
     "HealthRefill": ItemData(
         "HealthRefill", 26, ItemClassification.trap
@@ -253,7 +253,7 @@ misc_item_table: dict[str, ItemData] = {
 }
 
 # These item ids are invalid in the player state, we'll need to exclude it from logic relying on that
-custom_suit_upgrade_table: dict[str, ItemData] = {
+custom_suit_upgrade_table: Dict[str, ItemData] = {
     SuitUpgrade.Missile_Launcher.value: ItemData(
         SuitUpgrade.Missile_Launcher.value, 41, ItemClassification.progression
     ),
@@ -300,7 +300,7 @@ custom_suit_upgrade_table: dict[str, ItemData] = {
     ),
 }
 
-artifact_table: dict[str, ItemData] = {
+artifact_table: Dict[str, ItemData] = {
     "Artifact of Truth": ItemData(
         "Artifact of Truth", 29, ItemClassification.progression_skip_balancing
     ),
@@ -339,7 +339,7 @@ artifact_table: dict[str, ItemData] = {
     ),
 }
 
-item_table: dict[str, ItemData] = {
+item_table: Dict[str, ItemData] = {
     **suit_upgrade_table,
     **artifact_table,
     **custom_suit_upgrade_table,

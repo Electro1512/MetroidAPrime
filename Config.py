@@ -62,7 +62,7 @@ def color_options_to_value(world: "MetroidPrimeWorld") -> List[float]:
         ]
 
     # get the key in hudcolor enum that matches all caps color
-    color: str = str(world.options.hud_color.value)
+    color: str = world.options.hud_color.current_key
     color = color.upper()
     for key in HudColor.__members__.keys():
         if key == color:
@@ -73,7 +73,7 @@ def color_options_to_value(world: "MetroidPrimeWorld") -> List[float]:
 def make_artifact_hints(world: "MetroidPrimeWorld") -> Dict[str, str]:
     def make_artifact_hint(item: str) -> str:
         try:
-            if world.options.artifact_hints.value:
+            if world.options.artifact_hints:
                 location = world.multiworld.find_item(item, world.player)
                 player_string = (
                     f"{world.multiworld.player_name[location.player]}'s"
@@ -204,7 +204,7 @@ def make_config(world: "MetroidPrimeWorld") -> Dict[str, Any]:
             "warpToStart": True,
             "multiworldDolPatches": True,
             "nonvariaHeatDamage": bool(options.non_varia_heat_damage.value),
-            "staggeredSuitDamage": options.staggered_suit_damage.value,
+            "staggeredSuitDamage": options.staggered_suit_damage.current_option_name,
             "heatDamagePerSec": 10.0,
             "poisonDamagePerSec": 0.11,
             "phazonDamagePerSec": 0.964,
@@ -214,7 +214,7 @@ def make_config(world: "MetroidPrimeWorld") -> Dict[str, Any]:
             "removeHiveMecha": bool(options.remove_hive_mecha.value),
             "multiworldDolPatches": False,
             "startingItems": {
-                "combatVisor": True,  # starting_inventory(world, "Combat Visor"),
+                "combatVisor": True,
                 "powerSuit": True,
                 "powerBeam": starting_inventory(world, SuitUpgrade.Power_Beam.value)
                 or starting_inventory(

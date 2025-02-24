@@ -1,13 +1,28 @@
+from ..Enum import StartRoomDifficulty
 from ..data.AreaNames import MetroidPrimeArea
 from ..data.RoomNames import RoomName
-from ..data.StartRoomData import StartRoomData, StartRoomDifficulty
+from ..data.StartRoomData import StartRoomData
 from ..data.Transports import get_random_elevator_mapping
 from . import MetroidPrimeTestBase
+from ..data.Transports import default_elevator_mappings
 
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from .. import MetroidPrimeWorld
+
+
+class TestNoElevatorRando(MetroidPrimeTestBase):
+    run_default_tests = False  # type: ignore
+    options = {"elevator_randomization": False}
+
+    def test_elevators_do_not_get_changed(self):
+        # When start room is normal then it should be set to save_station_1 since landing site isn't viable for most seeds
+        world: "MetroidPrimeWorld" = self.world
+        self.assertEqual(
+            world.elevator_mapping,
+            default_elevator_mappings,
+        )
 
 
 class TestNonRandomStartingRoomWithElevatorRando(MetroidPrimeTestBase):
@@ -20,12 +35,19 @@ class TestNonRandomStartingRoomWithElevatorRando(MetroidPrimeTestBase):
         world: "MetroidPrimeWorld" = self.world
         assert world.starting_room_data.name == RoomName.Save_Station_1.value
 
+    def test_world_maps_random_elevators(self):
+        world: "MetroidPrimeWorld" = self.world
+        self.assertNotEqual(
+            world.elevator_mapping,
+            default_elevator_mappings,
+        )
+
 
 class TestRandomStartingRoomWithElevatorRando(MetroidPrimeTestBase):
     run_default_tests = False  # type: ignore
     options = {"elevator_randomization": True, "starting_room": "safe"}
 
-    def test_start_room_gets_set_to_save_1_when_normal_start(self):
+    def test_start_room_is_not_landing_site_with_safe_start(self):
         # When start room is normal then it should be set to save_station_1 since landing site isn't viable for most seeds
         self.world.generate_early()
         world: "MetroidPrimeWorld" = self.world
@@ -55,7 +77,6 @@ class AllowListElevatorRando(MetroidPrimeTestBase):
             },
         )
         self.world.starting_room_data = fake_start
-        self.world.options.elevator_mapping.value = {}
         mapping = get_random_elevator_mapping(self.world)
         assert (
             mapping[MetroidPrimeArea.Tallon_Overworld.value][

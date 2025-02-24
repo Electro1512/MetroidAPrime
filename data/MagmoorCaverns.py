@@ -73,8 +73,7 @@ class MagmoorCavernsAreaData(AreaData):
                         and can_bomb(world, state)
                         and (
                             can_warp_to_start(world, state)
-                            if world.options.starting_room_name
-                            == RoomName.Warrior_Shrine.value
+                            if world.starting_room_name == RoomName.Warrior_Shrine.value
                             else state.can_reach(
                                 RoomName.Warrior_Shrine.value, None, world.player
                             )
@@ -105,11 +104,13 @@ class MagmoorCavernsAreaData(AreaData):
                         RoomName.Lava_Lake,
                         rule_func=can_heat,
                         tricks=[Tricks.lava_lake_item_suitless],
+                        indirect_condition_rooms=[RoomName.Burning_Trail],
                     ),
                     1: DoorData(
                         RoomName.Burning_Trail,
                         rule_func=can_heat,
                         tricks=[Tricks.lava_lake_item_suitless],
+                        indirect_condition_rooms=[RoomName.Burning_Trail],
                     ),
                 },
             ),
@@ -121,12 +122,14 @@ class MagmoorCavernsAreaData(AreaData):
                         rule_func=lambda world, state: can_heat(world, state)
                         and (can_bomb(world, state) or can_power_bomb(world, state)),
                         tricks=[Tricks.lava_lake_item_suitless],
+                        indirect_condition_rooms=[RoomName.Burning_Trail],
                     ),
                     1: DoorData(
                         RoomName.Pit_Tunnel,
                         rule_func=lambda world, state: can_heat(world, state)
                         and (can_bomb(world, state) or can_power_bomb(world, state)),
                         tricks=[Tricks.lava_lake_item_suitless],
+                        indirect_condition_rooms=[RoomName.Burning_Trail],
                     ),
                 },
                 pickups=[
@@ -134,8 +137,9 @@ class MagmoorCavernsAreaData(AreaData):
                         "Magmoor Caverns: Lava Lake",
                         rule_func=lambda world, state: can_missile(world, state)
                         and can_space_jump(world, state)
+                        and can_heat(world, state)
                         and state.can_reach(
-                            "Magmoor Caverns: " + RoomName.Lake_Tunnel.value,
+                            RoomName.Burning_Trail.value,
                             None,
                             world.player,
                         ),

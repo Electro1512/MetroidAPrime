@@ -1,18 +1,18 @@
 # Setup Guide for Metroid Prime Archipelago
 
-This guide is meant to help you get up and running with Metroid Prime APWorld with Archipelago.  
+This guide is meant to help you get up and running with Metroid Prime APWorld with Archipelago.
 This has only been tested on Windows, but feel free to let us know if you get the chance to try it on other OS platforms!
 
 ## Requirements
 
 The following are required in order to play _Metroid Prime_ in Archipelago:
 
-- [Archipelago](https://github.com/ArchipelagoMW/Archipelago/releases) 
-   For Archipelago 5.0/5.1, see the Note about Python versions in [APWorld Installation](#apworld-installation)  
+- [Archipelago](https://github.com/ArchipelagoMW/Archipelago/releases)
+   For Archipelago 5.0/5.1, see the Note about Python versions in [APWorld Installation](#apworld-installation)
 - [Dolphin Emulator](https://dolphin-emu.org/download/). We recommend the latest Release version.
 - A _Metroid Prime_ (GameCube version) ISO file
   - Any official release copy of the GameCube version will work. (All region versions are compatible, including all three versions of NTSC-USA)
-  - The Wii and Switch version of the game are _not_ supported.   
+  - The Wii and Switch version of the game are _not_ supported.
 
 ## APWorld Installation
 
@@ -26,15 +26,15 @@ The following are required in order to play _Metroid Prime_ in Archipelago:
 > |------------------------------|----------------------------------------------|
 > | Archipelago 5.0 or earlier   | Download APWorld file ending with `3.11.zip`.|
 > | Archipelago 5.1 or later     | Download APWorld file ending with `3.12.zip`.|
-> 
+>
 >  Future versions after Metroid Prime AP 0.4.8 will likely target only Python 3.12 and will only work on Archipelago 5.1.
 
 >[!IMPORTANT]
-> If you have used a previous version of Metroid Prime AP that required copying folders into the `/lib` folder, go to your `Archipelago/lib` folder and delete the following directories:  
+> If you have used a previous version of Metroid Prime AP that required copying folders into the `/lib` folder, go to your `Archipelago/lib` folder and delete the following directories:
 > - `dolphin_memory_engine` (This may be kept if another APWorld depends on this folder, but may cause issues if versions are mismatched.)
-> - `ppc_asm`  
+> - `ppc_asm`
 > - `py_randomprime`
->   
+>
 > These are now included in the APWorld file.
 
 ## Setting Up Player Options YAML File
@@ -63,7 +63,7 @@ name and port number from the room's host.
 
 Once you do, follow these steps to connect to the room:
 
-1. In the Archipelago Launcher, click `Open Patch File`. Then select the `.apmp1` patch file.   
+1. In the Archipelago Launcher, click `Open Patch File`. Then select the `.apmp1` patch file.
    If you have not done so before, it will ask you what program you want to open it with.
 2. If this is your first time, it will prompt you for an input iso. Select your _Metroid Prime_ GameCube ISO file.
 3. The patch will take some time to complete in the background. (Be patient! The game is 1.46 GB!)
@@ -73,12 +73,12 @@ Once you do, follow these steps to connect to the room:
    If a game is hosted from the `ArchipelagoServer.exe` (without `.exe` on Linux), this will default to `38281` but may be changed in the `host.yaml`.
 
 >[!TIP]
->  **Optional**  
+>  **Optional**
 >  If you want double-clicking `.apmp1` patch file to automatically open your game for you,
 >    - Navigate to your `Archipelago` installation and edit the `host.yaml` file.
 >    - Scroll down to `metroidprime_options` and either set `rom_start` to `true` if ISO files are already associated with Dolphin or set it to the path to your `Dolphin.exe`.
 >    - If `metroidprime_options` isn't in the `host.yaml` yet, click your `.apmp1` patch file and then reopen the `host.yaml` and it should now be there.
-> 
+>
 >    Now when double-clicking the `.apmp1` patch file, it should open the client, patch, and launch Dolphin all at once!
 
 ## Troubleshooting
@@ -90,7 +90,7 @@ Once you do, follow these steps to connect to the room:
 - Use the latest Dolphin Emulator
   - Dolphin Emulator Release (**Recommended**): [Dolphin Emulator - Download](https://dolphin-emu.org/download/)
   - PrimeHack: [Releases · shiiion/dolphin](https://github.com/shiiion/dolphin/releases)
-    - While the dependencies that Metroid Prime AP uses does not target PrimeHack, many users report that PrimeHack can work.  
+    - While the dependencies that Metroid Prime AP uses does not target PrimeHack, many users report that PrimeHack can work.
       However, any issues found while using PrimeHack should be reproduced with the official Dolphin Emulator before reporting.
 
 ### Generating and Patching Troubleshooting
@@ -100,12 +100,12 @@ Once you do, follow these steps to connect to the room:
   - Check if you have residual files from previous versions in the lib/worlds folder - see the [APWorld Installation section](#apworld-installation)
   - Go to `%TEMP%` (C:\Users\<Username>\AppData\Local\Temp) and delete the folder `ap_metroidprime_temp_lib_vX.Y.Z`. Then restart the Archipelago Launcher.
 
-- If you receive this error in a dialog box after opening the AP_XXXXX_PX.apmp1 file:  
-  > Count Mount File  
+- If you receive this error in a dialog box after opening the AP_XXXXX_PX.apmp1 file:
+  > Count Mount File
   > The disc image is corrupted.
-  
-  This is not an error related to the patcher - this is Windows File Explorer attempting to mount the GameCube ISO as a removable drive. It's likely that the patcher did sucessfully patch the game.  
-  See if the patched ISO exists (often named AP_XXXXX_PX.iso). If it does, you can load it manually in Dolphin.  
+
+  This is not an error related to the patcher - this is Windows File Explorer attempting to mount the GameCube ISO as a removable drive. It's likely that the patcher did sucessfully patch the game.
+  See if the patched ISO exists (often named AP_XXXXX_PX.iso). If it does, you can load it manually in Dolphin.
 
 ### Connection Troubleshooting
 - I have the randomized game open in Dolphin, but the Metroid Prime client says it can't connect to it!
@@ -121,12 +121,12 @@ Once you do, follow these steps to connect to the room:
       **Uncheck** Enable Emulated Memory Size Override
   - Start the Metroid Prime Client and Dolphin in a Specific Order
 
-    - For some users, connecting to the AP server before letting the Metroid Prime client causes connection issues.  
-      Try starting the game in this order:  
-      1.) Start the Metroid Prime client  
-      2.) Start Dolphin and start the game (if it launches automatically, that's fine)  
-      3.) Select or create a save file and enter the game  
-      4.) Enter the AP server address into the Metroid Prime Client  
+    - For some users, connecting to the AP server before letting the Metroid Prime client causes connection issues.
+      Try starting the game in this order:
+      1.) Start the Metroid Prime client
+      2.) Start Dolphin and start the game (if it launches automatically, that's fine)
+      3.) Select or create a save file and enter the game
+      4.) Enter the AP server address into the Metroid Prime Client
 
   - For Linux, use Dolphin FlatPak
     - Install Dolphin Emulator from [Flathub](https://flathub.org/apps/org.DolphinEmu.dolphin-emu)
