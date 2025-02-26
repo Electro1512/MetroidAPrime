@@ -1,4 +1,5 @@
 from .PrimeUtils import setup_lib_path
+
 setup_lib_path()  # NOTE: This MUST be called before importing any other metroidprime modules (other than PrimeUtils)
 # Setup local dependencies if running in an apworldimport typing
 import typing
@@ -139,6 +140,9 @@ class MetroidPrimeWorld(World):
     has_generated_bomb_doors: bool = False
     starting_room_name: Optional[str] = None
     starting_beam: Optional[str] = None
+    disable_starting_room_bk_prevention: bool = (
+        False  # Used in certain scenarios to enable more flexibility with starting loadouts
+    )
 
     def __init__(self, multiworld: MultiWorld, player: int):
         super().__init__(multiworld, player)
