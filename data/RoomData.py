@@ -51,10 +51,10 @@ def get_config_item_model(world: "MetroidPrimeWorld", location: str) -> str:
     loc = world.get_location(location)
     assert loc.item
     model_patcher_names = {
-        "Metroid": "Nothing",
+        "Metroid": "Nothing", # The randomprime patcher names the Metroid model "Nothing"
         "Zoomer": "Zoomer",
         "Cog": "Cog",
-        "GameCube": "RandovaniaGamecube"
+        "GameCube": "Gamecube"
     }
     if loc.native_item:
         name = loc.item.name
@@ -77,10 +77,10 @@ def get_config_item_model(world: "MetroidPrimeWorld", location: str) -> str:
             return "Plasma Beam"
         return name
     if loc.item.advancement:
-        return model_patcher_names[world.options.advancement_pickup_model.value]
+        return model_patcher_names[world.options.progression_pickup_model.value]
     if loc.item.useful or loc.item.trap:
         return model_patcher_names[world.options.useful_pickup_model.value]
-    return model_patcher_names[world.options.filler_pickup_model.value]
+    return model_patcher_names[world.options.normal_pickup_model.value]
 
 
 @dataclass
