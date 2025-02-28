@@ -21,13 +21,14 @@ The following are required in order to play _Metroid Prime_ in Archipelago:
 3. In the Archipelago Launcher, select `Install APWorld`, and then select `metroidprime.apworld` file from the previous step.
 
 >[!NOTE]
-> Because Archipelago 5.1 on Windows transitioned to using Python 3.12, [Metroid Prime AP version 0.4.8](https://github.com/Electro1512/MetroidAPrime/releases/tag/v0.4.8) has two versions:
-> | Archipelago Version (Windows) |                                              |
-> |------------------------------|----------------------------------------------|
-> | Archipelago 5.0 or earlier   | Download APWorld file ending with `3.11.zip`.|
-> | Archipelago 5.1 or later     | Download APWorld file ending with `3.12.zip`.|
+> Because Archipelago 5.1 on Windows transitioned to using Python 3.12, current releases of Metroid Prime AP offers two options to download:
+> | Archipelago Version                             |                                              |
+> |-------------------------------------------------|----------------------------------------------|
+> | Archipelago 5.1 or later for Windows            | Download APWorld file ending with `3.12.zip`.|
+> | Archipelago 5.1 AppImage or Tarball for Linux   | Download APWorld file ending with `3.11.zip`.|
+> | Archipelago 5.0 or earlier for Windows          | Download APWorld file ending with `3.11.zip`.|
 >
->  Future versions after Metroid Prime AP 0.4.8 will likely target only Python 3.12 and will only work on Archipelago 5.1.
+>  Future versions after Metroid Prime AP 0.4.9 will likely target only Python 3.12 and will only work on Archipelago 5.1.
 
 >[!IMPORTANT]
 > If you have used a previous version of Metroid Prime AP that required copying folders into the `/lib` folder, go to your `Archipelago/lib` folder and delete the following directories:
