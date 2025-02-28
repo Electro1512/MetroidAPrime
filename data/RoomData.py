@@ -32,7 +32,6 @@ from .DoorData import DoorData
 if typing.TYPE_CHECKING:
     from .. import MetroidPrimeWorld
 
-
 def get_config_item_text(world: "MetroidPrimeWorld", location: str) -> str:
     loc = world.get_location(location)
     assert loc.item
@@ -51,6 +50,12 @@ def get_config_item_text(world: "MetroidPrimeWorld", location: str) -> str:
 def get_config_item_model(world: "MetroidPrimeWorld", location: str) -> str:
     loc = world.get_location(location)
     assert loc.item
+    model_patcher_names = {
+        "Metroid": "Nothing", # The randomprime patcher names the Metroid model "Nothing"
+        "Zoomer": "Zoomer",
+        "Cog": "Cog",
+        "GameCube": "Gamecube"
+    }
     if loc.native_item:
         name = loc.item.name
         if name == SuitUpgrade.Missile_Expansion.value:
@@ -72,10 +77,10 @@ def get_config_item_model(world: "MetroidPrimeWorld", location: str) -> str:
             return "Plasma Beam"
         return name
     if loc.item.advancement:
-        return "Cog"
+        return model_patcher_names[world.options.progression_pickup_model.value]
     if loc.item.useful or loc.item.trap:
-        return "Zoomer"
-    return "Nothing"
+        return model_patcher_names[world.options.useful_pickup_model.value]
+    return model_patcher_names[world.options.normal_pickup_model.value]
 
 
 @dataclass
