@@ -169,7 +169,7 @@ class PhazonMinesAreaData(AreaData):
                         defaultLock=DoorLockType.Plasma,
                         rule_func=lambda world, state: can_combat_omega_pirate(
                             world, state
-                        )
+                        ),
                     ),
                     1: DoorData(
                         RoomName.Processing_Center_Access,
@@ -185,7 +185,7 @@ class PhazonMinesAreaData(AreaData):
                         "Phazon Mines: Elite Quarters",
                         rule_func=lambda world, state: can_combat_omega_pirate(
                             world, state
-                        )
+                        ),
                     ),
                 ],
             ),
@@ -680,10 +680,7 @@ class PhazonMinesAreaData(AreaData):
                         RoomName.Elite_Research,
                         defaultLock=DoorLockType.Ice,
                         # Can't go backwards through the wall without tricks, checks if player can reach the room from the other side
-                        rule_func=lambda world, state: can_spider(world, state)
-                        and state.can_reach(
-                            RoomName.Research_Access.value, None, world.player
-                        ),
+                        rule_func=lambda world, state: False,
                         tricks=[
                             Tricks.elite_research_backwards_wall_boost_no_spider,
                             Tricks.elite_research_backwards_wall_boost,

@@ -30,7 +30,9 @@ if TYPE_CHECKING:
     from .. import MetroidPrimeWorld
 
 
-def can_crashed_frigate_front(world: "MetroidPrimeWorld", state: CollectionState) -> bool:
+def can_crashed_frigate_front(
+    world: "MetroidPrimeWorld", state: CollectionState
+) -> bool:
     return (
         can_morph_ball(world, state)
         and can_wave_beam(world, state)
@@ -555,7 +557,8 @@ class TallonOverworldAreaData(AreaData):
                     1: DoorData(
                         RoomName.Great_Tree_Hall,
                         defaultLock=DoorLockType.Ice,
-                        rule_func=can_boost,
+                        rule_func=lambda world, state: can_boost(world, state)
+                        and can_space_jump(world, state),
                         sub_region_door_index=0,
                         sub_region_access_override=lambda world, state: True,
                     ),
