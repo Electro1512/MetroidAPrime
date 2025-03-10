@@ -320,6 +320,30 @@ class ProgressiveBeamUpgrades(Toggle):
 
 # COSMETIC OPTIONS
 
+class ProgressionPickupModel(Choice):
+    """Choose a model for Progression item pickups"""
+    default = "Cog"
+    option_metroid = "Metroid"
+    option_zoomer= "Zoomer"
+    option_cog = "Cog"
+    option_gamecube = "GameCube"
+
+class UsefulPickupModel(Choice):
+    """Choose a model for Useful or Trap item pickups"""
+    default = "Zoomer"
+    option_metroid = "Metroid"
+    option_zoomer= "Zoomer"
+    option_cog = "Cog"
+    option_gamecube = "GameCube"
+
+class NormalPickupModel(Choice):
+    """Choose a model for Normal filler item pickups"""
+    default = "Metroid"
+    option_metroid = "Metroid"
+    option_zoomer= "Zoomer"
+    option_cog = "Cog"
+    option_gamecube = "GameCube"
+
 
 class RandomizeSuitColors(Toggle):
     """Randomize the colors of the suits. Is overridden if any of the color overrides are greater than 0. Note: This is not compatible with the Fusion Suit and will have no effect."""
@@ -445,6 +469,9 @@ class MetroidPrimeOptions(PerGameCommonOptions):
     spring_ball: SpringBall
 
     # Cosmetic options
+    progression_pickup_model: ProgressionPickupModel
+    useful_pickup_model: UsefulPickupModel
+    normal_pickup_model: NormalPickupModel
     fusion_suit: FusionSuit
     hud_color: HudColorOption
     hud_color_red: HudColorOverrideRed
@@ -513,6 +540,9 @@ prime_option_groups = [
     OptionGroup(
         "Cosmetic",
         [
+            ProgressionPickupModel,
+            UsefulPickupModel,
+            NormalPickupModel,
             FusionSuit,
             HudColorOption,
             HudColorOverrideRed,
