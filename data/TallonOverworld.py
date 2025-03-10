@@ -30,13 +30,23 @@ if TYPE_CHECKING:
     from .. import MetroidPrimeWorld
 
 
+def can_crashed_frigate_front(
+    world: "MetroidPrimeWorld", state: CollectionState
+) -> bool:
+    return (
+        can_morph_ball(world, state)
+        and can_wave_beam(world, state)
+        and can_thermal(world, state)
+        and (can_move_underwater(world, state) or can_space_jump(world, state))
+    )
+
+
 def can_crashed_frigate(world: "MetroidPrimeWorld", state: CollectionState) -> bool:
     return (
-        can_bomb(world, state)
+        can_crashed_frigate_front(world, state)
+        and can_bomb(world, state)
         and can_space_jump(world, state)
-        and can_wave_beam(world, state)
         and can_move_underwater(world, state)
-        and can_thermal(world, state)
     )
 
 
@@ -135,7 +145,7 @@ class TallonOverworldAreaData(AreaData):
                             can_missile(world, state) or can_charge_beam(world, state)
                         )
                         and (
-                            can_crashed_frigate(world, state)
+                            can_crashed_frigate_front(world, state)
                             or can_crashed_frigate_backwards(world, state)
                         ),
                     ),
@@ -153,7 +163,7 @@ class TallonOverworldAreaData(AreaData):
                 doors={
                     0: DoorData(
                         RoomName.Cargo_Freight_Lift_to_Deck_Gamma,
-                        rule_func=can_crashed_frigate,
+                        rule_func=can_crashed_frigate_front,
                         tricks=[Tricks.frigate_no_gravity],
                         exclude_from_rando=True,
                     ),
@@ -547,7 +557,8 @@ class TallonOverworldAreaData(AreaData):
                     1: DoorData(
                         RoomName.Great_Tree_Hall,
                         defaultLock=DoorLockType.Ice,
-                        rule_func=can_boost,
+                        rule_func=lambda world, state: can_boost(world, state)
+                        and can_space_jump(world, state),
                         sub_region_door_index=0,
                         sub_region_access_override=lambda world, state: True,
                     ),

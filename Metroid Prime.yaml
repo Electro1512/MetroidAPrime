@@ -72,12 +72,6 @@ Metroid Prime:
     safe: 0
     buckle_up: 0
 
-  disable_starting_room_bk_prevention:
-    # Normally, starting rooms will give you a minimum set of items in order to have access to several checks immediately. This option disables that behavior as well as any pre-filled items that would have been set. This will automatically get set to true if starting room is normal and tricks or blast shield rando is enabled.
-    # WARNING: This will possibly require multiple attempts to generate, especially in solo worlds!
-    'false': 50
-    'true': 0
-
   combat_logic_difficulty:
     # When enabled, the game will include energy tanks and the charge beam as requirements for certain combat heavy rooms.
     no_logic: 0
