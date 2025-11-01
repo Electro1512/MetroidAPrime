@@ -14,6 +14,7 @@ if TYPE_CHECKING:
 
 class MetroidPrimeContainer(APPlayerContainer):
     game: str = "Metroid Prime"  # type: ignore
+    patch_file_ending: str = ".apmp1"
 
     def __init__(
         self,
