@@ -93,7 +93,7 @@ class MetroidPrimeSettings(settings.Group):
         """
         Set this to false to never autostart a rom (such as after patching),
         Set it to true to have the operating system default program open the iso
-        Alternatively, set it to a path to a program to open the .iso file with (like Dolplhin)
+        Alternatively, set it to a path to a program to open the .iso file with (like Dolphin)
         """
 
     rom_file: RomFile = RomFile(RomFile.copy_to)
@@ -467,3 +467,4 @@ class MetroidPrimeWorld(World):
                             f"    {room} <--> {destination}: {door_data.blast_shield.value}\n"
                         )
                         written_mappings.append([room, destination])
+
