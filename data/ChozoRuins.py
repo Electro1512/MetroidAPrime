@@ -752,7 +752,10 @@ class ChozoRuinsAreaData(AreaData):
             ),
             RoomName.Sunchamber_Access: RoomData(
                 doors={
-                    0: DoorData(RoomName.Sunchamber),
+                    0: DoorData(
+						RoomName.Sunchamber,
+                        rule_func=can_pass_flaagrah_vines 
+					), # is locked if Flaagrah is dead until after you beat the ghosts
                     1: DoorData(RoomName.Sunchamber_Lobby),
                 },
             ),
