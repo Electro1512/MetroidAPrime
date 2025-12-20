@@ -72,6 +72,21 @@ def can_flaahgra(world: "MetroidPrimeWorld", state: CollectionState) -> bool:
     )
 
 
+def can_pass_flaagrah_vines(world: "MetroidPrimeWorld", state: CollectionState) -> bool:
+    if (
+        not world.get_location(
+            "Chozo Ruins: Sunchamber - Ghosts"
+        ) in state.locations_checked
+    ):
+        return (
+            not world.get_location(
+                    "Chozo Ruins: Sunchamber - Flaahgra"
+            ) in state.locations_checked
+        )
+    else:
+        return True
+
+
 def can_climb_tower_of_light(
     world: "MetroidPrimeWorld", state: CollectionState
 ) -> bool:
