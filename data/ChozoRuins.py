@@ -773,8 +773,11 @@ class ChozoRuinsAreaData(AreaData):
                         RoomName.Sun_Tower_Access,
                         rule_func=can_flaahgra,
                         exclude_from_rando=True,
-                    )
-                    # 1: DoorData(RoomName.Sunchamber_Lobby, rule_func=can_climb_sun_tower) # gets locked until after you beat the ghosts
+                    ),
+                    1: DoorData(
+                        RoomName.Sunchamber_Access, 
+                        rule_func=can_pass_flaagrah_vines
+                    ) # gets locked until after you beat the ghosts
                 },
                 pickups=[
                     PickupData(
