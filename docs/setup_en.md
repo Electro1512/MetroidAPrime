@@ -129,9 +129,10 @@ Once you do, follow these steps to connect to the room:
       3.) Select or create a save file and enter the game
       4.) Enter the AP server address into the Metroid Prime Client
 
-  - For Linux, use Dolphin FlatPak
-    - Install Dolphin Emulator from [Flathub](https://flathub.org/apps/org.DolphinEmu.dolphin-emu)
-    - Dolphin Memory Engine, as part of the Prime AP Client, can not access regular Dolphin's process but can access Flatpak's containerized Dolphin's process
+  - For Linux, kernel security modules such as [Yama](https://docs.kernel.org/admin-guide/LSM/Yama.html) can prevent Dolphin Memory Engine, as part of the Prime AP Client, from attaching to the Dolphin process (check your current Yama scope with `cat /proc/sys/kernel/yama/ptrace_scope`). There are multiple ways to resolve this issue:
+    - Relax Yama security scope to `0` with the command `echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope`. This change is **not** persistent across reboots and may be undesirable, as it reduces memory inspection restrictions on your system.
+    - Run Dolphin from the command line with `unshare -Ur dolphin-emu`. This runs Dolphin in a new user namespace that is now accessible to Dolphin Memory Engine (as it remains in the parent user namespace), even with Yama restrictions enabled.
+    - Install Dolphin Emulator from [Flathub](https://flathub.org/apps/org.DolphinEmu.dolphin-emu). The containerized runtime environment of Flatpaks also creates a separate user namespace for Dolphin, thus having a similar effect as running any other Dolphin install with `unshare -Ur`.
 
 ### In-Game Troubleshooting
 - In Dolphin, when fighting Ridley my screen keeps changing width
