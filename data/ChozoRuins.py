@@ -72,6 +72,21 @@ def can_flaahgra(world: "MetroidPrimeWorld", state: CollectionState) -> bool:
     )
 
 
+def can_pass_flaagrah_vines(world: "MetroidPrimeWorld", state: CollectionState) -> bool:
+    if (
+        not world.get_location(
+            "Chozo Ruins: Sunchamber - Ghosts"
+        ) in state.locations_checked
+    ):
+        return (
+            not world.get_location(
+                    "Chozo Ruins: Sunchamber - Flaahgra"
+            ) in state.locations_checked
+        )
+    else:
+        return True
+
+
 def can_climb_tower_of_light(
     world: "MetroidPrimeWorld", state: CollectionState
 ) -> bool:
@@ -737,7 +752,10 @@ class ChozoRuinsAreaData(AreaData):
             ),
             RoomName.Sunchamber_Access: RoomData(
                 doors={
-                    0: DoorData(RoomName.Sunchamber),
+                    0: DoorData(
+						RoomName.Sunchamber,
+                        rule_func=can_pass_flaagrah_vines 
+					), # is locked if Flaagrah is dead until after you beat the ghosts
                     1: DoorData(RoomName.Sunchamber_Lobby),
                 },
             ),
@@ -755,8 +773,11 @@ class ChozoRuinsAreaData(AreaData):
                         RoomName.Sun_Tower_Access,
                         rule_func=can_flaahgra,
                         exclude_from_rando=True,
-                    )
-                    # 1: DoorData(RoomName.Sunchamber_Lobby, rule_func=can_climb_sun_tower) # gets locked until after you beat the ghosts
+                    ),
+                    1: DoorData(
+                        RoomName.Sunchamber_Access, 
+                        rule_func=can_pass_flaagrah_vines
+                    ) # gets locked until after you beat the ghosts
                 },
                 pickups=[
                     PickupData(
